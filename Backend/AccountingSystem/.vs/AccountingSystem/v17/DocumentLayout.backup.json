@@ -1,0 +1,79 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\companydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\companydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 8,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CompanyDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAgAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T11:07:16.292Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 80,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
