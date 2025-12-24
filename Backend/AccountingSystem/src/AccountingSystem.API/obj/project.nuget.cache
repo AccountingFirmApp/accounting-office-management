@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "QEiAI2+IShU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\This User\\Desktop\\פרילנס\\הנהלת חשבונות\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\AccountingSystem.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\This User\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\This User\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
