@@ -461,8 +461,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "AccountingSystem.Application": "1.0.0",
           "AccountingSystem.Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "9.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.2"
         },
         "compile": {
