@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for Task - משימות
 /// </summary>
-public class TaskDto
+public class Task
 {
     public int Id { get; set; }
     public int CompanyId { get; set; }

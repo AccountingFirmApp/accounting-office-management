@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AccountingSystem.Domain.DTOs
 {
-    public class AuditLogDto
+    public class AuditLog
     {
         public long Id { get; set; }
         public int WorkerId { get; set; }

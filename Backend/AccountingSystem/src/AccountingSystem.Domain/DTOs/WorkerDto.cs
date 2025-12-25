@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for Worker - עובדים/ות (בלי Authentication)
 /// </summary>
-public class WorkerDto
+public class Worker
 {
     public int Id { get; set; }
     public int FirmId { get; set; }

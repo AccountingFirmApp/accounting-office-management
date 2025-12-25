@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for Company - חברות/לקוחות
 /// </summary>
-public class CompanyDto
+public class Company
 {
     public int Id { get; set; }
     public int FirmId { get; set; }

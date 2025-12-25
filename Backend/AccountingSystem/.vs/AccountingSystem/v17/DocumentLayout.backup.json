@@ -3,8 +3,76 @@
   "WorkspaceRootPath": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.infrastructure\\data\\accountingdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|solutionrelative:src\\accountingsystem.infrastructure\\data\\accountingdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.infrastructure\\entities\\tasktype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|solutionrelative:src\\accountingsystem.infrastructure\\entities\\tasktype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.infrastructure\\entities\\task.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|solutionrelative:src\\accountingsystem.infrastructure\\entities\\task.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.infrastructure\\entities\\reportinstance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|solutionrelative:src\\accountingsystem.infrastructure\\entities\\reportinstance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.infrastructure\\accountingsystem.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|solutionrelative:src\\accountingsystem.infrastructure\\accountingsystem.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\enums\\reportstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\enums\\reportstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\enums\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\enums\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.api\\accountingsystem.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|solutionrelative:src\\accountingsystem.api\\accountingsystem.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.application\\accountingsystem.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|solutionrelative:src\\accountingsystem.application\\accountingsystem.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|solutionrelative:src\\accountingsystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.application\\dtos\\accountingfirmdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|solutionrelative:src\\accountingsystem.application\\dtos\\accountingfirmdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\reportinstancedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\reportinstancedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\auditlogdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\auditlogdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\auditlogdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\auditlogdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\companydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\companydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\createauditlogdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\createauditlogdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\frequencydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\frequencydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\dtos\\workerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\dtos\\workerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -28,7 +96,7 @@
         },
         {
           "DockedWidth": 8,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -36,20 +104,236 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Tasktype.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Entities\\Tasktype.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Infrastructure\\Entities\\Tasktype.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Entities\\Tasktype.cs*",
+              "RelativeToolTip": "src\\AccountingSystem.Infrastructure\\Entities\\Tasktype.cs*",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T10:48:52.703Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Task.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Entities\\Task.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Infrastructure\\Entities\\Task.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Entities\\Task.cs*",
+              "RelativeToolTip": "src\\AccountingSystem.Infrastructure\\Entities\\Task.cs*",
+              "ViewState": "AgIAABwAAAAAAAAAAAA2wCgAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T10:48:23.59Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Reportinstance.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Entities\\Reportinstance.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Infrastructure\\Entities\\Reportinstance.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Entities\\Reportinstance.cs*",
+              "RelativeToolTip": "src\\AccountingSystem.Infrastructure\\Entities\\Reportinstance.cs*",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAswB8AAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T10:47:16.073Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PaymentMethod.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\Enums\\PaymentMethod.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\Enums\\PaymentMethod.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\Enums\\PaymentMethod.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\Enums\\PaymentMethod.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T10:43:33.979Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "AccountingDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Data\\AccountingDbContext.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Infrastructure\\Data\\AccountingDbContext.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\Data\\AccountingDbContext.cs*",
+              "RelativeToolTip": "src\\AccountingSystem.Infrastructure\\Data\\AccountingDbContext.cs*",
+              "ViewState": "AgIAAMIAAAAAAAAAAAAmwMsAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T10:35:11.425Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AccountingSystem.API.csproj",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\AccountingSystem.API.csproj",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.API\\AccountingSystem.API.csproj",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\AccountingSystem.API.csproj",
+              "RelativeToolTip": "src\\AccountingSystem.API\\AccountingSystem.API.csproj",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-25T10:21:10.302Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AccountingSystem.Infrastructure.csproj",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj",
+              "RelativeToolTip": "src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-25T10:13:58.797Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AccountingSystem.Application.csproj",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
+              "RelativeToolTip": "src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-25T10:05:13.521Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AccountingFirmDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Application\\DTOs\\AccountingFirmDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Application\\DTOs\\AccountingFirmDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Application\\DTOs\\AccountingFirmDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Application\\DTOs\\AccountingFirmDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T15:18:14.921Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\Program.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.API\\Program.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\Program.cs",
+              "RelativeToolTip": "src\\AccountingSystem.API\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T15:16:48.884Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ReportStatus.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\Enums\\ReportStatus.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\Enums\\ReportStatus.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\Enums\\ReportStatus.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\Enums\\ReportStatus.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T15:02:10.436Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ReportInstanceDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\ReportInstanceDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\ReportInstanceDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\ReportInstanceDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\ReportInstanceDto.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAA1wB0AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T15:01:44.395Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "FrequencyDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\FrequencyDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\FrequencyDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\FrequencyDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\FrequencyDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T14:59:24.75Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "WorkerDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\WorkerDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\WorkerDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\WorkerDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\WorkerDto.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAmwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T14:56:11.093Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AuditLogDetailDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\AuditLogDetailDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\AuditLogDetailDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\AuditLogDetailDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\AuditLogDetailDto.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAzwBQAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T14:04:57.494Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "CreateAuditLogDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\CreateAuditLogDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\CreateAuditLogDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\CreateAuditLogDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\CreateAuditLogDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T14:04:12.63Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AuditLogDto.cs",
+              "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\AuditLogDto.cs",
+              "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\AuditLogDto.cs",
+              "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\AuditLogDto.cs",
+              "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\AuditLogDto.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAswBQAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T14:02:38.718Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "CompanyDto.cs",
               "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
               "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
               "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
               "RelativeToolTip": "src\\AccountingSystem.Domain\\DTOs\\CompanyDto.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAgAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAIwBkAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-24T11:07:16.292Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-24T11:07:16.292Z"
             },
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
             }
           ]
         },

@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for CompanyReportConfig - הגדרת דיווחים פר-לקוח
 /// </summary>
-public class CompanyReportConfigDto
+public class CompanyReportConfig
 {
     public int Id { get; set; }
     public int CompanyId { get; set; }

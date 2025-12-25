@@ -1,16 +1,17 @@
+using AccountingSystem.Domain.Enums;
 namespace AccountingSystem.Application.DTOs;
 
 /// <summary>
 /// DTO for ReportInstance - מופעי דיווחים (דיווחים שבוצעו)
 /// </summary>
-public class ReportInstanceDto
+public class ReportInstance
 {
     public int Id { get; set; }
     public int ConfigId { get; set; }
     public DateTime Period { get; set; } // 2025-09-01
     public decimal? Amount { get; set; }
-    public string Status { get; set; } = string.Empty; // Pending, Reported, Paid, Approved, NotRequired
-    public string? PaymentMethod { get; set; } // Credit, Transfer, Check, Online, Cash
+    public ReportStatus Status { get; set; } = ReportStatus.Pending; // Pending, Reported, Paid, Approved, NotRequired
+    public PaymentMethod PaymentMethod { get; set; } // Credit, Transfer, Check, Online, Cash
     public DateTime? ReceiptDate { get; set; } // קבלת חומר מלקוח
     public DateTime? ReportedDate { get; set; }
     public DateTime? PaidDate { get; set; }

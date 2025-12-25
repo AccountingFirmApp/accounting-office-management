@@ -1,4 +1,5 @@
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\bin\Debug\net9.0\AccountingSystem.Infrastructure.deps.json
+C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\bin\Debug\net9.0\AccountingSystem.Infrastructure.runtimeconfig.json
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\bin\Debug\net9.0\AccountingSystem.Infrastructure.dll
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\bin\Debug\net9.0\AccountingSystem.Infrastructure.pdb
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\bin\Debug\net9.0\AccountingSystem.Application.dll
@@ -15,4 +16,5 @@ C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backen
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\obj\Debug\net9.0\AccountingSystem.Infrastructure.dll
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\obj\Debug\net9.0\refint\AccountingSystem.Infrastructure.dll
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\obj\Debug\net9.0\AccountingSystem.Infrastructure.pdb
+C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\obj\Debug\net9.0\AccountingSystem.Infrastructure.genruntimeconfig.cache
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.Infrastructure\obj\Debug\net9.0\ref\AccountingSystem.Infrastructure.dll

@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for ReportType - סוגי דיווחים (מע"מ, ביטוח לאומי, ניכוי מס)
 /// </summary>
-public class ReportTypeDto
+public class ReportType
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

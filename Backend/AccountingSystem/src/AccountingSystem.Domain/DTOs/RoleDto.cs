@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for Role - תפקידים כלליים במערכת (Admin, Manager, Employee)
 /// </summary>
-public class RoleDto
+public class Role
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for CompanyWorker - שיוך עובד לחברה (Many-to-Many פשוט)
 /// </summary>
-public class CompanyWorkerDto
+public class CompanyWorker
 {
     public int Id { get; set; }
     public int CompanyId { get; set; }

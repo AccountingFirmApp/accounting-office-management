@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for CompanyContact - אנשי קשר של חברה
 /// </summary>
-public class CompanyContactDto
+public class CompanyContact
 {
     public int Id { get; set; }
     public int CompanyId { get; set; }

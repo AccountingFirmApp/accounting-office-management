@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for TaskType - סוגי משימות (קליטת בנקים, בדיקת יתרות)
 /// </summary>
-public class TaskTypeDto
+public class TaskType
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
