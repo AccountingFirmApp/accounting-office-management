@@ -31,7 +31,7 @@ namespace AccountingSystem.Domain.Interfaces
         /// שמור את כל השינויים לDB
         /// מחזיר: מספר השורות שהשתנו
         /// </summary>
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
         // ========== ניהול טרנזקציות ==========
         /// <summary>
@@ -44,6 +44,7 @@ namespace AccountingSystem.Domain.Interfaces
         /// אשר את כל הפעולות - עכשיו הן באמת יישמרו!
         /// </summary>
         Task CommitTransactionAsync();
+        Task SaveChangesAsync();
     }
 }   
         /// <summary>

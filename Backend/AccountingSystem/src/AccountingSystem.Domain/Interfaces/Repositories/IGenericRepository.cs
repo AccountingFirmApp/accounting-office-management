@@ -63,6 +63,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// כמה Entities יש?
         /// דוגמה: כמה חברות יש במערכת?
         /// </summary>
-        Task<int> CountAsync();
+        Task<int> CountAsync(Func<object, bool> value);
     }
 }

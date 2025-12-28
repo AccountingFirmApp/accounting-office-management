@@ -79,7 +79,7 @@ namespace AccountingSystem.API.Controllers
         /// POST: api/companies
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<CompanyDto>> Create([FromBody] CreateCompanyCommand command)
+        public async Task<ActionResult<CompanyDto>> Create([FromBody] Application.Commands.Companies.CreateCompanyCommand command)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace AccountingSystem.API.Controllers
         /// PUT: api/companies/5
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult<CompanyDto>> Update(int id, [FromBody] UpdateCompanyCommand command)
+        public async Task<ActionResult<CompanyDto>> Update(int id, [FromBody] Application.Commands.Companies.UpdateCompanyCommand command)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace AccountingSystem.API.Controllers
         {
             try
             {
-                var command = new DeleteCompanyCommand(id);
+                var command = new Application.Commands.Companies.DeleteCompanyCommand(id);
                 await _mediator.Send(command);
                 return NoContent();
             }

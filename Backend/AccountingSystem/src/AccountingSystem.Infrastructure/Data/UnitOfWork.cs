@@ -105,5 +105,15 @@ namespace AccountingSystem.Infrastructure.Data
             _transaction?.Dispose();
             _context.Dispose();
         }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUnitOfWork.SaveChangesAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
