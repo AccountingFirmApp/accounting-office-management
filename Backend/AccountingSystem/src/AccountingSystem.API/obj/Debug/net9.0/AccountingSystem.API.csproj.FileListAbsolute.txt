@@ -51,3 +51,5 @@ C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backen
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.API\obj\Debug\net9.0\AccountingSystem.API.pdb
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.API\obj\Debug\net9.0\AccountingSystem.API.genruntimeconfig.cache
 C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.API\obj\Debug\net9.0\ref\AccountingSystem.API.dll
+C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.API\bin\Debug\net9.0\AutoMapper.dll
+C:\Users\This User\Desktop\פרילנס\הנהלת חשבונות\Irgunit\Backend\AccountingSystem\src\AccountingSystem.API\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

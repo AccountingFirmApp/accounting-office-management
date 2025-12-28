@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountingSystem.Domain.Entities;
-
 public partial class Accountingfirm
 {
 
