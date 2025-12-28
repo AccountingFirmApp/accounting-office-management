@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.application\\accountingsystem.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|solutionrelative:src\\accountingsystem.application\\accountingsystem.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.api\\accountingsystem.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|solutionrelative:src\\accountingsystem.api\\accountingsystem.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|solutionrelative:src\\accountingsystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.application\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|solutionrelative:src\\accountingsystem.application\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.application\\accountingsystem.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{F1309437-0249-4EF8-AB5E-83D7425E14C4}|src\\AccountingSystem.Application\\AccountingSystem.Application.csproj|solutionrelative:src\\accountingsystem.application\\accountingsystem.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\entities\\reportinstance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,10 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.domain\\entities\\tasktype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31B03B87-B94D-4239-AB28-30BA3787726C}|src\\AccountingSystem.Domain\\AccountingSystem.Domain.csproj|solutionrelative:src\\accountingsystem.domain\\entities\\tasktype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4C85FB0D-8C94-45BE-A12E-6E748EB8EB9E}|src\\AccountingSystem.API\\AccountingSystem.API.csproj|solutionrelative:src\\accountingsystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B6925FC4-78D0-4963-968F-3FBEC8216577}|src\\AccountingSystem.Infrastructure\\AccountingSystem.Infrastructure.csproj|c:\\users\\this user\\desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\irgunit\\backend\\accountingsystem\\src\\accountingsystem.infrastructure\\data\\accountingdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -108,7 +108,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 40,
+          "DockedWidth": 27,
           "SelectedChildIndex": -1,
           "Children": [
             {
@@ -126,8 +126,8 @@
           ]
         },
         {
-          "DockedWidth": 168,
-          "SelectedChildIndex": 24,
+          "DockedWidth": 181,
+          "SelectedChildIndex": 22,
           "Children": [
             {
               "$type": "Bookmark",
@@ -149,7 +149,7 @@
               "RelativeDocumentMoniker": "src\\AccountingSystem.Application\\Mappings\\MappingProfile.cs",
               "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Application\\Mappings\\MappingProfile.cs",
               "RelativeToolTip": "src\\AccountingSystem.Application\\Mappings\\MappingProfile.cs",
-              "ViewState": "AgIAAO8AAAAAAAAAAAAwwAIBAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAABQAAAAAAAAAAAAkwAsAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-28T09:59:18.046Z",
               "EditorCaption": ""
@@ -180,7 +180,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Tasktype.cs",
               "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\Entities\\Tasktype.cs",
               "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\Entities\\Tasktype.cs",
@@ -193,7 +193,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Task.cs",
               "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\Entities\\Task.cs",
               "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\Entities\\Task.cs",
@@ -218,7 +218,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Reportinstance.cs",
               "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Domain\\Entities\\Reportinstance.cs",
               "RelativeDocumentMoniker": "src\\AccountingSystem.Domain\\Entities\\Reportinstance.cs",
@@ -379,7 +379,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "AccountingSystem.API.csproj",
               "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\AccountingSystem.API.csproj",
               "RelativeDocumentMoniker": "src\\AccountingSystem.API\\AccountingSystem.API.csproj",
@@ -405,13 +405,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "AccountingSystem.Application.csproj",
               "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
               "RelativeDocumentMoniker": "src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
               "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
               "RelativeToolTip": "src\\AccountingSystem.Application\\AccountingSystem.Application.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAiwBIAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2025-12-25T10:05:13.521Z",
               "EditorCaption": ""
@@ -430,13 +430,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\Program.cs",
               "RelativeDocumentMoniker": "src\\AccountingSystem.API\\Program.cs",
               "ToolTip": "C:\\Users\\This User\\Desktop\\\u05E4\u05E8\u05D9\u05DC\u05E0\u05E1\\\u05D4\u05E0\u05D4\u05DC\u05EA \u05D7\u05E9\u05D1\u05D5\u05E0\u05D5\u05EA\\Irgunit\\Backend\\AccountingSystem\\src\\AccountingSystem.API\\Program.cs",
               "RelativeToolTip": "src\\AccountingSystem.API\\Program.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAAABUAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAowAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-24T15:16:48.884Z",
               "EditorCaption": ""
