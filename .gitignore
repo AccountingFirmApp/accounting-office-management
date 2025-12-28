@@ -11,8 +11,11 @@ Fronted/Angular-app/nul
 *.suo
 *.userosscache
 *.sln.docstates
+# Visual Studio temp files
+.vs/
 
 # Build artifacts
 *.dll
 *.exe
 *.pdb
+.vs
