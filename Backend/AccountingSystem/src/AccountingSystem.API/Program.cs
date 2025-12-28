@@ -1,4 +1,5 @@
 using AccountingSystem.Application.Mappings;
+using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Infrastructure.Data;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddDbContext<AccountingDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 //DI
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 //  MediatR (CQRS)
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(MappingProfile).Assembly));

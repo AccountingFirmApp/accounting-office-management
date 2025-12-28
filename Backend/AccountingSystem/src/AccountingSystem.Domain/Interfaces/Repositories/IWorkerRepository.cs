@@ -15,24 +15,24 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// <summary>
         /// תביא לי עובד + התפקיד שלו
         /// </summary>
-        Task<Worker?> GetWorkerWithRoleAsync(Guid workerId);
+        Task<Worker?> GetWorkerWithRoleAsync(int workerId);
 
         /// <summary>
         /// תביא לי עובד + כל החברות שהוא עובד בהן
         /// </summary>
-        Task<Worker?> GetWorkerWithCompaniesAsync(Guid workerId);
+        Task<Worker?> GetWorkerWithCompaniesAsync(int workerId);
 
         // ========== חיפושים ==========
 
         /// <summary>
         /// תביא לי את כל העובדים של משרד מסוים
         /// </summary>
-        Task<IEnumerable<Worker>> GetWorkersByFirmIdAsync(Guid firmId);
+        Task<IEnumerable<Worker>> GetWorkersByFirmIdAsync(int firmId);
 
         /// <summary>
         /// תביא לי את כל העובדים שעובדים בחברה מסוימת
         /// </summary>
-        Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(Guid companyId);
+        Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId);
 
         /// <summary>
         /// תביא לי רק עובדים פעילים
@@ -43,7 +43,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי את כל העובדים עם תפקיד מסוים
         /// דוגמה: כל המנהלים
         /// </summary>
-        Task<IEnumerable<Worker>> GetWorkersByRoleIdAsync(Guid roleId);
+        Task<IEnumerable<Worker>> GetWorkersByRoleIdAsync(int roleId);
 
         // ========== בדיקות ==========
 
@@ -51,6 +51,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// בדיקה: האם האימייל הזה כבר תפוס?
         /// חשוב! כל אימייל חייב להיות ייחודי
         /// </summary>
-        Task<bool> EmailExistsAsync(string email, Guid? excludeWorkerId = null);
+        Task<bool> EmailExistsAsync(string email, int? excludeWorkerId = null);
     }
 }

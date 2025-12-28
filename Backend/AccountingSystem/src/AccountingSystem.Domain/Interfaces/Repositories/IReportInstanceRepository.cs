@@ -15,12 +15,12 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// <summary>
         /// תביא לי את כל הדוחות של חברה
         /// </summary>
-        Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(Guid companyId);
+        Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId);
 
         /// <summary>
         /// תביא לי את כל הדוחות של הגדרה מסוימת
         /// </summary>
-        Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(Guid configId);
+        Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId);
 
         // ========== חיפושים לפי סטטוס ==========
 

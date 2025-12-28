@@ -8,10 +8,10 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
     public interface ITaskRepository : IGenericRepository<AccountingSystem.Domain.Entities.Task>
     {
         // חיפושים לפי מאפיינים
-        Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByCompanyIdAsync(Guid companyId);
-        Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByWorkerIdAsync(Guid workerId);
+        Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByCompanyIdAsync(int companyId);
+        Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByWorkerIdAsync(int workerId);
         Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByStatusAsync(string status);
-        Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByTaskTypeIdAsync(Guid taskTypeId);
+        Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByTaskTypeIdAsync(int taskTypeId);
 
         // חיפושים לפי תקופה
         Task<IEnumerable<AccountingSystem.Domain.Entities.Task>> GetTasksByPeriodAsync(DateTime period);

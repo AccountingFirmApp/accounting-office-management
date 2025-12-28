@@ -7,8 +7,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface IAccountingFirmRepository : IGenericRepository<Accountingfirm>
     {
-        Task<Accountingfirm?> GetFirmWithCompaniesAsync(Guid firmId);
-        Task<Accountingfirm?> GetFirmWithWorkersAsync(Guid firmId);
-        Task<Accountingfirm?> GetFirmWithAllDetailsAsync(Guid firmId);
+        Task<Accountingfirm?> GetFirmWithCompaniesAsync(int firmId);
+        Task<Accountingfirm?> GetFirmWithWorkersAsync(int firmId);
+        Task<Accountingfirm?> GetFirmWithAllDetailsAsync(int firmId);
     }
 }

@@ -7,8 +7,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface ICompanyWorkerRepository : IGenericRepository<Companyworker>
     {
-        Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(Guid companyId);
-        Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(Guid workerId);
-        Task<bool> AssignmentExistsAsync(Guid companyId, Guid workerId);
+        Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId);
+        Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId);
+        Task<bool> AssignmentExistsAsync(int companyId, int workerId);
     }
 }

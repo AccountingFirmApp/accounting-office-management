@@ -17,7 +17,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי Entity לפי ID
         /// דוגמה: תביא לי את החברה עם ID = 12345
         /// </summary>
-        Task<T?> GetByIdAsync(Guid id);
+        Task<T?> GetByIdAsync(int id);
 
         /// <summary>
         /// תביא לי את כל הEntities
@@ -49,7 +49,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תמחק Entity
         /// דוגמה: תמחק חברה מהמערכת
         /// </summary>
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(int id);
 
         // ========== בדיקות ==========
 
@@ -57,7 +57,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// האם Entity קיים?
         /// דוגמה: האם יש חברה עם ID = 12345?
         /// </summary>
-        Task<bool> ExistsAsync(Guid id);
+        Task<bool> ExistsAsync(int id);
 
         /// <summary>
         /// כמה Entities יש?
