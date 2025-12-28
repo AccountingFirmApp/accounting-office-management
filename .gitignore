@@ -7,6 +7,7 @@ Fronted/Angular-app/nul
 [Rr]elease/
 
 # Visual Studio files
+
 *.user
 *.suo
 *.userosscache
@@ -19,3 +20,42 @@ Fronted/Angular-app/nul
 *.exe
 *.pdb
 .vs
+=======
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates.json
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
