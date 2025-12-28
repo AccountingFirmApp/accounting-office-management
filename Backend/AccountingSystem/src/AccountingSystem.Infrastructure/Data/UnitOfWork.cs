@@ -3,6 +3,8 @@
 using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using AccountingSystem.Infrastructure.Repositories;
+
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Threading.Tasks;
@@ -36,7 +38,7 @@ namespace AccountingSystem.Infrastructure.Data
             _context = context;
 
             // צרי instance של כל repository
-            AccountingFirms = new  AccountingFirmRepository(_context);
+            AccountingFirms = new AccountingFirmRepository(_context);
             Companies = new CompanyRepository(_context);
             Workers = new WorkerRepository(_context);
             Roles = new RoleRepository(_context);
