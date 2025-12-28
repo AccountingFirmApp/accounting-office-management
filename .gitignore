@@ -59,3 +59,7 @@ bld/
 
 # VS Code
 .vscode/
+# Visual Studio temporary files
+.vs/
+bin/
+obj/

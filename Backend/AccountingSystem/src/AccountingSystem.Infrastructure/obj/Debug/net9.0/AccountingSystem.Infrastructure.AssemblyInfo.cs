@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AccountingSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< Updated upstream
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68718390f6d460ac98f0ff7a3c773fdda2642cd6")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7395e073d0ea83df55d5ece50a534b94fb0eb37")]
+>>>>>>> Stashed changes
 [assembly: System.Reflection.AssemblyProductAttribute("AccountingSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AccountingSystem.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
