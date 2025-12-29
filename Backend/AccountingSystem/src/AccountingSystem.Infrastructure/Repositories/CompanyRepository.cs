@@ -1,6 +1,7 @@
 ﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,9 +49,9 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Company>> GetAllAsync()
+        public async Task<IEnumerable<Company>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await context.Companies.ToListAsync();
         }
 
         public Task<Company?> GetByIdAsync(int id)
