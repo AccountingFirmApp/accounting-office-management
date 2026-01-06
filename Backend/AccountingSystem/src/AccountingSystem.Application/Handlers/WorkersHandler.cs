@@ -176,3 +176,66 @@ public class DeleteWorkerCommandHandler : IRequestHandler<DeleteWorkerCommand, U
         return Unit.Value;
     }
 }
+
+
+
+//using AccountingSystem.Application.DTOs;
+//using AccountingSystem.Application.Queries.Workers;
+//using AccountingSystem.Domain.Interfaces;
+//using MediatR;
+
+//namespace AccountingSystem.Application.Handlers.Workers;
+
+/// <summary>
+/// Handler לקבלת כל החברות של עובדת
+/// </summary>
+public class GetWorkerCompaniesHandler : IRequestHandler<GetWorkerCompaniesQuery, List<CompanyDto>>
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public GetWorkerCompaniesHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<List<CompanyDto>> Handle(
+        GetWorkerCompaniesQuery request,
+        CancellationToken cancellationToken)
+    {
+        // בדיקה שהעובדת קיימת
+        var workerExists = await _unitOfWork.Workers.ExistsAsync(request.WorkerId);
+        if (!workerExists)
+        {
+            throw new Exception($"עובדת עם ID {request.WorkerId} לא נמצאה");
+        }
+
+        // קבלת כל השיוכים של העובדת לחברות
+        var companyWorkers = await _unitOfWork.CompanyWorkers.GetByWorkerIdAsync(request.WorkerId);
+
+        // המרה ל-DTOs
+        var result = new List<CompanyDto>();
+
+        foreach (var cw in companyWorkers)
+        {
+            result.Add(new CompanyDto
+            {
+                Id = cw.Id,
+                Name = cw.Company.Name,
+                TaxId = cw.Company.Taxid ?? string.Empty,
+                Address = cw.Company.Address ?? string.Empty,
+                Phone = cw.Company.Phone ?? string.Empty,
+                Notes = cw.Company.Notes ?? string.Empty,
+                FirmId = cw.Company.Firmid,
+                //FirmName=cw.Company?
+                 Email = cw.Worker.Email,
+                IsActive = cw.Isactive ?? true,
+            });
+        }
+
+        // מיון: חברות פעילות קודם, אחר כך לפי שם
+        return result
+            .OrderByDescending(x => x.IsActive)
+            .ThenBy(x => x.Name)
+            .ToList();
+    }
+}

@@ -75,3 +75,22 @@ public class DeleteWorkerCommand : IRequest<Unit>
         Id = id;
     }
 }
+
+
+//using AccountingSystem.Application.DTOs;
+//using MediatR;
+
+//namespace AccountingSystem.Application.Queries.Workers;
+
+/// <summary>
+/// שאילתה לקבלת כל החברות של עובדת
+/// </summary>
+public class GetWorkerCompaniesQuery : IRequest<List<CompanyDto>>
+{
+    public int WorkerId { get; set; }
+
+    public GetWorkerCompaniesQuery(int workerId)
+    {
+        WorkerId = workerId;
+    }
+}
