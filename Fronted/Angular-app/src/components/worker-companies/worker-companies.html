@@ -1,0 +1,35 @@
+<div style="padding: 20px; direction: rtl;">
+  <h1>בדיקת חיבור לשרת</h1>
+
+  <!-- Loading -->
+  <div *ngIf="loading">
+    <p>טוען נתונים...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" style="color: red;">
+    <h3>שגיאה:</h3>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Success - הצגת JSON גולמי -->
+  <div *ngIf="data && !loading">
+    <h3 style="color: green;">✅ זה עובד! התקבל מהשרת:</h3>
+    
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
+      <pre>{{ data | json }}</pre>
+    </div>
+
+    <hr>
+
+    <h4>פירוט:</h4>
+    <p><strong>שם עובדת:</strong> {{ data.worker.fullName }}</p>
+    <p><strong>מספר חברות:</strong> {{ data.companies.length }}</p>
+    
+    <ul>
+      <li *ngFor="let company of data.companies">
+        {{ company.companyName }} ({{ company.isActive ? 'פעילה' : 'לא פעילה' }})
+      </li>
+    </ul>
+  </div>
+</div>
