@@ -79,7 +79,7 @@ namespace AccountingSystem.API.Controllers
         /// POST: api/workers
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<WorkerDto>> Create([FromBody] CreateWorkerCommand command)
+        public async Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace AccountingSystem.API.Controllers
         /// PUT: api/workers/5
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult<WorkerDto>> Update(int id, [FromBody] UpdateWorkerCommand command)
+        public async Task<ActionResult<WorkerDto>> Update(int id, [FromBody] Application.Commands.Workers.UpdateWorkerCommand command)
         {
             try
             {
@@ -124,13 +124,34 @@ namespace AccountingSystem.API.Controllers
         {
             try
             {
-                var command = new DeleteWorkerCommand(id);
+                var command = new Application.Commands.Workers.DeleteWorkerCommand(id);
                 await _mediator.Send(command);
                 return NoContent();
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+
+        /// <summary>
+        /// קבלת כל החברות של עובדת
+        /// GET: api/workers/5/companies
+        /// </summary>
+        [HttpGet("{workerId}/companies")]
+        public async Task<ActionResult<List<CompanyDto>>> GetWorkerCompanies(int workerId)
+        {
+            try
+            {
+                var query = new GetWorkerCompaniesQuery(workerId);
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
     }

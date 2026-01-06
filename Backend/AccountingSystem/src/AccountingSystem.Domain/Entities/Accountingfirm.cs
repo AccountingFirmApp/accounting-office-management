@@ -21,7 +21,7 @@ public partial class Accountingfirm
 
     public DateTime? Updatedat { get; set; }
 
-    public virtual ICollection<AccountingSystem.Domain.Entities.Company> Companies { get; set; } = new List<Company>();
+    public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 
-    public virtual ICollection<AccountingSystem.Domain.Entities.Worker> Workers { get; set; } = new List<Worker>();
+    public virtual ICollection<Worker> Workers { get; set; } = new List<Worker>();
 }
