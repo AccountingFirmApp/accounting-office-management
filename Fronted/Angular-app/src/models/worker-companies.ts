@@ -1,14 +1,14 @@
-export interface WorkerCompanies {
-  worker: {
-    id: number;
-    fullName: string;
-  };
-  companies: Array<{
-    assignmentId: number;
-    companyId: number;
-    companyName: string;
-    companyTaxId: string;
-    isActive: boolean;
-    assignedAt: Date;
-  }>;
+export interface CompanyDto {
+  id: number;
+  name: string;
+  taxId: string;
+  address: string;
+  phone: string;
+  notes: string;
+  firmId: number;
+  email: string;
+  isActive: boolean;
 }
+
+// זה מה שבאמת חוזר מהשרת
+export type WorkerCompanies = CompanyDto[];
