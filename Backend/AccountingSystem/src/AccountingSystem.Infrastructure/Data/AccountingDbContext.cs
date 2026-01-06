@@ -1,17 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using AccountingSystem.Domain.Entities;
+﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using System;
+using System.Collections.Generic;
 
 namespace AccountingSystem.Infrastructure.Data;
 
 public partial class AccountingDbContext : DbContext
 {
+    static AccountingDbContext()
+    {
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.TaskStatus>("task_status");
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.ReportStatus>("report_status");
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.PaymentMethod>("payment_method");
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.TaskCategory>("task_category");
+    }
+
     public AccountingDbContext(DbContextOptions<AccountingDbContext> options)
         : base(options)
     {
     }
+    //public AccountingDbContext(DbContextOptions<AccountingDbContext> options)
+    //    : base(options)
+    //{
+    //}
 
     public virtual DbSet<Accountingfirm> Accountingfirms { get; set; }
     public virtual DbSet<Auditlog> Auditlogs { get; set; }
@@ -308,12 +321,16 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Amount)
                 .HasPrecision(12, 2)
                 .HasColumnName("amount");
+            
             entity.Property(e => e.Status)
-                .HasColumnName("status")
-                .HasConversion<string>();
+      .HasColumnName("status")
+    .HasColumnType("report_status");
+
+
             entity.Property(e => e.PaymentMethod)
-                .HasColumnName("paymentmethod")
-                .HasConversion<string>();
+                .HasColumnName("paymentmethod");
+
+                //.HasConversion<string>();
             entity.Property(e => e.Receiptdate).HasColumnName("receiptdate");
             entity.Property(e => e.Reporteddate).HasColumnName("reporteddate");
             entity.Property(e => e.Paiddate).HasColumnName("paiddate");
@@ -378,6 +395,7 @@ public partial class AccountingDbContext : DbContext
         });
 
         // Task Configuration
+        
         modelBuilder.Entity<AccountingSystem.Domain.Entities.Task>(entity =>
         {
             entity.ToTable("task");
@@ -387,8 +405,8 @@ public partial class AccountingDbContext : DbContext
             entity.HasIndex(e => e.Assignedworkerid).HasDatabaseName("idx_task_assigned");
             entity.HasIndex(e => new { e.Companyid, e.Period }).HasDatabaseName("idx_task_company_period");
             entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period })
-                .IsUnique()
-                .HasDatabaseName("uq_task_period");
+                  .IsUnique()
+                  .HasDatabaseName("uq_task_period");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Companyid).HasColumnName("companyid");
@@ -399,34 +417,40 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Status)
-                .HasColumnName("status")
-                .HasConversion<string>();
-            entity.Property(e => e.Createdat)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("createdat")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(e => e.Updatedat)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("updatedat")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+           .HasColumnName("status")
+           .HasConversion<string>()
+           .HasColumnType("task_status");  // או report_status לפי השדה
+         
 
+        entity.Property(e => e.Createdat)
+                  .HasColumnType("timestamp without time zone")
+                  .HasColumnName("createdat")
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.Property(e => e.Updatedat)
+                  .HasColumnType("timestamp without time zone")
+                  .HasColumnName("updatedat")
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // יחסים
             entity.HasOne(d => d.Assignedworker)
-                .WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.Assignedworkerid)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("fk_task_worker");
+                  .WithMany(p => p.Tasks)
+                  .HasForeignKey(d => d.Assignedworkerid)
+                  .OnDelete(DeleteBehavior.SetNull)
+                  .HasConstraintName("fk_task_worker");
 
             entity.HasOne(d => d.Company)
-                .WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.Companyid)
-                .HasConstraintName("fk_task_company");
+                  .WithMany(p => p.Tasks)
+                  .HasForeignKey(d => d.Companyid)
+                  .HasConstraintName("fk_task_company");
 
             entity.HasOne(d => d.Tasktype)
-                .WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.Tasktypeid)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_task_tasktype");
+                  .WithMany(p => p.Tasks)
+                  .HasForeignKey(d => d.Tasktypeid)
+                  .OnDelete(DeleteBehavior.Restrict)
+                  .HasConstraintName("fk_task_tasktype");
         });
+
 
         // Tasktype Configuration
         modelBuilder.Entity<Tasktype>(entity =>
@@ -441,7 +465,8 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Category)
                 .HasColumnName("category")
-                .HasConversion<string>();
+                 .HasConversion<string>()
+           .HasColumnType("task_category");
             entity.Property(e => e.Defaultorder)
                 .HasColumnName("defaultorder")
                 .HasDefaultValue(99);

@@ -9,25 +9,25 @@ public enum TaskCategory
     /// <summary>
     /// משימות קשורות לבנקים (קליטת דפי בנק, התאמות בנק)
     /// </summary>
-    Banks = 0,
+    Banks,
     
     /// <summary>
     /// משימות קשורות להכנסות (קליטת חשבוניות, הכנסות)
     /// </summary>
-    Income = 1,
+    Income,
     
     /// <summary>
     /// משימות קשורות להוצאות (קליטת הוצאות, חשבוניות ספקים)
     /// </summary>
-    Expenses = 2,
+    Expenses,
     
     /// <summary>
     /// משימות התאמה (התאמות בנק, התאמת קופה)
     /// </summary>
-    Reconciliations = 3,
+    Reconciliations,
     
     /// <summary>
     /// משימות אחרות שלא נכנסות לקטגוריות הקודמות
     /// </summary>
-    Other = 4
+    Other
 }

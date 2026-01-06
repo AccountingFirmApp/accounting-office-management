@@ -6,97 +6,145 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
     public class CompanyRepository : ICompanyRepository
     {
-        private AccountingDbContext context;
+        private readonly AccountingDbContext _context;
+        private readonly DbSet<Company> _dbSet;
 
         public CompanyRepository(AccountingDbContext context)
         {
-            this.context = context;
-        }
-        public Task<Company> AddAsync(Company entity)
-        {
-            throw new NotImplementedException();
+            _context = context;
+            _dbSet = context.Companies;
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
-        {
-            throw new NotImplementedException();
-        }
+        // ==================== פעולות בסיסיות ====================
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public async Task<Company?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ExistsAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Company>> FindAsync(Expression<Func<Company, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Company>> GetActiveCompaniesAsync()
-        {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
         public async Task<IEnumerable<Company>> GetAllAsync()
         {
-            return await context.Companies.ToListAsync();
+            return await _dbSet
+                .Include(c => c.Firm)
+                .ToListAsync();
         }
 
-        public Task<Company?> GetByIdAsync(int id)
+        public async Task<IEnumerable<Company>> FindAsync(Expression<Func<Company, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId)
+        public async Task<Company> AddAsync(Company entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
+            return entity;
         }
 
-        public Task<Company?> GetCompanyWithAllDetailsAsync(int companyId)
+        public async System.Threading.Tasks.Task UpdateAsync(Company entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+            await System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public Task<Company?> GetCompanyWithContactsAsync(int companyId)
+        public async System.Threading.Tasks.Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+            }
         }
 
-        public Task<Company?> GetCompanyWithReportConfigsAsync(int companyId)
+        public async Task<bool> ExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AnyAsync(c => c.Id == id);
         }
 
-        public Task<Company?> GetCompanyWithWorkersAsync(int companyId)
+        public async Task<int> CountAsync(Func<object, bool> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.CountAsync();
         }
 
-        public Task<IEnumerable<Company>> GetInactiveCompaniesAsync()
+        // ==================== פעולות ייחודיות לCompany ====================
+
+        public async Task<Company?> GetCompanyWithContactsAsync(int companyId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(c => c.Companycontacts)
+                .FirstOrDefaultAsync(c => c.Id == companyId);
         }
 
-        public Task<bool> TaxIdExistsAsync(string taxId, int? excludeCompanyId = null)
+        public async Task<Company?> GetCompanyWithWorkersAsync(int companyId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(c => c.Companyworkers)
+                    .ThenInclude(cw => cw.Worker)
+                .FirstOrDefaultAsync(c => c.Id == companyId);
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Company entity)
+        public async Task<Company?> GetCompanyWithReportConfigsAsync(int companyId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(c => c.Companyreportconfigs)
+                    .ThenInclude(crc => crc.Reporttype)
+                .Include(c => c.Companyreportconfigs)
+                    .ThenInclude(crc => crc.Frequency)
+                .FirstOrDefaultAsync(c => c.Id == companyId);
+        }
+
+        public async Task<Company?> GetCompanyWithAllDetailsAsync(int companyId)
+        {
+            return await _dbSet
+                .Include(c => c.Firm)
+                .Include(c => c.Companycontacts)
+                .Include(c => c.Companyworkers)
+                    .ThenInclude(cw => cw.Worker)
+                .Include(c => c.Companyreportconfigs)
+                    .ThenInclude(crc => crc.Reporttype)
+                .Include(c => c.Companyreportconfigs)
+                    .ThenInclude(crc => crc.Frequency)
+                .Include(c => c.Tasks)  // ← זה חשוב למשימות!
+                .FirstOrDefaultAsync(c => c.Id == companyId);
+        }
+
+        public async Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId)
+        {
+            return await _dbSet
+                .Where(c => c.Firmid == firmId)
+                .Include(c => c.Firm)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Company>> GetActiveCompaniesAsync()
+        {
+            return await _dbSet
+                .Where(c => c.Isactive == true)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Company>> GetInactiveCompaniesAsync()
+        {
+            return await _dbSet
+                .Where(c => c.Isactive == false)
+                .ToListAsync();
+        }
+
+        public async Task<bool> TaxIdExistsAsync(string taxId, int? excludeCompanyId = null)
+        {
+            var query = _dbSet.Where(c => c.Taxid == taxId);
+
+            if (excludeCompanyId.HasValue)
+            {
+                query = query.Where(c => c.Id != excludeCompanyId.Value);
+            }
+
+            return await query.AnyAsync();
         }
     }
 }
