@@ -1,103 +1,91 @@
 using AccountingSystem.Application.DTOs;
-using AccountingSystem.Domain.Interfaces;
-using AutoMapper;
 using MediatR;
 
-namespace AccountingSystem.Application.Queries.Companies
+namespace AccountingSystem.Application.Queries.Companies;
+
+// ========================================
+// GET ALL COMPANIES
+// ========================================
+public class GetAllCompaniesQuery : IRequest<List<CompanyDto>>
 {
-    // ========================================
-    // GET COMPANY BY ID
-    // ========================================
+}
 
-    public class GetCompanyByIdQuery : IRequest<CompanyDto>
+// ========================================
+// GET COMPANY BY ID
+// ========================================
+public class GetCompanyByIdQuery : IRequest<CompanyDto>
+{
+    public int Id { get; set; }
+
+    public GetCompanyByIdQuery(int id)
     {
-        public int Id { get; set; }
-
-        public GetCompanyByIdQuery(int id)
-        {
-            Id = id;
-        }
+        Id = id;
     }
+}
 
-    public class GetCompanyByIdQueryHandler : IRequestHandler<GetCompanyByIdQuery, CompanyDto>
+// ========================================
+// GET COMPANIES BY FIRM ID
+// ========================================
+public class GetCompaniesByFirmIdQuery : IRequest<List<CompanyDto>>
+{
+    public int FirmId { get; set; }
+
+    public GetCompaniesByFirmIdQuery(int firmId)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public GetCompanyByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<CompanyDto> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
-        {
-            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
-
-            if (company == null)
-            {
-                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
-            }
-
-            return _mapper.Map<CompanyDto>(company);
-        }
+        FirmId = firmId;
     }
+}
 
-    // ========================================
-    // GET ALL COMPANIES
-    // ========================================
+// ========================================
+// GET COMPANIES BY FIRM ID WITH PENDING REPORTS
+// ========================================
+public class GetCompaniesByFirmIdQueryWithReport : IRequest<List<CompanyWithPendingReportsDto>>
+{
+    public int FirmId { get; set; }
 
-    public class GetAllCompaniesQuery : IRequest<List<CompanyDto>>
+    public GetCompaniesByFirmIdQueryWithReport(int firmId)
     {
+        FirmId = firmId;
     }
+}
 
-    public class GetAllCompaniesQueryHandler : IRequestHandler<GetAllCompaniesQuery, List<CompanyDto>>
+// ========================================
+// CREATE COMPANY COMMAND
+// ========================================
+public class CreateCompanyCommand : IRequest<CompanyDto>
+{
+    public string Name { get; set; } = string.Empty;
+    public string TaxId { get; set; } = string.Empty;
+    public int FirmId { get; set; }
+    public string? ContactPerson { get; set; }
+    public string? Phone { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+}
+
+// ========================================
+// UPDATE COMPANY COMMAND
+// ========================================
+public class UpdateCompanyCommand : IRequest<CompanyDto>
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string TaxId { get; set; } = string.Empty;
+    public string? ContactPerson { get; set; }
+    public string? Phone { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+}
+
+// ========================================
+// DELETE COMPANY COMMAND
+// ========================================
+public class DeleteCompanyCommand : IRequest<Unit>
+{
+    public int Id { get; set; }
+
+    public DeleteCompanyCommand(int id)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public GetAllCompaniesQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<List<CompanyDto>> Handle(GetAllCompaniesQuery request, CancellationToken cancellationToken)
-        {
-            var companies = await _unitOfWork.Companies.GetAllAsync();
-            return _mapper.Map<List<CompanyDto>>(companies.ToList());
-        }
-    }
-
-    // ========================================
-    // GET COMPANIES BY FIRM ID
-    // ========================================
-
-    public class GetCompaniesByFirmIdQuery : IRequest<List<CompanyDto>>
-    {
-        public int FirmId { get; set; }
-
-        public GetCompaniesByFirmIdQuery(int firmId)
-        {
-            FirmId = firmId;
-        }
-    }
-
-    public class GetCompaniesByFirmIdQueryHandler : IRequestHandler<GetCompaniesByFirmIdQuery, List<CompanyDto>>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public GetCompaniesByFirmIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<List<CompanyDto>> Handle(GetCompaniesByFirmIdQuery request, CancellationToken cancellationToken)
-        {
-            var companies = await _unitOfWork.Companies.GetCompaniesByFirmIdAsync(request.FirmId);
-            return _mapper.Map<List<CompanyDto>>(companies.ToList());
-        }
+        Id = id;
     }
 }
