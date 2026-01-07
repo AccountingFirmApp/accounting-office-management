@@ -1,6 +1,7 @@
 ﻿using AccountingSystem.Application.Mappings;
 using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Infrastructure.Data;
+using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddOpenApi();
 
-// AUTO MAPPING
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-// Database Configuration
+//// AUTO MAPPING
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 builder.Services.AddDbContext<AccountingDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
