@@ -68,9 +68,9 @@ public class WorkerListDto
     public bool IsActive { get; set; }
 }
 
-public class WorkerLoginDto
+public class LoginRequestDto
 {
-    public string EmployeeId { get; set; } = null!;
+    public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
 }
 

@@ -497,7 +497,10 @@ public partial class AccountingDbContext : DbContext
                 .WithMany(p => p.Workers)
                 .HasForeignKey(d => d.Firmid)
                 .HasConstraintName("fk_worker_firm");
-
+            entity.Property(e => e.PasswordHash)
+       .HasMaxLength(255)
+       .HasColumnName("passwordhash")
+       .IsRequired(false);גםאמקא 
             entity.HasOne(d => d.Role)
                 .WithMany(p => p.Workers)
                 .HasForeignKey(d => d.Roleid)
