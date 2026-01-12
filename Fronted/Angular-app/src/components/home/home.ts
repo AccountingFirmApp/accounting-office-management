@@ -17,4 +17,7 @@ export class HomeComponent {
   navigateToWorkerCompanies(): void {
     this.router.navigate(['/workers/3/companies']);
   }
+   navigateToReports() {
+    this.router.navigate(['/reports']);
+  }
 }
