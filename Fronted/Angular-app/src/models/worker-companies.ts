@@ -10,5 +10,4 @@ export interface CompanyDto {
   isActive: boolean;
 }
 
-// זה מה שבאמת חוזר מהשרת
 export type WorkerCompanies = CompanyDto[];
