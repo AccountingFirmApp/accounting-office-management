@@ -1,0 +1,140 @@
+<div class="report-form-container">
+  <!-- Header -->
+  <div class="form-header">
+    <button class="back-btn" (click)="goBack()">← חזרה</button>
+    <h2>{{ isEditMode ? '✏️ עריכת דוח' : '➕ דוח חדש' }}</h2>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>טוען נתונים...</p>
+  </div>
+
+  <!-- Form -->
+  <form *ngIf="!loading" class="report-form" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="companyId">
+          <span class="required">*</span> חברה
+        </label>
+        <select id="companyId" [(ngModel)]="formData.companyId" name="companyId" required [disabled]="isEditMode"
+          (change)="onCompanyChange()">
+          <option value="">בחר חברה</option>
+          <option *ngFor="let company of companies" [value]="company.id">
+            {{ company.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="reportTypeId">
+          <span class="required">*</span> סוג דיווח
+        </label>
+        <select id="reportTypeId" [(ngModel)]="formData.reportTypeId" name="reportTypeId" required
+          [disabled]="isEditMode || !formData.companyId" (change)="onReportTypeChange()">
+          <option value="">בחר סוג דיווח</option>
+          <option *ngFor="let type of availableReportTypes" [value]="type.id">
+            {{ type.name }}
+          </option>
+        </select>
+        <small class="help-text" *ngIf="!formData.companyId">
+          יש לבחור חברה תחילה
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="period">
+          <span class="required">*</span> תקופת הדיווח
+        </label>
+        <input type="month" id="period" [(ngModel)]="periodString" (ngModelChange)="onPeriodChange($event)"
+          name="period" required />
+        <small class="help-text">חודש ושנה</small>
+      </div>
+    </div>
+
+    <!-- Row 2: Amount & Status -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="amount">סכום (₪)</label>
+        <input type="number" id="amount" [(ngModel)]="formData.amount" name="amount" step="0.01" min="0"
+          placeholder="0.00" />
+        <small class="help-text">הסכום לתשלום (אופציונלי)</small>
+      </div>
+
+      <div class="form-group" *ngIf="isEditMode">
+        <label for="status">סטטוס</label>
+        <select id="status" [(ngModel)]="formData.status" name="status">
+          <option value="Pending">ממתין</option>
+          <option value="Reported">דווח</option>
+          <option value="Paid">שולם</option>
+          <option value="Approved">אושר</option>
+          <option value="NotRequired">לא נדרש</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 3: Payment Method & Receipt Date -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="paymentMethod">אמצעי תשלום</label>
+        <select id="paymentMethod" [(ngModel)]="formData.paymentMethod" name="paymentMethod">
+          <option value="">לא נבחר</option>
+          <option value="Credit">כרטיס אשראי</option>
+          <option value="Transfer">העברה בנקאית</option>
+          <option value="Check">צ'ק</option>
+          <option value="Online">תשלום מקוון</option>
+          <option value="Cash">מזומן</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="receiptDate">תאריך קבלת חומרים</label>
+        <!-- <input 
+          type="date" 
+          id="receiptDate" 
+       (ngModelChange)="onReceiptDateChange($event)"
+          name="receiptDate"
+        /> -->
+        <input type="date" id="receiptDate" [(ngModel)]="receiptDateString"
+          (ngModelChange)="onReceiptDateChange($event)" name="receiptDate" />
+
+        <small class="help-text">מתי התקבלו החומרים מהלקוח</small>
+      </div>
+    </div>
+
+    <!-- Row 4: Dates (Edit Mode Only) -->
+    <div class="form-row" *ngIf="isEditMode">
+      <div class="form-group">
+        <label for="reportedDate">תאריך דיווח</label>
+        <input type="date" id="reportedDate" [(ngModel)]="reportedDateString"
+          (ngModelChange)="onReportedDateChange($event)" name="reportedDate" />
+      </div>
+
+      <div class="form-group">
+        <label for="paidDate">תאריך תשלום</label>
+        <input type="date" id="paidDate" [(ngModel)]="paidDateString" (ngModelChange)="onPaidDateChange($event)"
+          name="paidDate" />
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <div class="form-group full-width">
+      <label for="comments">הערות</label>
+      <textarea id="comments" [(ngModel)]="formData.comments" name="comments" rows="4"
+        placeholder="הוסף הערות או פרטים נוספים..."></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="goBack()">
+        ביטול
+      </button>
+      <button type="submit" class="btn-submit" [disabled]="submitting">
+        <span *ngIf="!submitting">{{ isEditMode ? 'שמור שינויים' : 'צור דוח' }}</span>
+        <span *ngIf="submitting">שומר...</span>
+      </button>
+    </div>
+
+  </form>
+</div>

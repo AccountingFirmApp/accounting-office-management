@@ -1,103 +1,96 @@
+// Application/Queries/Workers/WorkerQueries.cs
 using AccountingSystem.Application.DTOs;
-using AccountingSystem.Domain.Interfaces;
-using AutoMapper;
 using MediatR;
 
-namespace AccountingSystem.Application.Queries.Workers
+namespace AccountingSystem.Application.Queries.Workers;
+
+// ========================================
+// GET ALL WORKERS
+// ========================================
+public class GetAllWorkersQuery : IRequest<List<WorkerDto>>
 {
-    // ========================================
-    // GET WORKER BY ID
-    // ========================================
+}
 
-    public class GetWorkerByIdQuery : IRequest<WorkerDto>
+// ========================================
+// GET WORKER BY ID
+// ========================================
+public class GetWorkerByIdQuery : IRequest<WorkerDto>
+{
+    public int Id { get; set; }
+
+    public GetWorkerByIdQuery(int id)
     {
-        public int Id { get; set; }
-
-        public GetWorkerByIdQuery(int id)
-        {
-            Id = id;
-        }
+        Id = id;
     }
+}
 
-    public class GetWorkerByIdQueryHandler : IRequestHandler<GetWorkerByIdQuery, WorkerDto>
+// ========================================
+// GET WORKERS BY FIRM ID
+// ========================================
+public class GetWorkersByFirmIdQuery : IRequest<List<WorkerDto>>
+{
+    public int FirmId { get; set; }
+
+    public GetWorkersByFirmIdQuery(int firmId)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public GetWorkerByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<WorkerDto> Handle(GetWorkerByIdQuery request, CancellationToken cancellationToken)
-        {
-            var worker = await _unitOfWork.Workers.GetWorkerWithRoleAsync(request.Id);
-
-            if (worker == null)
-            {
-                throw new Exception($"עובד עם ID {request.Id} לא נמצא");
-            }
-
-            return _mapper.Map<WorkerDto>(worker);
-        }
+        FirmId = firmId;
     }
+}
 
-    // ========================================
-    // GET ALL WORKERS
-    // ========================================
+// ========================================
+// CREATE WORKER COMMAND
+// ========================================
+public class CreateWorkerCommand : IRequest<WorkerDto>
+{
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public int FirmId { get; set; }
+    public string? Email { get; set; }
+    public string? Phone { get; set; }
+    public string? Role { get; set; }
+}
 
-    public class GetAllWorkersQuery : IRequest<List<WorkerDto>>
+// ========================================
+// UPDATE WORKER COMMAND
+// ========================================
+public class UpdateWorkerCommand : IRequest<WorkerDto>
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string? Email { get; set; }
+    public string? Phone { get; set; }
+    public string? Role { get; set; }
+}
+
+// ========================================
+// DELETE WORKER COMMAND
+// ========================================
+public class DeleteWorkerCommand : IRequest<Unit>
+{
+    public int Id { get; set; }
+
+    public DeleteWorkerCommand(int id)
     {
+        Id = id;
     }
+}
 
-    public class GetAllWorkersQueryHandler : IRequestHandler<GetAllWorkersQuery, List<WorkerDto>>
+
+//using AccountingSystem.Application.DTOs;
+//using MediatR;
+
+//namespace AccountingSystem.Application.Queries.Workers;
+
+/// <summary>
+/// שאילתה לקבלת כל החברות של עובדת
+/// </summary>
+public class GetWorkerCompaniesQuery : IRequest<List<CompanyDto>>
+{
+    public int WorkerId { get; set; }
+
+    public GetWorkerCompaniesQuery(int workerId)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public GetAllWorkersQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<List<WorkerDto>> Handle(GetAllWorkersQuery request, CancellationToken cancellationToken)
-        {
-            var workers = await _unitOfWork.Workers.GetAllAsync();
-            return _mapper.Map<List<WorkerDto>>(workers.ToList());
-        }
-    }
-
-    // ========================================
-    // GET WORKERS BY FIRM ID
-    // ========================================
-
-    public class GetWorkersByFirmIdQuery : IRequest<List<WorkerDto>>
-    {
-        public int FirmId { get; set; }
-
-        public GetWorkersByFirmIdQuery(int firmId)
-        {
-            FirmId = firmId;
-        }
-    }
-
-    public class GetWorkersByFirmIdQueryHandler : IRequestHandler<GetWorkersByFirmIdQuery, List<WorkerDto>>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public GetWorkersByFirmIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<List<WorkerDto>> Handle(GetWorkersByFirmIdQuery request, CancellationToken cancellationToken)
-        {
-            var workers = await _unitOfWork.Workers.GetWorkersByFirmIdAsync(request.FirmId);
-            return _mapper.Map<List<WorkerDto>>(workers.ToList());
-        }
+        WorkerId = workerId;
     }
 }

@@ -1,0 +1,131 @@
+.report-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border-right: 4px solid #667eea;
+}
+
+.report-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.report-card.overdue {
+  border-right-color: #fc8181;
+  background: #fff5f5;
+}
+
+/* Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.company-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  color: #2d3748;
+}
+
+.report-type {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #edf2f7;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.pending { background: #fef5e7; color: #f6ad55; }
+.status-badge.reported { background: #e3f2fd; color: #4299e1; }
+.status-badge.paid { background: #e8f5e9; color: #48bb78; }
+.status-badge.approved { background: #f3e5f5; color: #9c27b0; }
+.status-badge.not-required { background: #f7fafc; color: #718096; }
+
+/* Content */
+.card-content {
+  margin: 1rem 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f7fafc;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.value {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.amount {
+  color: #48bb78;
+  font-size: 1.1rem;
+}
+
+.overdue-label {
+  color: #fc8181;
+  font-weight: 600;
+}
+
+.overdue-value {
+  color: #fc8181;
+  font-weight: 700;
+}
+
+/* Footer */
+.card-footer {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-action.view { background: #e3f2fd; color: #2196f3; }
+.btn-action.edit { background: #fff3e0; color: #ff9800; }
+.btn-action.delete { background: #ffebee; color: #f44336; }
+
+.btn-action.view:hover { background: #bbdefb; }
+.btn-action.edit:hover { background: #ffe0b2; }
+.btn-action.delete:hover { background: #ffcdd2; }

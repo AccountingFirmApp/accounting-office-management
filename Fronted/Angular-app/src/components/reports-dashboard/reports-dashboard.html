@@ -1,0 +1,56 @@
+
+<div class="reports-dashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <button class="back-button" (click)="goBack()">
+        ← חזרה
+      </button>
+      <h1>📊 ניהול דוחות</h1>
+      <button class="add-button" (click)="createNewReport()">
+        + דוח חדש
+      </button>
+    </div>
+  </header>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <h3>ממתינים</h3>
+        <p class="stat-number">{{ stats.pending }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card overdue">
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-content">
+        <h3>באיחור</h3>
+        <p class="stat-number">{{ stats.overdue }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card reported">
+      <div class="stat-icon">📝</div>
+      <div class="stat-content">
+        <h3>דווחו</h3>
+        <p class="stat-number">{{ stats.reported }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card paid">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <h3>שולמו</h3>
+        <p class="stat-number">{{ stats.paid }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+

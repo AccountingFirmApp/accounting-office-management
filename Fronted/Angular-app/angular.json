@@ -8,7 +8,9 @@
   "projects": {
     "angular-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -25,6 +27,7 @@
               }
             ],
             "styles": [
+              "src/material-theme.scss",
               "src/styles.css"
             ]
           },
