@@ -9,25 +9,25 @@ public enum ReportStatus
     /// <summary>
     /// ממתין - הדיווח עדיין לא בוצע
     /// </summary>
-    Pending = 0,
+    Pending ,
     
     /// <summary>
     /// דווח - הדיווח בוצע אך טרם שולם
     /// </summary>
-    Reported = 1,
+    Reported ,
     
     /// <summary>
     /// שולם - הדיווח בוצע ושולם
     /// </summary>
-    Paid = 2,
+    Paid ,
     
     /// <summary>
     /// אושר - הדיווח אושר על ידי הרשות
     /// </summary>
-    Approved = 3,
+    Approved ,
     
     /// <summary>
     /// לא נדרש - הדיווח לא נדרש לתקופה זו
     /// </summary>
-    NotRequired = 4
+    NotRequired 
 }

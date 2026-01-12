@@ -10,7 +10,7 @@ public class CompanyReportConfigDto
     public int ReportTypeId { get; set; }
     public int FrequencyId { get; set; }
     public short? DayOfMonth { get; set; } // יום אחרון לדיווח (1-31)
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     

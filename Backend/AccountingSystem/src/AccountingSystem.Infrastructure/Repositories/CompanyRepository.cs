@@ -19,9 +19,12 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             this.context = context;
         }
-        public Task<Company> AddAsync(Company entity)
+        public async Task<Company> AddAsync(Company entity)
         {
-            throw new NotImplementedException();
+            await context.Companies.AddAsync(entity);
+            return entity;
+            Console.WriteLine("aaaaaaaaaaa");
+            //throw new NotImplementedException();
         }
 
         public Task<int> CountAsync(Func<object, bool> value)

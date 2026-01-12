@@ -113,9 +113,9 @@ namespace AccountingSystem.Infrastructure.Data
             throw new NotImplementedException();
         }
 
-        Task IUnitOfWork.SaveChangesAsync()
+        async Task IUnitOfWork.SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
     }
 }
