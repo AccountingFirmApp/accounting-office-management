@@ -277,7 +277,18 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Createdat).HasColumnType("timestamp without time zone").HasColumnName("createdat").HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Updatedat).HasColumnType("timestamp without time zone").HasColumnName("updatedat").HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.HasOne(d => d.Firm).WithMany(p => p.Workers).HasForeignKey(d => d.Firmid).HasConstraintName("fk_worker_firm");
-            entity.HasOne(d => d.Role).WithMany(p => p.Workers).HasForeignKey(d => d.Roleid).OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_worker_role");
+            entity.Property(e => e.PasswordHash)
+       .HasMaxLength(255)
+       .HasColumnName("passwordhash")
+       .IsRequired(false);
+            entity.Property(e => e.GoogleId)
+    .HasMaxLength(100)
+    .HasColumnName("googleid");
+
+            entity.Property(e => e.AuthProvider)
+                .HasMaxLength(20)
+                .HasColumnName("authprovider")
+                .HasDefaultValue("Local");            entity.HasOne(d => d.Role).WithMany(p => p.Workers).HasForeignKey(d => d.Roleid).OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_worker_role");
         });
 
         // Workerroletype Configuration
