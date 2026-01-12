@@ -18,6 +18,8 @@ public partial class Worker
     public string? PasswordHash { get; set; }
     public string? Phone { get; set; }
     public string? Employeeid { get; set; }
+    public string? GoogleId { get; set; }        
+    public string? AuthProvider { get; set; }
     public bool? Isactive { get; set; }
     public DateOnly? Hiredate { get; set; }
     public DateTime? Createdat { get; set; }

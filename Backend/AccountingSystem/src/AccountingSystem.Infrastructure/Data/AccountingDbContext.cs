@@ -500,7 +500,15 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.PasswordHash)
        .HasMaxLength(255)
        .HasColumnName("passwordhash")
-       .IsRequired(false);גםאמקא 
+       .IsRequired(false);
+            entity.Property(e => e.GoogleId)
+    .HasMaxLength(100)
+    .HasColumnName("googleid");
+
+            entity.Property(e => e.AuthProvider)
+                .HasMaxLength(20)
+                .HasColumnName("authprovider")
+                .HasDefaultValue("Local");
             entity.HasOne(d => d.Role)
                 .WithMany(p => p.Workers)
                 .HasForeignKey(d => d.Roleid)
