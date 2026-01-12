@@ -256,3 +256,21 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDt
         return await _authService.LoginAsync(request.Email, request.Password, cancellationToken);
     }
 }
+
+// ========================================
+// GOOGLE LOGIN HANDLER
+// ========================================
+public class GoogleLoginCommandHandler : IRequestHandler<GoogleLoginCommand, LoginResponseDto>
+{
+    private readonly AccountingSystem.Application.Intrefaces.IAuthenticationService _authService;
+
+    public GoogleLoginCommandHandler(AccountingSystem.Application.Intrefaces.IAuthenticationService authService)
+    {
+        _authService = authService;
+    }
+
+    public async Task<LoginResponseDto> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
+    {
+        return await _authService.GoogleLoginAsync(request.GoogleToken, cancellationToken);
+    }
+}

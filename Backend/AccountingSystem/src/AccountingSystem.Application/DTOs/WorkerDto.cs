@@ -73,7 +73,10 @@ public class LoginRequestDto
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
 }
-
+public class GoogleLoginRequestDto
+{
+    public string GoogleToken { get; set; } = null!;
+}
 public class LoginResponseDto
 {
     public string Token { get; set; } = null!;

@@ -45,7 +45,37 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { message = "שגיאה פנימית בשרת", detail = ex.Message });
         }
     }
+    /// <summary>
+    /// התחברות עם Google
+    /// </summary>
+    [HttpPost("signin-google")]
+    [AllowAnonymous]
+    public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
+    {
+        try
+        {
+            var command = new GoogleLoginCommand
+            {
+                GoogleToken = request.GoogleToken
+            };
 
+            var result = await _mediator.Send(command);
+
+            Console.WriteLine($"✅ Google login successful for: {result.Worker.Email}");
+
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"❌ Google login failed: {ex.Message}");
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"💥 Google login error: {ex.Message}");
+            return StatusCode(500, new { message = "שגיאה פנימית בשרת", detail = ex.Message });
+        }
+    }
     /// <summary>
     /// בדיקת תקינות Token
     /// </summary>

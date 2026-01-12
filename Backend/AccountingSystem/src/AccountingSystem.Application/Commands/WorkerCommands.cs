@@ -53,3 +53,10 @@ public class LoginCommand : IRequest<LoginResponseDto>
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
 }
+// ========================================
+// GOOGLE LOGIN COMMAND
+// ========================================
+public class GoogleLoginCommand : IRequest<LoginResponseDto>
+{
+    public string GoogleToken { get; set; } = null!;
+}
