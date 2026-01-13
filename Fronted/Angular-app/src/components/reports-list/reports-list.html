@@ -1,0 +1,147 @@
+<div class="reports-list">
+  <!-- Modal Component -->
+  <app-report-view-modal
+    [report]="selectedReport" 
+    [isOpen]="isModalOpen"
+    (closeModal)="closeModal()"
+    (editClicked)="onEditFromModal($event)"
+   ></app-report-view-modal> 
+
+  <!-- Filters & Search -->
+  <div class="filters-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="applyFilters()"
+        placeholder="🔍 חיפוש לפי שם חברה או סוג דיווח..."
+      />
+    </div>
+
+    <div class="filter-chips">
+      <button 
+        class="chip" 
+        [class.active]="selectedStatus === null"
+        (click)="filterByStatus(null)"
+      >
+        הכל
+      </button>
+      <button 
+        class="chip pending" 
+        [class.active]="selectedStatus === 'Pending'"
+        (click)="filterByStatus('Pending')"
+      >
+        ממתינים
+      </button>
+      <button 
+        class="chip overdue" 
+        [class.active]="selectedStatus === 'overdue'"
+        (click)="filterByStatus('overdue')"
+      >
+        באיחור
+      </button>
+      <button 
+        class="chip reported" 
+        [class.active]="selectedStatus === 'Reported'"
+        (click)="filterByStatus('Reported')"
+      >
+        דווחו
+      </button>
+      <button 
+        class="chip paid" 
+        [class.active]="selectedStatus === 'Paid'"
+        (click)="filterByStatus('Paid')"
+      >
+        שולמו
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>טוען דוחות...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredReports.length === 0" class="empty-state">
+    <div class="empty-icon">📋</div>
+    <h3>אין דוחות להצגה</h3>
+    <p>לא נמצאו דוחות התואמים את הסינון</p>
+  </div>
+
+  <!-- Reports Table -->
+  <div *ngIf="!loading && filteredReports.length > 0" class="table-container">
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th (click)="sortBy('companyName')" class="sortable">
+            חברה
+            <span class="sort-icon">{{ getSortIcon('companyName') }}</span>
+          </th>
+          <th (click)="sortBy('reportTypeName')" class="sortable">
+            סוג דיווח
+            <span class="sort-icon">{{ getSortIcon('reportTypeName') }}</span>
+          </th>
+          <th (click)="sortBy('period')" class="sortable">
+            תקופה
+            <span class="sort-icon">{{ getSortIcon('period') }}</span>
+          </th>
+          <th (click)="sortBy('amount')" class="sortable">
+            סכום
+            <span class="sort-icon">{{ getSortIcon('amount') }}</span>
+          </th>
+          <th>סטטוס</th>
+          <th>אמצעי תשלום</th>
+          <th>פעולות</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of filteredReports" [class.overdue]="isOverdue(report)">
+          <!-- ✅ תוקן! גישה ישירה ל-companyName -->
+          <td class="company-name">{{ report.companyName }}</td>
+          
+          <td>
+            <span class="report-type-badge">{{ report.reportTypeName }}</span>
+          </td>
+          
+          <td>
+            {{ formatDate(report.period) }}
+            <span *ngIf="isOverdue(report)" class="overdue-badge">
+              ⚠️ איחור
+            </span>
+          </td>
+          
+          <td class="amount">
+            <span *ngIf="report.amount">₪{{ report.amount | number:'1.2-2' }}</span>
+            <span *ngIf="!report.amount" class="no-data">-</span>
+          </td>
+          
+          <td>
+            <span class="status-badge" [class]="getStatusClass(report.status)">
+              {{ getStatusLabel(report.status) }}
+            </span>
+          </td>
+          
+          <td>
+            <span *ngIf="report.paymentMethod">{{ getPaymentMethodLabel(report.paymentMethod) }}</span>
+            <span *ngIf="!report.paymentMethod" class="no-data">-</span>
+          </td>
+          
+          <td class="actions">
+            <button class="action-btn view" (click)="viewReport(report.id)" title="צפייה">
+              👁️
+            </button>
+            <button class="action-btn edit" (click)="editReport(report.id)" title="עריכה">
+              ✏️
+            </button>
+            <button class="action-btn delete" (click)="deleteReport(report.id)" title="מחיקה">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

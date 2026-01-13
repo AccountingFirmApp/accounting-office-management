@@ -15,8 +15,8 @@ public class ReportInstanceDto
     public DateTime? ReportedDate { get; set; }
     public DateTime? PaidDate { get; set; }
     public string Comments { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }
 
 /// <summary>
