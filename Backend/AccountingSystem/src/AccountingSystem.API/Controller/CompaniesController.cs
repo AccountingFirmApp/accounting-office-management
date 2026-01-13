@@ -1,4 +1,5 @@
 ﻿using AccountingSystem.Application.Commands.Companies;
+using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.Companies;
 using MediatR;
@@ -150,6 +151,35 @@ namespace AccountingSystem.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpPatch("{companyId}/tasks/{taskId}/status")]
+        public async Task<ActionResult> UpdateTaskStatus(
+        int companyId,
+        int taskId,
+        [FromBody] UpdateTaskStatusRequest request)
+        {
+            try
+            {
+                var command = new UpdateTaskStatusCommand
+                {
+                    TaskId = taskId,
+                    Status = request.Status
+                };
+
+                await _mediator.Send(command);
+                return Ok(new { message = "הסטטוס עודכן בהצלחה" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // DTO לבקשה
+        public class UpdateTaskStatusRequest
+        {
+            public string Status { get; set; }
         }
     }
 }
