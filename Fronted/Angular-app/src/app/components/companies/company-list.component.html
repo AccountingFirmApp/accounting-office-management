@@ -1,0 +1,156 @@
+<!-- <div class="container">
+    <div class="header">
+      <h2>רשימת חברות</h2>
+      <button class="btn-primary" (click)="createCompany()">+ חברה חדשה</button>
+    </div>
+  
+    <div *ngIf="loading" class="loading">טוען...</div>
+    
+    <div *ngIf="error" class="error">{{ error }}</div>
+  
+    <table *ngIf="!loading && companies.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>שם</th>
+          <th>ח.פ/ע.מ</th>
+          <th>טלפון</th>
+          <th>אימייל</th>
+          <th>כתובת</th>
+          <th>פעולות</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let company of companies">
+          <td>{{ company.name }}</td>
+          <td>{{ company.taxId }}</td>
+          <td>{{ company.phone || '-' }}</td>
+          <td>{{ company.email || '-' }}</td>
+          <td>{{ company.address || '-' }}</td>
+          <td class="actions">
+           ← הנה המיקום! 
+            <button (click)="editCompany(company.id)" class="btn-edit">ערוך</button>
+            <button (click)="viewCompanyTasks(company.id)" class="btn-view">משימות</button>
+            <button (click)="deleteCompany(company.id)" class="btn-delete">מחק</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div *ngIf="!loading && companies.length === 0" class="no-data">
+      אין חברות להצגה
+    </div>
+  </div> -->
+
+  <!-- <div class="container">
+    <div class="header">
+      <h2>רשימת חברות</h2>
+      <button class="btn-primary" (click)="createCompany()">+ חברה חדשה</button>
+    </div>
+  
+    <div *ngIf="loading" class="loading">טוען...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+  
+    <table *ngIf="!loading && companies.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>שם</th>
+          <th>ח.פ/ע.מ</th>
+          <th>טלפון</th>
+          <th>אימייל</th>
+          <th>כתובת</th>
+          <th>פעולות</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let company of companies">
+          <td>{{ company.name }}</td>
+          <td>{{ company.taxId }}</td>
+          <td>{{ company.phone || '-' }}</td>
+          <td>{{ company.email || '-' }}</td>
+          <td>{{ company.address || '-' }}</td>
+          <td class="actions">
+            <button (click)="editCompany(company.id)" class="btn-edit">ערוך</button>
+            <button (click)="viewCompanyTasks(company.id, company.name)" class="btn-view">משימות</button>
+            <button (click)="deleteCompany(company.id)" class="btn-delete">מחק</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div *ngIf="!loading && companies.length === 0" class="no-data">
+      אין חברות להצגה
+    </div>
+  
+     ========================= -->
+    <!-- טבלת משימות -->
+    <!-- ========================= -->
+    <!-- <div *ngIf="selectedCompanyName" class="tasks-container">
+      <h3>משימות של {{ selectedCompanyName }}</h3>
+  
+      <div *ngIf="tasksLoading" class="loading">טוען משימות...</div>
+      <div *ngIf="tasksError" class="error">{{ tasksError }}</div>
+  
+      <table *ngIf="!tasksLoading && selectedCompanyTasks.length > 0" class="table">
+        <thead>
+          <tr>
+            <th>שם משימה</th>
+            <th>סטטוס</th>
+            <th>תאריך יעד</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of selectedCompanyTasks">
+            <td>{{ task.name }}</td> 
+            <td>{{ task.status }}</td>
+            <td>{{ task.dueDate | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <div *ngIf="!tasksLoading && selectedCompanyTasks.length === 0">
+        אין משימות להצגה
+      </div>
+    </div>
+  </div>
+-->
+
+<div class="container">
+  <div class="header">
+    <h2>רשימת חברות</h2>
+  </div>
+
+  <div *ngIf="loading" class="loading">טוען...</div>
+  
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading && companies.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>שם</th>
+        <th>ח.פ/ע.מ</th>
+        <th>טלפון</th>
+        <th>אימייל</th>
+        <th>כתובת</th>
+        <th>פעולות</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let company of companies">
+        <td>{{ company.name }}</td>
+        <td>{{ company.taxId }}</td>
+        <td>{{ company.phone || '-' }}</td>
+        <td>{{ company.email || '-' }}</td>
+        <td>{{ company.address || '-' }}</td>
+        <td class="actions">
+          <button (click)="viewCompanyTasks(company.id)" class="btn-view">משימות</button>
+          <button (click)="editCompany(company.id)" class="btn-edit">ערוך</button>
+          <button (click)="deleteCompany(company.id)" class="btn-delete">מחק</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && companies.length === 0" class="no-data">
+    אין חברות להצגה
+  </div>
+</div>
