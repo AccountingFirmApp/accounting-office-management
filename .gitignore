@@ -1,11 +1,16 @@
-# ==========================
-# Build directories
-# ==========================
-[Bb]in/
-[Oo]bj/
+nul 
+Fronted/Angular-app/nul 
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
 [Dd]ebug/
-[Rr]elease/
 [Dd]ebugPublic/
+[Rr]elease/
 [Rr]eleases/
 x64/
 x86/
@@ -13,25 +18,12 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-
-# ==========================
-# Visual Studio files
-# ==========================
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates.json
-
-# ==========================
-# Logs
-# ==========================
+[Bb]in/
+[Oo]bj/
 [Ll]og/
 [Ll]ogs/
 
-# ==========================
 # NuGet
-# ==========================
 *.nupkg
 *.snupkg
 **/packages/*
@@ -39,21 +31,16 @@ bld/
 *.nuget.props
 *.nuget.targets
 
-# ==========================
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates.json
+
 # Rider
-# ==========================
 .idea/
 *.sln.iml
 
-# ==========================
 # VS Code
-# ==========================
 .vscode/
-
-# ==========================
-# Misc
-# ==========================
-*.dll
-*.exe
-*.pdb
-Fronted/Angular-app/nul
