@@ -301,6 +301,45 @@
   }
 }
 
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: #a0aec0;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.divider span {
+  padding: 0 16px;
+}
+
+/* Google Button Container */
+.google-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+}
+
+/* Override Google button styles to match our design */
+.google-button-container > div {
+  width: 100% !important;
+}
+
+.google-button-container iframe {
+  width: 100% !important;
+}
+
 /* Form Footer */
 .form-footer {
   margin-top: 24px;

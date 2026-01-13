@@ -1,11 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<!-- Project References -->
 	<ItemGroup>
 		<ProjectReference Include="..\AccountingSystem.Domain\AccountingSystem.Domain.csproj" />
 
 	</ItemGroup>
 
+	<!-- Application Layer Packages - רק logic עסקי -->
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="12.0.1" />
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 		<PackageReference Include="FluentValidation" Version="11.10.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
@@ -18,9 +26,12 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
+	<ItemGroup>
+		<Folder Include="Commands\" />
+		<Folder Include="Queries\" />
+		<Folder Include="DTOs\" />
+		<Folder Include="Interfaces\" />
+		<Folder Include="Validators\" />
+		<Folder Include="Mappings\" />
+	</ItemGroup>
 </Project>
