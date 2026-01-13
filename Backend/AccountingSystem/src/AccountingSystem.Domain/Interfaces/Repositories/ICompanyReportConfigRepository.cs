@@ -9,5 +9,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
     {
         Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId);
         Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync();
+        Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId);
+
     }
 }

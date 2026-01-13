@@ -52,5 +52,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// חשוב! כל אימייל חייב להיות ייחודי
         /// </summary>
         Task<bool> EmailExistsAsync(string email, int? excludeWorkerId = null);
+
+
+
     }
 }

@@ -1,0 +1,105 @@
+<div class="login-container">
+  <div class="login-split">
+    <!-- Left Side - Branding -->
+    <div class="login-branding">
+      <div class="branding-content">
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.8"/>
+            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h1 class="logo-text">ארגונית</h1>
+        </div>
+        <p class="tagline">מערכת ניהול חשבונות חכמה</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="login-form-container">
+      <div class="form-wrapper">
+        <div class="form-header">
+          <h2>התחברות למערכת</h2>
+          <p>הזן את פרטי ההתחברות שלך כדי להמשיך</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="login-form">
+          <div class="form-group">
+            <label for="email">דוא"ל</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="email"
+              placeholder="example@company.com"
+              required
+              [disabled]="isLoading"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">סיסמה</label>
+            <div class="password-wrapper">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                name="password"
+                [(ngModel)]="password"
+                placeholder="הזן סיסמה"
+                required
+                [disabled]="isLoading"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility()"
+                [disabled]="isLoading"
+                [attr.aria-label]="showPassword ? 'הסתר סיסמה' : 'הצג סיסמה'"
+              >
+                <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <button
+            type="submit"
+            class="submit-button"
+            [disabled]="isLoading"
+          >
+            <span *ngIf="!isLoading">כניסה למערכת</span>
+            <span *ngIf="isLoading" class="loading-content">
+              <span class="spinner"></span>
+              מתחבר...
+            </span>
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>או</span>
+        </div>
+
+        <!-- Google Sign-In Button Container -->
+        <div id="google-signin-button" class="google-button-container"></div>
+
+      </div>
+    </div>
+  </div>
+</div>

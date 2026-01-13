@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+export class AppComponent {
+  title = 'accounting-system';
+}
+import { Component ,signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';  // ← וודא שיש את כל 3
 import { CommonModule } from '@angular/common';
 
@@ -14,6 +17,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class AppComponent {
-  title = 'accounting-system';
+
+
+
+
+export class App {
+  protected readonly title = signal('angular-app');
 }

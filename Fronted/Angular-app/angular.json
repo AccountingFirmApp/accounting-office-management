@@ -2,13 +2,20 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
+<<<<<<< HEAD
     "packageManager": "npm"
+=======
+    "packageManager": "npm",
+    "analytics": "d18de469-8717-4800-9ec4-5c1d7775ef70"
+>>>>>>> origin/test
   },
   "newProjectRoot": "projects",
   "projects": {
     "angular-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -25,6 +32,7 @@
               }
             ],
             "styles": [
+              "src/material-theme.scss",
               "src/styles.css"
             ]
           },

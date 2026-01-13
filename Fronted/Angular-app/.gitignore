@@ -41,3 +41,12 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+<<<<<<< HEAD
+=======
+
+# Environment files (keep local configuration private)
+.env
+.env.local
+.env.*.local
+src/app/app.config.env.ts
+>>>>>>> origin/test

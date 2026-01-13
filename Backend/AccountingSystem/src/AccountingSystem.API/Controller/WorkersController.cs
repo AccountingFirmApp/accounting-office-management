@@ -133,5 +133,26 @@ namespace AccountingSystem.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+
+
+        /// <summary>
+        /// קבלת כל החברות של עובדת
+        /// GET: api/workers/5/companies
+        /// </summary>
+        [HttpGet("{workerId}/companies")]
+        public async Task<ActionResult<List<CompanyDto>>> GetWorkerCompanies(int workerId)
+        {
+            try
+            {
+                var query = new GetWorkerCompaniesQuery(workerId);
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
     }
 }

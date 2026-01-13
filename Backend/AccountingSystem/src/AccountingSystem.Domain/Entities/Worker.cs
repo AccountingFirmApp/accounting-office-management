@@ -15,8 +15,11 @@ public partial class Worker
     public string Firstname { get; set; } = null!;
     public string Lastname { get; set; } = null!;
     public string Email { get; set; } = null!;
+    public string? PasswordHash { get; set; }
     public string? Phone { get; set; }
     public string? Employeeid { get; set; }
+    public string? GoogleId { get; set; }        
+    public string? AuthProvider { get; set; }
     public bool? Isactive { get; set; }
     public DateOnly? Hiredate { get; set; }
     public DateTime? Createdat { get; set; }

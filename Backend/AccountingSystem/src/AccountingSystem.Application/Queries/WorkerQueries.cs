@@ -1,5 +1,4 @@
-// Application/Queries/Workers/WorkerQueries.cs
-using AccountingSystem.Application.DTOs;
+﻿using AccountingSystem.Application.DTOs;
 using MediatR;
 
 namespace AccountingSystem.Application.Queries.Workers;
@@ -38,40 +37,17 @@ public class GetWorkersByFirmIdQuery : IRequest<List<WorkerDto>>
 }
 
 // ========================================
-// CREATE WORKER COMMAND
+// GET WORKER COMPANIES
 // ========================================
-public class CreateWorkerCommand : IRequest<WorkerDto>
+public class GetWorkerCompaniesQuery : IRequest<List<CompanyDto>>
 {
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public int FirmId { get; set; }
-    public string? Email { get; set; }
-    public string? Phone { get; set; }
-    public string? Role { get; set; }
-}
+    public int WorkerId { get; set; }
 
-// ========================================
-// UPDATE WORKER COMMAND
-// ========================================
-public class UpdateWorkerCommand : IRequest<WorkerDto>
-{
-    public int Id { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string? Email { get; set; }
-    public string? Phone { get; set; }
-    public string? Role { get; set; }
-}
-
-// ========================================
-// DELETE WORKER COMMAND
-// ========================================
-public class DeleteWorkerCommand : IRequest<Unit>
-{
-    public int Id { get; set; }
-
-    public DeleteWorkerCommand(int id)
+    public GetWorkerCompaniesQuery(int workerId)
     {
-        Id = id;
+        WorkerId = workerId;
     }
 }
+
+// ❌ מחקתי את כל ה-Commands מכאן!
+// הם צריכים להיות רק ב-Commands/Workers/WorkerCommands.cs

@@ -1,12 +1,16 @@
 ﻿// Application/Handlers/Workers/WorkersHandler.cs
 using AccountingSystem.Application.DTOs;
-using AccountingSystem.Application;
+//using AccountingSystem.Application;
 using AccountingSystem.Application.Queries.Workers;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces;
 using AutoMapper;
 using MediatR;
-
+using AccountingSystem.Application.Commands.Workers;
+using Microsoft.AspNetCore.Authentication;
+using CreateWorkerCommand = AccountingSystem.Application.Commands.Workers.CreateWorkerCommand;
+using UpdateWorkerCommand = AccountingSystem.Application.Commands.Workers.UpdateWorkerCommand;
+using DeleteWorkerCommand = AccountingSystem.Application.Commands.Workers.DeleteWorkerCommand;
 namespace AccountingSystem.Application.Handlers.Workers;
 
 // ========================================
@@ -96,11 +100,12 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
     {
         var worker = new Worker
         {
-            Firstname = request.FirstName,
-            Lastname = request.LastName,
-            Firmid = request.FirmId,
+            Firstname = request.Firstname,
+            Lastname = request.Lastname,
+            Firmid = request.Firmid,
             Email = request.Email,
             Phone = request.Phone,
+            Isactive = request.Isactive,
             //Role = request.Role,
             Createdat = DateTime.UtcNow
         };
@@ -135,10 +140,11 @@ public class UpdateWorkerCommandHandler : IRequestHandler<UpdateWorkerCommand, W
             throw new Exception($"עובד עם ID {request.Id} לא נמצא");
         }
 
-        worker.Firstname = request.FirstName;
-        worker.Lastname = request.LastName;
+        worker.Firstname = request.Firstname;
+        worker.Lastname = request.Lastname;
         worker.Email = request.Email;
         worker.Phone = request.Phone;
+        worker.Isactive = request.Isactive;
         //worker.Role = request.Role;
         worker.Updatedat = DateTime.UtcNow;
 
@@ -174,5 +180,99 @@ public class DeleteWorkerCommandHandler : IRequestHandler<DeleteWorkerCommand, U
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
+    }
+}
+
+
+
+//using AccountingSystem.Application.DTOs;
+//using AccountingSystem.Application.Queries.Workers;
+//using AccountingSystem.Domain.Interfaces;
+//using MediatR;
+
+//namespace AccountingSystem.Application.Handlers.Workers;
+
+/// <summary>
+/// Handler לקבלת כל החברות של עובדת
+/// </summary>
+public class GetWorkerCompaniesHandler : IRequestHandler<GetWorkerCompaniesQuery, List<CompanyDto>>
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public GetWorkerCompaniesHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<List<CompanyDto>> Handle(
+        GetWorkerCompaniesQuery request,
+        CancellationToken cancellationToken)
+    {
+        // בדיקה שהעובדת קיימת
+        var workerExists = await _unitOfWork.Workers.ExistsAsync(request.WorkerId);
+        if (!workerExists)
+        {
+            throw new Exception($"עובדת עם ID {request.WorkerId} לא נמצאה");
+        }
+
+        // קבלת כל השיוכים של העובדת לחברות
+        var companyWorkers = await _unitOfWork.CompanyWorkers.GetByWorkerIdAsync(request.WorkerId);
+
+        // המרה ל-DTOs
+        var result = new List<CompanyDto>();
+
+        foreach (var cw in companyWorkers)
+        {
+            result.Add(new CompanyDto
+            {
+                Id = cw.Id,
+                Name = cw.Company.Name,
+                TaxId = cw.Company.Taxid ?? string.Empty,
+                Address = cw.Company.Address ?? string.Empty,
+                Phone = cw.Company.Phone ?? string.Empty,
+                Notes = cw.Company.Notes ?? string.Empty,
+                FirmId = cw.Company.Firmid,
+                 Email = cw.Worker.Email,
+                IsActive = cw.Isactive ?? true,
+            });
+        }
+
+        return result
+            .OrderByDescending(x => x.IsActive)
+            .ThenBy(x => x.Name)
+            .ToList();
+    }
+}
+//=================Login========
+public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDto>
+{
+    private readonly AccountingSystem.Application.Intrefaces.IAuthenticationService _authService;
+
+    public LoginCommandHandler(AccountingSystem.Application.Intrefaces.IAuthenticationService authService)
+    {
+        _authService = authService;
+    }
+
+    public async Task<LoginResponseDto> Handle(LoginCommand request, CancellationToken cancellationToken)
+    {
+        return await _authService.LoginAsync(request.Email, request.Password, cancellationToken);
+    }
+}
+
+// ========================================
+// GOOGLE LOGIN HANDLER
+// ========================================
+public class GoogleLoginCommandHandler : IRequestHandler<GoogleLoginCommand, LoginResponseDto>
+{
+    private readonly AccountingSystem.Application.Intrefaces.IAuthenticationService _authService;
+
+    public GoogleLoginCommandHandler(AccountingSystem.Application.Intrefaces.IAuthenticationService authService)
+    {
+        _authService = authService;
+    }
+
+    public async Task<LoginResponseDto> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
+    {
+        return await _authService.GoogleLoginAsync(request.GoogleToken, cancellationToken);
     }
 }
