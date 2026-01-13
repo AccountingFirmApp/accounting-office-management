@@ -83,6 +83,7 @@ using Microsoft.IdentityModel.Tokens;  // ⬅️ הוסף!
 using System.Text;  // ⬅️ הוסף!
 
 var builder = WebApplication.CreateBuilder(args);
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // ========================================
 // 1. Database
