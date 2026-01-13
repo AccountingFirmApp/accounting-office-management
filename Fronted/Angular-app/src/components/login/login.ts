@@ -1,10 +1,11 @@
-import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, AfterViewInit, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequestDto, GoogleLoginRequestDto } from '../../models/auth';
 import { environment } from '../../environments/environment';
+import { WorkerService } from '../../services/worker';
 
 declare const google: any;
 
@@ -15,7 +16,7 @@ declare const google: any;
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
   email: string = '';
   password: string = '';
   errorMessage: string = '';
@@ -27,17 +28,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private ngZone: NgZone
-  ) {
-    console.log('🔑 Google Client ID:', this.googleClientId);
-  }
+    private ngZone: NgZone,
+    private workerServise:WorkerService
+  ) { }
 
   ngOnInit(): void {
     this.loadGoogleSignIn();
   }
-
+ ngOnDestroy(): void {
+    console.log(this.workerServise.currentWorker);
+  }
   ngAfterViewInit(): void {
-    // נחכה רגע שה-DOM יהיה מוכן
     setTimeout(() => {
       this.renderGoogleButton();
     }, 100);
@@ -45,7 +46,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   loadGoogleSignIn(): void {
     if (document.querySelector('script[src="https://accounts.google.com/gsi/client"]')) {
-      console.log('📌 Google SDK כבר טעון');
       return;
     }
 
@@ -53,26 +53,20 @@ export class LoginComponent implements OnInit, AfterViewInit {
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
-    script.onload = () => {
-      console.log('✅ Google Sign-In SDK טעון בהצלחה');
-    };
     script.onerror = () => {
-      console.error('❌ שגיאה בטעינת Google Sign-In SDK');
-      this.errorMessage = 'לא ניתן לטעון את Google Sign-In';
+      this.errorMessage = 'לא ניתן לטעון את שירות Google Sign-In. אנא בדוק את החיבור לאינטרנט';
     };
     document.head.appendChild(script);
   }
 
   renderGoogleButton(): void {
     if (typeof google === 'undefined') {
-      console.warn('⚠️ Google SDK עדיין לא טעון');
       setTimeout(() => this.renderGoogleButton(), 500);
       return;
     }
 
     const buttonContainer = document.getElementById('google-signin-button');
     if (!buttonContainer) {
-      console.error('❌ לא נמצא אלמנט google-signin-button');
       return;
     }
 
@@ -97,11 +91,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
           logo_alignment: 'left'
         }
       );
-
-      console.log('✅ כפתור Google נוצר בהצלחה');
     } catch (error) {
-      console.error('❌ שגיאה ביצירת כפתור Google:', error);
-      this.errorMessage = 'שגיאה באתחול Google Sign-In';
+      this.errorMessage = 'שגיאה באתחול Google Sign-In. אנא נסה לרענן את הדף';
     }
   }
 
@@ -110,7 +101,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   handleGoogleCallback(response: any): void {
-    console.log('📥 התקבל token מ-Google');
     this.isLoading = true;
     this.errorMessage = '';
 
@@ -120,22 +110,32 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     this.authService.googleLogin(request).subscribe({
       next: (result) => {
-        console.log('✅ התחברות הצליחה:', result.worker.email);
         this.authService.saveToken(result.token);
-        this.authService.saveWorkerInfo(result.worker);
+        this.workerServise.currentWorker=result.worker;
         this.isLoading = false;
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        console.error('❌ שגיאה בהתחברות:', error);
+        console.error('🔴 שגיאה בהתחברות Google:', error);
+        console.log('📊 סטטוס שגיאה:', error.status);
+        console.log('📋 isLoading לפני:', this.isLoading);
+
         this.isLoading = false;
-        if (error.status === 401) {
-          this.errorMessage = error.error?.message || 'אימות Google נכשל';
+
+        console.log('📋 isLoading אחרי:', this.isLoading);
+
+        // הצג הודעת שגיאה מפורטת ללקוח
+        if (error.status === 0) {
+          this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט או פנה לתמיכה';
+        } else if (error.status === 401) {
+          this.errorMessage = error.error?.message || 'אימות Google נכשל. המשתמש אינו רשום במערכת';
         } else if (error.status === 500) {
-          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת';
+          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת. אנא נסה שוב מאוחר יותר';
         } else {
-          this.errorMessage = 'שגיאה בהתחברות עם Google. אנא נסה שוב';
+          this.errorMessage = `שגיאה בהתחברות עם Google (קוד: ${error.status}). אנא נסה שוב או פנה לתמיכה`;
         }
+
+        console.log('💬 הודעת שגיאה:', this.errorMessage);
       }
     });
   }
@@ -143,6 +143,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   onSubmit(): void {
     if (!this.email || !this.password) {
       this.errorMessage = 'נא למלא את כל השדות';
+      return;
+    }
+
+    if (!this.isValidEmail(this.email)) {
+      this.errorMessage = 'כתובת אימייל אינה תקינה';
       return;
     }
 
@@ -157,20 +162,29 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
         this.authService.saveToken(response.token);
-        this.authService.saveWorkerInfo(response.worker);
+        this.workerServise.currentWorker=response.worker;
         this.isLoading = false;
         this.router.navigate(['/home']);
       },
       error: (error) => {
         this.isLoading = false;
-        if (error.status === 401) {
-          this.errorMessage = error.error?.message || 'אימייל או סיסמה שגויים';
+
+        // הצג הודעת שגיאה מפורטת ללקוח
+        if (error.status === 0) {
+          this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט או פנה לתמיכה';
+        } else if (error.status === 401) {
+          this.errorMessage = error.error?.message || 'אימייל או סיסמה שגויים. אנא נסה שוב';
         } else if (error.status === 500) {
-          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת';
+          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת. אנא נסה שוב מאוחר יותר';
         } else {
-          this.errorMessage = 'שגיאה בהתחברות. אנא נסה שוב';
+          this.errorMessage = `שגיאה בהתחברות (קוד: ${error.status}). אנא נסה שוב או פנה לתמיכה`;
         }
       }
     });
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 }

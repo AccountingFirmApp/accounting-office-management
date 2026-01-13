@@ -7,8 +7,6 @@ using AccountingSystem.Domain.Interfaces;
 using AutoMapper;
 using MediatR;
 using AccountingSystem.Application.Commands.Workers;
-using Microsoft.AspNetCore.Authentication;
-
 namespace AccountingSystem.Application.Handlers.Workers;
 
 // ========================================

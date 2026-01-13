@@ -132,7 +132,7 @@ public class AuthenticationService : IAuthenticationService
             {
                 worker.GoogleId = payload.Subject;
                 worker.AuthProvider = "Google";
-                worker.Updatedat = DateTime.UtcNow;
+                worker.Updatedat = DateTime.Now;
                 await _context.SaveChangesAsync(cancellationToken);
 
                 Console.WriteLine($"📝 Updated worker {worker.Email} with Google ID");
