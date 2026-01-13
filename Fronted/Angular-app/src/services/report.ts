@@ -15,7 +15,7 @@ import {
   providedIn: 'root'
 })
 export class ReportService {
-  private endpoint = 'api/reports';
+  private endpoint = '/reports';
 
   constructor(private api: ApiService) {}
 
@@ -228,7 +228,7 @@ export class ReportService {
    * GET: /api/companies
    */
   getCompanies(): Observable<any[]> {
-    return this.api.get<any[]>('api/companies');
+    return this.api.get<any[]>('/companies');
   }
 
   /**
@@ -236,7 +236,7 @@ export class ReportService {
    * GET: /api/report-types
    */
   getReportTypes(): Observable<any[]> {
-    return this.api.get<any[]>('api/report-types');
+    return this.api.get<any[]>('/report-types');
   }
 
   /**
@@ -244,6 +244,6 @@ export class ReportService {
    * GET: /api/company-report-configs
    */
   getConfigs(): Observable<any[]> {
-    return this.api.get<any[]>('api/company-report-configs');
+    return this.api.get<any[]>('/company-report-configs');
   }
 }
