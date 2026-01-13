@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Domain.Enums;
 using AutoMapper;
-using Xunit;
+//using Xunit;
 
 namespace AccountingSystem.Application.Handlers
 {

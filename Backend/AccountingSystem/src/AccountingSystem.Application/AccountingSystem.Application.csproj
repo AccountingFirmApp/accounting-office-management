@@ -8,6 +8,7 @@
 	<!-- Project References -->
 	<ItemGroup>
 		<ProjectReference Include="..\AccountingSystem.Domain\AccountingSystem.Domain.csproj" />
+
 	</ItemGroup>
 
 	<!-- Application Layer Packages - רק logic עסקי -->

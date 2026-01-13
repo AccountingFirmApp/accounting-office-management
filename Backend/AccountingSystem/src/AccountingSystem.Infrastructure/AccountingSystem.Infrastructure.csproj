@@ -1,4 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\AccountingSystem.Domain\AccountingSystem.Domain.csproj" />
+		<ProjectReference Include="..\AccountingSystem.Application\AccountingSystem.Application.csproj" />
+
+	</ItemGroup>
+	
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
