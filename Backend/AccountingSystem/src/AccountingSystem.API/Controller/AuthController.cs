@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// התחברות עם Google
     /// </summary>
-    [HttpPost("signin-google")]
+    [HttpPost("login-google")]
     [AllowAnonymous]
     public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
     {

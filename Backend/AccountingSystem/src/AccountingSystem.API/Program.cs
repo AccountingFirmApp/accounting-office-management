@@ -176,17 +176,22 @@ builder.Services.AddOpenApi();
 // ========================================
 // 8. CORS for Angular
 // ========================================
+// ========================================
+// 8. CORS for Angular
+// ========================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
+        policy.WithOrigins(
+                "http://localhost:4200",
+                "https://localhost:4200"
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
-
 var app = builder.Build();
 
 // ========================================
@@ -207,9 +212,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// ⚠️ סדר חשוב מאוד!
-app.UseAuthentication();  // ⬅️ הוסף! חייב לפני UseAuthorization
-app.UseAuthorization();   // ⬅️ הוסף!
-
+app.UseAuthentication();  
+app.UseAuthorization();   
 app.MapControllers();
 app.Run();
