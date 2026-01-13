@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\AccountingSystem.Domain\AccountingSystem.Domain.csproj" />
+
 	</ItemGroup>
 
 	<ItemGroup>

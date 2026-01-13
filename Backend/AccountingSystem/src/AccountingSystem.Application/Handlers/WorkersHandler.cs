@@ -1,6 +1,6 @@
 ﻿// Application/Handlers/Workers/WorkersHandler.cs
 using AccountingSystem.Application.DTOs;
-using AccountingSystem.Application;
+//using AccountingSystem.Application;
 using AccountingSystem.Application.Queries.Workers;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces;
@@ -8,7 +8,9 @@ using AutoMapper;
 using MediatR;
 using AccountingSystem.Application.Commands.Workers;
 using Microsoft.AspNetCore.Authentication;
-
+using CreateWorkerCommand = AccountingSystem.Application.Commands.Workers.CreateWorkerCommand;
+using UpdateWorkerCommand = AccountingSystem.Application.Commands.Workers.UpdateWorkerCommand;
+using DeleteWorkerCommand = AccountingSystem.Application.Commands.Workers.DeleteWorkerCommand;
 namespace AccountingSystem.Application.Handlers.Workers;
 
 // ========================================
