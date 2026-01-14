@@ -29,8 +29,6 @@
 	<ItemGroup>
 		<Folder Include="Commands\" />
 		<Folder Include="Queries\" />
-		<Folder Include="DTOs\" />
-		<Folder Include="Interfaces\" />
 		<Folder Include="Validators\" />
 		<Folder Include="Mappings\" />
 	</ItemGroup>

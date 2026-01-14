@@ -1,4 +1,4 @@
-namespace AccountingSystem.Application.DTOs;
+﻿namespace AccountingSystem.Application.DTOs;
 
 /// <summary>
 /// DTO for Worker - עובדים/ות (בלי Authentication)
@@ -18,7 +18,7 @@ public class WorkerDto
     public DateTime? HireDate { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    
+
     // Navigation properties (optional - for display)
     public string? FirmName { get; set; }
     public string? RoleName { get; set; }
