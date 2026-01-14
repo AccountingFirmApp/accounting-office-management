@@ -4,7 +4,7 @@ namespace AccountingSystem.Domain.Enums;
 /// סטטוסים של משימות
 /// תואם ל-PostgreSQL ENUM: task_status
 /// </summary>
-public enum TaskStatus
+public enum TaskStatus1
 {
     /// <summary>
     /// ממתין - המשימה טרם החלה

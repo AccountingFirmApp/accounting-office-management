@@ -2,6 +2,7 @@
 using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.Companies;
+using AccountingSystem.Application.Queries.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

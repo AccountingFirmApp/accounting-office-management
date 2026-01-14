@@ -29,4 +29,7 @@ export class HomeComponent implements OnInit{
    navigateToReports() {
     this.router.navigate(['/reports']);
   }
+  navigateToCompany() {
+    this.router.navigate(['/companies']);
+  }
 }

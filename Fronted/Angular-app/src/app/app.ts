@@ -1,20 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';  // ← וודא שיש את כל 3
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router'; // Ensure routing modules are imported
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-    standalone: true,
-
+  standalone: true, // Mark as standalone
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive], // Add necessary imports
   templateUrl: './app.html',
-  styleUrl: './app.css',
-
-  imports: [
-    CommonModule, 
-    RouterOutlet, 
-    RouterLink, 
-    RouterLinkActive  // ← חשוב! זה חייב להיות כאן
-  ],
+  styleUrls: ['./app.css']
 })
 export class AppComponent {
   title = 'accounting-system';
