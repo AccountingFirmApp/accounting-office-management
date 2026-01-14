@@ -10,10 +10,6 @@
 		<ProjectReference Include="..\AccountingSystem.Domain\AccountingSystem.Domain.csproj" />
 		<ProjectReference Include="..\AccountingSystem.Application\AccountingSystem.Application.csproj" />
 		<ProjectReference Include="..\AccountingSystem.Infrastructure\AccountingSystem.Infrastructure.csproj" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
-		<PackageReference Include="Npgsql" Version="9.0.2" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
 	<!-- API/Web Packages -->
