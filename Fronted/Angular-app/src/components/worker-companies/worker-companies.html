@@ -1,78 +1,45 @@
-<div style="padding: 20px; direction: rtl;">
+<div class="container">
+
   <!-- כפתור חזרה לדף הבית -->
-  <button 
-    (click)="goHome()" 
-    style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-size: 16px;">
-    ← חזרה לדף הבית
-  </button>
-
-  <h1 style="background: yellow;">🔥 אם אתה רואה את זה - הקומפוננט עובד! 🔥</h1>
-  
-  <!-- ... שאר הקוד -->
-</div>
-<div style="padding: 20px; direction: rtl;">
-  <h1>בדיקת חיבור לשרת</h1>
-
-  <!-- בחירת עובדת -->
-  <div style="margin-bottom: 20px;">
-    <label>בחר עובדת: </label>
-    <button (click)="changeWorker(1)" style="margin: 5px;">עובדת 1</button>
-    <button (click)="changeWorker(2)" style="margin: 5px;">עובדת 2</button>
-    <button (click)="changeWorker(3)" style="margin: 5px;">עובדת 3</button>
-    <button (click)="changeWorker(4)" style="margin: 5px;">עובדת 4</button>
-    <button (click)="changeWorker(5)" style="margin: 5px;">עובדת 5</button>
-  </div>
-
-  <p><strong>עובדת נבחרת:</strong> {{ workerId }}</p>
+  <button class="btn-primary" (click)="goHome()">← חזרה לדף הבית</button>  
 
   <!-- Loading -->
-  <div *ngIf="loading" style="background: #ffffcc; padding: 10px; border-radius: 5px;">
-    <p>⏳ טוען נתונים עבור עובדת {{ workerId }}...</p>
+  <div *ngIf="loading" class="alert alert-warning">
+    ⏳ טוען נתונים עבורך {{ workerId }}...
   </div>
 
   <!-- Error -->
-  <div *ngIf="error" style="color: red; background: #ffcccc; padding: 10px; border-radius: 5px;">
+  <div *ngIf="error" class="alert alert-error">
     <h3>❌ שגיאה:</h3>
     <pre>{{ error }}</pre>
   </div>
 
   <!-- Success -->
   <div *ngIf="companies && !loading">
-    <h3 style="color: green;">✅ זה עובד! התקבלו {{ companies.length }} חברות:</h3>
-    
-    <!-- JSON מלא -->
-    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-      <h4>JSON גולמי:</h4>
-      <pre>{{ companies | json }}</pre>
-    </div>
-
     <!-- רשימת חברות -->
     <div *ngIf="companies.length > 0">
-      <h4>רשימת החברות:</h4>
-      <ul style="list-style: none; padding: 0;">
-        <li *ngFor="let company of companies" 
-            style="background: white; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd;">
-          <h5 style="margin: 0 0 10px 0;">{{ company.name }}</h5>
-          <p style="margin: 5px 0;"><strong>ח.פ:</strong> {{ company.taxId }}</p>
-          <p style="margin: 5px 0;"><strong>כתובת:</strong> {{ company.address }}</p>
-          <p style="margin: 5px 0;"><strong>טלפון:</strong> {{ company.phone }}</p>
-          <p style="margin: 5px 0;"><strong>אימייל:</strong> {{ company.email }}</p>
-          <p style="margin: 5px 0;">
+      <ul class="company-list">
+        <li *ngFor="let company of companies" class="company-card">
+          <h5>{{ company.name }}</h5>
+          <p><strong>ח.פ:</strong> {{ company.taxId }}</p>
+          <p><strong>כתובת:</strong> {{ company.address }}</p>
+          <p><strong>טלפון:</strong> {{ company.phone }}</p>
+          <p><strong>אימייל:</strong> {{ company.email }}</p>
+          <p>
             <strong>סטטוס:</strong> 
-            <span [style.color]="company.isActive ? 'green' : 'red'">
+            <span [class.active]="company.isActive" [class.inactive]="!company.isActive">
               {{ company.isActive ? '✅ פעילה' : '❌ לא פעילה' }}
             </span>
           </p>
-          <p style="margin: 5px 0; font-size: 12px; color: #666;">
-            <strong>הערות:</strong> {{ company.notes || 'אין הערות' }}
-          </p>
+          <p class="notes"><strong>הערות:</strong> {{ company.notes || 'אין הערות' }}</p>
         </li>
       </ul>
     </div>
 
     <!-- אין חברות -->
-    <div *ngIf="companies.length === 0" style="text-align: center; padding: 20px; color: #999;">
-      <p>לא נמצאו חברות עבור עובדת זו</p>
+    <div *ngIf="companies.length === 0" class="no-companies">
+      לא נמצאו חברות עבור עובדת זו
     </div>
   </div>
+
 </div>

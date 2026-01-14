@@ -1,0 +1,97 @@
+/* כל המכולה */
+.container {
+  padding: 20px;
+  direction: rtl;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* כפתורים */
+.btn-primary {
+  background-color: #667eea;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #5563c1;
+}
+
+/* Alerts */
+.alert {
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.alert-warning {
+  background-color: #fff8cc;
+  color: #666600;
+}
+
+.alert-error {
+  background-color: #ffcccc;
+  color: #990000;
+}
+
+/* Success title */
+.success-title {
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+/* רשימת חברות */
+.company-list {
+  list-style: none;
+  padding: 0;
+}
+
+.company-card {
+  background-color: #fff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.company-card h5 {
+  margin: 0 0 10px 0;
+}
+
+.company-card p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+/* סטטוס פעיל / לא פעיל */
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive {
+  color: red;
+  font-weight: bold;
+}
+
+/* הערות */
+.notes {
+  font-size: 12px;
+  color: #666;
+}
+
+/* אין חברות */
+.no-companies {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-style: italic;
+}

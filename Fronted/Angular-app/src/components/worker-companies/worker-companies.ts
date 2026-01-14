@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';  // ⬅️ הוסף
+import { CommonModule,Location } from '@angular/common';
+import { Router } from '@angular/router';  
 import { WorkerService } from '../../services/worker';
+import { WorkerInfoDto } from '../../models/auth';
 
 @Component({
   selector: 'app-worker-companies',
@@ -19,26 +20,31 @@ export class WorkerCompaniesComponent implements OnInit {
   constructor(
     private workerService: WorkerService,
     private cdr: ChangeDetectorRef,
-    private router: Router  // ⬅️ הוסף
+    private router: Router,
+    private location:Location
   ) { 
-    console.log('🚀 Component נוצר');
   }
+  currentWorker!:WorkerInfoDto;
+ngOnInit(): void {
+  console.log('🚀 ngOnInit התחיל');
+  this.currentWorker = this.workerService.currentWorker; // מיידי
+  console.log(this.currentWorker);
 
-  ngOnInit(): void {
-    console.log('🚀 ngOnInit התחיל');
-    this.loadData();
+  if (this.currentWorker) {
+    this.loadData(); 
   }
+}
 
-  // ⬅️ הוסף פונקציה חדשה
   goHome(): void {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 
   loadData(): void {
     this.loading = true;
     this.cdr.detectChanges();
+    console.log(this.currentWorker);
     
-    this.workerService.getWorkerCompanies(this.workerId).subscribe({
+    this.workerService.getWorkerCompanies(this.currentWorker.id).subscribe({
       next: (response) => {
         this.companies = response;
         this.loading = false;

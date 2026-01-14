@@ -2,10 +2,11 @@ import { Routes } from '@angular/router';
 import { CompanyListComponent } from '../components/companies/company-list.component';
  import { CompanyCreateComponent } from '../components/company-create/company-create';
  import { CompanyTasksComponent } from '../components/company-tasks/company-tasks';
- import { HomeComponent } from '../components/home/home';
  import { WorkerCompaniesComponent } from '../components/worker-companies/worker-companies';
- import { LoginComponent } from '../components/login/login';
- 
+import { HomeComponent } from '../components/home/home';
+import { LoginComponent } from '../components/login/login';
+import { ReportFormComponent } from '../components/report-form/report-form';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'התחברות' },  // ⬅️ דף התחברות
   { path: 'home', component: HomeComponent, title: 'דף הבית' },  // ⬅️ דף הבית
@@ -14,6 +15,8 @@ export const routes: Routes = [
     path: 'reports',
     loadChildren: () => import('../components/reports-module').then(m => m.ReportsModule)
   }, 
+    // { path: 'reports/new', component: ReportFormComponent, title: 'חדש' },  // ⬅️ דף הבית
+
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // ⬅️ דף ראשי -> התחברות
   { path: '', redirectTo: '/companies', pathMatch: 'full' },
   { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
