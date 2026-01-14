@@ -1,3 +1,5 @@
+//using NpgsqlTypes;
+
 namespace AccountingSystem.Domain.Enums;
 
 /// <summary>
@@ -31,3 +33,21 @@ public enum TaskStatus
     /// </summary>
     NotRequired 
 }
+
+//public enum TaskStatus
+//{
+//    [PgName("Pending")]
+//    Pending,
+
+//    [PgName("InProgress")]
+//    InProgress,
+
+//    [PgName("Done")]
+//    Done,
+
+//    [PgName("Paid")]
+//    Paid,
+
+//    [PgName("NotRequired")]
+//    NotRequired
+//}

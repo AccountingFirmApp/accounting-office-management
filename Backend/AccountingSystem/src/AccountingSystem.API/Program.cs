@@ -1,10 +1,34 @@
-//using AccountingSystem.Application.Mappings;
+﻿﻿//using AccountingSystem.Application.Mappings;
+//using AccountingSystem.Domain.Enums;
 //using AccountingSystem.Domain.Interfaces;
 //using AccountingSystem.Infrastructure.Data;
 //using FluentValidation;
 //using Microsoft.EntityFrameworkCore;
 
+//using Npgsql;
+
 //var builder = WebApplication.CreateBuilder(args);
+//try
+//{
+//    NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.TaskStatus>("task_status");
+//    NpgsqlConnection.GlobalTypeMapper.MapEnum<ReportStatus>("report_status");
+//    NpgsqlConnection.GlobalTypeMapper.MapEnum<PaymentMethod>("payment_method");
+//    NpgsqlConnection.GlobalTypeMapper.MapEnum<TaskCategory>("task_category");
+
+//    Console.WriteLine("✅ Enum mapping completed successfully!");
+
+//    // הדפס את הערכים של TaskStatus כדי לוודא
+//    foreach (var value in Enum.GetValues<AccountingSystem.Domain.Enums.TaskStatus>())
+//    {
+//        Console.WriteLine($"  - TaskStatus: {value}");
+//    }
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine($"❌ Enum mapping failed: {ex.Message}");
+//}
+
+
 
 //// Add services to the container.
 //builder.Services.AddOpenApi();
@@ -12,9 +36,22 @@
 //// AUTO MAPPING
 //builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-//// Database Configuration
+////Database Configuration
+////builder.Services.AddDbContext<AccountingDbContext>(options =>
+////    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 //builder.Services.AddDbContext<AccountingDbContext>(options =>
-//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+//{
+//    options.UseNpgsql(
+//        builder.Configuration.GetConnectionString("DefaultConnection"),
+//        npgsqlOptions =>
+//        {
+//            npgsqlOptions.MapEnum<AccountingSystem.Domain.Enums.TaskStatus>("task_status");
+//            npgsqlOptions.MapEnum<ReportStatus>("report_status");
+//            npgsqlOptions.MapEnum<PaymentMethod>("payment_method");
+//            npgsqlOptions.MapEnum<TaskCategory>("task_category");
+//        });
+//});
+
 
 //// DI
 //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -70,6 +107,8 @@
 
 using AccountingSystem.Application.Intrefaces;  // ⬅️ הוסף!
 using AccountingSystem.Application.Mappings;
+using AccountingSystem.Application.Mappings;
+using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
@@ -79,8 +118,7 @@ using AccountingSystem.Infrastructure.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;  // ⬅️ הוסף!
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;  // ⬅️ הוסף!
-using System.Text;  // ⬅️ הוסף!
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -206,9 +244,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/openapi/v1.json", "Accounting API V1");
-    });
+        options.SwaggerEndpoint("/openapi/v1.json", "Accounting API V1"));
 }
 
 app.UseHttpsRedirection();
