@@ -17,7 +17,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             this.context = context;
         }
-        public Task<Domain.Entities.Task> AddAsync(Domain.Entities.Task entity)
+        public System.Threading.Tasks.Task AddAsync(Domain.Entities.Task entity)
         {
             throw new NotImplementedException();
         }

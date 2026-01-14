@@ -19,7 +19,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Role> AddAsync(Role entity)
+        public System.Threading.Tasks.Task AddAsync(Role entity)
         {
             throw new NotImplementedException();
         }

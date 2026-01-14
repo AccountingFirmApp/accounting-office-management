@@ -208,5 +208,10 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await _context.Companyworkers.CountAsync();
         }
+
+        System.Threading.Tasks.Task IGenericRepository<Companyworker>.AddAsync(Companyworker entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

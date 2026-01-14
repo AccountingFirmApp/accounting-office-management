@@ -19,7 +19,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Companycontact> AddAsync(Companycontact entity)
+        public System.Threading.Tasks.Task AddAsync(Companycontact entity)
         {
             throw new NotImplementedException();
         }

@@ -21,7 +21,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Companyreportconfig> AddAsync(Companyreportconfig entity)
+        public System.Threading.Tasks.Task AddAsync(Companyreportconfig entity)
         {
             throw new NotImplementedException();
         }

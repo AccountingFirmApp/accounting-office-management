@@ -101,5 +101,10 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             throw new NotImplementedException();
         }
+
+        System.Threading.Tasks.Task IGenericRepository<Company>.AddAsync(Company entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
     this.loadGoogleSignIn();
   }
  ngOnDestroy(): void {
-    console.log(this.workerServise.currentWorker);
   }
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -116,15 +115,8 @@ export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        console.error('🔴 שגיאה בהתחברות Google:', error);
-        console.log('📊 סטטוס שגיאה:', error.status);
-        console.log('📋 isLoading לפני:', this.isLoading);
-
         this.isLoading = false;
 
-        console.log('📋 isLoading אחרי:', this.isLoading);
-
-        // הצג הודעת שגיאה מפורטת ללקוח
         if (error.status === 0) {
           this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט או פנה לתמיכה';
         } else if (error.status === 401) {
@@ -134,8 +126,6 @@ export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
         } else {
           this.errorMessage = `שגיאה בהתחברות עם Google (קוד: ${error.status}). אנא נסה שוב או פנה לתמיכה`;
         }
-
-        console.log('💬 הודעת שגיאה:', this.errorMessage);
       }
     });
   }
