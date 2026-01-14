@@ -1,6 +1,7 @@
-﻿//using System;
+﻿
+
+//using System;
 //using System.Collections.Generic;
-//using AccountingSystem.Domain.Entities;
 //using AccountingSystem.Domain.Entities;
 //using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,6 @@
 //    public virtual DbSet<Role> Roles { get; set; }
 //    public virtual DbSet<AccountingSystem.Domain.Entities.Task> Tasks { get; set; }
 //    public virtual DbSet<Tasktype> Tasktypes { get; set; }
-
 //    public virtual DbSet<Worker> Workers { get; set; }
 //    public virtual DbSet<Workerroletype> Workerroletypes { get; set; }
 
@@ -493,22 +493,26 @@
 //                .HasColumnName("updatedat")
 //                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-//            entity.HasOne(d => d.Firm)
-//                .WithMany(p => p.Workers)
-//                .HasForeignKey(d => d.Firmid)
-//                .HasConstraintName("fk_worker_firm");
+//            // 🆕 השדות החדשים - במיקום הנכון!
 //            entity.Property(e => e.PasswordHash)
-//       .HasMaxLength(255)
-//       .HasColumnName("passwordhash")
-//       .IsRequired(false);
+//                .HasMaxLength(255)
+//                .HasColumnName("passwordhash");
+
 //            entity.Property(e => e.GoogleId)
-//    .HasMaxLength(100)
-//    .HasColumnName("googleid");
+//                .HasMaxLength(100)
+//                .HasColumnName("googleid");
 
 //            entity.Property(e => e.AuthProvider)
 //                .HasMaxLength(20)
 //                .HasColumnName("authprovider")
 //                .HasDefaultValue("Local");
+
+//            // Relationships
+//            entity.HasOne(d => d.Firm)
+//                .WithMany(p => p.Workers)
+//                .HasForeignKey(d => d.Firmid)
+//                .HasConstraintName("fk_worker_firm");
+
 //            entity.HasOne(d => d.Role)
 //                .WithMany(p => p.Workers)
 //                .HasForeignKey(d => d.Roleid)
@@ -532,10 +536,6 @@
 //            entity.Property(e => e.Description).HasColumnName("description");
 //        });
 
-
-
-
-
 //        OnModelCreatingPartial(modelBuilder);
 //    }
 
@@ -544,20 +544,46 @@
 
 
 
-
-using System;
-using System.Collections.Generic;
+//-------------------------
+using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql;
+using System;
+using System.Collections.Generic;
 
 namespace AccountingSystem.Infrastructure.Data;
 
 public partial class AccountingDbContext : DbContext
 {
+    // פונקציה נפרדת
+    //static AccountingSystem.Domain.Enums.TaskStatus SafeParseTaskStatus(string v)
+    //{
+    //    return Enum.TryParse(v, true, out AccountingSystem.Domain.Enums.TaskStatus result)
+    //        ? result
+    //        : AccountingSystem.Domain.Enums.TaskStatus.Pending;
+    //}
+
+    // ואז במיפוי
+    
+
+    static AccountingDbContext()
+    {
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.TaskStatus1>("task_status");
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.ReportStatus>("report_status");
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.PaymentMethod>("payment_method");
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<AccountingSystem.Domain.Enums.TaskCategory>("task_category");
+    }
+
     public AccountingDbContext(DbContextOptions<AccountingDbContext> options)
         : base(options)
     {
     }
+    //public AccountingDbContext(DbContextOptions<AccountingDbContext> options)
+    //    : base(options)
+    //{
+    //}
 
     public virtual DbSet<Accountingfirm> Accountingfirms { get; set; }
     public virtual DbSet<Auditlog> Auditlogs { get; set; }
@@ -571,6 +597,7 @@ public partial class AccountingDbContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<AccountingSystem.Domain.Entities.Task> Tasks { get; set; }
     public virtual DbSet<Tasktype> Tasktypes { get; set; }
+
     public virtual DbSet<Worker> Workers { get; set; }
     public virtual DbSet<Workerroletype> Workerroletypes { get; set; }
 
@@ -583,6 +610,7 @@ public partial class AccountingDbContext : DbContext
             .HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
             .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
             .HasPostgresEnum("task_status", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });
+        ;
 
         // Accountingfirm Configuration
         modelBuilder.Entity<Accountingfirm>(entity =>
@@ -853,12 +881,16 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Amount)
                 .HasPrecision(12, 2)
                 .HasColumnName("amount");
+
             entity.Property(e => e.Status)
-                .HasColumnName("status")
-                .HasConversion<string>();
+      .HasColumnName("status")
+    .HasColumnType("report_status");
+
+
             entity.Property(e => e.PaymentMethod)
-                .HasColumnName("paymentmethod")
-                .HasConversion<string>();
+                .HasColumnName("paymentmethod");
+
+            //.HasConversion<string>();
             entity.Property(e => e.Receiptdate).HasColumnName("receiptdate");
             entity.Property(e => e.Reporteddate).HasColumnName("reporteddate");
             entity.Property(e => e.Paiddate).HasColumnName("paiddate");
@@ -923,6 +955,61 @@ public partial class AccountingDbContext : DbContext
         });
 
         // Task Configuration
+
+        //modelBuilder.Entity<AccountingSystem.Domain.Entities.Task>(entity =>
+        //{
+        //    entity.ToTable("task");
+
+        //    entity.HasKey(e => e.Id).HasName("task_pkey");
+
+        //    entity.HasIndex(e => e.Assignedworkerid).HasDatabaseName("idx_task_assigned");
+        //    entity.HasIndex(e => new { e.Companyid, e.Period }).HasDatabaseName("idx_task_company_period");
+        //    entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period })
+        //          .IsUnique()
+        //          .HasDatabaseName("uq_task_period");
+
+        //    entity.Property(e => e.Id).HasColumnName("id");
+        //    entity.Property(e => e.Companyid).HasColumnName("companyid");
+        //    entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
+        //    entity.Property(e => e.Period).HasColumnName("period");
+        //    entity.Property(e => e.Duedate).HasColumnName("duedate");
+        //    entity.Property(e => e.Completeddate).HasColumnName("completeddate");
+        //    entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid");
+        //    entity.Property(e => e.Notes).HasColumnName("notes");
+        //    entity.Property(e => e.Status)
+        //   .HasColumnName("status")
+        //   .HasConversion<string>()
+        //   .HasColumnType("task_status");  // או report_status לפי השדה
+
+
+        //    entity.Property(e => e.Createdat)
+        //              .HasColumnType("timestamp without time zone")
+        //              .HasColumnName("createdat")
+        //              .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        //    entity.Property(e => e.Updatedat)
+        //          .HasColumnType("timestamp without time zone")
+        //          .HasColumnName("updatedat")
+        //          .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        //    // יחסים
+        //    entity.HasOne(d => d.Assignedworker)
+        //          .WithMany(p => p.Tasks)
+        //          .HasForeignKey(d => d.Assignedworkerid)
+        //          .OnDelete(DeleteBehavior.SetNull)
+        //          .HasConstraintName("fk_task_worker");
+
+        //    entity.HasOne(d => d.Company)
+        //          .WithMany(p => p.Tasks)
+        //          .HasForeignKey(d => d.Companyid)
+        //          .HasConstraintName("fk_task_company");
+
+        //    entity.HasOne(d => d.Tasktype)
+        //          .WithMany(p => p.Tasks)
+        //          .HasForeignKey(d => d.Tasktypeid)
+        //          .OnDelete(DeleteBehavior.Restrict)
+        //          .HasConstraintName("fk_task_tasktype");
+        //});
         modelBuilder.Entity<AccountingSystem.Domain.Entities.Task>(entity =>
         {
             entity.ToTable("task");
@@ -932,8 +1019,8 @@ public partial class AccountingDbContext : DbContext
             entity.HasIndex(e => e.Assignedworkerid).HasDatabaseName("idx_task_assigned");
             entity.HasIndex(e => new { e.Companyid, e.Period }).HasDatabaseName("idx_task_company_period");
             entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period })
-                .IsUnique()
-                .HasDatabaseName("uq_task_period");
+                  .IsUnique()
+                  .HasDatabaseName("uq_task_period");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Companyid).HasColumnName("companyid");
@@ -944,33 +1031,57 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Status)
-                .HasColumnName("status")
-                .HasConversion<string>();
-            entity.Property(e => e.Createdat)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("createdat")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(e => e.Updatedat)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("updatedat")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+         .HasColumnName("status")
+         .HasConversion<string>()
+         .HasColumnType("task_status");  // או report_status לפי השדה
 
+            //Enum mapping – מאפשר ignore case
+            //entity.Property(e => e.Status)
+            //        .HasColumnName("status")
+
+            //      .HasColumnType("task_status");
+            //   var taskStatusConverter = new ValueConverter<TaskStatus, string>(
+            //v => v.ToString(), // כתיבה: enum -> string
+            //v =>
+            //{
+            //    // קריאה: string -> enum בצורה בטוחה
+            //    if (Enum.TryParse<TaskStatus>(v, true, out var result))
+            //        return result;
+            //    return TaskStatus.w; // ערך ברירת מחדל במקרה של ערך לא חוקי
+            //}
+            //);
+            //entity.Property(e => e.Status)
+            //      .HasConversion(
+            //          v => v.ToString(),
+            //          v => SafeParseTaskStatus(v)
+            //      );
+
+            entity.Property(e => e.Createdat)
+                  .HasColumnType("timestamp without time zone")
+                  .HasColumnName("createdat")
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.Updatedat)
+                  .HasColumnType("timestamp without time zone")
+                  .HasColumnName("updatedat")
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // יחסים
             entity.HasOne(d => d.Assignedworker)
-                .WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.Assignedworkerid)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("fk_task_worker");
+                  .WithMany(p => p.Tasks)
+                  .HasForeignKey(d => d.Assignedworkerid)
+                  .OnDelete(DeleteBehavior.SetNull)
+                  .HasConstraintName("fk_task_worker");
 
             entity.HasOne(d => d.Company)
-                .WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.Companyid)
-                .HasConstraintName("fk_task_company");
+                  .WithMany(p => p.Tasks)
+                  .HasForeignKey(d => d.Companyid)
+                  .HasConstraintName("fk_task_company");
 
             entity.HasOne(d => d.Tasktype)
-                .WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.Tasktypeid)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_task_tasktype");
+                  .WithMany(p => p.Tasks)
+                  .HasForeignKey(d => d.Tasktypeid)
+                  .OnDelete(DeleteBehavior.Restrict)
+                  .HasConstraintName("fk_task_tasktype");
         });
 
         // Tasktype Configuration
@@ -986,7 +1097,8 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Category)
                 .HasColumnName("category")
-                .HasConversion<string>();
+                 .HasConversion<string>()
+           .HasColumnType("task_category");
             entity.Property(e => e.Defaultorder)
                 .HasColumnName("defaultorder")
                 .HasDefaultValue(99);
@@ -1025,7 +1137,16 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Employeeid)
                 .HasMaxLength(50)
                 .HasColumnName("employeeid");
+            entity.Property(e => e.AuthProvider)
+      .HasColumnName("authprovider");
+            entity.Property(e => e.PasswordHash)
+      .HasColumnName("passwordhash");
+
+            entity.Property(e => e.GoogleId)
+      .HasColumnName("googleid");
+
             entity.Property(e => e.Isactive)
+
                 .HasColumnName("isactive")
                 .HasDefaultValue(true);
             entity.Property(e => e.Hiredate).HasColumnName("hiredate");
@@ -1038,21 +1159,6 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnName("updatedat")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            // 🆕 השדות החדשים - במיקום הנכון!
-            entity.Property(e => e.PasswordHash)
-                .HasMaxLength(255)
-                .HasColumnName("passwordhash");
-
-            entity.Property(e => e.GoogleId)
-                .HasMaxLength(100)
-                .HasColumnName("googleid");
-
-            entity.Property(e => e.AuthProvider)
-                .HasMaxLength(20)
-                .HasColumnName("authprovider")
-                .HasDefaultValue("Local");
-
-            // Relationships
             entity.HasOne(d => d.Firm)
                 .WithMany(p => p.Workers)
                 .HasForeignKey(d => d.Firmid)
@@ -1080,6 +1186,10 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Description).HasColumnName("description");
         });
+
+
+
+
 
         OnModelCreatingPartial(modelBuilder);
     }

@@ -1,105 +1,174 @@
-﻿using AccountingSystem.Domain.Interfaces.Repositories;
+﻿using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
+using TaskEntity = AccountingSystem.Domain.Entities.Task;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
     public class TaskRepository : ITaskRepository
     {
-        private AccountingDbContext context;
+        private readonly AccountingDbContext _context;
+        private readonly DbSet<Domain.Entities.Task> _dbSet;
 
         public TaskRepository(AccountingDbContext context)
         {
-            this.context = context;
-        }
-        public Task<Domain.Entities.Task> AddAsync(Domain.Entities.Task entity)
-        {
-            throw new NotImplementedException();
+            _context = context;
+            _dbSet = context.Tasks;
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        // ==================== פעולות בסיסיות ====================
+
+        public async Task<Domain.Entities.Task?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .Include(t => t.Assignedworker)
+                .ToListAsync();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public async Task<IEnumerable<Domain.Entities.Task>> FindAsync(Expression<Func<Domain.Entities.Task, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> FindAsync(Expression<Func<Domain.Entities.Task, bool>> predicate)
+        public async Task<Domain.Entities.Task> AddAsync(Domain.Entities.Task entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
+            return entity;
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetAllAsync()
+        public async System.Threading.Tasks.Task UpdateAsync(Domain.Entities.Task entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+            await System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public Task<Domain.Entities.Task?> GetByIdAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+            }
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetOverdueTasksAsync()
+        public async Task<bool> ExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AnyAsync(t => t.Id == id);
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetPendingTasksAsync()
+        public async Task<int> CountAsync(Func<object, bool> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.CountAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetTasksByCompanyIdAsync(int companyId)
+        // ==================== פעולות ייחודיות למשימות ====================
+
+        /// <summary>
+        /// קבלת כל המשימות של חברה מסוימת
+        /// זה מה שאת צריכה! 🎯
+        /// </summary>
+        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByCompanyIdAsync(int companyId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Where(t => t.Companyid == companyId)
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .Include(t => t.Assignedworker)
+                .OrderBy(t => t.Duedate)  // ממוין לפי תאריך יעד
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetTasksByDateRangeAsync(DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByWorkerIdAsync(int workerId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Where(t => t.Assignedworkerid == workerId)
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .OrderBy(t => t.Duedate)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetTasksByPeriodAsync(DateTime period)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByStatusAsync(string status)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Where(t => t.Status.ToString() == status)
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .Include(t => t.Assignedworker)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetTasksByStatusAsync(string status)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByTaskTypeIdAsync(int taskTypeId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Where(t => t.Tasktypeid == taskTypeId)
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetTasksByTaskTypeIdAsync(int taskTypeId)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByPeriodAsync(DateTime period)
         {
-            throw new NotImplementedException();
+            var periodDateOnly = DateOnly.FromDateTime(period);
+            return await _dbSet
+                .Where(t => t.Period == periodDateOnly)
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetTasksByWorkerIdAsync(int workerId)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException();
+            var startDateOnly = DateOnly.FromDateTime(startDate);
+            var endDateOnly = DateOnly.FromDateTime(endDate);
+
+            return await _dbSet
+                .Where(t => t.Period >= startDateOnly && t.Period <= endDateOnly)
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Domain.Entities.Task>> GetTasksDueInNextDaysAsync(int days)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetOverdueTasksAsync()
         {
-            throw new NotImplementedException();
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            return await _dbSet
+                .Where(t => t.Duedate < today && t.Status.ToString() == "Pending")
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .Include(t => t.Assignedworker)
+                .ToListAsync();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Domain.Entities.Task entity)
+        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksDueInNextDaysAsync(int days)
         {
-            throw new NotImplementedException();
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var futureDate = today.AddDays(days);
+
+            return await _dbSet
+                .Where(t => t.Duedate >= today && t.Duedate <= futureDate && t.Status.ToString() == "Pending")
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .Include(t => t.Assignedworker)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Domain.Entities.Task>> GetPendingTasksAsync()
+        {
+            return await GetTasksByStatusAsync("Pending");
         }
     }
 }
