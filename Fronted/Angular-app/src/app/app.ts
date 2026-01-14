@@ -1,15 +1,21 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';  // ← וודא שיש את כל 3
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
     standalone: true,
 
-  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 
+  imports: [
+    CommonModule, 
+    RouterOutlet, 
+    RouterLink, 
+    RouterLinkActive  // ← חשוב! זה חייב להיות כאן
+  ],
 })
-export class App {
-  protected readonly title = signal('angular-app');
+export class AppComponent {
+  title = 'accounting-system';
 }
