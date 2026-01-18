@@ -17,8 +17,6 @@ export class HomeComponent implements OnInit{
   currentWorker!:WorkerInfoDto;
   ngOnInit(): void {
     this.currentWorker=this.workerService.currentWorker;
-    console.log(this.currentWorker);
-    
   }
 
   // ניווט לדף חברות עובדת

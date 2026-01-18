@@ -215,4 +215,20 @@ export class ReportsListComponent implements OnInit {
       });
     }
   }
+
+  getEmptyStateMessage(): string {
+    if (this.selectedStatus === 'Pending') {
+      return 'אין דוחות ממתינים להגשה 🎉';
+    } else if (this.selectedStatus === 'overdue') {
+      return 'אין דוחות באיחור - מצוין! 👏';
+    } else if (this.selectedStatus === 'Reported') {
+      return 'אין דוחות שדווחו';
+    } else if (this.selectedStatus === 'Paid') {
+      return 'אין דוחות ששולמו';
+    } else if (this.searchTerm) {
+      return `לא נמצאו תוצאות עבור "${this.searchTerm}"`;
+    } else {
+      return 'לא קיימים דוחות במערכת';
+    }
+  }
 }

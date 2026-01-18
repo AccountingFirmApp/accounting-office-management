@@ -146,5 +146,10 @@ namespace AccountingSystem.Infrastructure.Repositories
 
             return await query.AnyAsync();
         }
+
+        System.Threading.Tasks.Task IGenericRepository<Company>.AddAsync(Company entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

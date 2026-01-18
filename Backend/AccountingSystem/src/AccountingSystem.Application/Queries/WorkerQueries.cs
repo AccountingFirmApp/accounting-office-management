@@ -48,6 +48,3 @@ public class GetWorkerCompaniesQuery : IRequest<List<CompanyDto>>
         WorkerId = workerId;
     }
 }
-
-// ❌ מחקתי את כל ה-Commands מכאן!
-// הם צריכים להיות רק ב-Commands/Workers/WorkerCommands.cs
