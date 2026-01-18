@@ -115,19 +115,27 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CompanyDto, CreateCompanyCommand, UpdateCompanyCommand } from '../models/Company';
 import { TaskDto } from '../models/task';
-
+import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
 export class CompanyService {
   private apiUrl = 'https://localhost:7118/api/companies';
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
-  constructor(private http: HttpClient) { }
+  // constructor(private http: HttpClient) { }
 
   getAllCompanies(): Observable<CompanyDto[]> {
-    console.log('🔍 קריאה ל-API:', this.apiUrl);
-    return this.http.get<CompanyDto[]>(this.apiUrl);
+    const token = this.authService.getToken();
+    console.log('🔍 קריאה ל-API עם token:', token);
+  
+    return this.http.get<CompanyDto[]>('https://localhost:7118/api/companies', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
   }
+  
 
   getCompanyById(id: number): Observable<CompanyDto> {
     console.log('🔍 קריאה ל-API:', `${this.apiUrl}/${id}`);

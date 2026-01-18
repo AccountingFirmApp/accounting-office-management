@@ -43,12 +43,16 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
-
-        public async Task<Domain.Entities.Task> AddAsync(Domain.Entities.Task entity)
+        public async System.Threading.Tasks.Task AddAsync(Domain.Entities.Task entity)
         {
             await _dbSet.AddAsync(entity);
-            return entity;
+            // לא מחזירים כלום - רק Task
         }
+        //public async Task<Domain.Entities.Task> AddAsync(Domain.Entities.Task entity)
+        //{
+        //    await _dbSet.AddAsync(entity);
+        //    return entity;
+        //}
 
         public async System.Threading.Tasks.Task UpdateAsync(Domain.Entities.Task entity)
         {

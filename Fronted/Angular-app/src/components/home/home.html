@@ -43,7 +43,8 @@
       <p>ניהול ומעקב אחר כל הדוחות</p>
       <button class="card-button">כניסה ←</button>
     </div>
-    <div class="menu-card" (click)="navigateToCompany()">
+    <div class="menu-card" 
+    *ngIf="auth.isAdmin()" (click)="navigateToCompany()">
       <div class="card-icon">📠</div>
       <h3>חברות</h3>
       <p>ניהול ומעקב אחר כל החברות</p>

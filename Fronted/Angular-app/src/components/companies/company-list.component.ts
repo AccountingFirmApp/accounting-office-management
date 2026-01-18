@@ -230,10 +230,11 @@
 //   }
 // }
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule ,Location} from '@angular/common';
 import { Router } from '@angular/router';
 import { CompanyService } from '../../services/company';
 import { CompanyDto } from '../../models/Company';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-company-list',
@@ -250,7 +251,10 @@ export class CompanyListComponent implements OnInit {
   constructor(
     private companyService: CompanyService,
     private router: Router,
-    private cdr: ChangeDetectorRef  // ← הוסף את זה
+    private cdr: ChangeDetectorRef , // ← הוסף את זה
+    private location:Location,
+    public auth: AuthService
+
   ) { 
     console.log('✅ CompanyListComponent נוצר');
   }
@@ -308,5 +312,9 @@ export class CompanyListComponent implements OnInit {
         }
       });
     }
+  }
+
+  goHome(): void {
+    this.router.navigate(['/home']);
   }
 }

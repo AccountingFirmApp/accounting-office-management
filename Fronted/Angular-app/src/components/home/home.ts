@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,10 @@ import { WorkerInfoDto } from '../../models/auth';
 })
 export class HomeComponent implements OnInit{
   
-  constructor(private router: Router,private workerService:WorkerService) { }
+  constructor(private router: Router,private workerService:WorkerService,
+        public auth: AuthService
+    
+  ) { }
   currentWorker!:WorkerInfoDto;
   ngOnInit(): void {
     this.currentWorker=this.workerService.currentWorker;
