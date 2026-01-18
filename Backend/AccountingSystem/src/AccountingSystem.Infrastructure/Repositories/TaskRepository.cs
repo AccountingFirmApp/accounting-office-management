@@ -22,6 +22,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Tasks;
         }
 
+
         // ==================== פעולות בסיסיות ====================
 
         public async Task<Domain.Entities.Task?> GetByIdAsync(int id)

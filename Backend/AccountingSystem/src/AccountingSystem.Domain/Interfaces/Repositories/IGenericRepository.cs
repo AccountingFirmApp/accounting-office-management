@@ -37,7 +37,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תוסיף Entity חדש
         /// דוגמה: תוסיף חברה חדשה למערכת
         /// </summary>
-        Task<T> AddAsync(T entity);
+        Task AddAsync(T entity);
 
         /// <summary>
         /// תעדכן Entity קיים

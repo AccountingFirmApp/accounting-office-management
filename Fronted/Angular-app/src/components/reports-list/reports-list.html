@@ -65,9 +65,13 @@
 
   <!-- Empty State -->
   <div *ngIf="!loading && filteredReports.length === 0" class="empty-state">
-    <div class="empty-icon">📋</div>
-    <h3>אין דוחות להצגה</h3>
-    <p>לא נמצאו דוחות התואמים את הסינון</p>
+    <div class="success-animation">
+      <div class="success-icon">✨</div>
+      <div class="checkmark">✓</div>
+    </div>
+    <h3>כל הכבוד!</h3>
+    <p class="success-message">אין דוחות ממתינים! כל העבודה בוצעה</p>
+    <p class="sub-message">{{ getEmptyStateMessage() }}</p>
   </div>
 
   <!-- Reports Table -->

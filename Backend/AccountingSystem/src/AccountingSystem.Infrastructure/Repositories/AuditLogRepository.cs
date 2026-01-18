@@ -13,7 +13,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Auditlog> AddAsync(Auditlog entity)
+        public System.Threading.Tasks.Task AddAsync(Auditlog entity)
         {
             throw new NotImplementedException();
         }

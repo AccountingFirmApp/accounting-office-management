@@ -107,7 +107,7 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
             Email = request.Email,
             Phone = request.Phone,
             Isactive = request.Isactive,
-            //Role = request.Role,
+            Roleid = request.Roleid,
             Createdat = DateTime.UtcNow
         };
 

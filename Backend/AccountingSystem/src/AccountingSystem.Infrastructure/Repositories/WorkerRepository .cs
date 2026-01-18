@@ -19,11 +19,11 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             this.context = context;
         }
-
-        public Task<Worker> AddAsync(Worker entity)
+        public async System.Threading.Tasks.Task AddAsync(Worker entity)
         {
-            throw new NotImplementedException();
+            await context.AddAsync(entity);
         }
+
 
         public Task<int> CountAsync(Func<object, bool> value)
         {
@@ -102,5 +102,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

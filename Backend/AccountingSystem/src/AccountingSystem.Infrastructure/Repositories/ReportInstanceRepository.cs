@@ -1445,5 +1445,10 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .OrderBy(r => r.Period)
                 .ToListAsync();
         }
+
+        Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
