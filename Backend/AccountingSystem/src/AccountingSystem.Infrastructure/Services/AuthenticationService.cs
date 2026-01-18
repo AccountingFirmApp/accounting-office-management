@@ -24,10 +24,62 @@ public class AuthenticationService : IAuthenticationService
     }
 
 
+    //public async Task<LoginResponseDto> LoginAsync(
+    //string email,
+    //string password,
+    //CancellationToken cancellationToken = default)
+    //{
+    //    var worker = await _context.Workers
+    //        .Include(w => w.Role)
+    //        .Include(w => w.Firm)
+    //        .FirstOrDefaultAsync(w => w.Email == email, cancellationToken);
+
+    //    if (worker == null)
+    //    {
+    //        throw new UnauthorizedAccessException("אימייל או סיסמה שגויים");
+    //    }
+
+    //    if (worker.Isactive != true)
+    //    {
+    //        throw new UnauthorizedAccessException("חשבון המשתמש אינו פעיל");
+    //    }
+
+    //    // 🔥 תיקון: בדיקה אם יש PasswordHash בכלל
+    //    if (string.IsNullOrEmpty(worker.PasswordHash))
+    //    {
+    //        throw new UnauthorizedAccessException(
+    //            "חשבון זה נרשם דרך Google. אנא השתמש בכפתור 'התחבר עם Google'");
+    //    }
+
+    //    bool isPasswordValid = await VerifyPasswordAsync(password, worker.PasswordHash);
+    //    if (!isPasswordValid)
+    //    {
+    //        throw new UnauthorizedAccessException("אימייל או סיסמה שגויים");
+    //    }
+
+    //    string token = _tokenService.GenerateToken(worker);
+
+    //    return new LoginResponseDto
+    //    {
+    //        Token = token,
+    //        TokenType = "Bearer",
+    //        ExpiresIn = 3600,
+    //        Worker = new WorkerInfoDto
+    //        {
+    //            Id = worker.Id,
+    //            EmployeeId = worker.Employeeid ?? "",
+    //            Firstname = worker.Firstname,
+    //            Lastname = worker.Lastname,
+    //            Email = worker.Email,
+    //            RoleName = worker.Role.Name,
+    //            FirmId = worker.Firmid
+    //        }
+    //    };
+    //}
     public async Task<LoginResponseDto> LoginAsync(
-    string email,
-    string password,
-    CancellationToken cancellationToken = default)
+string email,
+string password,
+CancellationToken cancellationToken = default)
     {
         var worker = await _context.Workers
             .Include(w => w.Role)

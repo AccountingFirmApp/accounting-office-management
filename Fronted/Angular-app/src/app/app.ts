@@ -1,15 +1,14 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router'; // Ensure routing modules are imported
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-    standalone: true,
-
-  imports: [RouterOutlet],
+  standalone: true, // Mark as standalone
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive], // Add necessary imports
   templateUrl: './app.html',
-  styleUrl: './app.css'
-
+  styleUrls: ['./app.css']
 })
-export class App {
-  protected readonly title = signal('angular-app');
+export class AppComponent {
+  title = 'accounting-system';
 }

@@ -2,6 +2,8 @@
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application;
 using AccountingSystem.Application.Queries.Companies;
+using AccountingSystem.Application.Queries.Tasks;
+
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
@@ -201,4 +203,57 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
             return Unit.Value;
         }
     }
+}
+public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<TaskDto>>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public GetTasksByCompanyIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
+
+    public async Task<List<TaskDto>> Handle(GetTasksByCompanyIdQuery request, CancellationToken cancellationToken)
+    {
+        // 1. בדוק שהחברה קיימת
+        var companyExists = await _unitOfWork.Companies.ExistsAsync(request.CompanyId);
+        if (!companyExists)
+        {
+            throw new Exception($"חברה עם ID {request.CompanyId} לא נמצאה");
+        }
+
+        // 2. קבל את כל המשימות של החברה
+        var tasks = await _unitOfWork.Tasks.GetTasksByCompanyIdAsync(request.CompanyId);
+
+        // 3. המר ל-DTOs
+        var taskDtos = tasks.Select(t => new TaskDto
+        {
+            Id = t.Id,
+            CompanyId = t.Companyid,
+            TaskTypeId = t.Tasktypeid,
+            Period = t.Period.ToDateTime(TimeOnly.MinValue),
+            DueDate = t.Duedate.HasValue
+? t.Duedate.Value.ToDateTime(TimeOnly.MinValue)
+: null,
+            CompletedDate = t.Completeddate.HasValue
+? t.Completeddate.Value.ToDateTime(TimeOnly.MinValue)
+: null,
+            AssignedWorkerId = t.Assignedworkerid,
+            Notes = t.Notes,
+            Status = t.Status.ToString(),
+            CreatedAt = t.Createdat ?? DateTime.MinValue,
+            UpdatedAt = t.Updatedat ?? DateTime.MinValue,
+
+            CompanyName = t.Company?.Name ?? string.Empty,
+            TaskTypeName = t.Tasktype?.Name ?? string.Empty,
+            AssignedWorkerName = t.Assignedworker != null
+                ? $"{t.Assignedworker.Firstname} {t.Assignedworker.Lastname}"
+                : null
+        }).ToList();
+
+        return taskDtos;
+    }
+
 }

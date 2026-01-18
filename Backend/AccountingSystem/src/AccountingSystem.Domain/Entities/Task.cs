@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+//using AccountingSystem.Domain.Enums;  // ← הוסף את זה!
 
 namespace AccountingSystem.Domain.Entities;
 
@@ -17,7 +18,7 @@ public partial class Task
 
     public int? Assignedworkerid { get; set; }
     public string? Notes { get; set; }
-    public TaskStatus Status { get; set; }
+    public AccountingSystem.Domain.Enums.TaskStatus1 Status { get; set; }
     public DateTime? Createdat { get; set; }
 
     public DateTime? Updatedat { get; set; }

@@ -1,6 +1,8 @@
 ﻿using AccountingSystem.Application.Commands.Companies;
+using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.Companies;
+using AccountingSystem.Application.Queries.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -132,6 +134,53 @@ namespace AccountingSystem.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        /// <summary>
+        /// קבלת כל המשימות של חברה מסוימת
+        /// GET: api/companies/5/tasks
+        /// </summary>
+        [HttpGet("{id}/tasks")]
+        public async Task<ActionResult<List<TaskDto>>> GetCompanyTasks(int id)
+        {
+            try
+            {
+                var query = new AccountingSystem.Application.Queries.Tasks.GetTasksByCompanyIdQuery(id);
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPatch("{companyId}/tasks/{taskId}/status")]
+        public async Task<ActionResult> UpdateTaskStatus(
+        int companyId,
+        int taskId,
+        [FromBody] UpdateTaskStatusRequest request)
+        {
+            try
+            {
+                var command = new UpdateTaskStatusCommand
+                {
+                    TaskId = taskId,
+                    Status = request.Status
+                };
+
+                await _mediator.Send(command);
+                return Ok(new { message = "הסטטוס עודכן בהצלחה" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // DTO לבקשה
+        public class UpdateTaskStatusRequest
+        {
+            public string Status { get; set; }
         }
     }
 }
