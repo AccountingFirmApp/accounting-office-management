@@ -50,13 +50,33 @@ namespace AccountingSystem.Application.Mappings
             // ========================================
             // Worker Mappings
             // ========================================
+            //CreateMap<Worker, WorkerDto>()
+            //    .ForMember(d => d.FirmName,
+            //        opt => opt.MapFrom(s => s.Firm != null ? s.Firm.Name : string.Empty))
+            //    .ForMember(d => d.RoleName,
+            //        opt => opt.MapFrom(s => s.Role != null ? s.Role.Name : string.Empty))
+            //    .ForMember(d => d.FullName,
+            //        opt => opt.MapFrom(s => $"{s.Firstname} {s.Lastname}"));
             CreateMap<Worker, WorkerDto>()
-                .ForMember(d => d.FirmName,
-                    opt => opt.MapFrom(s => s.Firm != null ? s.Firm.Name : string.Empty))
-                .ForMember(d => d.RoleName,
-                    opt => opt.MapFrom(s => s.Role != null ? s.Role.Name : string.Empty))
-                .ForMember(d => d.FullName,
-                    opt => opt.MapFrom(s => $"{s.Firstname} {s.Lastname}"));
+    .ForMember(d => d.FirmId, opt => opt.MapFrom(s => s.Firmid))
+    .ForMember(d => d.RoleId, opt => opt.MapFrom(s => s.Roleid))
+    .ForMember(d => d.FirstName, opt => opt.MapFrom(s => s.Firstname))
+    .ForMember(d => d.LastName, opt => opt.MapFrom(s => s.Lastname))
+    .ForMember(d => d.EmployeeId, opt => opt.MapFrom(s => s.Employeeid ?? string.Empty))
+    .ForMember(d => d.IsActive, opt => opt.MapFrom(s => s.Isactive ?? false))
+    .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.Createdat ?? DateTime.MinValue))
+    .ForMember(d => d.UpdatedAt, opt => opt.MapFrom(s => s.Updatedat ?? DateTime.MinValue))
+    .ForMember(d => d.HireDate,
+        opt => opt.MapFrom(s =>
+            s.Hiredate.HasValue
+                ? s.Hiredate.Value.ToDateTime(TimeOnly.MinValue)
+                : (DateTime?)null
+        ))
+    .ForMember(d => d.FirmName,
+        opt => opt.MapFrom(s => s.Firm != null ? s.Firm.Name : string.Empty))
+    .ForMember(d => d.RoleName,
+        opt => opt.MapFrom(s => s.Role != null ? s.Role.Name : string.Empty))
+    .ForMember(d => d.FullName, opt => opt.Ignore()); // ⛔ מחושב אוטומטית
 
             CreateMap<CreateWorkerDto, Worker>()
                 .ForMember(d => d.Id, opt => opt.Ignore())

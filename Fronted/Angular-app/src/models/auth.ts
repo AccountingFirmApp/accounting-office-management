@@ -17,9 +17,10 @@ export interface LoginResponseDto {
 export interface WorkerInfoDto {
   id: number;
   employeeId: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   roleName: string;
   firmId: number;
+  isActive: boolean;
 }

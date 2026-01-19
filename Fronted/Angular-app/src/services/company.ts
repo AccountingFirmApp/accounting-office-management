@@ -166,4 +166,15 @@ export class CompanyService {
     console.log('🔄 עדכון סטטוס:', url, status);
     return this.http.patch(url, { status });
   }
+  addCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
+    const token = this.authService.getToken();
+    console.log('🔍 יצירת חברה חדשה עם token:', token);
+  
+    return this.http.post<CompanyDto>(this.apiUrl, command, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+  
 }

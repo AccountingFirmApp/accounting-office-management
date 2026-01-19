@@ -30,10 +30,18 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var worker = await context.Workers.FindAsync(id);
+
+            if (worker == null)
+                throw new KeyNotFoundException($"Worker with id {id} not found");
+            worker.Isactive = false;
+
+            context.Workers.Remove(worker);
+            await context.SaveChangesAsync();
         }
+
 
         public Task<bool> EmailExistsAsync(string email, int? excludeWorkerId = null)
         {
@@ -70,7 +78,8 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public Task<Worker?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return  context.Workers
+                   .FirstOrDefaultAsync(w => w.Id == id);
         }
 
         public Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId)
