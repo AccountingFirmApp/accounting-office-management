@@ -1,0 +1,60 @@
+<button class="back-btn" (click)="goHome()">← חזרה</button>
+
+<div class="workers-grid">
+
+    <div
+      class="worker-card"
+      *ngFor="let worker of workers"
+    >
+  
+      <!-- Header -->
+      <div class="card-header">
+        <div class="worker-info">
+          <h3>{{ worker.firstName }}</h3>
+          <h3>{{ worker.lastName }}</h3>
+
+          <span class="role-badge">{{ worker.roleName }}</span>
+        </div>
+  
+        <span
+          class="status-badge"
+          [class.active]="worker.isActive"
+          [class.inactive]="!worker.isActive"
+        >
+          {{ worker.isActive ? 'פעיל' : 'לא פעיל' }}
+        </span>
+      </div>
+  
+      <!-- Content -->
+      <div class="card-content">
+        <div class="info-row">
+          <span class="label">אימייל</span>
+          <span class="value">{{ worker.email }}</span>
+        </div>
+  
+        <div class="info-row">
+          <span class="label">מספר עובד</span>
+          <span class="value">{{ worker.employeeId }}</span>
+        </div>
+        
+      </div>
+  
+      <!-- Footer -->
+      <div class="card-footer">
+        <button class="btn-action view" (click)="viewWorker(worker)">
+          צפייה
+        </button>
+        <button class="btn-action edit" (click)="openEdit(worker)">
+          עריכה
+        </button>
+        <button class="btn-action delete" (click)="deleteWorker(worker.id)"> 
+          מחיקה
+        </button> 
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  <button class="floating-add" (click)="openCreate()">＋</button>
+  

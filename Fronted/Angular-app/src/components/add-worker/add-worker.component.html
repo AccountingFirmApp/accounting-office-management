@@ -1,0 +1,33 @@
+<div class="worker-form-container">
+    <h2>{{ isEditMode ? 'עריכת עובד' : 'הוספת עובד' }}</h2>
+  
+    <form [formGroup]="workerForm" (ngSubmit)="onSubmit()" class="worker-form">
+      <div class="form-group">
+        <label>שם</label>
+        <input formControlName="firstName" type="text" placeholder="שם" />
+      </div>
+  
+      <div class="form-group">
+        <label>אימייל</label>
+        <input formControlName="email" type="email" placeholder="אימייל" />
+      </div>
+  
+      <div class="form-group">
+        <label>תפקיד</label>
+        <input formControlName="RoleId" type="text" placeholder="תפקיד" />
+      </div>
+  
+      <div class="form-group">
+        <label>מספר חברה</label>
+        <input formControlName="firmId" type="number" placeholder="מספר חברה" />
+      </div>
+  
+      <div class="form-actions">
+        <button type="submit" [disabled]="workerForm.invalid">
+          {{ isEditMode ? 'שמור' : 'צור' }}
+        </button>
+        <button type="button" class="back-btn" (click)="goback()">חזרה</button>
+      </div>
+    </form>
+  </div>
+  

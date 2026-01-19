@@ -313,7 +313,9 @@ export class CompanyListComponent implements OnInit {
       });
     }
   }
-
+addCompany(): void {
+    this.router.navigate(['/companies/create']);
+  }
   goHome(): void {
     this.router.navigate(['/home']);
   }

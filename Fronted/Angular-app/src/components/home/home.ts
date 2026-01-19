@@ -34,4 +34,7 @@ export class HomeComponent implements OnInit{
   navigateToCompany() {
     this.router.navigate(['/companies']);
   }
+  navigateToWorker() {
+    this.router.navigate(['/workers']);
+  }
 }
