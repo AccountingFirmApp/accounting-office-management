@@ -21,6 +21,8 @@ export interface WorkerInfoDto {
   lastName: string;
   email: string;
   roleName: string;
+  roleId: number;        // ← מוסיפים את זה
+
   firmId: number;
   isActive: boolean;
 }

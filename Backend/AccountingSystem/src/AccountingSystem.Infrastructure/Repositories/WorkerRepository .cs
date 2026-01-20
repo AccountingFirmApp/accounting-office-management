@@ -107,10 +107,22 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Worker entity)
+        public async System.Threading.Tasks.Task UpdateAsync(Worker entity)
         {
-            throw new NotImplementedException();
+            var existingWorker = await context.Workers.FindAsync(entity.Id);
+            if (existingWorker == null)
+                throw new KeyNotFoundException("Worker not found."); // זה יזרוק חריגה אם לא קיים
+
+            existingWorker.Firstname = entity.Firstname;
+            existingWorker.Lastname = entity.Lastname;
+            existingWorker.Email = entity.Email;
+            existingWorker.Roleid = entity.Roleid;
+            existingWorker.Firmid = entity.Firmid;
+            existingWorker.Isactive = entity.Isactive;
+
+            await context.SaveChangesAsync(); // ✅ בסוף המתודה יש Task שמסתיים
         }
+
 
 
     }

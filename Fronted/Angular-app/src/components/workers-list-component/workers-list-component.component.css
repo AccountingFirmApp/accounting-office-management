@@ -1,10 +1,10 @@
 /* Grid */
-.workers-grid {
+/* .workers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
   }
-  
+   */
   /* Card */
   .worker-card {
     background: white;
@@ -141,5 +141,22 @@
   
   .floating-add:hover {
     transform: scale(1.1);
+  }
+  .workers-page {
+    max-width: 1200px;
+    margin: 0 auto;          /* 🔥 מרכז את כל העמוד */
+    padding: 2rem 1rem;
+  }
+  
+  .workers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
+    gap: 1.5rem;
+  
+    justify-content: center;   /* מרכז את כל הגריד */
+  }
+  
+  body {
+    direction: rtl;
   }
   
