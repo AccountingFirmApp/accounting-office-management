@@ -865,6 +865,8 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
+
+
         // Reportinstance Configuration
         modelBuilder.Entity<Reportinstance>(entity =>
         {
@@ -876,21 +878,29 @@ public partial class AccountingDbContext : DbContext
             entity.HasIndex(e => e.Period).HasDatabaseName("idx_report_period");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Configid).HasColumnName("configid");
+
+            // 🔥 תיקון קריטי - הוסף .HasColumnType("integer")
+            entity.Property(e => e.Configid)
+                .HasColumnName("configid")
+                .HasColumnType("integer");
+
             entity.Property(e => e.Period).HasColumnName("period");
             entity.Property(e => e.Amount)
                 .HasPrecision(12, 2)
                 .HasColumnName("amount");
 
+            // 🔥 תיקון - הוסף HasConversion
             entity.Property(e => e.Status)
-      .HasColumnName("status")
-    .HasColumnType("report_status");
+                .HasColumnName("status")
+                .HasConversion<string>()  // ← הוסף את זה!
+                .HasColumnType("report_status");
 
-
+            // 🔥 תיקון - הוסף HasConversion
             entity.Property(e => e.PaymentMethod)
-                .HasColumnName("paymentmethod");
+                .HasColumnName("paymentmethod")
+                .HasConversion<string>()  // ← הוסף את זה!
+                .HasColumnType("payment_method");
 
-            //.HasConversion<string>();
             entity.Property(e => e.Receiptdate).HasColumnName("receiptdate");
             entity.Property(e => e.Reporteddate).HasColumnName("reporteddate");
             entity.Property(e => e.Paiddate).HasColumnName("paiddate");
@@ -909,6 +919,51 @@ public partial class AccountingDbContext : DbContext
                 .HasForeignKey(d => d.Configid)
                 .HasConstraintName("fk_instance_config");
         });
+
+        //    // Reportinstance Configuration
+        //    modelBuilder.Entity<Reportinstance>(entity =>
+        //    {
+        //        entity.ToTable("reportinstance");
+
+        //        entity.HasKey(e => e.Id).HasName("reportinstance_pkey");
+
+        //        entity.HasIndex(e => e.Configid).HasDatabaseName("idx_report_config");
+        //        entity.HasIndex(e => e.Period).HasDatabaseName("idx_report_period");
+
+        //        entity.Property(e => e.Id).HasColumnName("id");
+        //        entity.Property(e => e.Configid).HasColumnName("configid");
+        //        entity.Property(e => e.Period).HasColumnName("period");
+        //        entity.Property(e => e.Amount)
+        //            .HasPrecision(12, 2)
+        //            .HasColumnName("amount");
+
+        //        entity.Property(e => e.Status)
+        //  .HasColumnName("status")
+        //.HasColumnType("report_status");
+
+
+        //        entity.Property(e => e.PaymentMethod)
+        //            .HasColumnName("paymentmethod");
+
+        //        //.HasConversion<string>();
+        //        entity.Property(e => e.Receiptdate).HasColumnName("receiptdate");
+        //        entity.Property(e => e.Reporteddate).HasColumnName("reporteddate");
+        //        entity.Property(e => e.Paiddate).HasColumnName("paiddate");
+        //        entity.Property(e => e.Comments).HasColumnName("comments");
+        //        entity.Property(e => e.Createdat)
+        //            .HasColumnType("timestamp without time zone")
+        //            .HasColumnName("createdat")
+        //            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        //        entity.Property(e => e.Updatedat)
+        //            .HasColumnType("timestamp without time zone")
+        //            .HasColumnName("updatedat")
+        //            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        //        entity.HasOne(d => d.Config)
+        //            .WithMany(p => p.Reportinstances)
+        //            .HasForeignKey(d => d.Configid)
+        //            .HasConstraintName("fk_instance_config");
+        //    });
 
         // Reporttype Configuration
         modelBuilder.Entity<Reporttype>(entity =>

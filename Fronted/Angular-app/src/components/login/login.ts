@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit, NgZone, OnDestroy } from '@angular/core';
+// components/login/login.component.ts
+import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +17,7 @@ declare const google: any;
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
-export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
+export class LoginComponent implements OnInit, AfterViewInit {
   email: string = '';
   password: string = '';
   errorMessage: string = '';
@@ -26,18 +27,16 @@ export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
   private googleClientId: string = environment.googleClientId;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     private ngZone: NgZone,
-    private workerServise:WorkerService
+    private workerService: WorkerService
   ) { }
 
   ngOnInit(): void {
     this.loadGoogleSignIn();
   }
- ngOnDestroy(): void {
-    console.log(this.workerServise.currentWorker);
-  }
+
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.renderGoogleButton();
@@ -110,32 +109,27 @@ export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
 
     this.authService.googleLogin(request).subscribe({
       next: (result) => {
-        this.authService.saveToken(result.token);
-        this.workerServise.currentWorker=result.worker;
+        // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
+        // ✅ שמירת פרטי העובד ב-WorkerService
+        this.workerService.currentWorker = result.worker;
+        
+        console.log('✅ Google login successful');
         this.isLoading = false;
         this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('🔴 שגיאה בהתחברות Google:', error);
-        console.log('📊 סטטוס שגיאה:', error.status);
-        console.log('📋 isLoading לפני:', this.isLoading);
-
         this.isLoading = false;
 
-        console.log('📋 isLoading אחרי:', this.isLoading);
-
-        // הצג הודעת שגיאה מפורטת ללקוח
         if (error.status === 0) {
-          this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט או פנה לתמיכה';
+          this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט';
         } else if (error.status === 401) {
           this.errorMessage = error.error?.message || 'אימות Google נכשל. המשתמש אינו רשום במערכת';
         } else if (error.status === 500) {
-          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת. אנא נסה שוב מאוחר יותר';
+          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת';
         } else {
-          this.errorMessage = `שגיאה בהתחברות עם Google (קוד: ${error.status}). אנא נסה שוב או פנה לתמיכה`;
+          this.errorMessage = `שגיאה בהתחברות עם Google (קוד: ${error.status})`;
         }
-
-        console.log('💬 הודעת שגיאה:', this.errorMessage);
       }
     });
   }
@@ -161,23 +155,25 @@ export class LoginComponent implements OnInit, AfterViewInit,OnDestroy {
 
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
-        this.authService.saveToken(response.token);
-        this.workerServise.currentWorker=response.worker;
+        // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
+        // ✅ שמירת פרטי העובד ב-WorkerService
+        this.workerService.currentWorker = response.worker;
+        
+        console.log('✅ Login successful');
         this.isLoading = false;
         this.router.navigate(['/home']);
       },
       error: (error) => {
         this.isLoading = false;
 
-        // הצג הודעת שגיאה מפורטת ללקוח
         if (error.status === 0) {
-          this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט או פנה לתמיכה';
+          this.errorMessage = 'לא ניתן להתחבר לשרת';
         } else if (error.status === 401) {
-          this.errorMessage = error.error?.message || 'אימייל או סיסמה שגויים. אנא נסה שוב';
+          this.errorMessage = error.error?.message || 'אימייל או סיסמה שגויים';
         } else if (error.status === 500) {
-          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת. אנא נסה שוב מאוחר יותר';
+          this.errorMessage = error.error?.message || 'שגיאה פנימית בשרת';
         } else {
-          this.errorMessage = `שגיאה בהתחברות (קוד: ${error.status}). אנא נסה שוב או פנה לתמיכה`;
+          this.errorMessage = `שגיאה בהתחברות (קוד: ${error.status})`;
         }
       }
     });

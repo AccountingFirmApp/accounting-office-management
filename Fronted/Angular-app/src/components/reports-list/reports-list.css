@@ -1,14 +1,40 @@
+<<<<<<< HEAD
 /* Reports List - 2026 Professional Design */
 
 .reports-list {
+=======
+
+.reports-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   direction: rtl;
   padding: var(--spacing-xl);
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Filters Section */
+/* כותרת */
+.header {
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* פילטרים */
 .filters-section {
+<<<<<<< HEAD
   background-color: var(--color-white);
   border-radius: var(--radius-xl);
   padding: var(--spacing-xl);
@@ -18,10 +44,22 @@
 
 .search-box {
   margin-bottom: var(--spacing-lg);
+=======
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
 }
 
-.search-box input {
+.search-box {
+  margin-bottom: 15px;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
+}
+
+.search-input {
   width: 100%;
+<<<<<<< HEAD
   padding: var(--spacing-md) var(--spacing-lg);
   border: 2px solid var(--color-gray-300);
   border-radius: var(--radius-lg);
@@ -32,16 +70,28 @@
 
 .search-box input::placeholder {
   color: var(--color-gray-400);
+=======
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
-.search-box input:focus {
+.search-input:focus {
   outline: none;
+<<<<<<< HEAD
   border-color: var(--color-primary);
   box-shadow: 0 0 0 4px var(--color-primary-light);
+=======
+  border-color: #4CAF50;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
-.filter-chips {
+.filter-controls {
   display: flex;
+<<<<<<< HEAD
   gap: var(--spacing-md);
   flex-wrap: wrap;
 }
@@ -105,12 +155,107 @@
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 0 auto var(--spacing-lg);
+=======
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+}
+
+.btn-clear {
+  padding: 10px 20px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn-clear:hover:not(:disabled) {
+  background: #d32f2f;
+}
+
+.btn-clear:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* סטטיסטיקה */
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  border-right: 4px solid #2196F3;
+}
+
+.stat-card.pending {
+  border-right-color: #FF9800;
+}
+
+.stat-card.reported {
+  border-right-color: #2196F3;
+}
+
+.stat-card.paid {
+  border-right-color: #4CAF50;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-label {
+  color: #666;
+  margin-top: 5px;
+}
+
+/* טעינה */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 8px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
+<<<<<<< HEAD
 .loading p {
   color: var(--color-gray-600);
   font-size: var(--font-size-base);
@@ -145,6 +290,30 @@
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+=======
+/* שגיאה */
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border-right: 4px solid #f44336;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+}
+
+/* טבלה */
+.reports-table-wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
 .reports-table {
@@ -153,6 +322,7 @@
 }
 
 .reports-table thead {
+<<<<<<< HEAD
   background-color: var(--color-gray-50);
 }
 
@@ -210,10 +380,36 @@
   text-align: right;
   font-size: var(--font-size-sm);
   color: var(--color-gray-700);
+=======
+  background: #f5f5f5;
+}
+
+.reports-table th {
+  padding: 15px 10px;
+  text-align: right;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.reports-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s;
+}
+
+.reports-table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.reports-table td {
+  padding: 12px 10px;
+  text-align: right;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
 .company-name {
   font-weight: 600;
+<<<<<<< HEAD
   color: var(--color-gray-900);
   font-size: var(--font-size-base);
 }
@@ -226,10 +422,22 @@
   font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--color-gray-700);
+=======
+  color: #2196F3;
+}
+
+.short-code {
+  font-family: monospace;
+  background: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
 .amount {
   font-weight: 600;
+<<<<<<< HEAD
   color: var(--color-gray-900);
   font-size: var(--font-size-base);
 }
@@ -256,11 +464,23 @@
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
+=======
+  color: #4CAF50;
+}
+
+/* סטטוס */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
+<<<<<<< HEAD
 .status-badge.pending {
   background-color: var(--color-warning-light);
   color: var(--color-warning);
@@ -279,11 +499,54 @@
 .status-badge.approved {
   background-color: #f3e5f5;
   color: #7c3aed;
+=======
+.status-pending {
+  background: #fff3e0;
+  color: #f57c00;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
-/* Actions */
+.status-reported {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-paid {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.status-approved {
+  background: #f3e5f5;
+  color: #9c27b0;
+}
+
+/* שורת דוח באיחור */
+.delayed-report {
+  background-color: #ffebee !important;
+  border-right: 4px solid #d32f2f !important;
+}
+
+.delayed-report:hover {
+  background-color: #ffcdd2 !important;
+}
+
+.delay-badge {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 1.2rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* פעולות */
 .actions {
   display: flex;
+<<<<<<< HEAD
   gap: var(--spacing-sm);
   justify-content: center;
 }
@@ -353,6 +616,66 @@
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
     padding-bottom: var(--spacing-sm);
+=======
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn-view,
+.btn-edit {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.btn-view:hover {
+  background: #e3f2fd;
+}
+
+.btn-edit:hover {
+  background: #fff3e0;
+}
+
+/* אין תוצאות */
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.no-results p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background: #45a049;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reports-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .stats-cards {
+    grid-template-columns: 1fr 1fr;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   }
 
   .table-container {

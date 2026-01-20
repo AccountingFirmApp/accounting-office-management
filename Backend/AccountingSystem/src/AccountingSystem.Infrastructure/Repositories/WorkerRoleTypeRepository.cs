@@ -18,7 +18,11 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             this.context = context;
         }
+<<<<<<< HEAD
         public AccountingSystem.Domain.Entities.Task<Workerroletype> AddAsync(Workerroletype entity)
+=======
+        public System.Threading.Tasks.Task AddAsync(Workerroletype entity)
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
         {
             throw new NotImplementedException();
         }

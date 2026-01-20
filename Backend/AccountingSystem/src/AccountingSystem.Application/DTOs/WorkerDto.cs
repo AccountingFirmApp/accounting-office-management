@@ -12,6 +12,7 @@ public class WorkerDto
     public string LastName { get; set; } = string.Empty;
     public string FullName => $"{FirstName} {LastName}";
     public string Email { get; set; } = string.Empty;
+    public string PasswordHash { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string EmployeeId { get; set; } = string.Empty;
     public bool IsActive { get; set; }

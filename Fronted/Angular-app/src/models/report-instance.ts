@@ -283,7 +283,10 @@ export interface UpcomingReport {
  * יצירת דיווח חדש - תואם ל-CreateReportInstanceDto בשרת
  */
 export interface CreateReportInstance {
-  configId: number;
+  companyId: number;      // 🆕 חובה
+  reportTypeId: number;   // 🆕 חובה
+  frequencyId?: number;   // 🆕 אופציונלי
+  // configId: number;
   period: Date;
   amount?: number;
   paymentMethod?: string;

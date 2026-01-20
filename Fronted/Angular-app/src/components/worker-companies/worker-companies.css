@@ -1,162 +1,187 @@
-/* כל המכולה */
+/* Main Container */
 .container {
-  padding: 32px;
+  min-height: 100vh;
   direction: rtl;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f5f7fa;
-  max-width: 1200px;
-  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 32px;
+  position: relative;
+  z-index: 1;
 }
 
-/* כפתורים */
+/* Back Button */
 .btn-primary {
-  background-color: #3b5998;
-  color: #ffffff;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 4px;
+  background: white;
+  color: #2563EB;
+  border: 1px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 24px;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-primary:hover {
-  background-color: #2f4779;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.btn-primary:active {
-  transform: translateY(1px);
+  background: #f8fafc;
+  border-color: #2563EB;
 }
 
 /* Alerts */
 .alert {
+  max-width: 1400px;
+  margin: 0 auto 24px;
   padding: 16px 20px;
-  border-radius: 4px;
-  margin-bottom: 24px;
+  border-radius: 8px;
   font-size: 14px;
-  font-weight: 400;
-  border-right: 4px solid;
-  background-color: #ffffff;
+  font-weight: 500;
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .alert-warning {
-  border-right-color: #f59e0b;
-  color: #78350f;
-  background-color: #fffbeb;
+  border-right: 4px solid #f59e0b;
+  color: #92400e;
+  background: #fffbeb;
 }
 
 .alert-error {
-  border-right-color: #dc2626;
-  color: #7f1d1d;
-  background-color: #fef2f2;
-}
-
-.alert-error h3 {
-  margin: 0 0 8px 0;
-  font-size: 16px;
-  font-weight: 600;
+  border-right: 4px solid #ef4444;
   color: #991b1b;
+  background: #fef2f2;
 }
 
-.alert-error pre {
-  margin: 0;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-/* רשימת חברות */
+/* Companies List Grid */
 .company-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
+/* Company Card - Elegant Style */
 .company-card {
-  background-color: #ffffff;
-  padding: 24px;
-  margin: 0 0 16px 0;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 28px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.company-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #2563EB, #3b82f6);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.company-card:hover::before {
+  transform: scaleY(1);
 }
 
 .company-card:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+  transform: translateY(-3px);
+  background: white;
 }
 
 .company-card h5 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
+  margin: 0 0 20px 0;
+  font-size: 20px;
   font-weight: 600;
-  color: #1f2937;
-  border-bottom: 1px solid #f3f4f6;
-  padding-bottom: 12px;
+  color: #1a1a1a;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
+  letter-spacing: -0.3px;
 }
 
 .company-card p {
-  margin: 8px 0;
+  margin: 10px 0;
   font-size: 14px;
-  color: #4b5563;
-  line-height: 1.5;
+  color: #64748b;
+  line-height: 1.6;
 }
 
 .company-card p strong {
-  color: #374151;
-  font-weight: 500;
-  min-width: 80px;
+  color: #1a1a1a;
+  font-weight: 600;
+  margin-left: 8px;
   display: inline-block;
+  min-width: 70px;
 }
 
-/* סטטוס פעיל / לא פעיל */
+/* Status Badges - Soft & Elegant */
 .active {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 12px;
-  background-color: #d1fae5;
   color: #065f46;
-  font-weight: 500;
+  font-weight: 600;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-block;
   font-size: 13px;
+  border: 1px solid #86efac;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
 }
 
 .inactive {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 12px;
-  background-color: #fee2e2;
   color: #991b1b;
-  font-weight: 500;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-block;
   font-size: 13px;
+  border: 1px solid #fca5a5;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
 }
 
-/* הערות */
+/* Notes Section */
 .notes {
   font-size: 13px;
-  color: #6b7280;
-  background-color: #f9fafb;
-  padding: 8px 12px;
-  border-radius: 4px;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 6px;
   margin-top: 12px;
+  border-right: 3px solid #cbd5e1;
 }
 
-.notes strong {
-  color: #4b5563;
-}
-
-/* אין חברות */
+/* Empty State */
 .no-companies {
   text-align: center;
-  padding: 48px 20px;
-  color: #9ca3af;
-  font-size: 15px;
-  background-color: #ffffff;
-  border-radius: 6px;
-  border: 1px dashed #d1d5db;
+  padding: 80px 20px;
+  color: #64748b;
+  font-size: 16px;
+  background: white;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .company-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }

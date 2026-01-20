@@ -26,12 +26,10 @@ export class WorkerCompaniesComponent implements OnInit {
   }
   currentWorker!:WorkerInfoDto;
 ngOnInit(): void {
-  console.log('🚀 ngOnInit התחיל');
-  this.currentWorker = this.workerService.currentWorker; // מיידי
-  console.log(this.currentWorker);
+  this.currentWorker = this.workerService.currentWorker;
 
   if (this.currentWorker) {
-    this.loadData(); 
+    this.loadData();
   }
 }
 
@@ -42,8 +40,7 @@ ngOnInit(): void {
   loadData(): void {
     this.loading = true;
     this.cdr.detectChanges();
-    console.log(this.currentWorker);
-    
+
     this.workerService.getWorkerCompanies(this.currentWorker.id).subscribe({
       next: (response) => {
         this.companies = response;

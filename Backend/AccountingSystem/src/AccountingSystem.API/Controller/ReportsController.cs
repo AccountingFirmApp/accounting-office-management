@@ -21,7 +21,7 @@
 //        /// קבלת כל הדיווחים של חברה
 //        /// </summary>
 //        [HttpGet("company/{companyId}")]
-//        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByCompany(
+//        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByCompany(
 //            int companyId,
 //            [FromQuery] string? status = null,
 //            [FromQuery] DateTime? fromPeriod = null,
@@ -43,7 +43,7 @@
 //        /// קבלת דיווח ספציפי לפי ID
 //        /// </summary>
 //        [HttpGet("{id}")]
-//        public async AccountingSystem.Domain.Entities.Task<ActionResult<ReportInstanceDetailDto>> GetReportById(int id)
+//        public async Task<ActionResult<ReportInstanceDetailDto>> GetReportById(int id)
 //        {
 //            var query = new GetReportByIdQuery { ReportId = id };
 //            var report = await _mediator.Send(query);
@@ -58,7 +58,7 @@
 //        /// קבלת דיווחים קרובים/באיחור
 //        /// </summary>
 //        [HttpGet("upcoming")]
-//        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<UpcomingReportDto>>> GetUpcomingReports(
+//        public async Task<ActionResult<List<UpcomingReportDto>>> GetUpcomingReports(
 //            [FromQuery] int? companyId = null,
 //            [FromQuery] int daysAhead = 30)
 //        {
@@ -76,7 +76,7 @@
 //        /// יצירת דיווח חדש
 //        /// </summary>
 //        [HttpPost]
-//        public async AccountingSystem.Domain.Entities.Task<ActionResult<ReportInstanceDto>> CreateReport(
+//        public async Task<ActionResult<ReportInstanceDto>> CreateReport(
 //            [FromBody] CreateReportInstanceDto dto)
 //        {
 //            var command = new CreateReportInstanceCommand
@@ -97,7 +97,7 @@
 //        /// עדכון סטטוס דיווח
 //        /// </summary>
 //        [HttpPut("status")]
-//        public async AccountingSystem.Domain.Entities.Task<ActionResult> UpdateReportStatus(
+//        public async Task<ActionResult> UpdateReportStatus(
 //            [FromBody] UpdateReportStatusDto dto)
 //        {
 //            var command = new UpdateReportStatusCommand
@@ -118,7 +118,7 @@
 //        /// עדכון תשלום דיווח
 //        /// </summary>
 //        [HttpPut("payment")]
-//        public async AccountingSystem.Domain.Entities.Task<ActionResult> UpdateReportPayment(
+//        public async Task<ActionResult> UpdateReportPayment(
 //            [FromBody] UpdateReportPaymentDto dto)
 //        {
 //            var command = new UpdateReportPaymentCommand
@@ -141,7 +141,7 @@
 //        /// עדכון מלא של דיווח
 //        /// </summary>
 //        [HttpPut("{id}")]
-//        public async AccountingSystem.Domain.Entities.Task<ActionResult> UpdateReport(
+//        public async Task<ActionResult> UpdateReport(
 //            int id,
 //            [FromBody] UpdateReportInstanceDto dto)
 //        {
@@ -177,11 +177,14 @@ using Microsoft.AspNetCore.Mvc;
 using AccountingSystem.Application.Commands;
 using AccountingSystem.Application.Queries;
 using AccountingSystem.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AccountingSystem.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ReportsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -197,7 +200,7 @@ namespace AccountingSystem.API.Controllers
         /// קבלת כל הדיווחים של חברה
         /// </summary>
         [HttpGet("company/{companyId}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByCompany(
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByCompany(
             int companyId,
             [FromQuery] string? status = null,
             [FromQuery] DateTime? fromPeriod = null,
@@ -219,7 +222,7 @@ namespace AccountingSystem.API.Controllers
         /// קבלת דיווח ספציפי לפי ID
         /// </summary>
         [HttpGet("{id}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<ReportInstanceDetailDto>> GetReportById(int id)
+        public async Task<ActionResult<ReportInstanceDetailDto>> GetReportById(int id)
         {
             var query = new GetReportByIdQuery { ReportId = id };
             var report = await _mediator.Send(query);
@@ -234,7 +237,7 @@ namespace AccountingSystem.API.Controllers
         /// קבלת דיווחים קרובים/באיחור
         /// </summary>
         [HttpGet("upcoming")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<UpcomingReportDto>>> GetUpcomingReports(
+        public async Task<ActionResult<List<UpcomingReportDto>>> GetUpcomingReports(
             [FromQuery] int? companyId = null,
             [FromQuery] int daysAhead = 30)
         {
@@ -251,13 +254,36 @@ namespace AccountingSystem.API.Controllers
         /// <summary>
         /// יצירת דיווח חדש
         /// </summary>
+        //[HttpPost]
+        //public async Task<ActionResult<ReportInstanceDto>> CreateReport(
+        //    [FromBody] CreateReportInstanceDto dto)
+        //{
+        //    var command = new CreateReportInstanceCommand
+        //    {
+        //        ConfigId = dto.ConfigId,
+        //        Period = dto.Period,
+        //        Amount = dto.Amount,
+        //        PaymentMethod = dto.PaymentMethod,
+        //        ReceiptDate = dto.ReceiptDate,
+        //        Comments = dto.Comments
+        //    };
+
+        //    var report = await _mediator.Send(command);
+        //    return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
+        //}
+
+
+
+
         [HttpPost]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<ReportInstanceDto>> CreateReport(
-            [FromBody] CreateReportInstanceDto dto)
+        public async Task<ActionResult<ReportInstanceDto>> CreateReport(
+    [FromBody] CreateReportInstanceDto dto)
         {
             var command = new CreateReportInstanceCommand
             {
-                ConfigId = dto.ConfigId,
+                CompanyId = dto.CompanyId,           // 🆕
+                ReportTypeId = dto.ReportTypeId,     // 🆕
+                FrequencyId = dto.FrequencyId,       // 🆕
                 Period = dto.Period,
                 Amount = dto.Amount,
                 PaymentMethod = dto.PaymentMethod,
@@ -268,12 +294,11 @@ namespace AccountingSystem.API.Controllers
             var report = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
         }
-
         /// <summary>
         /// עדכון סטטוס דיווח
         /// </summary>
         [HttpPut("status")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult> UpdateReportStatus(
+        public async Task<ActionResult> UpdateReportStatus(
             [FromBody] UpdateReportStatusDto dto)
         {
             var command = new UpdateReportStatusCommand
@@ -294,7 +319,7 @@ namespace AccountingSystem.API.Controllers
         /// עדכון תשלום דיווח
         /// </summary>
         [HttpPut("payment")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult> UpdateReportPayment(
+        public async Task<ActionResult> UpdateReportPayment(
             [FromBody] UpdateReportPaymentDto dto)
         {
             var command = new UpdateReportPaymentCommand
@@ -317,7 +342,7 @@ namespace AccountingSystem.API.Controllers
         /// עדכון מלא של דיווח
         /// </summary>
         [HttpPut("{id}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult> UpdateReport(
+        public async Task<ActionResult> UpdateReport(
             int id,
             [FromBody] UpdateReportInstanceDto dto)
         {
@@ -350,20 +375,46 @@ namespace AccountingSystem.API.Controllers
         /// קבלת כל הדיווחים במערכת
         /// GET: api/reports/all
         /// </summary>
+        //[HttpGet("all")]
+        //public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
+        //{
+        //    var query = new GetAllReportsQuery();
+        //    var reports = await _mediator.Send(query);
+        //    return Ok(reports);
+        //}
+
         [HttpGet("all")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
         {
-            var query = new GetAllReportsQuery();
-            var reports = await _mediator.Send(query);
-            return Ok(reports);
+            try
+            {
+                // 🔥 מחלץ את ה-WorkerId מה-Token
+                var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
+                {
+                    return Unauthorized(new { message = "משתמש לא מזוהה" });
+                }
+
+                // שליחת Query עם WorkerId
+                var query = new GetAllReportsQuery { WorkerId = workerId };
+                var reports = await _mediator.Send(query);
+
+                return Ok(reports);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
+            }
         }
+
 
         /// <summary>
         /// קבלת דיווחים לפי Config ID
         /// GET: api/reports/config/5
         /// </summary>
         [HttpGet("config/{configId}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByConfig(int configId)
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByConfig(int configId)
         {
             var query = new GetReportsByConfigIdQuery { ConfigId = configId };
             var reports = await _mediator.Send(query);
@@ -375,7 +426,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/reports/status/Pending
         /// </summary>
         [HttpGet("status/{status}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByStatus(string status)
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByStatus(string status)
         {
             var query = new GetReportsByStatusQuery { Status = status };
             var reports = await _mediator.Send(query);
@@ -387,7 +438,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/reports/pending
         /// </summary>
         [HttpGet("pending")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetPendingReports()
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetPendingReports()
         {
             var query = new GetPendingReportsQuery();
             var reports = await _mediator.Send(query);
@@ -399,7 +450,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/reports/period?year=2024&month=1
         /// </summary>
         [HttpGet("period")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByPeriod(
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByPeriod(
             [FromQuery] int year,
             [FromQuery] int month)
         {
@@ -414,7 +465,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/reports/daterange?startDate=2024-01-01&endDate=2024-12-31
         /// </summary>
         [HttpGet("daterange")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByDateRange(
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsByDateRange(
             [FromQuery] DateTime startDate,
             [FromQuery] DateTime endDate)
         {
@@ -432,7 +483,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/reports/overdue
         /// </summary>
         [HttpGet("overdue")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetOverdueReports()
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetOverdueReports()
         {
             var query = new GetOverdueReportsQuery();
             var reports = await _mediator.Send(query);
@@ -445,7 +496,7 @@ namespace AccountingSystem.API.Controllers
         /// דוגמה: דיווחים לשבוע הקרוב
         /// </summary>
         [HttpGet("due")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsDueInDays(
+        public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetReportsDueInDays(
             [FromQuery] int days = 7)
         {
             var query = new GetReportsDueInNextDaysQuery { Days = days };

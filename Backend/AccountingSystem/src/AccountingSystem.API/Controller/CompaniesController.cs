@@ -4,6 +4,7 @@ using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.Companies;
 using AccountingSystem.Application.Queries.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingSystem.API.Controllers
@@ -23,6 +24,9 @@ namespace AccountingSystem.API.Controllers
         /// קבלת כל החברות
         /// GET: api/companies
         /// </summary>
+        /// 
+        [Authorize(Roles = "Admin")]
+
         [HttpGet]
         public async AccountingSystem.Domain.Entities.Task<ActionResult<List<CompanyDto>>> GetAll()
         {

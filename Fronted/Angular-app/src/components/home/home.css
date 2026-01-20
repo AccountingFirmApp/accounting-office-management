@@ -2,6 +2,7 @@
 
 .home-container {
   min-height: 100vh;
+<<<<<<< HEAD
   background-color: var(--color-white);
   direction: rtl;
   display: flex;
@@ -67,6 +68,125 @@
   text-align: center;
   box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
+=======
+  direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  z-index: 1;
+}
+
+/* Top Navigation Bar */
+.header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.logo-icon path {
+  stroke: #2563EB;
+  fill: #2563EB;
+}
+
+.logo-text h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+}
+
+.logo-subtitle {
+  display: none;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.user-info:hover {
+  background: #f8fafc;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: 8px;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+  text-transform: uppercase;
+}
+
+/* Main Content Area */
+.menu-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* Menu Card - Elegant Soft Style */
+.menu-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 40px 32px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   cursor: pointer;
   border: 2px solid transparent;
   position: relative;
@@ -80,6 +200,7 @@
   left: 0;
   right: 0;
   height: 4px;
+<<<<<<< HEAD
   background: linear-gradient(90deg, var(--color-primary), #3b82f6);
   transform: scaleX(0);
   transition: transform var(--transition-base);
@@ -101,6 +222,48 @@
   opacity: 0.5;
   cursor: not-allowed;
   background-color: var(--color-gray-50);
+=======
+  background: linear-gradient(90deg, #2563EB, #3b82f6, #60a5fa);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.menu-card:not(.disabled):hover::before {
+  transform: scaleX(1);
+}
+
+.menu-card:not(.disabled):hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.1);
+  transform: translateY(-6px);
+  background: white;
+}
+
+.menu-card.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: #fafafa;
+}
+
+/* Card Icon */
+.card-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+.menu-card:hover .card-icon {
+  transform: scale(1.1) translateY(-4px);
+  opacity: 1;
+}
+
+.menu-card.disabled .card-icon {
+  filter: grayscale(100%);
+  opacity: 0.4;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
 .menu-card.disabled:hover {
@@ -110,6 +273,7 @@
 
 /* Card Content */
 .menu-card h3 {
+<<<<<<< HEAD
   margin: 0 0 var(--spacing-md);
   font-size: var(--font-size-2xl);
   font-weight: 600;
@@ -122,10 +286,25 @@
   font-size: var(--font-size-base);
   line-height: 1.6;
   min-height: 48px;
+=======
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+}
+
+.menu-card p {
+  margin: 0 0 24px;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
 /* Card Button */
 .card-button {
+<<<<<<< HEAD
   background-color: var(--color-primary);
   color: var(--color-white);
   border: none;
@@ -151,6 +330,28 @@
 
 .card-button:disabled {
   background-color: var(--color-gray-300);
+=======
+  background: linear-gradient(135deg, #2563EB 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.card-button:not(:disabled):hover {
+  background: linear-gradient(135deg, #1e40af 0%, #2563EB 100%);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+}
+
+.card-button:disabled {
+  background: #cbd5e1;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -160,6 +361,7 @@
   background-color: var(--color-gray-900);
   color: var(--color-gray-400);
   text-align: center;
+<<<<<<< HEAD
   padding: var(--spacing-xl);
   font-size: var(--font-size-sm);
   margin-top: auto;
@@ -209,16 +411,46 @@
 
   .subtitle {
     font-size: var(--font-size-base);
+=======
+  color: #94a3b8;
+  padding: 32px 20px;
+  font-size: 13px;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-top {
+    padding: 12px 16px;
+  }
+
+  .logo-text h1 {
+    font-size: 20px;
+  }
+
+  .user-details {
+    display: none;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   }
 
   .menu-grid {
+    padding: 24px 16px;
     grid-template-columns: 1fr;
+<<<<<<< HEAD
     gap: var(--spacing-lg);
     padding: var(--spacing-xl) var(--spacing-md);
   }
 
   .menu-card {
     padding: var(--spacing-xl);
+=======
+    gap: 16px;
+  }
+
+  .card-icon {
+    font-size: 40px;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   }
 
   .menu-card h3 {

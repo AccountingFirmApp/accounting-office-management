@@ -22,6 +22,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Tasks;
         }
 
+
         // ==================== פעולות בסיסיות ====================
 
         public async AccountingSystem.Domain.Entities.Task<Domain.Entities.AccountingSystem.Domain.Entities.Task?> GetByIdAsync(int id)
@@ -42,12 +43,21 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+<<<<<<< HEAD
 
         public async AccountingSystem.Domain.Entities.Task<Domain.Entities.AccountingSystem.Domain.Entities.Task> AddAsync(Domain.Entities.AccountingSystem.Domain.Entities.Task entity)
+=======
+        public async System.Threading.Tasks.Task AddAsync(Domain.Entities.Task entity)
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
         {
             await _dbSet.AddAsync(entity);
-            return entity;
+            // לא מחזירים כלום - רק Task
         }
+        //public async Task<Domain.Entities.Task> AddAsync(Domain.Entities.Task entity)
+        //{
+        //    await _dbSet.AddAsync(entity);
+        //    return entity;
+        //}
 
         public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Domain.Entities.AccountingSystem.Domain.Entities.Task entity)
         {
@@ -169,6 +179,11 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetPendingTasksAsync()
         {
             return await GetTasksByStatusAsync("Pending");
+        }
+
+        System.Threading.Tasks.Task IGenericRepository<TaskEntity>.AddAsync(TaskEntity entity)
+        {
+            return AddAsync(entity);
         }
     }
 }

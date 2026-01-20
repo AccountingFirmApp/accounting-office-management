@@ -8,69 +8,164 @@ using AccountingSystem.Domain.Interfaces.Repositories;
 
 namespace AccountingSystem.Application.Handlers
 {
-    public class CreateReportInstanceCommandHandler
-        : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
-    {
-        private readonly IReportInstanceRepository _reportInstanceRepository;
-        private readonly IUnitOfWork _unitOfWork;
+    //public class CreateReportInstanceCommandHandler
+    //    : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
+    //{
+    //    private readonly IReportInstanceRepository _reportInstanceRepository;
+    //    private readonly IUnitOfWork _unitOfWork;
 
-        public CreateReportInstanceCommandHandler(
-            IReportInstanceRepository reportInstanceRepository,
-            IUnitOfWork unitOfWork)
-        {
-            _reportInstanceRepository = reportInstanceRepository;
-            _unitOfWork = unitOfWork;
-        }
+    //    public CreateReportInstanceCommandHandler(
+    //        IReportInstanceRepository reportInstanceRepository,
+    //        IUnitOfWork unitOfWork)
+    //    {
+    //        _reportInstanceRepository = reportInstanceRepository;
+    //        _unitOfWork = unitOfWork;
+    //    }
 
-        public async AccountingSystem.Domain.Entities.Task<ReportInstanceDto> Handle(
-            CreateReportInstanceCommand request,
-            CancellationToken cancellationToken)
+        //    public async Task<ReportInstanceDto> Handle(
+        //        CreateReportInstanceCommand request,
+        //        CancellationToken cancellationToken)
+        //    {
+        //        // המרת PaymentMethod מ-string ל-Enum (אם קיים)
+        //        PaymentMethod? paymentMethod = null;
+        //        if (!string.IsNullOrEmpty(request.PaymentMethod) &&
+        //            Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var parsedMethod))
+        //        {
+        //            paymentMethod = parsedMethod;
+        //        }
+
+        //        var reportInstance = new Reportinstance
+        //        {
+        //            Configid = request.ConfigId,
+        //            Period = DateOnly.FromDateTime(request.Period), // DateTime -> DateOnly
+        //            Amount = request.Amount,
+        //            Status = ReportStatus.Pending, // ברירת מחדל
+        //            PaymentMethod = paymentMethod,
+        //            Receiptdate = request.ReceiptDate.HasValue
+        //                ? DateOnly.FromDateTime(request.ReceiptDate.Value)
+        //                : null,
+        //            Comments = request.Comments,
+        //            Createdat = DateTime.Now,
+        //            Updatedat = DateTime.Now
+        //        };
+
+        //        await _reportInstanceRepository.AddAsync(reportInstance);
+        //        await _unitOfWork.SaveChangesAsync();
+
+        //        return new ReportInstanceDto
+        //        {
+        //            Id = reportInstance.Id,
+        //            ConfigId = reportInstance.Configid,
+        //            Period = reportInstance.Period.ToDateTime(TimeOnly.MinValue),
+        //            Amount = reportInstance.Amount,
+        //            Status = reportInstance.Status.ToString(),
+        //            PaymentMethod = reportInstance.PaymentMethod?.ToString(),
+        //            ReceiptDate = reportInstance.Receiptdate?.ToDateTime(TimeOnly.MinValue),
+        //            Comments = reportInstance.Comments ?? string.Empty,
+        //            CreatedAt = reportInstance.Createdat,
+        //            UpdatedAt = reportInstance.Updatedat
+        //        };
+        //    }
+        //}
+
+        public class CreateReportInstanceCommandHandler
+    : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
         {
-            // המרת PaymentMethod מ-string ל-Enum (אם קיים)
-            PaymentMethod? paymentMethod = null;
-            if (!string.IsNullOrEmpty(request.PaymentMethod) &&
-                Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var parsedMethod))
+            private readonly IReportInstanceRepository _reportInstanceRepository;
+            private readonly ICompanyReportConfigRepository _configRepository;
+            private readonly IUnitOfWork _unitOfWork;
+
+            public CreateReportInstanceCommandHandler(
+                IReportInstanceRepository reportInstanceRepository,
+                ICompanyReportConfigRepository configRepository,
+                IUnitOfWork unitOfWork)
             {
-                paymentMethod = parsedMethod;
+                _reportInstanceRepository = reportInstanceRepository;
+                _configRepository = configRepository;
+                _unitOfWork = unitOfWork;
             }
 
-            var reportInstance = new Reportinstance
+            public async Task<ReportInstanceDto> Handle(
+                CreateReportInstanceCommand request,
+                CancellationToken cancellationToken)
             {
-                Configid = request.ConfigId,
-                Period = DateOnly.FromDateTime(request.Period), // DateTime -> DateOnly
-                Amount = request.Amount,
-                Status = ReportStatus.Pending, // ברירת מחדל
-                PaymentMethod = paymentMethod,
-                Receiptdate = request.ReceiptDate.HasValue
-                    ? DateOnly.FromDateTime(request.ReceiptDate.Value)
-                    : null,
-                Comments = request.Comments,
-                Createdat = DateTime.Now,
-                Updatedat = DateTime.Now
-            };
+                // 🔍 שלב 1: בדוק אם קיים Config עם הצירוף הזה
+                var configs = await _configRepository.GetByCompanyIdAsync(request.CompanyId);
+                var existingConfig = configs.FirstOrDefault(c =>
+                    c.Reporttypeid == request.ReportTypeId);
 
-            await _reportInstanceRepository.AddAsync(reportInstance);
-            await _unitOfWork.SaveChangesAsync();
+                int configId;
 
-            return new ReportInstanceDto
-            {
-                Id = reportInstance.Id,
-                ConfigId = reportInstance.Configid,
-                Period = reportInstance.Period.ToDateTime(TimeOnly.MinValue),
-                Amount = reportInstance.Amount,
-                Status = reportInstance.Status.ToString(),
-                PaymentMethod = reportInstance.PaymentMethod?.ToString(),
-                ReceiptDate = reportInstance.Receiptdate?.ToDateTime(TimeOnly.MinValue),
-                Comments = reportInstance.Comments ?? string.Empty,
-                CreatedAt = reportInstance.Createdat,
-                UpdatedAt = reportInstance.Updatedat
-            };
+                if (existingConfig != null)
+                {
+                    // ✅ Config קיים - השתמש בו
+                    configId = existingConfig.Id;
+                }
+                else
+                {
+                    // 🆕 Config לא קיים - צור חדש
+                    var newConfig = new Companyreportconfig
+                    {
+                        Companyid = request.CompanyId,
+                        Reporttypeid = request.ReportTypeId,
+                        Frequencyid = request.FrequencyId ?? 1, // ברירת מחדל: חודשי
+                        Dayofmonth = null, // או ערך ברירת מחדל
+                        Isactive = true,
+                        Createdat = DateTime.UtcNow,
+                        Updatedat = DateTime.UtcNow
+                    };
+
+                    await _configRepository.AddAsync(newConfig);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    configId = newConfig.Id;
+                }
+
+                // 📝 שלב 2: צור את ה-ReportInstance עם ה-ConfigId
+                PaymentMethod? paymentMethod = null;
+                if (!string.IsNullOrEmpty(request.PaymentMethod) &&
+                    Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var parsedMethod))
+                {
+                    paymentMethod = parsedMethod;
+                }
+
+                var reportInstance = new Reportinstance
+                {
+                    Configid = configId, // ✅ משתמש ב-Config שנמצא או נוצר
+                    Period = DateOnly.FromDateTime(request.Period),
+                    Amount = request.Amount,
+                    Status = ReportStatus.Pending,
+                    PaymentMethod = paymentMethod,
+                    Receiptdate = request.ReceiptDate.HasValue
+                        ? DateOnly.FromDateTime(request.ReceiptDate.Value)
+                        : null,
+                    Comments = request.Comments,
+                    Createdat = DateTime.UtcNow,
+                    Updatedat = DateTime.UtcNow
+                };
+
+                await _reportInstanceRepository.AddAsync(reportInstance);
+                await _unitOfWork.SaveChangesAsync();
+
+                return new ReportInstanceDto
+                {
+                    Id = reportInstance.Id,
+                    ConfigId = reportInstance.Configid,
+                    Period = reportInstance.Period.ToDateTime(TimeOnly.MinValue),
+                    Amount = reportInstance.Amount,
+                    Status = reportInstance.Status.ToString(),
+                    PaymentMethod = reportInstance.PaymentMethod?.ToString(),
+                    ReceiptDate = reportInstance.Receiptdate?.ToDateTime(TimeOnly.MinValue),
+                    Comments = reportInstance.Comments ?? string.Empty,
+                    CreatedAt = reportInstance.Createdat,
+                    UpdatedAt = reportInstance.Updatedat
+                };
+            }
         }
-    }
 
 
 
-    public class UpdateReportStatusCommandHandler
+        public class UpdateReportStatusCommandHandler
         : IRequestHandler<UpdateReportStatusCommand, bool>
     {
         private readonly IReportInstanceRepository _reportInstanceRepository;
@@ -84,7 +179,7 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async AccountingSystem.Domain.Entities.Task<bool> Handle(
+        public async Task<bool> Handle(
             UpdateReportStatusCommand request,
             CancellationToken cancellationToken)
         {
@@ -106,7 +201,7 @@ namespace AccountingSystem.Application.Handlers
             report.Updatedat = DateTime.UtcNow;
 
             // עדכון אוטומטי של תאריכים
-            if (status == ReportStatus.Reported && !report.Reporteddate.HasValue)
+            if (status == ReportStatus.Reported )
             {
                 report.Reporteddate = DateOnly.FromDateTime(DateTime.Now);
             }
@@ -140,7 +235,7 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async AccountingSystem.Domain.Entities.Task<bool> Handle(
+        public async Task<bool> Handle(
             UpdateReportPaymentCommand request,
             CancellationToken cancellationToken)
         {
@@ -182,7 +277,7 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async AccountingSystem.Domain.Entities.Task<bool> Handle(
+        public async Task<bool> Handle(
             UpdateReportInstanceCommand request,
             CancellationToken cancellationToken)
         {

@@ -1239,11 +1239,19 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תוסיף דוח חדש
         /// </summary>
+<<<<<<< HEAD
         public async AccountingSystem.Domain.Entities.Task<Reportinstance> AddAsync(Reportinstance entity)
         {
             await _context.Reportinstances.AddAsync(entity);
             return entity;
         }
+=======
+        //public async Task<Reportinstance> AddAsync(Reportinstance entity)
+        //{
+        //    await _context.Reportinstances.AddAsync(entity);
+        //    return entity;
+        //}
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 
         /// <summary>
         /// תעדכן דוח קיים
@@ -1444,6 +1452,42 @@ namespace AccountingSystem.Infrastructure.Repositories
                            r.Status != AccountingSystem.Domain.Enums.ReportStatus.Paid)
                 .OrderBy(r => r.Period)
                 .ToListAsync();
+        }
+
+        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
+        //{
+
+        //    throw new NotImplementedException();
+        //}
+
+        //public async Task<Reportinstance> AddAsync(Reportinstance entity)
+        //{
+        //    if (entity == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(entity));
+        //    }
+
+        //    // הוספת תאריך יצירה אם לא הוגדר
+        //    if (entity.Createdat == default)
+        //    {
+        //        entity.Createdat = DateTime.UtcNow;
+        //    }
+
+        //    await _context.Reportinstances.AddAsync(entity);
+        //    await _context.SaveChangesAsync();
+
+        //    return entity;
+        //}
+
+        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
+        //{
+        //    return AddAsync(entity);
+        //}
+
+        public async Task AddAsync(Reportinstance entity)
+        {
+            await _context.Reportinstances.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

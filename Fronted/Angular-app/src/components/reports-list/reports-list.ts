@@ -1,218 +1,195 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReportService } from '../../services/report';
 import { ReportInstanceDetail } from '../../models/report-instance';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ReportViewModalComponent } from "../report-view/report-view";
-// import { ReportViewModalComponent } from '../../models/reportview';
+import { WorkerService } from '../../services/worker';
+import { ReportViewModalComponent } from '../report-view/report-view';
 
 @Component({
-  standalone: true,
   selector: 'app-reports-list',
+  standalone: true,
   imports: [CommonModule, FormsModule, ReportViewModalComponent],
   templateUrl: './reports-list.html',
   styleUrls: ['./reports-list.css']
 })
 export class ReportsListComponent implements OnInit {
-  
   reports: ReportInstanceDetail[] = [];
   filteredReports: ReportInstanceDetail[] = [];
-  loading = true;
+  isLoading: boolean = false;
+  errorMessage: string = '';
   
-  searchTerm = '';
-  selectedStatus: string | null = null;
+  selectedReport: ReportInstanceDetail | null = null;
+  isModalOpen: boolean = false;
   
-  sortColumn: string = 'period';
-  sortDirection: 'asc' | 'desc' = 'desc';
+  // פילטרים
+  searchTerm: string = '';
+  selectedStatus: string = 'all';
+  selectedCompany: string = 'all';
+  selectedReportType: string = 'all';
+  
+  // רשימות ייחודיות לפילטרים
+  companies: string[] = [];
+  reportTypes: string[] = [];
+  statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
 
   constructor(
     private reportService: ReportService,
+    public workerService: WorkerService,
     private router: Router
-  ) {}
+  ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadReports();
   }
 
-  loadReports() {
-    this.loading = true;
+  loadReports(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
     this.reportService.getAll().subscribe({
       next: (data) => {
         this.reports = data;
-        this.applyFilters();
-        this.loading = false;
+        this.filteredReports = data;
+        this.companies = [...new Set(data.map(r => r.companyName))].sort();
+        this.reportTypes = [...new Set(data.map(r => r.reportTypeName))].sort();
+        this.isLoading = false;
+        console.log('✅ נטענו', data.length, 'דוחות');
       },
-      error: (err) => {
-        console.error('Error loading reports:', err);
-        alert('שגיאה בטעינת דוחות');
-        this.loading = false;
+      error: (error) => {
+        this.isLoading = false;
+        console.error('❌ שגיאה בטעינת דוחות:', error);
+        
+        if (error.status === 401) {
+          this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
+        } else if (error.status === 500) {
+          this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
+        } else {
+          this.errorMessage = 'שגיאה בטעינת הדוחות';
+        }
       }
     });
   }
 
-  applyFilters() {
-    let filtered = [...this.reports];
+  applyFilters(): void {
+    this.filteredReports = this.reports.filter(report => {
+      const matchesSearch = !this.searchTerm || 
+        report.companyName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        report.reportTypeName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        report.reportTypeShortCode?.toLowerCase().includes(this.searchTerm.toLowerCase());
 
-    // חיפוש - ✅ תוקן! עכשיו גישה ישירה ל-companyName
-    if (this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(r => 
-        r.companyName?.toLowerCase().includes(term) ||
-        r.reportTypeName?.toLowerCase().includes(term)
-      );
-    }
+      const matchesStatus = this.selectedStatus === 'all' || 
+        report.status === this.selectedStatus;
 
-    // סינון לפי סטטוס
-    if (this.selectedStatus) {
-      if (this.selectedStatus === 'overdue') {
-        filtered = filtered.filter(r => this.isOverdue(r));
-      } else {
-        filtered = filtered.filter(r => r.status === this.selectedStatus);
-      }
-    }
+      const matchesCompany = this.selectedCompany === 'all' || 
+        report.companyName === this.selectedCompany;
 
-    this.filteredReports = filtered;
-    this.applySorting();
-  }
+      const matchesReportType = this.selectedReportType === 'all' ||
+        report.reportTypeName === this.selectedReportType;
 
-  filterByStatus(status: string | null) {
-    this.selectedStatus = status;
-    this.applyFilters();
-  }
-
-  sortBy(column: string) {
-    if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
-    }
-    this.applySorting();
-  }
-
-  applySorting() {
-    this.filteredReports.sort((a, b) => {
-      let aVal: any;
-      let bVal: any;
-
-      // ✅ תוקן! גישה ישירה לשדות
-      switch(this.sortColumn) {
-        case 'companyName':
-          aVal = a.companyName;
-          bVal = b.companyName;
-          break;
-        case 'reportTypeName':
-          aVal = a.reportTypeName;
-          bVal = b.reportTypeName;
-          break;
-        case 'period':
-          aVal = new Date(a.period).getTime();
-          bVal = new Date(b.period).getTime();
-          break;
-        case 'amount':
-          aVal = a.amount || 0;
-          bVal = b.amount || 0;
-          break;
-        default:
-          return 0;
-      }
-
-      if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
-      if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
-      return 0;
+      return matchesSearch && matchesStatus && matchesCompany && matchesReportType;
     });
   }
 
-  getSortIcon(column: string): string {
-    if (this.sortColumn !== column) return '⇅';
-    return this.sortDirection === 'asc' ? '↑' : '↓';
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedStatus = 'all';
+    this.selectedCompany = 'all';
+    this.selectedReportType = 'all';
+    this.filteredReports = this.reports;
   }
 
-  isOverdue(report: ReportInstanceDetail): boolean {
-    if (!report.period) return false;
-    const today = new Date();
-    const period = new Date(report.period);
-    return (report.status === 'Pending' || report.status === 'Reported') && period < today;
+  /**
+   * 🔥 בדיקה האם הדוח באיחור
+   */
+  isReportDelayed(report: ReportInstanceDetail): boolean {
+    return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
   }
 
-  formatDate(date: Date | string): string {
-    if (!date) return '-';
-    const d = new Date(date);
-    return d.toLocaleDateString('he-IL', { year: 'numeric', month: '2-digit' });
+  /**
+   * 🔥 קבלת טקסט איחור
+   */
+  getDelayText(report: ReportInstanceDetail): string {
+    if (!this.isReportDelayed(report)) return '';
+    const days = report.daysOverdue!;
+    return days === 1 ? 'איחור של יום אחד' : `איחור של ${days} ימים`;
   }
 
-  getStatusClass(status: string): string {
-    const statusMap: Record<string, string> = {
-      'Pending': 'pending',
-      'Reported': 'reported',
-      'Paid': 'paid',
-      'Approved': 'approved',
-      'NotRequired': 'not-required'
-    };
-    return statusMap[status] || '';
-  }
-
-  getStatusLabel(status: string): string {
-    const labels: Record<string, string> = {
-      'Pending': 'ממתין',
-      'Reported': 'דווח',
-      'Paid': 'שולם',
-      'Approved': 'אושר',
-      'NotRequired': 'לא נדרש'
-    };
-    return labels[status] || status;
-  }
-
-  getPaymentMethodLabel(method: string): string {
-    const labels: Record<string, string> = {
-      'Credit': 'כרטיס אשראי',
-      'Transfer': 'העברה בנקאית',
-      'Check': 'צ\'ק',
-      'Online': 'תשלום מקוון',
-      'Cash': 'מזומן'
-    };
-    return labels[method] || method;
-  }
-
-  // Modal state
-  selectedReport: ReportInstanceDetail | null = null;
-  isModalOpen = false;
-
-  viewReport(id: number) {
-    // מצא את הדוח לפי ID
-    const report = this.filteredReports.find(r => r.id === id);
+  viewReport(reportId: number): void {
+    const report = this.reports.find(r => r.id === reportId);
     if (report) {
       this.selectedReport = report;
       this.isModalOpen = true;
     }
   }
 
-  closeModal() {
+  closeModal(): void {
     this.isModalOpen = false;
     this.selectedReport = null;
   }
 
-  onEditFromModal(id: number) {
-    this.router.navigate(['/reports/edit', id]);
+  onEditFromModal(reportId: number): void {
+    this.router.navigate(['/reports/edit', reportId]);
   }
 
-  editReport(id: number) {
-    this.router.navigate(['/reports/edit', id]);
+  editReport(reportId: number): void {
+    this.router.navigate(['/reports/edit', reportId]);
   }
 
-  deleteReport(id: number) {
-    if (confirm('האם אתה בטוח שברצונך למחוק דוח זה?')) {
-      this.reportService.delete(id).subscribe({
-        next: () => {
-          alert('הדוח נמחק בהצלחה! ✅');
-          this.loadReports();
-        },
-        error: (err) => {
-          console.error('Error deleting report:', err);
-          alert('שגיאה במחיקת הדוח');
-        }
-      });
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'Pending': return 'status-pending';
+      case 'Reported': return 'status-reported';
+      case 'Approved': return 'status-approved';
+      case 'Paid': return 'status-paid';
+      default: return '';
     }
+  }
+
+  getStatusText(status: string): string {
+    switch (status) {
+      case 'Pending': return 'ממתין';
+      case 'Reported': return 'דווח';
+      case 'Approved': return 'אושר';
+      case 'Paid': return 'שולם';
+      default: return status;
+    }
+  }
+
+  getPaymentMethodText(method: string): string {
+    switch (method) {
+      case 'Transfer': return 'העברה בנקאית';
+      case 'Credit': return 'כרטיס אשראי';
+      case 'Check': return 'צ\'ק';
+      case 'Cash': return 'מזומן';
+      case 'Online': return 'תשלום מקוון';
+      default: return method;
+    }
+  }
+
+  formatDate(date: Date | null | undefined): string {
+    if (!date) return '-';
+    return new Date(date).toLocaleDateString('he-IL');
+  }
+
+  formatAmount(amount: number | null | undefined): string {
+    if (!amount) return '-';
+    return new Intl.NumberFormat('he-IL', {
+      style: 'currency',
+      currency: 'ILS'
+    }).format(amount);
+  }
+
+  getPendingCount(): number {
+    return this.filteredReports.filter(r => r.status === 'Pending').length;
+  }
+
+  getReportedCount(): number {
+    return this.filteredReports.filter(r => r.status === 'Reported').length;
+  }
+
+  getPaidCount(): number {
+    return this.filteredReports.filter(r => r.status === 'Paid').length;
   }
 }

@@ -129,13 +129,40 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         // ⭐ המתודה החשובה ביותר
+<<<<<<< HEAD
         public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
+=======
+        //public async Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
+        //{
+        //    return await _context.Companyworkers
+        //        .Include(cw => cw.Company)   // טוען את פרטי החברה
+        //        .Include(cw => cw.Worker)    // טוען את פרטי העובדת
+        //        .Where(cw => cw.Workerid == workerId)
+        //        .ToListAsync();
+        //}
+        // Infrastructure/Repositories/CompanyWorkerRepository.cs
+        public async Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
         {
-            return await _context.Companyworkers
-                .Include(cw => cw.Company)   // טוען את פרטי החברה
-                .Include(cw => cw.Worker)    // טוען את פרטי העובדת
-                .Where(cw => cw.Workerid == workerId)
-                .ToListAsync();
+            try
+            {
+                Console.WriteLine($"🔍 Querying CompanyWorkers for WorkerId: {workerId}");
+
+                var result = await _context.Companyworkers
+                    .Include(cw => cw.Company)
+                    .Include(cw => cw.Worker)
+                    .Where(cw => cw.Workerid == workerId)
+                    .ToListAsync();
+
+                Console.WriteLine($"✅ Found {result.Count} records");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error in GetByWorkerIdAsync: {ex.Message}");
+                Console.WriteLine($"Stack: {ex.StackTrace}");
+                throw;
+            }
         }
 
         public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId)
@@ -207,6 +234,11 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             return await _context.Companyworkers.CountAsync();
+        }
+
+        System.Threading.Tasks.Task IGenericRepository<Companyworker>.AddAsync(Companyworker entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
