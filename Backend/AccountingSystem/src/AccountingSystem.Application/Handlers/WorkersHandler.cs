@@ -28,7 +28,7 @@ public class GetAllWorkersQueryHandler : IRequestHandler<GetAllWorkersQuery, Lis
         _mapper = mapper;
     }
 
-    public async Task<List<WorkerDto>> Handle(GetAllWorkersQuery request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<List<WorkerDto>> Handle(GetAllWorkersQuery request, CancellationToken cancellationToken)
     {
         var workers = await _unitOfWork.Workers.GetAllAsync();
         return _mapper.Map<List<WorkerDto>>(workers);
@@ -49,7 +49,7 @@ public class GetWorkerByIdQueryHandler : IRequestHandler<GetWorkerByIdQuery, Wor
         _mapper = mapper;
     }
 
-    public async Task<WorkerDto> Handle(GetWorkerByIdQuery request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<WorkerDto> Handle(GetWorkerByIdQuery request, CancellationToken cancellationToken)
     {
         var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
 
@@ -76,7 +76,7 @@ public class GetWorkersByFirmIdQueryHandler : IRequestHandler<GetWorkersByFirmId
         _mapper = mapper;
     }
 
-    public async Task<List<WorkerDto>> Handle(GetWorkersByFirmIdQuery request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<List<WorkerDto>> Handle(GetWorkersByFirmIdQuery request, CancellationToken cancellationToken)
     {
         var workers = await _unitOfWork.Workers.GetWorkersByFirmIdAsync(request.FirmId);
         return _mapper.Map<List<WorkerDto>>(workers);
@@ -97,7 +97,7 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
         _mapper = mapper;
     }
 
-    public async Task<WorkerDto> Handle(CreateWorkerCommand request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<WorkerDto> Handle(CreateWorkerCommand request, CancellationToken cancellationToken)
     {
         var worker = new Worker
         {
@@ -132,7 +132,7 @@ public class UpdateWorkerCommandHandler : IRequestHandler<UpdateWorkerCommand, W
         _mapper = mapper;
     }
 
-    public async Task<WorkerDto> Handle(UpdateWorkerCommand request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<WorkerDto> Handle(UpdateWorkerCommand request, CancellationToken cancellationToken)
     {
         var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
 
@@ -168,7 +168,7 @@ public class DeleteWorkerCommandHandler : IRequestHandler<DeleteWorkerCommand, U
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Unit> Handle(DeleteWorkerCommand request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<Unit> Handle(DeleteWorkerCommand request, CancellationToken cancellationToken)
     {
         var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
 
@@ -205,7 +205,7 @@ public class GetWorkerCompaniesHandler : IRequestHandler<GetWorkerCompaniesQuery
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<List<CompanyDto>> Handle(
+    public async AccountingSystem.Domain.Entities.Task<List<CompanyDto>> Handle(
         GetWorkerCompaniesQuery request,
         CancellationToken cancellationToken)
     {
@@ -254,7 +254,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDt
         _authService = authService;
     }
 
-    public async Task<LoginResponseDto> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<LoginResponseDto> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         return await _authService.LoginAsync(request.Email, request.Password, cancellationToken);
     }
@@ -272,7 +272,7 @@ public class GoogleLoginCommandHandler : IRequestHandler<GoogleLoginCommand, Log
         _authService = authService;
     }
 
-    public async Task<LoginResponseDto> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
+    public async AccountingSystem.Domain.Entities.Task<LoginResponseDto> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
     {
         return await _authService.GoogleLoginAsync(request.GoogleToken, cancellationToken);
     }

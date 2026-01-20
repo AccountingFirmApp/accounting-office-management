@@ -10,11 +10,11 @@
   <!-- Filters & Search -->
   <div class="filters-section">
     <div class="search-box">
-      <input 
-        type="text" 
-        [(ngModel)]="searchTerm" 
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
         (input)="applyFilters()"
-        placeholder="🔍 חיפוש לפי שם חברה או סוג דיווח..."
+        placeholder="חיפוש לפי שם חברה או סוג דיווח..."
       />
     </div>
 
@@ -65,7 +65,6 @@
 
   <!-- Empty State -->
   <div *ngIf="!loading && filteredReports.length === 0" class="empty-state">
-    <div class="empty-icon">📋</div>
     <h3>אין דוחות להצגה</h3>
     <p>לא נמצאו דוחות התואמים את הסינון</p>
   </div>
@@ -108,7 +107,7 @@
           <td>
             {{ formatDate(report.period) }}
             <span *ngIf="isOverdue(report)" class="overdue-badge">
-              ⚠️ איחור
+              איחור
             </span>
           </td>
           
@@ -130,13 +129,13 @@
           
           <td class="actions">
             <button class="action-btn view" (click)="viewReport(report.id)" title="צפייה">
-              👁️
+              צפייה
             </button>
             <button class="action-btn edit" (click)="editReport(report.id)" title="עריכה">
-              ✏️
+              עריכה
             </button>
             <button class="action-btn delete" (click)="deleteReport(report.id)" title="מחיקה">
-              🗑️
+              מחיקה
             </button>
           </td>
         </tr>

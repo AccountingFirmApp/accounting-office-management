@@ -30,7 +30,7 @@
     </div>
     
     <div class="info-row" *ngIf="isOverdue">
-      <span class="label overdue-label">⚠️ באיחור:</span>
+      <span class="label overdue-label">באיחור:</span>
       <span class="value overdue-value">{{ getDaysOverdue() }} ימים</span>
     </div>
   </div>
@@ -38,13 +38,13 @@
   <!-- Footer Actions -->
   <div class="card-footer">
     <button class="btn-action view" (click)="onView()">
-      👁️ צפייה
+      צפייה
     </button>
     <button class="btn-action edit" (click)="onEdit()">
-      ✏️ עריכה
+      עריכה
     </button>
     <button class="btn-action delete" (click)="onDelete()">
-      🗑️ מחיקה
+      מחיקה
     </button>
   </div>
 </div>

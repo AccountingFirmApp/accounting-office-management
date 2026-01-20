@@ -7,6 +7,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface ITaskTypeRepository : IGenericRepository<Tasktype>
     {
-        Task<IEnumerable<Tasktype>> GetByCategoryAsync(string category);
+        AccountingSystem.Domain.Entities.Task<IEnumerable<Tasktype>> GetByCategoryAsync(string category);
     }
 }

@@ -22,7 +22,7 @@ namespace AccountingSystem.Application.Handlers
             _reportInstanceRepository = reportInstanceRepository;
         }
 
-        public async Task<List<ReportInstanceDetailDto>> Handle(
+        public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(
             GetReportsByCompanyIdQuery request,
             CancellationToken cancellationToken)
         {
@@ -102,7 +102,7 @@ namespace AccountingSystem.Application.Handlers
             _reportInstanceRepository = reportInstanceRepository;
         }
 
-        public async Task<ReportInstanceDetailDto?> Handle(
+        public async AccountingSystem.Domain.Entities.Task<ReportInstanceDetailDto?> Handle(
             GetReportByIdQuery request,
             CancellationToken cancellationToken)
         {
@@ -156,7 +156,7 @@ namespace AccountingSystem.Application.Handlers
             _reportInstanceRepository = reportInstanceRepository;
         }
 
-        public async Task<List<UpcomingReportDto>> Handle(
+        public async AccountingSystem.Domain.Entities.Task<List<UpcomingReportDto>> Handle(
             GetUpcomingReportsQuery request,
             CancellationToken cancellationToken)
         {
@@ -213,7 +213,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetAllAsync();
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -233,7 +233,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByConfigIdQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetReportsByConfigIdQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetReportsByConfigIdAsync(request.ConfigId);
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -253,7 +253,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByStatusQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetReportsByStatusQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetReportsByStatusAsync(request.Status);
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -273,7 +273,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetPendingReportsQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetPendingReportsQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetPendingReportsAsync();
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -293,7 +293,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByPeriodQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetReportsByPeriodQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetReportsByPeriodAsync(request.Period);
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -313,7 +313,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByDateRangeQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetReportsByDateRangeQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetReportsByDateRangeAsync(request.StartDate, request.EndDate);
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -333,7 +333,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetOverdueReportsQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetOverdueReportsQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetOverdueReportsAsync();
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -353,7 +353,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsDueInNextDaysQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportInstanceDetailDto>> Handle(GetReportsDueInNextDaysQuery request, CancellationToken cancellationToken)
             {
                 var reports = await _repository.GetReportsDueInNextDaysAsync(request.Days);
                 return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
@@ -377,7 +377,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<ReportTypeDto>> Handle(GetAllReportTypesQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<ReportTypeDto>> Handle(GetAllReportTypesQuery request, CancellationToken cancellationToken)
             {
                 var reportTypes = await _repository.GetAllAsync();
                 return _mapper.Map<List<ReportTypeDto>>(reportTypes);
@@ -395,7 +395,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<ReportTypeDto?> Handle(GetReportTypeByIdQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<ReportTypeDto?> Handle(GetReportTypeByIdQuery request, CancellationToken cancellationToken)
             {
                 var reportType = await _repository.GetByIdAsync(request.Id);
                 return reportType != null ? _mapper.Map<ReportTypeDto>(reportType) : null;
@@ -415,7 +415,7 @@ namespace AccountingSystem.Application.Handlers
                 _mapper = mapper;
             }
 
-            public async Task<List<CompanyReportConfigDto>> Handle(GetAllConfigsQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<CompanyReportConfigDto>> Handle(GetAllConfigsQuery request, CancellationToken cancellationToken)
             {
                 var configs = await _repository.GetAllAsync();
 
@@ -443,7 +443,7 @@ namespace AccountingSystem.Application.Handlers
                 _repository = repository;
             }
 
-            public async Task<List<CompanyReportConfigDto>> Handle(GetConfigsByCompanyIdQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<List<CompanyReportConfigDto>> Handle(GetConfigsByCompanyIdQuery request, CancellationToken cancellationToken)
             {
                 var configs = await _repository.GetByCompanyIdAsync(request.CompanyId);
 
@@ -471,7 +471,7 @@ namespace AccountingSystem.Application.Handlers
                 _repository = repository;
             }
 
-            public async Task<CompanyReportConfigDto?> Handle(GetConfigByIdQuery request, CancellationToken cancellationToken)
+            public async AccountingSystem.Domain.Entities.Task<CompanyReportConfigDto?> Handle(GetConfigByIdQuery request, CancellationToken cancellationToken)
             {
                 var config = await _repository.GetByIdAsync(request.Id);
 

@@ -19,47 +19,47 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Tasktype> AddAsync(Tasktype entity)
+        public AccountingSystem.Domain.Entities.Task<Tasktype> AddAsync(Tasktype entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Tasktype>> FindAsync(Expression<Func<Tasktype, bool>> predicate)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Tasktype>> FindAsync(Expression<Func<Tasktype, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Tasktype>> GetAllAsync()
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Tasktype>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Tasktype>> GetByCategoryAsync(string category)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Tasktype>> GetByCategoryAsync(string category)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Tasktype?> GetByIdAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<Tasktype?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Tasktype entity)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Tasktype entity)
         {
             throw new NotImplementedException();
         }

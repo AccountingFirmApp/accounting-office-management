@@ -13,42 +13,42 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Auditlog> AddAsync(Auditlog entity)
+        public AccountingSystem.Domain.Entities.Task<Auditlog> AddAsync(Auditlog entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Auditlog>> FindAsync(Expression<Func<Auditlog, bool>> predicate)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> FindAsync(Expression<Func<Auditlog, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Auditlog>> GetAllAsync()
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Auditlog?> GetByIdAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<Auditlog?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, Guid entityId)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, Guid entityId)
         {
             throw new NotImplementedException();
 
@@ -58,12 +58,12 @@ namespace AccountingSystem.Infrastructure.Repositories
             //    .ToListAsync();
         }
 
-        public Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, int entityId)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, int entityId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(Guid workerId)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(Guid workerId)
         {
             throw new NotImplementedException();
 
@@ -73,12 +73,12 @@ namespace AccountingSystem.Infrastructure.Repositories
             //    .ToListAsync();
         }
 
-        public Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(int workerId)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(int workerId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Auditlog>> GetRecentLogsAsync(int count)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetRecentLogsAsync(int count)
         {
             throw new NotImplementedException();
 
@@ -89,7 +89,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             //    .ToListAsync();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Auditlog entity)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Auditlog entity)
         {
             throw new NotImplementedException();
         }

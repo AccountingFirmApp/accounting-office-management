@@ -24,7 +24,7 @@
 //    public virtual DbSet<Reportinstance> Reportinstances { get; set; }
 //    public virtual DbSet<Reporttype> Reporttypes { get; set; }
 //    public virtual DbSet<Role> Roles { get; set; }
-//    public virtual DbSet<AccountingSystem.Domain.Entities.Task> Tasks { get; set; }
+//    public virtual DbSet<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task> Tasks { get; set; }
 //    public virtual DbSet<Tasktype> Tasktypes { get; set; }
 //    public virtual DbSet<Worker> Workers { get; set; }
 //    public virtual DbSet<Workerroletype> Workerroletypes { get; set; }
@@ -33,7 +33,7 @@
 //    {
 //        // PostgreSQL Enums
 //        modelBuilder
-//            .HasPostgresEnum("audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" })
+//            .HasPostgresEnum("audit_entity", new[] { "ReportInstance", "AccountingSystem.Domain.Entities.Task", "Company", "Worker" })
 //            .HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
 //            .HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
 //            .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
@@ -377,8 +377,8 @@
 //                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 //        });
 
-//        // Task Configuration
-//        modelBuilder.Entity<AccountingSystem.Domain.Entities.Task>(entity =>
+//        // AccountingSystem.Domain.Entities.Task Configuration
+//        modelBuilder.Entity<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>(entity =>
 //        {
 //            entity.ToTable("task");
 
@@ -595,7 +595,7 @@ public partial class AccountingDbContext : DbContext
     public virtual DbSet<Reportinstance> Reportinstances { get; set; }
     public virtual DbSet<Reporttype> Reporttypes { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
-    public virtual DbSet<AccountingSystem.Domain.Entities.Task> Tasks { get; set; }
+    public virtual DbSet<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task> Tasks { get; set; }
     public virtual DbSet<Tasktype> Tasktypes { get; set; }
 
     public virtual DbSet<Worker> Workers { get; set; }
@@ -605,7 +605,7 @@ public partial class AccountingDbContext : DbContext
     {
         // PostgreSQL Enums
         modelBuilder
-            .HasPostgresEnum("audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" })
+            .HasPostgresEnum("audit_entity", new[] { "ReportInstance", "AccountingSystem.Domain.Entities.Task", "Company", "Worker" })
             .HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
             .HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
             .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
@@ -954,9 +954,9 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        // Task Configuration
+        // AccountingSystem.Domain.Entities.Task Configuration
 
-        //modelBuilder.Entity<AccountingSystem.Domain.Entities.Task>(entity =>
+        //modelBuilder.Entity<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>(entity =>
         //{
         //    entity.ToTable("task");
 
@@ -1010,7 +1010,7 @@ public partial class AccountingDbContext : DbContext
         //          .OnDelete(DeleteBehavior.Restrict)
         //          .HasConstraintName("fk_task_tasktype");
         //});
-        modelBuilder.Entity<AccountingSystem.Domain.Entities.Task>(entity =>
+        modelBuilder.Entity<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>(entity =>
         {
             entity.ToTable("task");
 

@@ -244,9 +244,9 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Tasks, opt => opt.Ignore());
 
             // ========================================
-            // Task Mappings
+            // AccountingSystem.Domain.Entities.Task Mappings
             // ========================================
-            CreateMap<AccountingSystem.Domain.Entities.Task, TaskDto>()
+            CreateMap<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task, TaskDto>()
      .ForMember(d => d.CompanyName,
          opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : string.Empty))
      .ForMember(d => d.TaskTypeName,
@@ -258,7 +258,7 @@ namespace AccountingSystem.Application.Mappings
              ? $"{s.Assignedworker.Firstname} {s.Assignedworker.Lastname}"
              : string.Empty));
 
-            CreateMap<CreateTaskDto, AccountingSystem.Domain.Entities.Task>()
+            CreateMap<CreateTaskDto, AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
@@ -266,7 +266,7 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Tasktype, opt => opt.Ignore())
                 .ForMember(d => d.Assignedworker, opt => opt.Ignore());
 
-            CreateMap<UpdateTaskDto, AccountingSystem.Domain.Entities.Task>()
+            CreateMap<UpdateTaskDto, AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())

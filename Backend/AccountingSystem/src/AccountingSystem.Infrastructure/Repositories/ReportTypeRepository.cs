@@ -20,47 +20,47 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Reporttype> AddAsync(Reporttype entity)
+        public AccountingSystem.Domain.Entities.Task<Reporttype> AddAsync(Reporttype entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Reporttype>> FindAsync(Expression<Func<Reporttype, bool>> predicate)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reporttype>> FindAsync(Expression<Func<Reporttype, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Reporttype>> GetAllAsync()
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reporttype>> GetAllAsync()
         {
             return await context.Reporttypes.ToListAsync();
         }
 
-        public Task<Reporttype?> GetByIdAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<Reporttype?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Reporttype?> GetByShortcodeAsync(string shortcode)
+        public AccountingSystem.Domain.Entities.Task<Reporttype?> GetByShortcodeAsync(string shortcode)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Reporttype entity)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Reporttype entity)
         {
             throw new NotImplementedException();
         }

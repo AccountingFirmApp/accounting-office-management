@@ -19,57 +19,57 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Accountingfirm> AddAsync(Accountingfirm entity)
+        public AccountingSystem.Domain.Entities.Task<Accountingfirm> AddAsync(Accountingfirm entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Accountingfirm>> FindAsync(Expression<Func<Accountingfirm, bool>> predicate)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Accountingfirm>> FindAsync(Expression<Func<Accountingfirm, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Accountingfirm>> GetAllAsync()
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Accountingfirm>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Accountingfirm?> GetByIdAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<Accountingfirm?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Accountingfirm?> GetFirmWithAllDetailsAsync(int firmId)
+        public AccountingSystem.Domain.Entities.Task<Accountingfirm?> GetFirmWithAllDetailsAsync(int firmId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Accountingfirm?> GetFirmWithCompaniesAsync(int firmId)
+        public AccountingSystem.Domain.Entities.Task<Accountingfirm?> GetFirmWithCompaniesAsync(int firmId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Accountingfirm?> GetFirmWithWorkersAsync(int firmId)
+        public AccountingSystem.Domain.Entities.Task<Accountingfirm?> GetFirmWithWorkersAsync(int firmId)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Accountingfirm entity)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Accountingfirm entity)
         {
             throw new NotImplementedException();
         }

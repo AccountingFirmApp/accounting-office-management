@@ -22,7 +22,7 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ReportInstanceDto> Handle(
+        public async AccountingSystem.Domain.Entities.Task<ReportInstanceDto> Handle(
             CreateReportInstanceCommand request,
             CancellationToken cancellationToken)
         {
@@ -84,7 +84,7 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(
+        public async AccountingSystem.Domain.Entities.Task<bool> Handle(
             UpdateReportStatusCommand request,
             CancellationToken cancellationToken)
         {
@@ -140,7 +140,7 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(
+        public async AccountingSystem.Domain.Entities.Task<bool> Handle(
             UpdateReportPaymentCommand request,
             CancellationToken cancellationToken)
         {
@@ -182,7 +182,7 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(
+        public async AccountingSystem.Domain.Entities.Task<bool> Handle(
             UpdateReportInstanceCommand request,
             CancellationToken cancellationToken)
         {

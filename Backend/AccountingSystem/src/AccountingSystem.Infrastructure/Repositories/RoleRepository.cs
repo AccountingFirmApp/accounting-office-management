@@ -19,47 +19,47 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-        public Task<Role> AddAsync(Role entity)
+        public AccountingSystem.Domain.Entities.Task<Role> AddAsync(Role entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Role>> FindAsync(Expression<Func<Role, bool>> predicate)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Role>> FindAsync(Expression<Func<Role, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Role>> GetAllAsync()
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Role>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Role?> GetByIdAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<Role?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Role?> GetByNameAsync(string name)
+        public AccountingSystem.Domain.Entities.Task<Role?> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Role entity)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Role entity)
         {
             throw new NotImplementedException();
         }
