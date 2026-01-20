@@ -32,14 +32,16 @@ namespace AccountingSystem.Application.Queries
         /// </summary>
         public class GetAllReportsQuery : IRequest<List<ReportInstanceDetailDto>>
         {
-        }
+        public int? WorkerId { get; set; } // 🆕 הוספנו WorkerId אופציונלי
 
-        // ========== Query 2: דיווחים לפי Config ==========
+    }
 
-        /// <summary>
-        /// שאילתה לקבלת דיווחים לפי Config ID
-        /// </summary>
-        public class GetReportsByConfigIdQuery : IRequest<List<ReportInstanceDetailDto>>
+    // ========== Query 2: דיווחים לפי Config ==========
+
+    /// <summary>
+    /// שאילתה לקבלת דיווחים לפי Config ID
+    /// </summary>
+    public class GetReportsByConfigIdQuery : IRequest<List<ReportInstanceDetailDto>>
         {
             public int ConfigId { get; set; }
         }

@@ -1,4 +1,4 @@
-using AccountingSystem.Application.DTOs;
+﻿using AccountingSystem.Application.DTOs;
 using MediatR;
 
 namespace AccountingSystem.Application.Commands.Workers;

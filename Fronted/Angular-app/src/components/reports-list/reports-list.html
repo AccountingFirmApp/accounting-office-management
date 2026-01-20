@@ -1,151 +1,146 @@
-<div class="reports-list">
-  <!-- Modal Component -->
+
+<div class="reports-container">
+
+  <!-- 🔥 המודל לצפייה -->
   <app-report-view-modal
     [report]="selectedReport" 
     [isOpen]="isModalOpen"
     (closeModal)="closeModal()"
     (editClicked)="onEditFromModal($event)"
-   ></app-report-view-modal> 
+  ></app-report-view-modal>
 
-  <!-- Filters & Search -->
+  <!-- כותרת -->
+  <div class="header">
+    <h1>הדוחות שלי</h1>
+    <p class="subtitle">
+      שלום {{ workerService.currentWorker.firstName }} {{ workerService.currentWorker.lastName }}
+    </p>
+  </div>
+
+  <!-- פילטרים -->
   <div class="filters-section">
     <div class="search-box">
       <input 
         type="text" 
         [(ngModel)]="searchTerm" 
         (input)="applyFilters()"
-        placeholder="🔍 חיפוש לפי שם חברה או סוג דיווח..."
+        placeholder="חפש לפי שם חברה או סוג דוח..."
+        class="search-input"
       />
     </div>
 
-    <div class="filter-chips">
-      <button 
-        class="chip" 
-        [class.active]="selectedStatus === null"
-        (click)="filterByStatus(null)"
+    <div class="filter-controls">
+      <select 
+        [(ngModel)]="selectedStatus" 
+        (change)="applyFilters()"
+        class="filter-select"
       >
-        הכל
-      </button>
-      <button 
-        class="chip pending" 
-        [class.active]="selectedStatus === 'Pending'"
-        (click)="filterByStatus('Pending')"
+        <option value="all">כל הסטטוסים</option>
+        <option value="Pending">ממתין</option>
+        <option value="Reported">דווח</option>
+        <option value="Approved">אושר</option>
+        <option value="Paid">שולם</option>
+      </select>
+
+      <select 
+        [(ngModel)]="selectedCompany" 
+        (change)="applyFilters()"
+        class="filter-select"
       >
-        ממתינים
-      </button>
-      <button 
-        class="chip overdue" 
-        [class.active]="selectedStatus === 'overdue'"
-        (click)="filterByStatus('overdue')"
+        <option value="all">כל החברות</option>
+        <option *ngFor="let company of companies" [value]="company">
+          {{ company }}
+        </option>
+      </select>
+
+      <!-- 🔥 סינון לפי סוג דיווח -->
+      <select 
+        [(ngModel)]="selectedReportType" 
+        (change)="applyFilters()"
+        class="filter-select"
       >
-        באיחור
-      </button>
+        <option value="all">כל סוגי הדיווח</option>
+        <option *ngFor="let reportType of reportTypes" [value]="reportType">
+          {{ reportType }}
+        </option>
+      </select>
+
       <button 
-        class="chip reported" 
-        [class.active]="selectedStatus === 'Reported'"
-        (click)="filterByStatus('Reported')"
+        (click)="clearFilters()" 
+        class="btn-clear"
+        [disabled]="searchTerm === '' && selectedStatus === 'all' && selectedCompany === 'all' && selectedReportType === 'all'"
       >
-        דווחו
-      </button>
-      <button 
-        class="chip paid" 
-        [class.active]="selectedStatus === 'Paid'"
-        (click)="filterByStatus('Paid')"
-      >
-        שולמו
+        נקה סינון
       </button>
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
+  <!-- טעינה -->
+  <div *ngIf="isLoading" class="loading">
     <div class="spinner"></div>
     <p>טוען דוחות...</p>
   </div>
 
-  <!-- Empty State -->
-  <div *ngIf="!loading && filteredReports.length === 0" class="empty-state">
-    <div class="success-animation">
-      <div class="success-icon">✨</div>
-      <div class="checkmark">✓</div>
-    </div>
-    <h3>כל הכבוד!</h3>
-    <p class="success-message">אין דוחות ממתינים! כל העבודה בוצעה</p>
-    <p class="sub-message">{{ getEmptyStateMessage() }}</p>
+  <!-- הודעת שגיאה -->
+  <div *ngIf="errorMessage" class="error-message">
+    <span class="error-icon">⚠️</span>
+    {{ errorMessage }}
   </div>
 
-  <!-- Reports Table -->
-  <div *ngIf="!loading && filteredReports.length > 0" class="table-container">
+  <!-- טבלת דוחות -->
+  <div *ngIf="!isLoading && !errorMessage" class="reports-table-wrapper">
     <table class="reports-table">
       <thead>
         <tr>
-          <th (click)="sortBy('companyName')" class="sortable">
-            חברה
-            <span class="sort-icon">{{ getSortIcon('companyName') }}</span>
-          </th>
-          <th (click)="sortBy('reportTypeName')" class="sortable">
-            סוג דיווח
-            <span class="sort-icon">{{ getSortIcon('reportTypeName') }}</span>
-          </th>
-          <th (click)="sortBy('period')" class="sortable">
-            תקופה
-            <span class="sort-icon">{{ getSortIcon('period') }}</span>
-          </th>
-          <th (click)="sortBy('amount')" class="sortable">
-            סכום
-            <span class="sort-icon">{{ getSortIcon('amount') }}</span>
-          </th>
-          <th>סטטוס</th>
+          <th>חברה</th>
+          <th>סוג דוח</th>
+          <th>קוד</th>
+          <th>תקופה</th>
+          <th>סכום</th>
           <th>אמצעי תשלום</th>
+          <th>סטטוס</th>
+          <th>תאריך דיווח</th>
+          <th>תאריך תשלום</th>
           <th>פעולות</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let report of filteredReports" [class.overdue]="isOverdue(report)">
-          <!-- ✅ תוקן! גישה ישירה ל-companyName -->
-          <td class="company-name">{{ report.companyName }}</td>
-          
-          <td>
-            <span class="report-type-badge">{{ report.reportTypeName }}</span>
+        <tr *ngFor="let report of filteredReports" class="report-row" [class.delayed-report]="isReportDelayed(report)">
+          <td class="company-name">
+            <span *ngIf="isReportDelayed(report)" class="delay-badge" [title]="getDelayText(report)">⚠️</span>
+            {{ report.companyName }}
           </td>
-          
+          <td>{{ report.reportTypeName }}</td>
+          <td class="short-code">{{ report.reportTypeShortCode }}</td>
+          <td>{{ formatDate(report.period) }}</td>
+          <td class="amount">{{ formatAmount(report.amount) }}</td>
           <td>
-            {{ formatDate(report.period) }}
-            <span *ngIf="isOverdue(report)" class="overdue-badge">
-              ⚠️ איחור
-            </span>
-          </td>
-          
-          <td class="amount">
-            <span *ngIf="report.amount">₪{{ report.amount | number:'1.2-2' }}</span>
-            <span *ngIf="!report.amount" class="no-data">-</span>
-          </td>
-          
-          <td>
-            <span class="status-badge" [class]="getStatusClass(report.status)">
-              {{ getStatusLabel(report.status) }}
-            </span>
-          </td>
-          
-          <td>
-            <span *ngIf="report.paymentMethod">{{ getPaymentMethodLabel(report.paymentMethod) }}</span>
+            <span *ngIf="report.paymentMethod">{{ getPaymentMethodText(report.paymentMethod) }}</span>
             <span *ngIf="!report.paymentMethod" class="no-data">-</span>
           </td>
-          
+          <td>
+            <span class="status-badge" [ngClass]="getStatusColor(report.status)">
+              {{ getStatusText(report.status) }}
+            </span>
+          </td>
+          <td>{{ formatDate(report.reportedDate) }}</td>
+          <td>{{ formatDate(report.paidDate) }}</td>
           <td class="actions">
-            <button class="action-btn view" (click)="viewReport(report.id)" title="צפייה">
+            <button (click)="viewReport(report.id)" class="btn-view" title="צפייה">
               👁️
             </button>
-            <button class="action-btn edit" (click)="editReport(report.id)" title="עריכה">
+            <button (click)="editReport(report.id)" class="btn-edit" title="עריכה">
               ✏️
-            </button>
-            <button class="action-btn delete" (click)="deleteReport(report.id)" title="מחיקה">
-              🗑️
             </button>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- אין תוצאות -->
+    <div *ngIf="filteredReports.length === 0" class="no-results">
+      <p>לא נמצאו דוחות</p>
+      <button (click)="clearFilters()" class="btn-primary">נקה סינון</button>
+    </div>
   </div>
 </div>
-

@@ -177,11 +177,14 @@ using Microsoft.AspNetCore.Mvc;
 using AccountingSystem.Application.Commands;
 using AccountingSystem.Application.Queries;
 using AccountingSystem.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AccountingSystem.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ReportsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -251,13 +254,36 @@ namespace AccountingSystem.API.Controllers
         /// <summary>
         /// יצירת דיווח חדש
         /// </summary>
+        //[HttpPost]
+        //public async Task<ActionResult<ReportInstanceDto>> CreateReport(
+        //    [FromBody] CreateReportInstanceDto dto)
+        //{
+        //    var command = new CreateReportInstanceCommand
+        //    {
+        //        ConfigId = dto.ConfigId,
+        //        Period = dto.Period,
+        //        Amount = dto.Amount,
+        //        PaymentMethod = dto.PaymentMethod,
+        //        ReceiptDate = dto.ReceiptDate,
+        //        Comments = dto.Comments
+        //    };
+
+        //    var report = await _mediator.Send(command);
+        //    return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
+        //}
+
+
+
+
         [HttpPost]
         public async Task<ActionResult<ReportInstanceDto>> CreateReport(
-            [FromBody] CreateReportInstanceDto dto)
+    [FromBody] CreateReportInstanceDto dto)
         {
             var command = new CreateReportInstanceCommand
             {
-                ConfigId = dto.ConfigId,
+                CompanyId = dto.CompanyId,           // 🆕
+                ReportTypeId = dto.ReportTypeId,     // 🆕
+                FrequencyId = dto.FrequencyId,       // 🆕
                 Period = dto.Period,
                 Amount = dto.Amount,
                 PaymentMethod = dto.PaymentMethod,
@@ -268,7 +294,6 @@ namespace AccountingSystem.API.Controllers
             var report = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
         }
-
         /// <summary>
         /// עדכון סטטוס דיווח
         /// </summary>
@@ -350,13 +375,39 @@ namespace AccountingSystem.API.Controllers
         /// קבלת כל הדיווחים במערכת
         /// GET: api/reports/all
         /// </summary>
+        //[HttpGet("all")]
+        //public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
+        //{
+        //    var query = new GetAllReportsQuery();
+        //    var reports = await _mediator.Send(query);
+        //    return Ok(reports);
+        //}
+
         [HttpGet("all")]
         public async Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
         {
-            var query = new GetAllReportsQuery();
-            var reports = await _mediator.Send(query);
-            return Ok(reports);
+            try
+            {
+                // 🔥 מחלץ את ה-WorkerId מה-Token
+                var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
+                {
+                    return Unauthorized(new { message = "משתמש לא מזוהה" });
+                }
+
+                // שליחת Query עם WorkerId
+                var query = new GetAllReportsQuery { WorkerId = workerId };
+                var reports = await _mediator.Send(query);
+
+                return Ok(reports);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
+            }
         }
+
 
         /// <summary>
         /// קבלת דיווחים לפי Config ID

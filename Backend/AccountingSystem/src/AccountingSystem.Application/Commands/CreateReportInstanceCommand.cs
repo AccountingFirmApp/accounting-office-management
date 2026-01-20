@@ -5,7 +5,10 @@ namespace AccountingSystem.Application.Commands
 {
     public class CreateReportInstanceCommand : IRequest<ReportInstanceDto>
     {
-        public int ConfigId { get; set; }
+        public int CompanyId { get; set; }        // 🆕
+        public int ReportTypeId { get; set; }     // 🆕
+        public int? FrequencyId { get; set; }
+        //public int ConfigId { get; set; }
         public DateTime Period { get; set; }
         public decimal? Amount { get; set; }
         public string? PaymentMethod { get; set; }

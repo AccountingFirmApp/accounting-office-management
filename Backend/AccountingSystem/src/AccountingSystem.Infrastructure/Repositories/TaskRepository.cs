@@ -175,5 +175,10 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await GetTasksByStatusAsync("Pending");
         }
+
+        System.Threading.Tasks.Task IGenericRepository<TaskEntity>.AddAsync(TaskEntity entity)
+        {
+            return AddAsync(entity);
+        }
     }
 }

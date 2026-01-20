@@ -55,7 +55,7 @@
 // }
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { LoginRequestDto, LoginResponseDto, GoogleLoginRequestDto } from '../models/auth';
 import { environment } from '../environments/environment';
 import { jwtDecode } from 'jwt-decode';
@@ -70,6 +70,7 @@ interface JwtPayload {
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
+  private readonly TOKEN_KEY = 'authToken';
 
   constructor(private http: HttpClient) { }
 
@@ -77,11 +78,26 @@ export class AuthService {
   // Auth API Calls
   // =========================
   login(request: LoginRequestDto): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, request);
+    return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, request)
+      .pipe(
+        tap(response => {
+          this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          console.log('✅ Token saved:', response.token.substring(0, 20) + '...');
+        })
+      );
   }
 
+  /**
+   * התחברות Google
+   */
   googleLogin(request: GoogleLoginRequestDto): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(`${this.apiUrl}/login-google`, request);
+    return this.http.post<LoginResponseDto>(`${this.apiUrl}/login-google`, request)
+      .pipe(
+        tap(response => {
+          this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          console.log('✅ Token saved:', response.token.substring(0, 20) + '...');
+        })
+      );
   }
 
   // =========================
@@ -91,6 +107,9 @@ export class AuthService {
     localStorage.setItem('authToken', token);
   }
 
+  /**
+   * קבלת טוקן
+   */
   getToken(): string | null {
     console.log('🔑 קבלת טוקן מה-localStorage1',localStorage.getItem('authToken')); 
     
@@ -113,8 +132,7 @@ export class AuthService {
   // Logout
   // =========================
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('workerInfo');
+    localStorage.removeItem(this.TOKEN_KEY);
   }
 
   // =========================

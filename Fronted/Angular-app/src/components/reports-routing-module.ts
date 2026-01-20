@@ -12,7 +12,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', component: ReportsListComponent },
       { path: 'new', component: ReportFormComponent },
-      { path: 'edit/:id', component: ReportFormComponent }
+      { path: 'edit/:id', component: ReportFormComponent },
+      
     ]
   }
 ];

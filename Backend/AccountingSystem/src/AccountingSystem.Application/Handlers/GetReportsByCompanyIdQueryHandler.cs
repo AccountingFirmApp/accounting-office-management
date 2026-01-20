@@ -200,163 +200,206 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-        // ========== Handler 1: קבלת כל הדיווחים ==========
+    // ========== Handler 1: קבלת כל הדיווחים ==========
 
-        public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
+    //public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
+    //{
+    //    private readonly IReportInstanceRepository _repository;
+    //    private readonly IMapper _mapper;
+
+    //    public GetAllReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+    //    {
+    //        _repository = repository;
+    //        _mapper = mapper;
+    //    }
+
+    //    public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
+    //    {
+    //        var reports = await _repository.GetAllAsync();
+    //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+    //    }
+
+
+
+    // Application/Handlers/GetAllReportsQueryHandler.cs
+    public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly ICompanyWorkerRepository _companyWorkerRepository;
+        private readonly IMapper _mapper;
+
+        public GetAllReportsQueryHandler(
+            IReportInstanceRepository repository,
+            ICompanyWorkerRepository companyWorkerRepository,
+            IMapper mapper)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
-
-            public GetAllReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-            {
-                _repository = repository;
-                _mapper = mapper;
-            }
-
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetAllAsync();
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-            }
+            _repository = repository;
+            _companyWorkerRepository = companyWorkerRepository;
+            _mapper = mapper;
         }
 
-        // ========== Handler 2: דיווחים לפי Config ==========
-
-        public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
+        public async Task<List<ReportInstanceDetailDto>> Handle(
+            GetAllReportsQuery request,
+            CancellationToken cancellationToken)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
+            // קבלת כל הדוחות
+            var reports = await _repository.GetAllAsync();
 
-            public GetReportsByConfigIdQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+            // 🔥 אם יש WorkerId - מסננים רק לחברות של העובדת הזו
+            if (request.WorkerId.HasValue)
             {
-                _repository = repository;
-                _mapper = mapper;
+                // קבלת כל החברות של העובדת
+                var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
+                var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
+
+                // סינון הדוחות רק לחברות האלה
+                reports = reports
+                    .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
+                    .ToList();
             }
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByConfigIdQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetReportsByConfigIdAsync(request.ConfigId);
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-            }
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        }
+    }
+}
+
+    // ========== Handler 2: דיווחים לפי Config ==========
+
+    public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly IMapper _mapper;
+
+        public GetReportsByConfigIdQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // ========== Handler 3: דיווחים לפי סטטוס ==========
-
-        public class GetReportsByStatusQueryHandler : IRequestHandler<GetReportsByStatusQuery, List<ReportInstanceDetailDto>>
+        public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByConfigIdQuery request, CancellationToken cancellationToken)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
+            var reports = await _repository.GetReportsByConfigIdAsync(request.ConfigId);
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        }
+    }
 
-            public GetReportsByStatusQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-            {
-                _repository = repository;
-                _mapper = mapper;
-            }
+    // ========== Handler 3: דיווחים לפי סטטוס ==========
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByStatusQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetReportsByStatusAsync(request.Status);
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-            }
+    public class GetReportsByStatusQueryHandler : IRequestHandler<GetReportsByStatusQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly IMapper _mapper;
+
+        public GetReportsByStatusQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // ========== Handler 4: דיווחים ממתינים ==========
-
-        public class GetPendingReportsQueryHandler : IRequestHandler<GetPendingReportsQuery, List<ReportInstanceDetailDto>>
+        public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByStatusQuery request, CancellationToken cancellationToken)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
+            var reports = await _repository.GetReportsByStatusAsync(request.Status);
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        }
+    }
 
-            public GetPendingReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-            {
-                _repository = repository;
-                _mapper = mapper;
-            }
+    // ========== Handler 4: דיווחים ממתינים ==========
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetPendingReportsQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetPendingReportsAsync();
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-            }
+    public class GetPendingReportsQueryHandler : IRequestHandler<GetPendingReportsQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly IMapper _mapper;
+
+        public GetPendingReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // ========== Handler 5: דיווחים לפי תקופה ==========
-
-        public class GetReportsByPeriodQueryHandler : IRequestHandler<GetReportsByPeriodQuery, List<ReportInstanceDetailDto>>
+        public async Task<List<ReportInstanceDetailDto>> Handle(GetPendingReportsQuery request, CancellationToken cancellationToken)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
+            var reports = await _repository.GetPendingReportsAsync();
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        }
+    }
 
-            public GetReportsByPeriodQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-            {
-                _repository = repository;
-                _mapper = mapper;
-            }
+    // ========== Handler 5: דיווחים לפי תקופה ==========
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByPeriodQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetReportsByPeriodAsync(request.Period);
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-            }
+    public class GetReportsByPeriodQueryHandler : IRequestHandler<GetReportsByPeriodQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly IMapper _mapper;
+
+        public GetReportsByPeriodQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // ========== Handler 6: דיווחים בטווח תאריכים ==========
-
-        public class GetReportsByDateRangeQueryHandler : IRequestHandler<GetReportsByDateRangeQuery, List<ReportInstanceDetailDto>>
+        public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByPeriodQuery request, CancellationToken cancellationToken)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
+            var reports = await _repository.GetReportsByPeriodAsync(request.Period);
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        }
+    }
 
-            public GetReportsByDateRangeQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-            {
-                _repository = repository;
-                _mapper = mapper;
-            }
+    // ========== Handler 6: דיווחים בטווח תאריכים ==========
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByDateRangeQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetReportsByDateRangeAsync(request.StartDate, request.EndDate);
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-            }
+    public class GetReportsByDateRangeQueryHandler : IRequestHandler<GetReportsByDateRangeQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly IMapper _mapper;
+
+        public GetReportsByDateRangeQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // ========== Handler 7: דיווחים באיחור (OVERDUE) ==========
-
-        public class GetOverdueReportsQueryHandler : IRequestHandler<GetOverdueReportsQuery, List<ReportInstanceDetailDto>>
+        public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsByDateRangeQuery request, CancellationToken cancellationToken)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
+            var reports = await _repository.GetReportsByDateRangeAsync(request.StartDate, request.EndDate);
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        }
+    }
 
-            public GetOverdueReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-            {
-                _repository = repository;
-                _mapper = mapper;
-            }
+    // ========== Handler 7: דיווחים באיחור (OVERDUE) ==========
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetOverdueReportsQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetOverdueReportsAsync();
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-            }
+    public class GetOverdueReportsQueryHandler : IRequestHandler<GetOverdueReportsQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly IMapper _mapper;
+
+        public GetOverdueReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // ========== Handler 8: דיווחים שמגיעים בקרוב ==========
-
-        public class GetReportsDueInNextDaysQueryHandler : IRequestHandler<GetReportsDueInNextDaysQuery, List<ReportInstanceDetailDto>>
+        public async Task<List<ReportInstanceDetailDto>> Handle(GetOverdueReportsQuery request, CancellationToken cancellationToken)
         {
-            private readonly IReportInstanceRepository _repository;
-            private readonly IMapper _mapper;
+            var reports = await _repository.GetOverdueReportsAsync();
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        }
+    }
 
-            public GetReportsDueInNextDaysQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-            {
-                _repository = repository;
-                _mapper = mapper;
-            }
+    // ========== Handler 8: דיווחים שמגיעים בקרוב ==========
 
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsDueInNextDaysQuery request, CancellationToken cancellationToken)
-            {
-                var reports = await _repository.GetReportsDueInNextDaysAsync(request.Days);
-                return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+    public class GetReportsDueInNextDaysQueryHandler : IRequestHandler<GetReportsDueInNextDaysQuery, List<ReportInstanceDetailDto>>
+    {
+        private readonly IReportInstanceRepository _repository;
+        private readonly IMapper _mapper;
+
+        public GetReportsDueInNextDaysQueryHandler(IReportInstanceRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
+
+        public async Task<List<ReportInstanceDetailDto>> Handle(GetReportsDueInNextDaysQuery request, CancellationToken cancellationToken)
+        {
+            var reports = await _repository.GetReportsDueInNextDaysAsync(request.Days);
+            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
         }
 
 
@@ -366,7 +409,7 @@ namespace AccountingSystem.Application.Handlers
 
         // ========== Report Types Handlers ==========
 
-    public class GetAllReportTypesQueryHandler : IRequestHandler<GetAllReportTypesQuery, List<ReportTypeDto>>
+        public class GetAllReportTypesQueryHandler : IRequestHandler<GetAllReportTypesQuery, List<ReportTypeDto>>
         {
             private readonly IReportTypeRepository _repository;
             private readonly IMapper _mapper;
@@ -493,13 +536,3 @@ namespace AccountingSystem.Application.Handlers
             }
         }
     }
-    }
-
-
-
-
-
-
-
-
-
