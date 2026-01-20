@@ -129,13 +129,36 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         // ⭐ המתודה החשובה ביותר
+        //public async Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
+        //{
+        //    return await _context.Companyworkers
+        //        .Include(cw => cw.Company)   // טוען את פרטי החברה
+        //        .Include(cw => cw.Worker)    // טוען את פרטי העובדת
+        //        .Where(cw => cw.Workerid == workerId)
+        //        .ToListAsync();
+        //}
+        // Infrastructure/Repositories/CompanyWorkerRepository.cs
         public async Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
         {
-            return await _context.Companyworkers
-                .Include(cw => cw.Company)   // טוען את פרטי החברה
-                .Include(cw => cw.Worker)    // טוען את פרטי העובדת
-                .Where(cw => cw.Workerid == workerId)
-                .ToListAsync();
+            try
+            {
+                Console.WriteLine($"🔍 Querying CompanyWorkers for WorkerId: {workerId}");
+
+                var result = await _context.Companyworkers
+                    .Include(cw => cw.Company)
+                    .Include(cw => cw.Worker)
+                    .Where(cw => cw.Workerid == workerId)
+                    .ToListAsync();
+
+                Console.WriteLine($"✅ Found {result.Count} records");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error in GetByWorkerIdAsync: {ex.Message}");
+                Console.WriteLine($"Stack: {ex.StackTrace}");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId)

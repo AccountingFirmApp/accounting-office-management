@@ -10,6 +10,7 @@ import {
   UpdateReportPayment,
   UpcomingReport
 } from '../models/report-instance';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,12 @@ export class ReportService {
    * GET: /api/reports/all
    */
   getAll(): Observable<ReportInstanceDetail[]> {
-    return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`);
+    const url = `${this.endpoint}/all`;
+  console.log('🔗 Calling URL:', url);
+  console.log('🔗 Full URL:', `${environment.apiUrl}${url}`);
+    return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`); // 🔥 תקן סוגריים
+
+    // return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`);
   }
 
   /**

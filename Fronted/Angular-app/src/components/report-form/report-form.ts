@@ -238,10 +238,10 @@ export class ReportFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.formData.configId) {
-      alert('יש לבחור חברה וסוג דיווח');
-      return;
-    }
+    // if (!this.formData.configId) {
+    //   alert('יש לבחור חברה וסוג דיווח');
+    //   return;
+    // }
 
     this.submitting = true;
 
@@ -252,28 +252,58 @@ export class ReportFormComponent implements OnInit {
     }
   }
 
-  createReport() {
-    const data: CreateReportInstance = {
-      configId: +this.formData.configId,
-      period: this.formData.period,
-      amount: this.formData.amount || undefined,
-      paymentMethod: this.formData.paymentMethod || undefined,
-      receiptDate: this.formData.receiptDate || undefined,
-      comments: this.formData.comments || ''
-    };
+  // createReport() {
+  //   const data: CreateReportInstance = {
+  //     configId: +this.formData.configId,
+  //     period: this.formData.period,
+  //     amount: this.formData.amount || undefined,
+  //     paymentMethod: this.formData.paymentMethod || undefined,
+  //     receiptDate: this.formData.receiptDate || undefined,
+  //     comments: this.formData.comments || ''
+  //   };
 
-    this.reportService.create(data).subscribe({
-      next: () => {
-        alert('הדוח נוצר בהצלחה! ✅');
-        this.goBack();
-      },
-      error: (err) => {
-        console.error('Error creating report:', err);
-        alert('שגיאה ביצירת הדוח');
-        this.submitting = false;
-      }
-    });
-  }
+  //   this.reportService.create(data).subscribe({
+  //     next: () => {
+  //       alert('הדוח נוצר בהצלחה! ✅');
+  //       this.goBack();
+  //     },
+  //     error: (err) => {
+  //       console.error('Error creating report:', err);
+  //       alert('שגיאה ביצירת הדוח');
+  //       this.submitting = false;
+  //     }
+  //   });
+  // }
+
+createReport() {
+  const data: CreateReportInstance = {
+    companyId: this.formData.companyId,        // מהטופס
+    reportTypeId: this.formData.reportTypeId,  // מהטופס
+    frequencyId: this.formData.frequencyId,    // אופציונלי
+    period: this.formData.period,
+    amount: this.formData.amount || undefined,
+    paymentMethod: this.formData.paymentMethod || undefined,
+    receiptDate: this.formData.receiptDate || undefined,
+    comments: this.formData.comments || ''
+  };
+
+  this.reportService.create(data).subscribe({
+    next: () => {
+      alert('הדוח נוצר בהצלחה! ✅');
+      this.goBack();
+    },
+    error: (err) => {
+      console.error('Error creating report:', err);
+      alert('שגיאה ביצירת הדוח');
+      this.submitting = false;
+    }
+  });
+}
+
+
+
+
+
 
   updateReport() {
     const data: UpdateReportInstance = {

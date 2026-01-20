@@ -27,7 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Commands\" />
+		<Folder Include="Queries\" />
 		<Folder Include="Validators\" />
 		<Folder Include="Mappings\" />
 	</ItemGroup>
