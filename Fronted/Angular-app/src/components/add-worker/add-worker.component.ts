@@ -153,7 +153,8 @@ export class WorkerFormComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       roleId: [null, Validators.required],   // ✅ עכשיו יש roleId
       firmId: [null, Validators.required],
-      isActive: [true]
+      isActive: [true],
+      PasswordHash: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]]
     });
   }
 

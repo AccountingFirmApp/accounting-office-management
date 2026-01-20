@@ -22,7 +22,7 @@ export interface WorkerInfoDto {
   email: string;
   roleName: string;
   roleId: number;        // ← מוסיפים את זה
-
+  password: string;
   firmId: number;
   isActive: boolean;
 }
