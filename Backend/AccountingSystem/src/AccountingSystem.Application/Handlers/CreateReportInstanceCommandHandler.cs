@@ -201,7 +201,7 @@ namespace AccountingSystem.Application.Handlers
             report.Updatedat = DateTime.UtcNow;
 
             // עדכון אוטומטי של תאריכים
-            if (status == ReportStatus.Reported )
+            if (status == ReportStatus.Reported && !report.Reporteddate.HasValue)
             {
                 report.Reporteddate = DateOnly.FromDateTime(DateTime.Now);
             }
