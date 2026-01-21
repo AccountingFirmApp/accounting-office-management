@@ -13,7 +13,7 @@ namespace AccountingSystem.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:audit_entity", "ReportInstance,Task,Company,Worker")
+                .Annotation("Npgsql:Enum:audit_entity", "ReportInstance,AccountingSystem.Domain.Entities.Task,Company,Worker")
                 .Annotation("Npgsql:Enum:payment_method", "Credit,Transfer,Check,Online,Cash")
                 .Annotation("Npgsql:Enum:report_status", "Pending,Reported,Paid,Approved,NotRequired")
                 .Annotation("Npgsql:Enum:task_category", "Banks,Income,Expenses,Reconciliations,Other")

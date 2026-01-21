@@ -7,14 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using TaskEntity = AccountingSystem.Domain.Entities.Task;
+using TaskEntity = AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
     public class TaskRepository : ITaskRepository
     {
         private readonly AccountingDbContext _context;
-        private readonly DbSet<Domain.Entities.Task> _dbSet;
+        private readonly DbSet<Domain.Entities.AccountingSystem.Domain.Entities.Task> _dbSet;
 
         public TaskRepository(AccountingDbContext context)
         {
@@ -25,12 +25,12 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         // ==================== פעולות בסיסיות ====================
 
-        public async Task<Domain.Entities.Task?> GetByIdAsync(int id)
+        public async AccountingSystem.Domain.Entities.Task<Domain.Entities.AccountingSystem.Domain.Entities.Task?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetAllAsync()
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetAllAsync()
         {
             return await _dbSet
                 .Include(t => t.Company)
@@ -39,11 +39,16 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> FindAsync(Expression<Func<Domain.Entities.Task, bool>> predicate)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> FindAsync(Expression<Func<Domain.Entities.AccountingSystem.Domain.Entities.Task, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+<<<<<<< HEAD
+
+        public async AccountingSystem.Domain.Entities.Task<Domain.Entities.AccountingSystem.Domain.Entities.Task> AddAsync(Domain.Entities.AccountingSystem.Domain.Entities.Task entity)
+=======
         public async System.Threading.Tasks.Task AddAsync(Domain.Entities.Task entity)
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
         {
             await _dbSet.AddAsync(entity);
             // לא מחזירים כלום - רק Task
@@ -54,13 +59,13 @@ namespace AccountingSystem.Infrastructure.Repositories
         //    return entity;
         //}
 
-        public async System.Threading.Tasks.Task UpdateAsync(Domain.Entities.Task entity)
+        public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Domain.Entities.AccountingSystem.Domain.Entities.Task entity)
         {
             _dbSet.Update(entity);
-            await System.Threading.Tasks.Task.CompletedTask;
+            await System.Threading.Tasks.AccountingSystem.Domain.Entities.Task.CompletedTask;
         }
 
-        public async System.Threading.Tasks.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
@@ -69,12 +74,12 @@ namespace AccountingSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> ExistsAsync(int id)
+        public async AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             return await _dbSet.AnyAsync(t => t.Id == id);
         }
 
-        public async Task<int> CountAsync(Func<object, bool> predicate)
+        public async AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> predicate)
         {
             return await _dbSet.CountAsync();
         }
@@ -85,7 +90,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// קבלת כל המשימות של חברה מסוימת
         /// זה מה שאת צריכה! 🎯
         /// </summary>
-        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByCompanyIdAsync(int companyId)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetTasksByCompanyIdAsync(int companyId)
         {
             return await _dbSet
                 .Where(t => t.Companyid == companyId)
@@ -96,7 +101,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByWorkerIdAsync(int workerId)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetTasksByWorkerIdAsync(int workerId)
         {
             return await _dbSet
                 .Where(t => t.Assignedworkerid == workerId)
@@ -106,7 +111,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByStatusAsync(string status)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetTasksByStatusAsync(string status)
         {
             return await _dbSet
                 .Where(t => t.Status.ToString() == status)
@@ -116,7 +121,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByTaskTypeIdAsync(int taskTypeId)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetTasksByTaskTypeIdAsync(int taskTypeId)
         {
             return await _dbSet
                 .Where(t => t.Tasktypeid == taskTypeId)
@@ -125,7 +130,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByPeriodAsync(DateTime period)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetTasksByPeriodAsync(DateTime period)
         {
             var periodDateOnly = DateOnly.FromDateTime(period);
             return await _dbSet
@@ -135,7 +140,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksByDateRangeAsync(DateTime startDate, DateTime endDate)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetTasksByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             var startDateOnly = DateOnly.FromDateTime(startDate);
             var endDateOnly = DateOnly.FromDateTime(endDate);
@@ -147,7 +152,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetOverdueTasksAsync()
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetOverdueTasksAsync()
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
             return await _dbSet
@@ -158,7 +163,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetTasksDueInNextDaysAsync(int days)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetTasksDueInNextDaysAsync(int days)
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
             var futureDate = today.AddDays(days);
@@ -171,7 +176,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Domain.Entities.Task>> GetPendingTasksAsync()
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Domain.Entities.AccountingSystem.Domain.Entities.Task>> GetPendingTasksAsync()
         {
             return await GetTasksByStatusAsync("Pending");
         }

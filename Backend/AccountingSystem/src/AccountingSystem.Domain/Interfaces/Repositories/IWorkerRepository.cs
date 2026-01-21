@@ -15,35 +15,35 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// <summary>
         /// תביא לי עובד + התפקיד שלו
         /// </summary>
-        Task<Worker?> GetWorkerWithRoleAsync(int workerId);
+        AccountingSystem.Domain.Entities.Task<Worker?> GetWorkerWithRoleAsync(int workerId);
 
         /// <summary>
         /// תביא לי עובד + כל החברות שהוא עובד בהן
         /// </summary>
-        Task<Worker?> GetWorkerWithCompaniesAsync(int workerId);
+        AccountingSystem.Domain.Entities.Task<Worker?> GetWorkerWithCompaniesAsync(int workerId);
 
         // ========== חיפושים ==========
 
         /// <summary>
         /// תביא לי את כל העובדים של משרד מסוים
         /// </summary>
-        Task<IEnumerable<Worker>> GetWorkersByFirmIdAsync(int firmId);
+        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetWorkersByFirmIdAsync(int firmId);
 
         /// <summary>
         /// תביא לי את כל העובדים שעובדים בחברה מסוימת
         /// </summary>
-        Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId);
+        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId);
 
         /// <summary>
         /// תביא לי רק עובדים פעילים
         /// </summary>
-        Task<IEnumerable<Worker>> GetActiveWorkersAsync();
+        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetActiveWorkersAsync();
 
         /// <summary>
         /// תביא לי את כל העובדים עם תפקיד מסוים
         /// דוגמה: כל המנהלים
         /// </summary>
-        Task<IEnumerable<Worker>> GetWorkersByRoleIdAsync(int roleId);
+        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetWorkersByRoleIdAsync(int roleId);
 
         // ========== בדיקות ==========
 
@@ -51,7 +51,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// בדיקה: האם האימייל הזה כבר תפוס?
         /// חשוב! כל אימייל חייב להיות ייחודי
         /// </summary>
-        Task<bool> EmailExistsAsync(string email, int? excludeWorkerId = null);
+        AccountingSystem.Domain.Entities.Task<bool> EmailExistsAsync(string email, int? excludeWorkerId = null);
 
 
 

@@ -28,7 +28,7 @@ namespace AccountingSystem.API.Controllers
         [Authorize(Roles = "Admin")]
 
         [HttpGet]
-        public async Task<ActionResult<List<CompanyDto>>> GetAll()
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<CompanyDto>>> GetAll()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/companies/5
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<ActionResult<CompanyDto>> GetById(int id)
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<CompanyDto>> GetById(int id)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/companies/firm/1
         /// </summary>
         [HttpGet("firm/{firmId}")]
-        public async Task<ActionResult<List<CompanyDto>>> GetByFirmId(int firmId)
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<CompanyDto>>> GetByFirmId(int firmId)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace AccountingSystem.API.Controllers
         /// POST: api/companies
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<CompanyDto>> Create([FromBody] Application.Commands.Companies.CreateCompanyCommand command)
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<CompanyDto>> Create([FromBody] Application.Commands.Companies.CreateCompanyCommand command)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace AccountingSystem.API.Controllers
         /// PUT: api/companies/5
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult<CompanyDto>> Update(int id, [FromBody] Application.Commands.Companies.UpdateCompanyCommand command)
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<CompanyDto>> Update(int id, [FromBody] Application.Commands.Companies.UpdateCompanyCommand command)
         {
             try
             {
@@ -126,7 +126,7 @@ namespace AccountingSystem.API.Controllers
         /// DELETE: api/companies/5
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async AccountingSystem.Domain.Entities.Task<ActionResult> Delete(int id)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/companies/5/tasks
         /// </summary>
         [HttpGet("{id}/tasks")]
-        public async Task<ActionResult<List<TaskDto>>> GetCompanyTasks(int id)
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<TaskDto>>> GetCompanyTasks(int id)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace AccountingSystem.API.Controllers
         }
 
         [HttpPatch("{companyId}/tasks/{taskId}/status")]
-        public async Task<ActionResult> UpdateTaskStatus(
+        public async AccountingSystem.Domain.Entities.Task<ActionResult> UpdateTaskStatus(
         int companyId,
         int taskId,
         [FromBody] UpdateTaskStatusRequest request)

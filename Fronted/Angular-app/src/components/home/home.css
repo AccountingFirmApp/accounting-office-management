@@ -1,5 +1,74 @@
+/* Home Page - Dokka-Inspired Design */
+
 .home-container {
   min-height: 100vh;
+<<<<<<< HEAD
+  background-color: var(--color-white);
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Section */
+.header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #1e40af 100%);
+  color: var(--color-white);
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0 L1200,0 L1200,60 Q900,120 600,60 T0,60 Z" fill="rgba(255,255,255,0.05)"/></svg>') bottom center / cover no-repeat;
+  opacity: 0.5;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
+}
+
+.subtitle {
+  margin: var(--spacing-md) 0 0;
+  font-size: var(--font-size-lg);
+  opacity: 0.95;
+  font-weight: 400;
+  position: relative;
+  z-index: 1;
+}
+
+/* Menu Grid */
+.menu-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  flex: 1;
+}
+
+/* Menu Card - Clean Dokka Style */
+.menu-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+=======
   direction: rtl;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   position: relative;
@@ -117,7 +186,9 @@
   padding: 40px 32px;
   text-align: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   cursor: pointer;
+  border: 2px solid transparent;
   position: relative;
   overflow: hidden;
 }
@@ -129,6 +200,29 @@
   left: 0;
   right: 0;
   height: 4px;
+<<<<<<< HEAD
+  background: linear-gradient(90deg, var(--color-primary), #3b82f6);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+  transform-origin: right;
+}
+
+.menu-card:not(.disabled):hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--color-primary-light);
+}
+
+.menu-card:not(.disabled):hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.menu-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-gray-50);
+=======
   background: linear-gradient(90deg, #2563EB, #3b82f6, #60a5fa);
   transform: scaleX(0);
   transform-origin: left;
@@ -169,10 +263,30 @@
 .menu-card.disabled .card-icon {
   filter: grayscale(100%);
   opacity: 0.4;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
-/* Card Text */
+.menu-card.disabled:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
+
+/* Card Content */
 .menu-card h3 {
+<<<<<<< HEAD
+  margin: 0 0 var(--spacing-md);
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--color-gray-900);
+}
+
+.menu-card p {
+  margin: 0 0 var(--spacing-xl);
+  color: var(--color-gray-600);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  min-height: 48px;
+=======
   margin: 0 0 12px;
   font-size: 22px;
   font-weight: 600;
@@ -185,10 +299,38 @@
   color: #64748b;
   font-size: 15px;
   line-height: 1.6;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 }
 
 /* Card Button */
 .card-button {
+<<<<<<< HEAD
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-button:not(:disabled):hover {
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card-button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.card-button:disabled {
+  background-color: var(--color-gray-300);
+=======
   background: linear-gradient(135deg, #2563EB 0%, #3b82f6 100%);
   color: white;
   border: none;
@@ -209,13 +351,67 @@
 
 .card-button:disabled {
   background: #cbd5e1;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   cursor: not-allowed;
   box-shadow: none;
 }
 
 /* Footer */
 .footer {
+  background-color: var(--color-gray-900);
+  color: var(--color-gray-400);
   text-align: center;
+<<<<<<< HEAD
+  padding: var(--spacing-xl);
+  font-size: var(--font-size-sm);
+  margin-top: auto;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-card {
+  animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.menu-card:nth-child(1) { animation-delay: 0.1s; }
+.menu-card:nth-child(2) { animation-delay: 0.2s; }
+.menu-card:nth-child(3) { animation-delay: 0.3s; }
+.menu-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+
+  .header h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-base);
+=======
   color: #94a3b8;
   padding: 32px 20px;
   font-size: 13px;
@@ -235,15 +431,44 @@
 
   .user-details {
     display: none;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
   }
 
   .menu-grid {
     padding: 24px 16px;
     grid-template-columns: 1fr;
+<<<<<<< HEAD
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .menu-card {
+    padding: var(--spacing-xl);
+=======
     gap: 16px;
   }
 
   .card-icon {
     font-size: 40px;
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
+  }
+
+  .menu-card h3 {
+    font-size: var(--font-size-xl);
+  }
+
+  .menu-card p {
+    font-size: var(--font-size-sm);
+    min-height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .menu-card {
+    padding: var(--spacing-lg);
   }
 }

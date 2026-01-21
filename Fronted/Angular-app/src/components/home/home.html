@@ -35,12 +35,15 @@
       <button class="card-button">כניסה ←</button>
     </div>
 
-    <!-- כרטיס 2: דוחות - ✅ פעיל! -->
+    <!-- כרטיס 2: דוחות -->
     <div class="menu-card" (click)="navigateToReports()">
       <h3>דוחות</h3>
       <p>ניהול ומעקב אחר כל הדוחות</p>
       <button class="card-button">כניסה ←</button>
     </div>
+<<<<<<< HEAD
+    <div class="menu-card" (click)="navigateToCompany()">
+=======
     <div class="menu-card" 
     *ngIf="auth.isAdmin()" (click)="navigateToCompany()">
       <h3>חברות</h3>

@@ -55,18 +55,18 @@
 //        }
 
 //        // ========== שמירת שינויים ==========
-//        public async Task<int> SaveChangesAsync()
+//        public async AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync()
 //        {
 //            return await _context.SaveChangesAsync();
 //        }
 
 //        // ========== ניהול טרנזקציות ==========
-//        public async Task BeginTransactionAsync()
+//        public async AccountingSystem.Domain.Entities.Task BeginTransactionAsync()
 //        {
 //            _transaction = await _context.Database.BeginTransactionAsync();
 //        }
 
-//        public async Task CommitTransactionAsync()
+//        public async AccountingSystem.Domain.Entities.Task CommitTransactionAsync()
 //        {
 //            try
 //            {
@@ -91,7 +91,7 @@
 //            }
 //        }
 
-//        public async Task RollbackTransactionAsync()
+//        public async AccountingSystem.Domain.Entities.Task RollbackTransactionAsync()
 //        {
 //            if (_transaction != null)
 //            {
@@ -108,12 +108,12 @@
 //            _context.Dispose();
 //        }
 
-//        public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+//        public AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken)
 //        {
 //            throw new NotImplementedException();
 //        }
 
-//        Task IUnitOfWork.SaveChangesAsync()
+//        AccountingSystem.Domain.Entities.Task IUnitOfWork.SaveChangesAsync()
 //        {
 //            throw new NotImplementedException();
 //        }
@@ -152,20 +152,20 @@
 //        /// שמור את כל השינויים לDB
 //        /// מחזיר: מספר השורות שהשתנו
 //        /// </summary>
-//        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+//        AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
 //        // ========== ניהול טרנזקציות ==========
 //        /// <summary>
 //        /// פתח טרנזקציה חדשה
 //        /// מעכשיו כל הפעולות "תלויות באוויר" עד לCommit
 //        /// </summary>
-//        Task BeginTransactionAsync();
+//        AccountingSystem.Domain.Entities.Task BeginTransactionAsync();
 
 //        /// <summary>
 //        /// אשר את כל הפעולות - עכשיו הן באמת יישמרו!
 //        /// </summary>
-//        Task CommitTransactionAsync();
-//        Task SaveChangesAsync();
+//        AccountingSystem.Domain.Entities.Task CommitTransactionAsync();
+//        AccountingSystem.Domain.Entities.Task SaveChangesAsync();
 //    }
 //}   
 //        /// <summary>
@@ -246,7 +246,7 @@ public class UnitOfWork : IUnitOfWork
         _auditLogs ??= new AuditLogRepository(_context);
 
     // ← הפונקציה החשובה!
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         Console.WriteLine("💾 UnitOfWork.SaveChangesAsync נקרא");
         try
@@ -264,22 +264,22 @@ public class UnitOfWork : IUnitOfWork
     }
 
     // ← הפונקציה השנייה (ללא cancellationToken)
-    public async Task SaveChangesAsync()
+    public async AccountingSystem.Domain.Entities.Task SaveChangesAsync()
     {
         await SaveChangesAsync(CancellationToken.None);
     }
 
     // Transactions
-    public async Task BeginTransactionAsync()
+    public async AccountingSystem.Domain.Entities.Task BeginTransactionAsync()
     {
         await _context.Database.BeginTransactionAsync();
     }
 
-    public async Task CommitTransactionAsync()
+    public async AccountingSystem.Domain.Entities.Task CommitTransactionAsync()
     {
         await _context.Database.CommitTransactionAsync();
     }
-    public async Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default)
+    public async AccountingSystem.Domain.Entities.Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default)
     {
         Console.WriteLine($"💾 UnitOfWork.UpdateTaskStatusAsync - TaskId={taskId}, Status={status}");
 

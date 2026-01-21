@@ -23,7 +23,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_entity", new[] { "ReportInstance", "AccountingSystem.Domain.Entities.Task", "Company", "Worker" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" });
@@ -559,7 +559,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.ToTable("role", (string)null);
                 });
 
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.Task", b =>
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -896,7 +896,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.Navigation("Config");
                 });
 
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.Task", b =>
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task", b =>
                 {
                     b.HasOne("AccountingSystem.Domain.Entities.Worker", "Assignedworker")
                         .WithMany("Tasks")

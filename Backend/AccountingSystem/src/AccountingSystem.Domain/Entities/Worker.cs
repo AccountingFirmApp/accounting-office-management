@@ -1,5 +1,5 @@
 ﻿////using AccountingSystem.Domain.Entities;
-////using TaskEntity = AccountingSystem.Domain.Entities.Task;
+////using TaskEntity = AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task;
 
 ////public partial class Worker
 ////{
@@ -28,7 +28,7 @@
 ////}
 
 
-//using TaskEntity = AccountingSystem.Domain.Entities.Task;
+//using TaskEntity = AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task;
 
 //namespace AccountingSystem.Domain.Entities
 //{
@@ -89,7 +89,7 @@ namespace AccountingSystem.Domain.Entities
         // Navigation properties
         public virtual Accountingfirm Firm { get; set; } = null!;
         public virtual Role Role { get; set; } = null!;
-        public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
+        public virtual ICollection<AccountingSystem.Domain.Entities.Task> Tasks { get; set; } = new List<AccountingSystem.Domain.Entities.Task>();
         public virtual ICollection<Auditlog> Auditlogs { get; set; } = new List<Auditlog>();
         public virtual ICollection<Companyworker> Companyworkers { get; set; } = new List<Companyworker>();
     }

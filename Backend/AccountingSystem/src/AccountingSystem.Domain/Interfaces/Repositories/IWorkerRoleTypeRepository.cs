@@ -6,6 +6,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface IWorkerRoleTypeRepository : IGenericRepository<Workerroletype>
     {
-        Task<Workerroletype?> GetByNameAsync(string name);
+        AccountingSystem.Domain.Entities.Task<Workerroletype?> GetByNameAsync(string name);
     }
 }
