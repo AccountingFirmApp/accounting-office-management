@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(ng serve:*)"
+      "Bash(ng serve:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
