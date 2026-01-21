@@ -30,22 +30,24 @@
     
     <!-- כרטיס 1: חברות לפי עובדת -->
     <div class="menu-card" (click)="navigateToWorkerCompanies()">
-      <div class="card-icon">👥</div>
       <h3>חברות</h3>
       <p>צפייה בכל החברות שלי</p>
       <button class="card-button">כניסה ←</button>
     </div>
 
-    <!-- כרטיס 2: דוחות - ✅ פעיל! -->
+    <!-- כרטיס 2: דוחות -->
     <div class="menu-card" (click)="navigateToReports()">
-      <div class="card-icon">📊</div>
-      <h3>דוחות</h3>
+      <h3>דיווחים</h3>
       <p>ניהול ומעקב אחר כל הדוחות</p>
       <button class="card-button">כניסה ←</button>
     </div>
+<<<<<<< HEAD
+    <div class="menu-card" (click)="navigateToCompany()">
+=======
     <div class="menu-card" 
     *ngIf="auth.isAdmin()" (click)="navigateToCompany()">
       <div class="card-icon">📠</div>
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
       <h3>חברות</h3>
       <p>ניהול ומעקב אחר כל החברות</p>
       <button class="card-button">כניסה ←</button>
@@ -59,7 +61,6 @@
     </div>
     <!-- כרטיס 3: משימה עתידית -->
     <div class="menu-card disabled">
-      <div class="card-icon">📈</div>
       <h3>סטטיסטיקות</h3>
       <p>בקרוב...</p>
       <button class="card-button" disabled>בקרוב</button>
@@ -67,7 +68,6 @@
 
     <!-- כרטיס 4: משימה עתידית -->
     <div class="menu-card disabled">
-      <div class="card-icon">⚙️</div>
       <h3>הגדרות</h3>
       <p>בקרוב...</p>
       <button class="card-button" disabled>בקרוב</button>

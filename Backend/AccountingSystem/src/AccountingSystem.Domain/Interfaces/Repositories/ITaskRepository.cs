@@ -8,22 +8,22 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
     public interface ITaskRepository : IGenericRepository<TaskEntity>
     {
         // ← הפונקציות החשובות לעדכון סטטוס
-        System.Threading.Tasks.Task<TaskEntity?> GetByIdAsync(int id);
-        System.Threading.Tasks.Task UpdateAsync(TaskEntity task);
+       AccountingSystem.Domain.Entities.Task GetByIdAsync(int id);
+        AccountingSystem.Domain.Entities.Task UpdateAsync(TaskEntity task);
 
         // חיפושים לפי מאפיינים
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetTasksByCompanyIdAsync(int companyId);
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetTasksByWorkerIdAsync(int workerId);
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetTasksByStatusAsync(string status);
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetTasksByTaskTypeIdAsync(int taskTypeId);
+        AccountingSystem.Domain.Entities.Task GetTasksByCompanyIdAsync(int companyId);
+        AccountingSystem.Domain.Entities.Task GetTasksByWorkerIdAsync(int workerId);
+        AccountingSystem.Domain.Entities.Task GetTasksByStatusAsync(string status);
+        AccountingSystem.Domain.Entities.Task GetTasksByTaskTypeIdAsync(int taskTypeId);
 
         // חיפושים לפי תקופה
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetTasksByPeriodAsync(DateTime period);
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetTasksByDateRangeAsync(DateTime startDate, DateTime endDate);
+        AccountingSystem.Domain.Entities.Task GetTasksByPeriodAsync(DateTime period);
+        AccountingSystem.Domain.Entities.Task GetTasksByDateRangeAsync(DateTime startDate, DateTime endDate);
 
         // משימות שדורשות תשומת לב
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetOverdueTasksAsync();
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetTasksDueInNextDaysAsync(int days);
-        System.Threading.Tasks.Task<IEnumerable<TaskEntity>> GetPendingTasksAsync();
+        AccountingSystem.Domain.Entities.Task GetOverdueTasksAsync();
+        AccountingSystem.Domain.Entities.Task GetTasksDueInNextDaysAsync(int days);
+        AccountingSystem.Domain.Entities.Task GetPendingTasksAsync();
     }
 }

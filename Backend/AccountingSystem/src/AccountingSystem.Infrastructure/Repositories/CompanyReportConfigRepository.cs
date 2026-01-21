@@ -22,6 +22,9 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
+<<<<<<< HEAD
+        public AccountingSystem.Domain.Entities.Task<Companyreportconfig> AddAsync(Companyreportconfig entity)
+=======
         //Task<Companyreportconfig> IGenericRepository<Companyreportconfig>.AddAsync(Companyreportconfig entity)
         //{
         //    throw new NotImplementedException();
@@ -80,11 +83,16 @@ namespace AccountingSystem.Infrastructure.Repositories
 
 
         System.Threading.Tasks.Task IGenericRepository<Companyreportconfig>.AddAsync(Companyreportconfig entity)
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
         {
             return AddAsync(entity);
         }
 
+<<<<<<< HEAD
+        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
+=======
         public async Task<Companyreportconfig> AddAsync(Companyreportconfig entity)
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
         {
             await context.Companyreportconfigs.AddAsync(entity);
             // ❌ אל תשמרי כאן!
@@ -92,42 +100,42 @@ namespace AccountingSystem.Infrastructure.Repositories
             return entity;
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Companyreportconfig>> FindAsync(Expression<Func<Companyreportconfig, bool>> predicate)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Companyreportconfig>> FindAsync(Expression<Func<Companyreportconfig, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync()
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync()
         {
             throw new NotImplementedException();
         }
 
-        //public Task<IEnumerable<Companyreportconfig>> GetAllAsync()
+        //public AccountingSystem.Domain.Entities.Task<IEnumerable<Companyreportconfig>> GetAllAsync()
         //{
         //    throw new NotImplementedException();
         //}
 
-        //public Task<Companyreportconfig?> GetByIdAsync(int id)
+        //public AccountingSystem.Domain.Entities.Task<Companyreportconfig?> GetByIdAsync(int id)
         //{
         //    throw new NotImplementedException();
         //}
 
-        public Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Companyreportconfig entity)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Companyreportconfig entity)
         {
             throw new NotImplementedException();
         }
@@ -136,7 +144,7 @@ namespace AccountingSystem.Infrastructure.Repositories
 
       
 
-            public async Task<IEnumerable<Companyreportconfig>> GetAllAsync()
+            public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyreportconfig>> GetAllAsync()
             {
                 return await context.Companyreportconfigs
                     .Include(c => c.Company)
@@ -145,7 +153,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                     .ToListAsync();
             }
 
-            public async Task<Companyreportconfig?> GetByIdAsync(int id)
+            public async AccountingSystem.Domain.Entities.Task<Companyreportconfig?> GetByIdAsync(int id)
             {
                 return await context.Companyreportconfigs
                     .Include(c => c.Company)
@@ -155,7 +163,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             }
 
             // 👇 הוסיפי את זה
-            public async Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
+            public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
             {
                 return await context.Companyreportconfigs
                     .Include(c => c.Company)

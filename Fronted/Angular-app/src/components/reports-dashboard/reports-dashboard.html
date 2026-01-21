@@ -6,7 +6,7 @@
       <button class="back-button" (click)="goBack()">
         ← חזרה
       </button>
-      <h1>📊 ניהול דוחות</h1>
+      <h1>ניהול דיווחים</h1>
       <button class="add-button" (click)="createNewReport()">
         + דוח חדש
       </button>
@@ -16,7 +16,6 @@
   <!-- Statistics Cards -->
   <div class="stats-grid">
     <div class="stat-card pending">
-      <div class="stat-icon">⏳</div>
       <div class="stat-content">
         <h3>ממתינים</h3>
         <p class="stat-number">{{ stats.pending }}</p>
@@ -24,7 +23,6 @@
     </div>
 
     <div class="stat-card overdue">
-      <div class="stat-icon">⚠️</div>
       <div class="stat-content">
         <h3>באיחור</h3>
         <p class="stat-number">{{ stats.overdue }}</p>
@@ -32,7 +30,6 @@
     </div>
 
     <div class="stat-card reported">
-      <div class="stat-icon">📝</div>
       <div class="stat-content">
         <h3>דווחו</h3>
         <p class="stat-number">{{ stats.reported }}</p>
@@ -40,7 +37,6 @@
     </div>
 
     <div class="stat-card paid">
-      <div class="stat-icon">✅</div>
       <div class="stat-content">
         <h3>שולמו</h3>
         <p class="stat-number">{{ stats.paid }}</p>

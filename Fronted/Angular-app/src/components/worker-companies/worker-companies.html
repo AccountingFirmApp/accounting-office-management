@@ -5,12 +5,12 @@
 
   <!-- Loading -->
   <div *ngIf="loading" class="alert alert-warning">
-    ⏳ טוען נתונים עבורך {{ workerId }}...
+    טוען נתונים...
   </div>
 
   <!-- Error -->
   <div *ngIf="error" class="alert alert-error">
-    <h3>❌ שגיאה:</h3>
+    <h3>שגיאה</h3>
     <pre>{{ error }}</pre>
   </div>
 
@@ -26,9 +26,9 @@
           <p><strong>טלפון:</strong> {{ company.phone }}</p>
           <p><strong>אימייל:</strong> {{ company.email }}</p>
           <p>
-            <strong>סטטוס:</strong> 
+            <strong>סטטוס:</strong>
             <span [class.active]="company.isActive" [class.inactive]="!company.isActive">
-              {{ company.isActive ? '✅ פעילה' : '❌ לא פעילה' }}
+              {{ company.isActive ? 'פעילה' : 'לא פעילה' }}
             </span>
           </p>
           <p class="notes"><strong>הערות:</strong> {{ company.notes || 'אין הערות' }}</p>

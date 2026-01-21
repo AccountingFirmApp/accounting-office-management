@@ -18,82 +18,82 @@
 ////////////        {
 ////////////            this.context = context;
 ////////////        }
-////////////        public Task<Reportinstance> AddAsync(Reportinstance entity)
+////////////        public AccountingSystem.Domain.Entities.Task<Reportinstance> AddAsync(Reportinstance entity)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<int> CountAsync(Func<object, bool> value)
+////////////        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public System.Threading.Tasks.Task DeleteAsync(int id)
+////////////        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<bool> ExistsAsync(int id)
+////////////        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetAllAsync()
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetAllAsync()
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<Reportinstance?> GetByIdAsync(int id)
+////////////        public AccountingSystem.Domain.Entities.Task<Reportinstance?> GetByIdAsync(int id)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
+////////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
 
-////////////        public System.Threading.Tasks.Task UpdateAsync(Reportinstance entity)
+////////////        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Reportinstance entity)
 ////////////        {
 ////////////            throw new NotImplementedException();
 ////////////        }
@@ -119,7 +119,7 @@
 //////////            _context = context;
 //////////        }
 
-//////////        public async Task<Reportinstance?> GetByIdAsync(int id)
+//////////        public async AccountingSystem.Domain.Entities.Task<Reportinstance?> GetByIdAsync(int id)
 //////////        {
 //////////            return await _context.Reportinstances
 //////////                .Include(r => r.Config)
@@ -131,7 +131,7 @@
 //////////                .FirstOrDefaultAsync(r => r.Id == id);
 //////////        }
 
-//////////        public async Task<List<Reportinstance>> GetAllAsync()
+//////////        public async AccountingSystem.Domain.Entities.Task<List<Reportinstance>> GetAllAsync()
 //////////        {
 //////////            return await _context.Reportinstances
 //////////                .Include(r => r.Config)
@@ -143,7 +143,7 @@
 //////////                .ToListAsync();
 //////////        }
 
-//////////        public async Task<List<Reportinstance>> GetByCompanyIdAsync(int companyId)
+//////////        public async AccountingSystem.Domain.Entities.Task<List<Reportinstance>> GetByCompanyIdAsync(int companyId)
 //////////        {
 //////////            return await _context.Reportinstances
 //////////                .Include(r => r.Config)
@@ -156,7 +156,7 @@
 //////////                .ToListAsync();
 //////////        }
 
-//////////        public async Task AddAsync(Reportinstance reportInstance)
+//////////        public async AccountingSystem.Domain.Entities.Task AddAsync(Reportinstance reportInstance)
 //////////        {
 //////////            await _context.Reportinstances.AddAsync(reportInstance);
 //////////        }
@@ -173,102 +173,102 @@
 
 
 
-//////////        public Task<int> CountAsync(Func<object, bool> value)
+//////////        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        //public System.Threading.Tasks.Task DeleteAsync(int id)
+//////////        //public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
 //////////        //{
 //////////        //    throw new NotImplementedException();
 //////////        //}
 
-//////////        public Task<bool> ExistsAsync(int id)
+//////////        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        //public Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
+//////////        //public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
 //////////        //{
 //////////        //    throw new NotImplementedException();
 //////////        //}
 
-//////////        //        public Task<IEnumerable<Reportinstance>> GetAllAsync()
+//////////        //        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetAllAsync()
 //////////        //        {
 //////////        //            throw new NotImplementedException();
 //////////        //        }
 
-//////////        //        public Task<Reportinstance?> GetByIdAsync(int id)
+//////////        //        public AccountingSystem.Domain.Entities.Task<Reportinstance?> GetByIdAsync(int id)
 //////////        //        {
 //////////        //            throw new NotImplementedException();
 //////////        //        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        Task<IEnumerable<Reportinstance>> IGenericRepository<Reportinstance>.GetAllAsync()
+//////////        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> IGenericRepository<Reportinstance>.GetAllAsync()
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
+//////////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        Task<Reportinstance> IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
+//////////        AccountingSystem.Domain.Entities.Task<Reportinstance> IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        System.Threading.Tasks.Task IGenericRepository<Reportinstance>.UpdateAsync(Reportinstance entity)
+//////////        System.Threading.Tasks.AccountingSystem.Domain.Entities.Task IGenericRepository<Reportinstance>.UpdateAsync(Reportinstance entity)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        public System.Threading.Tasks.Task DeleteAsync(int id)
+//////////        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
 //////////        {
 //////////            throw new NotImplementedException();
 //////////        }
 
-//////////        //        public System.Threading.Tasks.Task UpdateAsync(Reportinstance entity)
+//////////        //        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Reportinstance entity)
 //////////        //        {
 //////////        //            throw new NotImplementedException();
 //////////        //        }
@@ -320,7 +320,7 @@
 ////////        /// <summary>
 ////////        /// תביא לי את כל הדוחות של חברה
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
 ////////        {
 ////////            return await _context.Reportinstances
 ////////                .Include(r => r.Config)
@@ -337,7 +337,7 @@
 ////////        /// <summary>
 ////////        /// תביא לי את כל הדוחות של הגדרה מסוימת
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
 ////////        {
 ////////            return await _context.Reportinstances
 ////////                .Include(r => r.Config)
@@ -356,7 +356,7 @@
 ////////        /// <summary>
 ////////        /// תביא לי דוחות לפי סטטוס (Draft, Submitted, Approved...)
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
 ////////        {
 ////////            return await _context.Reportinstances
 ////////                .Include(r => r.Config)
@@ -371,7 +371,7 @@
 ////////        /// <summary>
 ////////        /// תביא לי דוחות שממתינים (Pending)
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
 ////////        {
 ////////            return await GetReportsByStatusAsync("Pending");
 ////////        }
@@ -382,7 +382,7 @@
 ////////        /// תביא לי דוחות של תקופה מסוימת
 ////////        /// דוגמה: כל הדוחות של 01/2024
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
 ////////        {
 ////////            return await _context.Reportinstances
 ////////                .Include(r => r.Config)
@@ -399,7 +399,7 @@
 ////////        /// <summary>
 ////////        /// תביא לי דוחות בטווח תאריכים
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
 ////////        {
 ////////            return await _context.Reportinstances
 ////////                .Include(r => r.Config)
@@ -419,7 +419,7 @@
 ////////        /// תביא לי דוחות שפספסו את תאריך היעד! (OVERDUE)
 ////////        /// זה קריטי! צריך להתריע על דוחות באיחור
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
 ////////        {
 ////////            var today = DateTime.UtcNow.Date;
 
@@ -440,7 +440,7 @@
 ////////        /// תביא לי דוחות שצריך להגיש בעוד X ימים
 ////////        /// למשל: תביא לי דוחות שצריך להגיש בשבוע הקרוב
 ////////        /// </summary>
-////////        public async Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
+////////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
 ////////        {
 ////////            var today = DateTime.UtcNow.Date;
 ////////            var futureDate = today.AddDays(days);
@@ -499,7 +499,7 @@
 //////        /// <summary>
 //////        /// תביא לי את כל הדוחות של חברה
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
 //////        {
 //////            return await _context.Reportinstances
 //////                .Include(r => r.Config)
@@ -516,7 +516,7 @@
 //////        /// <summary>
 //////        /// תביא לי את כל הדוחות של הגדרה מסוימת
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
 //////        {
 //////            return await _context.Reportinstances
 //////                .Include(r => r.Config)
@@ -535,7 +535,7 @@
 //////        /// <summary>
 //////        /// תביא לי דוחות לפי סטטוס (Draft, Submitted, Approved...)
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
 //////        {
 //////            return await _context.Reportinstances
 //////                .Include(r => r.Config)
@@ -550,7 +550,7 @@
 //////        /// <summary>
 //////        /// תביא לי דוחות שממתינים (Pending)
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
 //////        {
 //////            return await GetReportsByStatusAsync("Pending");
 //////        }
@@ -561,7 +561,7 @@
 //////        /// תביא לי דוחות של תקופה מסוימת
 //////        /// דוגמה: כל הדוחות של 01/2024
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
 //////        {
 //////            return await _context.Reportinstances
 //////                .Include(r => r.Config)
@@ -578,7 +578,7 @@
 //////        /// <summary>
 //////        /// תביא לי דוחות בטווח תאריכים
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
 //////        {
 //////            return await _context.Reportinstances
 //////                .Include(r => r.Config)
@@ -598,7 +598,7 @@
 //////        /// תביא לי דוחות שפספסו את תאריך היעד! (OVERDUE)
 //////        /// זה קריטי! צריך להתריע על דוחות באיחור
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
 //////        {
 //////            var today = DateTime.UtcNow.Date;
 
@@ -619,7 +619,7 @@
 //////        /// תביא לי דוחות שצריך להגיש בעוד X ימים
 //////        /// למשל: תביא לי דוחות שצריך להגיש בשבוע הקרוב
 //////        /// </summary>
-//////        public async Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
+//////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
 //////        {
 //////            var today = DateTime.UtcNow.Date;
 //////            var futureDate = today.AddDays(days);
@@ -671,7 +671,7 @@
 ////        /// <summary>
 ////        /// תביא לי את כל הדוחות של חברה
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
 ////        {
 ////            return await _context.Reportinstances
 ////                .Include(r => r.Config)
@@ -688,7 +688,7 @@
 ////        /// <summary>
 ////        /// תביא לי את כל הדוחות של הגדרה מסוימת
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
 ////        {
 ////            return await _context.Reportinstances
 ////                .Include(r => r.Config)
@@ -707,7 +707,7 @@
 ////        /// <summary>
 ////        /// תביא לי דוחות לפי סטטוס (Draft, Submitted, Approved...)
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
 ////        {
 ////            // המרה מ-string ל-Enum
 ////            if (Enum.TryParse<AccountingSystem.Domain.Enums.ReportStatus>(status, out var reportStatus))
@@ -728,7 +728,7 @@
 ////        /// <summary>
 ////        /// תביא לי דוחות שממתינים (Pending)
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
 ////        {
 ////            return await _context.Reportinstances
 ////                .Include(r => r.Config)
@@ -746,7 +746,7 @@
 ////        /// תביא לי דוחות של תקופה מסוימת
 ////        /// דוגמה: כל הדוחות של 01/2024
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
 ////        {
 ////            var dateOnly = DateOnly.FromDateTime(period);
 ////            var year = dateOnly.Year;
@@ -765,7 +765,7 @@
 ////        /// <summary>
 ////        /// תביא לי דוחות בטווח תאריכים
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
 ////        {
 ////            var startDateOnly = DateOnly.FromDateTime(startDate);
 ////            var endDateOnly = DateOnly.FromDateTime(endDate);
@@ -787,7 +787,7 @@
 ////        /// זה קריטי! צריך להתריע על דוחות באיחור
 ////        /// הערה: במודל שלך אין Duedate, אז מחשב לפי Period + תדירות
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
 ////        {
 ////            var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -810,7 +810,7 @@
 ////        /// תביא לי דוחות שצריך להגיש בעוד X ימים
 ////        /// למשל: תביא לי דוחות שצריך להגיש בשבוע הקרוב
 ////        /// </summary>
-////        public async Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
+////        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
 ////        {
 ////            var today = DateOnly.FromDateTime(DateTime.UtcNow);
 ////            var futureDate = today.AddDays(days);
@@ -831,42 +831,42 @@
 ////                .ToListAsync();
 ////        }
 
-////        public Task<Reportinstance?> GetByIdAsync(int id)
+////        public AccountingSystem.Domain.Entities.Task<Reportinstance?> GetByIdAsync(int id)
 ////        {
 ////            throw new NotImplementedException();
 ////        }
 
-////        public Task<IEnumerable<Reportinstance>> GetAllAsync()
+////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetAllAsync()
 ////        {
 ////            throw new NotImplementedException();
 ////        }
 
-////        public Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
+////        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
 ////        {
 ////            throw new NotImplementedException();
 ////        }
 
-////        public Task<Reportinstance> AddAsync(Reportinstance entity)
+////        public AccountingSystem.Domain.Entities.Task<Reportinstance> AddAsync(Reportinstance entity)
 ////        {
 ////            throw new NotImplementedException();
 ////        }
 
-////        public System.Threading.Tasks.Task UpdateAsync(Reportinstance entity)
+////        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Reportinstance entity)
 ////        {
 ////            throw new NotImplementedException();
 ////        }
 
-////        public System.Threading.Tasks.Task DeleteAsync(int id)
+////        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
 ////        {
 ////            throw new NotImplementedException();
 ////        }
 
-////        public Task<bool> ExistsAsync(int id)
+////        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
 ////        {
 ////            throw new NotImplementedException();
 ////        }
 
-////        public Task<int> CountAsync(Func<object, bool> value)
+////        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
 ////        {
 ////            throw new NotImplementedException();
 ////        }
@@ -903,7 +903,7 @@
 //        /// <summary>
 //        /// תביא לי דוח לפי ID
 //        /// </summary>
-//        public async Task<Reportinstance?> GetByIdAsync(int id)
+//        public async AccountingSystem.Domain.Entities.Task<Reportinstance?> GetByIdAsync(int id)
 //        {
 //            return await _context.Reportinstances
 //                .Include(r => r.Config)
@@ -918,7 +918,7 @@
 //        /// <summary>
 //        /// תביא לי את כל הדוחות
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetAllAsync()
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetAllAsync()
 //        {
 //            return await _context.Reportinstances
 //                .Include(r => r.Config)
@@ -935,7 +935,7 @@
 //        /// תביא לי דוחות לפי תנאי
 //        /// דוגמה: FindAsync(r => r.Status == ReportStatus.Pending)
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
 //        {
 //            return await _context.Reportinstances
 //                .Include(r => r.Config)
@@ -951,7 +951,7 @@
 //        /// <summary>
 //        /// תוסיף דוח חדש
 //        /// </summary>
-//        public async Task<Reportinstance> AddAsync(Reportinstance entity)
+//        public async AccountingSystem.Domain.Entities.Task<Reportinstance> AddAsync(Reportinstance entity)
 //        {
 //            await _context.Reportinstances.AddAsync(entity);
 //            return entity;
@@ -960,16 +960,16 @@
 //        /// <summary>
 //        /// תעדכן דוח קיים
 //        /// </summary>
-//        public async Task UpdateAsync(Reportinstance entity)
+//        public async AccountingSystem.Domain.Entities.Task UpdateAsync(Reportinstance entity)
 //        {
 //            _context.Reportinstances.Update(entity);
-//            await Task.CompletedTask;
+//            await AccountingSystem.Domain.Entities.Task.CompletedTask;
 //        }
 
 //        /// <summary>
 //        /// תמחק דוח לפי ID
 //        /// </summary>
-//        public async Task DeleteAsync(int id)
+//        public async AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
 //        {
 //            var entity = await _context.Reportinstances.FindAsync(id);
 //            if (entity != null)
@@ -981,7 +981,7 @@
 //        /// <summary>
 //        /// האם דוח קיים?
 //        /// </summary>
-//        public async Task<bool> ExistsAsync(int id)
+//        public async AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
 //        {
 //            return await _context.Reportinstances.AnyAsync(r => r.Id == id);
 //        }
@@ -989,7 +989,7 @@
 //        /// <summary>
 //        /// כמה דוחות יש?
 //        /// </summary>
-//        public async Task<int> CountAsync(Func<object, bool> value)
+//        public async AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
 //        {
 //            return await _context.Reportinstances.CountAsync();
 //        }
@@ -999,7 +999,7 @@
 //        /// <summary>
 //        /// תביא לי את כל הדוחות של חברה
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
 //        {
 //            return await _context.Reportinstances
 //                .Include(r => r.Config)
@@ -1016,7 +1016,7 @@
 //        /// <summary>
 //        /// תביא לי את כל הדוחות של הגדרה מסוימת
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
 //        {
 //            return await _context.Reportinstances
 //                .Include(r => r.Config)
@@ -1035,7 +1035,7 @@
 //        /// <summary>
 //        /// תביא לי דוחות לפי סטטוס (Draft, Submitted, Approved...)
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
 //        {
 //            // המרה מ-string ל-Enum
 //            if (Enum.TryParse<AccountingSystem.Domain.Enums.ReportStatus>(status, out var reportStatus))
@@ -1056,7 +1056,7 @@
 //        /// <summary>
 //        /// תביא לי דוחות שממתינים (Pending)
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
 //        {
 //            return await _context.Reportinstances
 //                .Include(r => r.Config)
@@ -1074,7 +1074,7 @@
 //        /// תביא לי דוחות של תקופה מסוימת
 //        /// דוגמה: כל הדוחות של 01/2024
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
 //        {
 //            var dateOnly = DateOnly.FromDateTime(period);
 //            var year = dateOnly.Year;
@@ -1093,7 +1093,7 @@
 //        /// <summary>
 //        /// תביא לי דוחות בטווח תאריכים
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
 //        {
 //            var startDateOnly = DateOnly.FromDateTime(startDate);
 //            var endDateOnly = DateOnly.FromDateTime(endDate);
@@ -1114,7 +1114,7 @@
 //        /// תביא לי דוחות שפספסו את תאריך היעד! (OVERDUE)
 //        /// זה קריטי! צריך להתריע על דוחות באיחור
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
 //        {
 //            var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -1137,7 +1137,7 @@
 //        /// תביא לי דוחות שצריך להגיש בעוד X ימים
 //        /// למשל: תביא לי דוחות שצריך להגיש בשבוע הקרוב
 //        /// </summary>
-//        public async Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
+//        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
 //        {
 //            var today = DateOnly.FromDateTime(DateTime.UtcNow);
 //            var futureDate = today.AddDays(days);
@@ -1170,7 +1170,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Task = System.Threading.Tasks.Task;
+using AccountingSystem.Domain.Entities.Task = System.Threading.Tasks.AccountingSystem.Domain.Entities.Task;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
@@ -1191,7 +1191,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי דוח לפי ID
         /// </summary>
-        public async Task<Reportinstance?> GetByIdAsync(int id)
+        public async AccountingSystem.Domain.Entities.Task<Reportinstance?> GetByIdAsync(int id)
         {
             return await _context.Reportinstances
                 .Include(r => r.Config)
@@ -1206,7 +1206,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי את כל הדוחות
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetAllAsync()
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetAllAsync()
         {
             return await _context.Reportinstances
                 .Include(r => r.Config)
@@ -1223,7 +1223,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// תביא לי דוחות לפי תנאי
         /// דוגמה: FindAsync(r => r.Status == ReportStatus.Pending)
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> FindAsync(Expression<Func<Reportinstance, bool>> predicate)
         {
             return await _context.Reportinstances
                 .Include(r => r.Config)
@@ -1239,25 +1239,33 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תוסיף דוח חדש
         /// </summary>
+<<<<<<< HEAD
+        public async AccountingSystem.Domain.Entities.Task<Reportinstance> AddAsync(Reportinstance entity)
+        {
+            await _context.Reportinstances.AddAsync(entity);
+            return entity;
+        }
+=======
         //public async Task<Reportinstance> AddAsync(Reportinstance entity)
         //{
         //    await _context.Reportinstances.AddAsync(entity);
         //    return entity;
         //}
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
 
         /// <summary>
         /// תעדכן דוח קיים
         /// </summary>
-        public Task UpdateAsync(Reportinstance entity)
+        public AccountingSystem.Domain.Entities.Task UpdateAsync(Reportinstance entity)
         {
             _context.Reportinstances.Update(entity);
-            return Task.CompletedTask;
+            return AccountingSystem.Domain.Entities.Task.CompletedTask;
         }
 
         /// <summary>
         /// תמחק דוח לפי ID
         /// </summary>
-        public async Task DeleteAsync(int id)
+        public async AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             var entity = await _context.Reportinstances.FindAsync(id);
             if (entity != null)
@@ -1269,7 +1277,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// האם דוח קיים?
         /// </summary>
-        public async Task<bool> ExistsAsync(int id)
+        public async AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             return await _context.Reportinstances.AnyAsync(r => r.Id == id);
         }
@@ -1277,7 +1285,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// כמה דוחות יש?
         /// </summary>
-        public async Task<int> CountAsync(Func<object, bool> value)
+        public async AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             return await _context.Reportinstances.CountAsync();
         }
@@ -1287,7 +1295,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי את כל הדוחות של חברה
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId)
         {
             return await _context.Reportinstances
                 .Include(r => r.Config)
@@ -1304,7 +1312,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי את כל הדוחות של הגדרה מסוימת
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId)
         {
             return await _context.Reportinstances
                 .Include(r => r.Config)
@@ -1323,7 +1331,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי דוחות לפי סטטוס (Draft, Submitted, Approved...)
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
         {
             // המרה מ-string ל-Enum
             if (Enum.TryParse<AccountingSystem.Domain.Enums.ReportStatus>(status, out var reportStatus))
@@ -1344,7 +1352,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי דוחות שממתינים (Pending)
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync()
         {
             return await _context.Reportinstances
                 .Include(r => r.Config)
@@ -1362,7 +1370,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// תביא לי דוחות של תקופה מסוימת
         /// דוגמה: כל הדוחות של 01/2024
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period)
         {
             var dateOnly = DateOnly.FromDateTime(period);
             var year = dateOnly.Year;
@@ -1381,7 +1389,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי דוחות בטווח תאריכים
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             var startDateOnly = DateOnly.FromDateTime(startDate);
             var endDateOnly = DateOnly.FromDateTime(endDate);
@@ -1402,7 +1410,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// תביא לי דוחות שפספסו את תאריך היעד! (OVERDUE)
         /// זה קריטי! צריך להתריע על דוחות באיחור
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync()
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -1425,7 +1433,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// תביא לי דוחות שצריך להגיש בעוד X ימים
         /// למשל: תביא לי דוחות שצריך להגיש בשבוע הקרוב
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
+        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             var futureDate = today.AddDays(days);

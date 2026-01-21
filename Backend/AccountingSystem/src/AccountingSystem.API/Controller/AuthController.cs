@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
     /// </summary>
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
+    public async AccountingSystem.Domain.Entities.Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
     {
         try
         {
@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
     /// </summary>
     [HttpPost("login-google")]
     [AllowAnonymous]
-    public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
+    public async AccountingSystem.Domain.Entities.Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
     {
         try
         {

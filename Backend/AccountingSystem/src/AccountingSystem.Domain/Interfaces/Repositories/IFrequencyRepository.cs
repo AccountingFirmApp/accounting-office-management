@@ -6,6 +6,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface IFrequencyRepository : IGenericRepository<Frequency>
     {
-        Task<Frequency?> GetByNameAsync(string name);
+        AccountingSystem.Domain.Entities.Task<Frequency?> GetByNameAsync(string name);
     }
 }

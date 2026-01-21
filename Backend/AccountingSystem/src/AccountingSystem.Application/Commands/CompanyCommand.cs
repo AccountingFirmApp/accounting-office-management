@@ -33,7 +33,7 @@ namespace AccountingSystem.Application.Commands.Companies
             _mapper = mapper;
         }
 
-        public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
+        public async AccountingSystem.Domain.Entities.Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
             if (await _unitOfWork.Companies.TaxIdExistsAsync(request.Taxid))
             {
@@ -93,7 +93,7 @@ namespace AccountingSystem.Application.Commands.Companies
             _mapper = mapper;
         }
 
-        public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
+        public async AccountingSystem.Domain.Entities.Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
         {
             var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
             if (company == null)
@@ -140,7 +140,7 @@ namespace AccountingSystem.Application.Commands.Companies
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
+        public async AccountingSystem.Domain.Entities.Task<bool> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
         {
             var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
             if (company == null)

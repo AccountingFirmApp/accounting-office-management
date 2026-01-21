@@ -21,7 +21,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/report-types
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<List<ReportTypeDto>>> GetAllReportTypes()
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<ReportTypeDto>>> GetAllReportTypes()
         {
             var query = new GetAllReportTypesQuery();
             var reportTypes = await _mediator.Send(query);
@@ -33,7 +33,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/report-types/5
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<ActionResult<ReportTypeDto>> GetReportTypeById(int id)
+        public async AccountingSystem.Domain.Entities.Task<ActionResult<ReportTypeDto>> GetReportTypeById(int id)
         {
             var query = new GetReportTypeByIdQuery { Id = id };
             var reportType = await _mediator.Send(query);

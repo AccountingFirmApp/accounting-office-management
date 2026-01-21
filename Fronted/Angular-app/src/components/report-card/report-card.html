@@ -1,0 +1,51 @@
+<!-- report-card.component.html -->
+<div class="report-card" [class.overdue]="isOverdue">
+  <!-- Header -->
+  <div class="card-header">
+    <div class="company-info">
+      <!-- ✅ תוקן! גישה ישירה ל-companyName -->
+      <h3>{{ report.companyName }}</h3>
+      <span class="report-type">{{ report.reportTypeName }}</span>
+    </div>
+    <span class="status-badge" [class]="getStatusClass()">
+      {{ getStatusLabel() }}
+    </span>
+  </div>
+
+  <!-- Content -->
+  <div class="card-content">
+    <div class="info-row">
+      <span class="label">תקופה:</span>
+      <span class="value">{{ formatPeriod() }}</span>
+    </div>
+    
+    <div class="info-row" *ngIf="report.amount">
+      <span class="label">סכום:</span>
+      <span class="value amount">{{ formatAmount() }}</span>
+    </div>
+    
+    <div class="info-row" *ngIf="report.paymentMethod">
+      <span class="label">אמצעי תשלום:</span>
+      <span class="value">{{ getPaymentMethodLabel() }}</span>
+    </div>
+    
+    <div class="info-row" *ngIf="isOverdue">
+      <span class="label overdue-label">באיחור:</span>
+      <span class="value overdue-value">{{ getDaysOverdue() }} ימים</span>
+    </div>
+  </div>
+
+  <!-- Footer Actions -->
+  <div class="card-footer">
+    <button class="btn-action view" (click)="onView()">
+      צפייה
+    </button>
+    <button class="btn-action edit" (click)="onEdit()">
+      עריכה
+    </button>
+    <button class="btn-action delete" (click)="onDelete()">
+      מחיקה
+    </button>
+  </div>
+</div>
+
