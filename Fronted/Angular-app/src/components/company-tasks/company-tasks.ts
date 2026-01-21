@@ -29,23 +29,19 @@
 //     private companyService: CompanyService,
 //     private cdr: ChangeDetectorRef  // ← הוסף את זה
 //   ) { 
-//     console.log('✅ CompanyTasksComponent נוצר');
 //   }
 
 //   ngOnInit(): void {
 //     this.route.params.subscribe(params => {
 //       this.companyId = +params['id'];
-//       console.log('✅ Company ID:', this.companyId);
 //       this.loadCompanyInfo();
 //       this.loadTasks();
 //     });
 //   }
 
 //   loadCompanyInfo(): void {
-//     console.log('🔄 טוען פרטי חברה:', this.companyId);
 //     this.companyService.getCompanyById(this.companyId).subscribe({
 //       next: (data) => {
-//         console.log('✅ פרטי חברה התקבלו:', data);
 //         this.company = data;
 //         this.cdr.detectChanges(); // ← הוסף את זה
 //       },
@@ -56,19 +52,15 @@
 //   }
 
 //   loadTasks(): void {
-//     console.log('🔄 טוען משימות לחברה:', this.companyId);
 //     this.loading = true;
 //     this.error = null;
 //     this.cdr.detectChanges(); // ← הוסף את זה
     
 //     this.companyService.getTasksByCompanyId(this.companyId).subscribe({
 //       next: (data) => {
-//         console.log('✅ משימות התקבלו:', data.length, data);
 //         this.tasks = data;
 //         this.loading = false;
 //         this.cdr.detectChanges(); // ← הוסף את זה
-//         console.log('✅ loading =', this.loading);
-//         console.log('✅ tasks.length =', this.tasks.length);
 //       },
 //       error: (err) => {
 //         console.error('❌ שגיאה בטעינת המשימות:', err);
@@ -81,7 +73,6 @@
 //   }
 
 //   onStatusChange(task: TaskDto, newStatus: string): void {
-//     console.log(`שינוי סטטוס משימה ${task.id} ל-${newStatus}`);
 //     task.status = newStatus;
 //   }
 
@@ -144,23 +135,19 @@ export class CompanyTasksComponent implements OnInit {
     private location:Location
 
   ) { 
-    console.log('✅ CompanyTasksComponent נוצר');
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.companyId = +params['id'];
-      console.log('✅ Company ID:', this.companyId);
       this.loadCompanyInfo();
       this.loadTasks();
     });
   }
 
   loadCompanyInfo(): void {
-    console.log('🔄 טוען פרטי חברה:', this.companyId);
     this.companyService.getCompanyById(this.companyId).subscribe({
       next: (data) => {
-        console.log('✅ פרטי חברה התקבלו:', data);
         this.company = data;
         this.cdr.detectChanges();
       },
@@ -171,14 +158,12 @@ export class CompanyTasksComponent implements OnInit {
   }
 
   loadTasks(): void {
-    console.log('🔄 טוען משימות לחברה:', this.companyId);
     this.loading = true;
     this.error = null;
     this.cdr.detectChanges();
     
     this.companyService.getTasksByCompanyId(this.companyId).subscribe({
       next: (data) => {
-        console.log('✅ משימות התקבלו:', data.length, data);
         this.tasks = data;
         this.loading = false;
         this.cdr.detectChanges();
@@ -194,7 +179,6 @@ export class CompanyTasksComponent implements OnInit {
 
   // ← הפונקציה המעודכנת!
   onStatusChange(task: TaskDto, newStatus: string): void {
-    console.log(`🔄 משנה סטטוס משימה ${task.id} ל-${newStatus}`);
     
     const oldStatus = task.status;  // שמור את הסטטוס הישן למקרה של שגיאה
     this.updatingTaskId = task.id;  // סמן שהמשימה הזו מתעדכנת
@@ -206,7 +190,6 @@ export class CompanyTasksComponent implements OnInit {
     // שלח לשרת
     this.companyService.updateTaskStatus(this.companyId, task.id, newStatus).subscribe({
       next: (response) => {
-        console.log('✅ סטטוס עודכן בהצלחה:', response);
         this.updatingTaskId = null;
         this.cdr.detectChanges();
         
