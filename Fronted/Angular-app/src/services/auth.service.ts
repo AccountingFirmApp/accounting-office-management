@@ -82,7 +82,6 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.token); // 🔥 שמירה אוטומטית
-          console.log('✅ Token saved:', response.token.substring(0, 20) + '...');
         })
       );
   }
@@ -95,7 +94,6 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.token); // 🔥 שמירה אוטומטית
-          console.log('✅ Token saved:', response.token.substring(0, 20) + '...');
         })
       );
   }
@@ -111,7 +109,6 @@ export class AuthService {
    * קבלת טוקן
    */
   getToken(): string | null {
-    console.log('🔑 קבלת טוקן מה-localStorage1',localStorage.getItem('authToken')); 
     
     return localStorage.getItem('authToken');
   }
@@ -148,7 +145,6 @@ export class AuthService {
   // getUserRole(): string | null {
   //   const token = this.getToken();
   //   if (!token) return null;
-  //   console.log('🔐 קבלת תפקיד משתמש מהטוקן:2', token);
 
   //   try {
   //     const decoded = jwtDecode<JwtPayload>(token);
@@ -183,7 +179,6 @@ export class AuthService {
   }
   
   isAdmin(): boolean {
-    console.log('🔐 בדיקת Admin:3', this.getUserRole());
 
     return this.getUserRole() === 'Admin';
     

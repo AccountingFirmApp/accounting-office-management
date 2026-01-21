@@ -54,8 +54,6 @@
 
 //       this.workerService.getWorkerById(+workerId).subscribe({
 //         next: (worker) => {
-//           console.log('roleName from server:', worker.roleId);
-// console.log('mapped roleId:', this.mapRoleNameToId(worker.roleName));
 
 //           this.workerForm.patchValue({
 //             id: worker.id,
@@ -81,7 +79,6 @@
 //     }
 
 //     const payload = this.workerForm.value;
-//     console.log('payload:', payload);
 
 //     if (this.isEditMode && payload.id) {
 //       this.workerService.updateWorker(payload.id, payload)
@@ -177,7 +174,6 @@ export class WorkerFormComponent implements OnInit {
     if (this.workerForm.invalid) return;
 
     const payload = this.workerForm.value;
-    console.log('payload:', payload);
 
     const request$ = this.isEditMode
       ? this.workerService.updateWorker(payload.id!, payload)
