@@ -55,7 +55,6 @@ export class ReportsListComponent implements OnInit {
         this.companies = [...new Set(data.map(r => r.companyName))].sort();
         this.reportTypes = [...new Set(data.map(r => r.reportTypeName))].sort();
         this.isLoading = false;
-        console.log('✅ נטענו', data.length, 'דוחות');
       },
       error: (error) => {
         this.isLoading = false;

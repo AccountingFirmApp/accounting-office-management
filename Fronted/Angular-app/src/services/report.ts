@@ -27,12 +27,7 @@ export class ReportService {
    * GET: /api/reports/all
    */
   getAll(): Observable<ReportInstanceDetail[]> {
-    const url = `${this.endpoint}/all`;
-  console.log('🔗 Calling URL:', url);
-  console.log('🔗 Full URL:', `${environment.apiUrl}${url}`);
-    return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`); // 🔥 תקן סוגריים
-
-    // return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`);
+    return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`);
   }
 
   /**

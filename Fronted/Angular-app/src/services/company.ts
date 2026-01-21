@@ -78,12 +78,10 @@
 //   constructor(private http: HttpClient) { }
 
 //   getAllCompanies(): Observable<CompanyDto[]> {
-//     console.log('🔍 קריאה ל-API:', `${this.apiUrl}`);
 //     return this.http.get<CompanyDto[]>(this.apiUrl);
 //   }
 
 //   getCompanyById(id: number): Observable<CompanyDto> {
-//     console.log('🔍 קריאה ל-API:', `${this.apiUrl}/${id}`);
 //     return this.http.get<CompanyDto>(`${this.apiUrl}/${id}`);
 //   }
 
@@ -106,7 +104,6 @@
 //   // ← זה החשוב! התקן את ה-endpoint
 //   getTasksByCompanyId(companyId: number): Observable<TaskDto[]> {
 //     const url = `${this.apiUrl}/${companyId}/tasks`;
-//     console.log('🔍 קריאה למשימות:', url);
 //     return this.http.get<TaskDto[]>(url);
 //   }
 // }
@@ -127,7 +124,6 @@ export class CompanyService {
 
   getAllCompanies(): Observable<CompanyDto[]> {
     const token = this.authService.getToken();
-    console.log('🔍 קריאה ל-API עם token:', token);
   
     return this.http.get<CompanyDto[]>('https://localhost:7118/api/companies', {
       headers: {
@@ -138,7 +134,6 @@ export class CompanyService {
   
 
   getCompanyById(id: number): Observable<CompanyDto> {
-    console.log('🔍 קריאה ל-API:', `${this.apiUrl}/${id}`);
     return this.http.get<CompanyDto>(`${this.apiUrl}/${id}`);
   }
 
@@ -156,19 +151,16 @@ export class CompanyService {
 
   getTasksByCompanyId(companyId: number): Observable<TaskDto[]> {
     const url = `${this.apiUrl}/${companyId}/tasks`;
-    console.log('🔍 קריאה למשימות:', url);
     return this.http.get<TaskDto[]>(url);
   }
 
   // ← הפונקציה החדשה!
   updateTaskStatus(companyId: number, taskId: number, status: string): Observable<any> {
     const url = `${this.apiUrl}/${companyId}/tasks/${taskId}/status`;
-    console.log('🔄 עדכון סטטוס:', url, status);
     return this.http.patch(url, { status });
   }
   addCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
     const token = this.authService.getToken();
-    console.log('🔍 יצירת חברה חדשה עם token:', token);
   
     return this.http.post<CompanyDto>(this.apiUrl, command, {
       headers: {

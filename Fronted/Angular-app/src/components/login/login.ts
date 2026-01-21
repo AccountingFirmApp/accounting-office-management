@@ -112,8 +112,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
         // ✅ שמירת פרטי העובד ב-WorkerService
         this.workerService.currentWorker = result.worker;
-        
-        console.log('✅ Google login successful');
+
         this.isLoading = false;
         this.router.navigate(['/home']);
       },
@@ -158,8 +157,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
         // ✅ שמירת פרטי העובד ב-WorkerService
         this.workerService.currentWorker = response.worker;
-        
-        console.log('✅ Login successful');
+
         this.isLoading = false;
         this.router.navigate(['/home']);
       },
