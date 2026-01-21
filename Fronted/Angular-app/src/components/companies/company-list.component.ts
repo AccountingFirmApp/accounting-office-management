@@ -256,29 +256,22 @@ export class CompanyListComponent implements OnInit {
     public auth: AuthService
 
   ) { 
-    console.log('✅ CompanyListComponent נוצר');
   }
 
   ngOnInit(): void {
-    console.log('✅ ngOnInit נקרא');
     this.loadCompanies();
   }
 
   loadCompanies(): void {
-    console.log('🔄 מתחיל לטעון חברות...');
     this.loading = true;
     this.error = null;
     this.cdr.detectChanges(); // ← הוסף את זה
     
     this.companyService.getAllCompanies().subscribe({
       next: (data) => {
-        console.log('✅ התקבלו חברות:', data);
-        console.log('✅ מספר חברות:', data.length);
         this.companies = data;
         this.loading = false;
         this.cdr.detectChanges(); // ← הוסף את זה
-        console.log('✅ loading =', this.loading);
-        console.log('✅ companies.length =', this.companies.length);
       },
       error: (err) => {
         console.error('❌ שגיאה בטעינת חברות:', err);
@@ -290,12 +283,10 @@ export class CompanyListComponent implements OnInit {
   }
 
   viewCompanyTasks(id: number): void {
-    console.log('🔄 מנווט למשימות של חברה:', id);
     this.router.navigate(['/companies', id, 'tasks']);
   }
 
   editCompany(id: number): void {
-    console.log('🔄 מנווט לעריכת חברה:', id);
     this.router.navigate(['/companies', id, 'edit']);
   }
 
@@ -303,7 +294,6 @@ export class CompanyListComponent implements OnInit {
     if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
       this.companyService.deleteCompany(id).subscribe({
         next: () => {
-          console.log('✅ חברה נמחקה בהצלחה');
           this.loadCompanies();
         },
         error: (err) => {

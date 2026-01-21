@@ -70,7 +70,6 @@ export class WorkersListComponent implements OnInit {
     // אם המשתמש אישר, מבצעים מחיקה
     this.WorkerService.deleteWorker(employeeId).subscribe({ 
       next: () => {
-        console.log('✅ עובד נמחק בהצלחה');
         this.loadWorkers(); // טען מחדש את רשימת העובדים לאחר המחיקה
       },
       error: (err) => {
