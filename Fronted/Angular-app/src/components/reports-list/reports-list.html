@@ -12,7 +12,7 @@
   <!-- כותרת -->
   <div class="header">
     <h1>הדוחות שלי</h1>
-    <p class="subtitle">
+    <p class="subtitle" *ngIf="workerService.currentWorker">
       שלום {{ workerService.currentWorker.firstName }} {{ workerService.currentWorker.lastName }}
     </p>
   </div>
