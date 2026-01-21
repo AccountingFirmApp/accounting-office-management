@@ -19,52 +19,56 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
+<<<<<<< HEAD
+        public AccountingSystem.Domain.Entities.Task<Companycontact> AddAsync(Companycontact entity)
+=======
         public System.Threading.Tasks.Task AddAsync(Companycontact entity)
+>>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task DeleteAsync(int id)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Companycontact>> FindAsync(Expression<Func<Companycontact, bool>> predicate)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Companycontact>> FindAsync(Expression<Func<Companycontact, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Companycontact>> GetAllAsync()
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Companycontact>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Companycontact?> GetByIdAsync(int id)
+        public AccountingSystem.Domain.Entities.Task<Companycontact?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Companycontact>> GetContactsByCompanyIdAsync(int companyId)
+        public AccountingSystem.Domain.Entities.Task<IEnumerable<Companycontact>> GetContactsByCompanyIdAsync(int companyId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Companycontact?> GetPrimaryContactAsync(int companyId)
+        public AccountingSystem.Domain.Entities.Task<Companycontact?> GetPrimaryContactAsync(int companyId)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task UpdateAsync(Companycontact entity)
+        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Companycontact entity)
         {
             throw new NotImplementedException();
         }

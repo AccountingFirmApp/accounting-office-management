@@ -1,4 +1,4 @@
-import { envConfig } from '../app/app.config.env';
+import { envConfig } from '../app/app.config.env.example';
 
 export const environment = {
   production: true,

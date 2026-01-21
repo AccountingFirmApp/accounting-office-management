@@ -3,8 +3,8 @@
         
         <!-- Header -->
         <div class="modal-header">
-          <h2>📊 פרטי דוח מלאים</h2>
-          <button class="close-btn" (click)="close()">✖️</button>
+          <h2>פרטי דוח מלאים</h2>
+          <button class="close-btn" (click)="close()">×</button>
         </div>
 
         <!-- Body -->
@@ -12,7 +12,7 @@
           
           <!-- חברה ודיווח -->
           <div class="section">
-            <h3>📋 פרטי הדיווח</h3>
+            <h3>פרטי הדיווח</h3>
             <div class="info-grid">
               <div class="info-item">
                 <span class="label">חברה:</span>
@@ -35,7 +35,7 @@
 
           <!-- תקופה וסטטוס -->
           <div class="section">
-            <h3>📅 תקופה וסטטוס</h3>
+            <h3>תקופה וסטטוס</h3>
             <div class="info-grid">
               <div class="info-item">
                 <span class="label">תקופה:</span>
@@ -60,7 +60,7 @@
 
           <!-- סכומים ותשלום -->
           <div class="section" *ngIf="report.amount || report.paymentMethod">
-            <h3>💰 פרטי תשלום</h3>
+            <h3>פרטי תשלום</h3>
             <div class="info-grid">
               <div class="info-item" *ngIf="report.amount">
                 <span class="label">סכום:</span>
@@ -75,7 +75,7 @@
 
           <!-- תאריכים -->
           <div class="section">
-            <h3>📆 תאריכים חשובים</h3>
+            <h3>תאריכים חשובים</h3>
             <div class="info-grid">
               <div class="info-item" *ngIf="report.receiptDate">
                 <span class="label">תאריך קבלת חומרים:</span>
@@ -90,7 +90,7 @@
                 <span class="value">{{ formatDate(report.paidDate) }}</span>
               </div>
               <div class="info-item" *ngIf="isOverdue()">
-                <span class="label overdue">⚠️ איחור:</span>
+                <span class="label overdue">איחור:</span>
                 <span class="value overdue">{{ getDaysOverdue() }} ימים</span>
               </div>
             </div>
@@ -98,7 +98,7 @@
 
           <!-- הערות -->
           <div class="section" *ngIf="report.comments">
-            <h3>📝 הערות</h3>
+            <h3>הערות</h3>
             <div class="comments-box">
               {{ report.comments }}
             </div>
@@ -126,7 +126,7 @@
             סגור
           </button>
           <button class="btn-primary" (click)="editReport()">
-            ✏️ עריכה
+            עריכה
           </button>
         </div>
 

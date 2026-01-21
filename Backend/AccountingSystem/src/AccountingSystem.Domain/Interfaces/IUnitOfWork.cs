@@ -31,20 +31,20 @@
 //        /// שמור את כל השינויים לDB
 //        /// מחזיר: מספר השורות שהשתנו
 //        /// </summary>
-//        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+//        AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
 //        // ========== ניהול טרנזקציות ==========
 //        /// <summary>
 //        /// פתח טרנזקציה חדשה
 //        /// מעכשיו כל הפעולות "תלויות באוויר" עד לCommit
 //        /// </summary>
-//        Task BeginTransactionAsync();
+//        AccountingSystem.Domain.Entities.Task BeginTransactionAsync();
 
 //        /// <summary>
 //        /// אשר את כל הפעולות - עכשיו הן באמת יישמרו!
 //        /// </summary>
-//        Task CommitTransactionAsync();
-//        Task SaveChangesAsync();
+//        AccountingSystem.Domain.Entities.Task CommitTransactionAsync();
+//        AccountingSystem.Domain.Entities.Task SaveChangesAsync();
 //    }
 //}   
 //        /// <summary>
@@ -74,14 +74,14 @@ namespace AccountingSystem.Domain.Interfaces
         IAuditLogRepository AuditLogs { get; }
 
         // ========== שמירת שינויים ==========
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
         // ========== ניהול טרנזקציות ==========
-        Task BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task SaveChangesAsync();
+        AccountingSystem.Domain.Entities.Task BeginTransactionAsync();
+        AccountingSystem.Domain.Entities.Task CommitTransactionAsync();
+        AccountingSystem.Domain.Entities.Task SaveChangesAsync();
 
         // ← הוסף את זה! פונקציה לעדכון סטטוס
-        Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
+        AccountingSystem.Domain.Entities.Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
     }
 }

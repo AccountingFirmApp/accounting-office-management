@@ -118,6 +118,7 @@
   <div class="header">
     <h2>רשימת חברות</h2>
   </div>
+  <button class="btn-primary" (click)="goHome()">← חזרה</button>  
 
   <div *ngIf="loading" class="loading">טוען...</div>
   
@@ -143,13 +144,22 @@
         <td>{{ company.address || '-' }}</td>
         <td class="actions">
           <button (click)="viewCompanyTasks(company.id)" class="btn-view">משימות</button>
-          <button (click)="editCompany(company.id)" class="btn-edit">ערוך</button>
-          <button (click)="deleteCompany(company.id)" class="btn-delete">מחק</button>
+        
+
+          <button
+          *ngIf="auth.isAdmin()"
+           (click)="editCompany(company.id)" class="btn-edit">ערוך</button>
+
+          <button 
+          *ngIf="auth.isAdmin()"
+          (click)="deleteCompany(company.id)" class="btn-delete">מחק</button>
         </td>
       </tr>
     </tbody>
   </table>
-
+<br>
+  <button 
+  (click)="addCompany()" class="btn-delete">הוספת חברה +</button>  
   <div *ngIf="!loading && companies.length === 0" class="no-data">
     אין חברות להצגה
   </div>

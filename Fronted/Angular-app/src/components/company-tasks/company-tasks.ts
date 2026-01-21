@@ -112,7 +112,7 @@
 //   }
 // }
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule ,Location} from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/company';
@@ -140,7 +140,9 @@ export class CompanyTasksComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private companyService: CompanyService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private location:Location
+
   ) { 
     console.log('✅ CompanyTasksComponent נוצר');
   }
@@ -224,9 +226,7 @@ export class CompanyTasksComponent implements OnInit {
     });
   }
 
-  goBack(): void {
-    this.router.navigate(['/companies']);
-  }
+  
 
   getStatusColor(status: string): string {
     switch(status) {
@@ -254,4 +254,11 @@ export class CompanyTasksComponent implements OnInit {
   isUpdating(taskId: number): boolean {
     return this.updatingTaskId === taskId;
   }
+  goBack(): void {
+    this.router.navigate(['/companies']);
+  }
+  // goHome(): void {
+  //   this.location.back();
+  // }
+
 }

@@ -1,4 +1,8 @@
-﻿//using AccountingSystem.Application.Intrefaces;  // ⬅️ הוסף!
+﻿
+
+
+
+//using AccountingSystem.Application.Intrefaces;  
 //using AccountingSystem.Application.Mappings;
 //using AccountingSystem.Domain.Interfaces;
 //using AccountingSystem.Domain.Interfaces.Repositories;
@@ -11,6 +15,7 @@
 //using Microsoft.EntityFrameworkCore;
 //using Microsoft.IdentityModel.Tokens;  // ⬅️ הוסף!
 //using System.Text;  // ⬅️ הוסף!
+//using Microsoft.OpenApi.Models;
 
 //var builder = WebApplication.CreateBuilder(args);
 //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -95,7 +100,12 @@
 //    };
 //});
 
-//builder.Services.AddAuthorization();  // ⬅️ הוסף!
+////builder.Services.AddAuthorization();  // ⬅️ הוסף!
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("AdminOnly", policy =>
+//        policy.RequireRole("Admin"));
+//});
 
 //// ========================================
 //// 7. Controllers & API
@@ -246,7 +256,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+});
+
 
 // ========================================
 // 8. Controllers & API

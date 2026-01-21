@@ -1,7 +1,7 @@
 namespace AccountingSystem.Application.DTOs;
 
 /// <summary>
-/// DTO for Task - משימות
+/// DTO for AccountingSystem.Domain.Entities.Task - משימות
 /// </summary>
 public class TaskDto
 {
@@ -61,12 +61,12 @@ public class TaskDetailDto
     public string CompanyName { get; set; } = string.Empty;
     public string CompanyTaxId { get; set; } = string.Empty;
     
-    // Task Type info
+    // AccountingSystem.Domain.Entities.Task Type info
     public int TaskTypeId { get; set; }
     public string TaskTypeName { get; set; } = string.Empty;
     public string TaskTypeCategory { get; set; } = string.Empty;
     
-    // Task data
+    // AccountingSystem.Domain.Entities.Task data
     public DateTime Period { get; set; }
     public string PeriodFormatted => Period.ToString("MM/yyyy"); // 09/2025
     public string Status { get; set; } = string.Empty;
