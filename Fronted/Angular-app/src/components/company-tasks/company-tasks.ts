@@ -109,11 +109,12 @@ import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/company';
 import { TaskDto } from '../../models/task';
 import { CompanyDto } from '../../models/Company';
+import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
 @Component({
   selector: 'app-company-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BackButtonComponent],
   templateUrl: './company-tasks.html',
   styleUrls: ['./company-tasks.css']
 })

@@ -1,13 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule,Location } from '@angular/common';
-import { Router } from '@angular/router';  
+import { Router } from '@angular/router';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
+import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
 @Component({
   selector: 'app-worker-companies',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BackButtonComponent],
   templateUrl: './worker-companies.html',
   styleUrls: ['./worker-companies.css']
 })

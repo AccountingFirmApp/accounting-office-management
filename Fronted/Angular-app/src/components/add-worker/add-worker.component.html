@@ -51,9 +51,7 @@
         {{ isEditMode ? 'שמור שינויים' : 'יצירת עובד' }}
       </button>
 
-      <button type="button" class="secondary-btn" (click)="goback()">
-        חזרה
-      </button>
+      <app-back-button [route]="'/workers'"></app-back-button>
     </div>
 
   </form>

@@ -1484,7 +1484,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         //    return AddAsync(entity);
         //}
 
-        public async Task AddAsync(Reportinstance entity)
+        public async System.Threading.Tasks.Task AddAsync(Reportinstance entity)
         {
             await _context.Reportinstances.AddAsync(entity);
             await _context.SaveChangesAsync();

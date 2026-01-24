@@ -118,7 +118,7 @@
   <div class="header">
     <h2>רשימת חברות</h2>
   </div>
-  <button class="btn-primary" (click)="goHome()">← חזרה</button>  
+  <app-back-button [route]="'/home'"></app-back-button>  
 
   <div *ngIf="loading" class="loading">טוען...</div>
   

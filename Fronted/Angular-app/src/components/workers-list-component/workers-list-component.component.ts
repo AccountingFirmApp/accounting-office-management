@@ -2,14 +2,15 @@
 import { Component, OnInit } from '@angular/core';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
 @Component({
   selector: 'app-workers-list',
    standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, BackButtonComponent],
   templateUrl: './workers-list-component.component.html',
   styleUrls: ['workers-list-component.component.css']
 })

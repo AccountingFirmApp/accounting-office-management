@@ -4,10 +4,11 @@ import { ReportService } from '../../services/report';
 import { CreateReportInstance, UpdateReportInstance } from '../../models/report-instance';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BackButtonComponent],
   selector: 'app-report-form',
   templateUrl: './report-form.html',
   styleUrls: ['./report-form.css']

@@ -110,6 +110,7 @@ import { WorkerService } from '../../services/worker';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
 @Component({
   selector: 'app-worker-form',
@@ -119,7 +120,8 @@ import { Router, ActivatedRoute } from '@angular/router';
   imports: [
     ReactiveFormsModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    BackButtonComponent
   ],
 })
 export class WorkerFormComponent implements OnInit {

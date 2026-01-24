@@ -1,7 +1,7 @@
 <div class="container">
 
   <!-- כפתור חזרה לדף הבית -->
-  <button class="btn-primary" (click)="goHome()">← חזרה לדף הבית</button>  
+  <app-back-button [route]="'/home'" [text]="'חזרה לדף הבית'"></app-back-button>  
 
   <!-- Loading -->
   <div *ngIf="loading" class="alert alert-warning">

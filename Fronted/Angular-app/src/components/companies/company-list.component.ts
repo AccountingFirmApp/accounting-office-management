@@ -235,11 +235,12 @@ import { Router } from '@angular/router';
 import { CompanyService } from '../../services/company';
 import { CompanyDto } from '../../models/Company';
 import { AuthService } from '../../services/auth.service';
+import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
 @Component({
   selector: 'app-company-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BackButtonComponent],
   templateUrl: './company-list.component.html',
   styleUrls: ['./company-list.component.css']
 })

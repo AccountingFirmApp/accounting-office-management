@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { ReportService } from '../../services/report';
 import { CommonModule } from '@angular/common';
+import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
 @Component({
   standalone: true,
   selector: 'app-reports-dashboard',
   templateUrl: './reports-dashboard.html',
   styleUrls: ['./reports-dashboard.css'],
-  imports: [RouterOutlet, CommonModule]
+  imports: [RouterOutlet, CommonModule, BackButtonComponent]
 })
 export class ReportsDashboardComponent implements OnInit {
   
