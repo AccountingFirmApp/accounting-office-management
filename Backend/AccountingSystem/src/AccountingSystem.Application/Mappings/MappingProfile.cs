@@ -85,7 +85,7 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Firm, opt => opt.Ignore())
                 .ForMember(d => d.Role, opt => opt.Ignore())
                 .ForMember(d => d.Companyworkers, opt => opt.Ignore())
-                .ForMember(d => d.Tasks, opt => opt.Ignore())
+                .ForMember(d => d.CompanyTasks, opt => opt.Ignore())
                 .ForMember(d => d.Auditlogs, opt => opt.Ignore());
 
             CreateMap<UpdateWorkerDto, Worker>()
@@ -95,7 +95,7 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Firm, opt => opt.Ignore())
                 .ForMember(d => d.Role, opt => opt.Ignore())
                 .ForMember(d => d.Companyworkers, opt => opt.Ignore())
-                .ForMember(d => d.Tasks, opt => opt.Ignore())
+                .ForMember(d => d.CompanyTasks, opt => opt.Ignore())
                 .ForMember(d => d.Auditlogs, opt => opt.Ignore());
 
             // ========================================
@@ -123,7 +123,7 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Companycontacts, opt => opt.Ignore())
                 .ForMember(d => d.Companyreportconfigs, opt => opt.Ignore())
                 .ForMember(d => d.Companyworkers, opt => opt.Ignore())
-                .ForMember(d => d.Tasks, opt => opt.Ignore());
+                .ForMember(d => d.CompanyTasks, opt => opt.Ignore());
 
             CreateMap<UpdateCompanyDto, Company>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
@@ -133,7 +133,7 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Companycontacts, opt => opt.Ignore())
                 .ForMember(d => d.Companyreportconfigs, opt => opt.Ignore())
                 .ForMember(d => d.Companyworkers, opt => opt.Ignore())
-                .ForMember(d => d.Tasks, opt => opt.Ignore());
+                .ForMember(d => d.CompanyTasks, opt => opt.Ignore());
 
             // ========================================
             // CompanyWorker Mappings
@@ -261,12 +261,12 @@ namespace AccountingSystem.Application.Mappings
             CreateMap<CreateTaskTypeDto, Tasktype>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
-                .ForMember(d => d.Tasks, opt => opt.Ignore());
+                .ForMember(d => d.CompanyTasks, opt => opt.Ignore());
 
             // ========================================
             // AccountingSystem.Domain.Entities.Task Mappings
             // ========================================
-            CreateMap<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task, TaskDto>()
+            CreateMap<CompanyTask,CompanyTaskDto>()
      .ForMember(d => d.CompanyName,
          opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : string.Empty))
      .ForMember(d => d.TaskTypeName,
@@ -278,7 +278,7 @@ namespace AccountingSystem.Application.Mappings
              ? $"{s.Assignedworker.Firstname} {s.Assignedworker.Lastname}"
              : string.Empty));
 
-            CreateMap<CreateTaskDto, AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>()
+            CreateMap<CreateCompanyTaskDto, CompanyTask>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
@@ -286,7 +286,7 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Tasktype, opt => opt.Ignore())
                 .ForMember(d => d.Assignedworker, opt => opt.Ignore());
 
-            CreateMap<UpdateTaskDto, AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>()
+            CreateMap<UpdateCompanyTaskDto, CompanyTask>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())

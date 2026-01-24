@@ -8,65 +8,6 @@ using AccountingSystem.Domain.Interfaces.Repositories;
 
 namespace AccountingSystem.Application.Handlers
 {
-    //public class CreateReportInstanceCommandHandler
-    //    : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
-    //{
-    //    private readonly IReportInstanceRepository _reportInstanceRepository;
-    //    private readonly IUnitOfWork _unitOfWork;
-
-    //    public CreateReportInstanceCommandHandler(
-    //        IReportInstanceRepository reportInstanceRepository,
-    //        IUnitOfWork unitOfWork)
-    //    {
-    //        _reportInstanceRepository = reportInstanceRepository;
-    //        _unitOfWork = unitOfWork;
-    //    }
-
-        //    public async Task<ReportInstanceDto> Handle(
-        //        CreateReportInstanceCommand request,
-        //        CancellationToken cancellationToken)
-        //    {
-        //        // המרת PaymentMethod מ-string ל-Enum (אם קיים)
-        //        PaymentMethod? paymentMethod = null;
-        //        if (!string.IsNullOrEmpty(request.PaymentMethod) &&
-        //            Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var parsedMethod))
-        //        {
-        //            paymentMethod = parsedMethod;
-        //        }
-
-        //        var reportInstance = new Reportinstance
-        //        {
-        //            Configid = request.ConfigId,
-        //            Period = DateOnly.FromDateTime(request.Period), // DateTime -> DateOnly
-        //            Amount = request.Amount,
-        //            Status = ReportStatus.Pending, // ברירת מחדל
-        //            PaymentMethod = paymentMethod,
-        //            Receiptdate = request.ReceiptDate.HasValue
-        //                ? DateOnly.FromDateTime(request.ReceiptDate.Value)
-        //                : null,
-        //            Comments = request.Comments,
-        //            Createdat = DateTime.Now,
-        //            Updatedat = DateTime.Now
-        //        };
-
-        //        await _reportInstanceRepository.AddAsync(reportInstance);
-        //        await _unitOfWork.SaveChangesAsync();
-
-        //        return new ReportInstanceDto
-        //        {
-        //            Id = reportInstance.Id,
-        //            ConfigId = reportInstance.Configid,
-        //            Period = reportInstance.Period.ToDateTime(TimeOnly.MinValue),
-        //            Amount = reportInstance.Amount,
-        //            Status = reportInstance.Status.ToString(),
-        //            PaymentMethod = reportInstance.PaymentMethod?.ToString(),
-        //            ReceiptDate = reportInstance.Receiptdate?.ToDateTime(TimeOnly.MinValue),
-        //            Comments = reportInstance.Comments ?? string.Empty,
-        //            CreatedAt = reportInstance.Createdat,
-        //            UpdatedAt = reportInstance.Updatedat
-        //        };
-        //    }
-        //}
 
         public class CreateReportInstanceCommandHandler
     : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>

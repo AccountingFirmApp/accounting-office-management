@@ -1,6 +1,7 @@
 ﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,36 +24,32 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         // ==================== פעולות בסיסיות ====================
 
-        public async AccountingSystem.Domain.Entities.Task<Company?> GetByIdAsync(int id)
+        public async Task<Company?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> GetAllAsync()
+        public async Task<IEnumerable<Company>> GetAllAsync()
         {
             return await _dbSet
                 .Include(c => c.Firm)
                 .ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> FindAsync(Expression<Func<Company, bool>> predicate)
+        public async Task<IEnumerable<Company>> FindAsync(Expression<Func<Company, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<Company> AddAsync(Company entity)
-        {
-            await _dbSet.AddAsync(entity);
-            return entity;
-        }
+    
 
-        public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Company entity)
+        public async System.Threading.Tasks.Task UpdateAsync(Company entity)
         {
             _dbSet.Update(entity);
-            await System.Threading.Tasks.AccountingSystem.Domain.Entities.Task.CompletedTask;
+            await System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(int id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
@@ -61,26 +58,26 @@ namespace AccountingSystem.Infrastructure.Repositories
             }
         }
 
-        public async AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
+        public async Task<bool> ExistsAsync(int id)
         {
             return await _dbSet.AnyAsync(c => c.Id == id);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> predicate)
+        public async Task<int> CountAsync(Func<object, bool> predicate)
         {
             return await _dbSet.CountAsync();
         }
 
         // ==================== פעולות ייחודיות לCompany ====================
 
-        public async AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithContactsAsync(int companyId)
+        public async Task<Company?> GetCompanyWithContactsAsync(int companyId)
         {
             return await _dbSet
                 .Include(c => c.Companycontacts)
                 .FirstOrDefaultAsync(c => c.Id == companyId);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithWorkersAsync(int companyId)
+        public async Task<Company?> GetCompanyWithWorkersAsync(int companyId)
         {
             return await _dbSet
                 .Include(c => c.Companyworkers)
@@ -88,7 +85,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Id == companyId);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithReportConfigsAsync(int companyId)
+        public async Task<Company?> GetCompanyWithReportConfigsAsync(int companyId)
         {
             return await _dbSet
                 .Include(c => c.Companyreportconfigs)
@@ -98,7 +95,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Id == companyId);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithAllDetailsAsync(int companyId)
+        public async Task<Company?> GetCompanyWithAllDetailsAsync(int companyId)
         {
             return await _dbSet
                 .Include(c => c.Firm)
@@ -109,11 +106,11 @@ namespace AccountingSystem.Infrastructure.Repositories
                     .ThenInclude(crc => crc.Reporttype)
                 .Include(c => c.Companyreportconfigs)
                     .ThenInclude(crc => crc.Frequency)
-                .Include(c => c.Tasks)  // ← זה חשוב למשימות!
+                .Include(c => c.CompanyTasks) 
                 .FirstOrDefaultAsync(c => c.Id == companyId);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId)
+        public async Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId)
         {
             return await _dbSet
                 .Where(c => c.Firmid == firmId)
@@ -121,21 +118,21 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> GetActiveCompaniesAsync()
+        public async Task<IEnumerable<Company>> GetActiveCompaniesAsync()
         {
             return await _dbSet
                 .Where(c => c.Isactive == true)
                 .ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> GetInactiveCompaniesAsync()
+        public async Task<IEnumerable<Company>> GetInactiveCompaniesAsync()
         {
             return await _dbSet
                 .Where(c => c.Isactive == false)
                 .ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<bool> TaxIdExistsAsync(string taxId, int? excludeCompanyId = null)
+        public async Task<bool> TaxIdExistsAsync(string taxId, int? excludeCompanyId = null)
         {
             var query = _dbSet.Where(c => c.Taxid == taxId);
 
@@ -147,9 +144,9 @@ namespace AccountingSystem.Infrastructure.Repositories
             return await query.AnyAsync();
         }
 
-        System.Threading.Tasks.Task IGenericRepository<Company>.AddAsync(Company entity)
+        public async Task AddAsync(Company company)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(company);
         }
     }
 }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using AccountingSystem.Application.Queries;
 using AccountingSystem.Application.DTOs;
+using System.Threading.Tasks;
+
 
 namespace AccountingSystem.API.Controllers
 {
@@ -21,7 +23,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/company-report-configs
         /// </summary>
         [HttpGet]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<CompanyReportConfigDto>>> GetAllConfigs()
+        public async System.Threading.Tasks.Task<ActionResult<List<CompanyReportConfigDto>>> GetAllConfigs()
         {
             var query = new GetAllConfigsQuery();
             var configs = await _mediator.Send(query);
@@ -33,7 +35,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/company-report-configs/company/5
         /// </summary>
         [HttpGet("company/{companyId}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<CompanyReportConfigDto>>> GetConfigsByCompany(int companyId)
+        public async System.Threading.Tasks.Task<ActionResult<List<CompanyReportConfigDto>>> GetConfigsByCompany(int companyId)
         {
             var query = new GetConfigsByCompanyIdQuery { CompanyId = companyId };
             var configs = await _mediator.Send(query);
@@ -45,7 +47,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/company-report-configs/5
         /// </summary>
         [HttpGet("{id}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<CompanyReportConfigDto>> GetConfigById(int id)
+        public async System.Threading.Tasks.Task<ActionResult<CompanyReportConfigDto>> GetConfigById(int id)
         {
             var query = new GetConfigByIdQuery { Id = id };
             var config = await _mediator.Send(query);

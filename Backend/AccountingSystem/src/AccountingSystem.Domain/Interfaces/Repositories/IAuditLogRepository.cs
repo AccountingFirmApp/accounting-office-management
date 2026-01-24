@@ -7,8 +7,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface IAuditLogRepository : IGenericRepository<Auditlog>
     {
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, int entityId);
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(int workerId);
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Auditlog>> GetRecentLogsAsync(int count);
+        System.Threading.Tasks.Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, int entityId);
+        System.Threading.Tasks.Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(int workerId);
+        System.Threading.Tasks.Task<IEnumerable<Auditlog>> GetRecentLogsAsync(int count);
     }
 }

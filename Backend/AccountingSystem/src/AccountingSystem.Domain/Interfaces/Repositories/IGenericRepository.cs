@@ -17,19 +17,19 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי Entity לפי ID
         /// דוגמה: תביא לי את החברה עם ID = 12345
         /// </summary>
-        Task<T?> GetByIdAsync(int id);
+        System.Threading.Tasks.Task<T?> GetByIdAsync(int id);
 
         /// <summary>
         /// תביא לי את כל הEntities
         /// דוגמה: תביא לי את כל החברות
         /// </summary>
-        Task<IEnumerable<T>> GetAllAsync();
+        System.Threading.Tasks.Task<IEnumerable<T>> GetAllAsync();
 
         /// <summary>
         /// תביא לי Entities לפי תנאי
         /// דוגמה: תביא לי את כל החברות שהסטטוס שלהן Active
         /// </summary>
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        System.Threading.Tasks.Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
 
         // ========== כתיבה ==========
 
@@ -37,19 +37,19 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תוסיף Entity חדש
         /// דוגמה: תוסיף חברה חדשה למערכת
         /// </summary>
-        Task AddAsync(T entity);
+        //System.Threading.Tasks.Task AddAsync(T entity);
 
         /// <summary>
         /// תעדכן Entity קיים
         /// דוגמה: תשנה את שם החברה
         /// </summary>
-        Task UpdateAsync(T entity);
+        System.Threading.Tasks.Task UpdateAsync(T entity);
 
         /// <summary>
         /// תמחק Entity
         /// דוגמה: תמחק חברה מהמערכת
         /// </summary>
-        Task DeleteAsync(int id);
+        System.Threading.Tasks.Task DeleteAsync(int id);
 
         // ========== בדיקות ==========
 
@@ -57,12 +57,12 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// האם Entity קיים?
         /// דוגמה: האם יש חברה עם ID = 12345?
         /// </summary>
-        Task<bool> ExistsAsync(int id);
+        System.Threading.Tasks.Task<bool> ExistsAsync(int id);
 
         /// <summary>
         /// כמה Entities יש?
         /// דוגמה: כמה חברות יש במערכת?
         /// </summary>
-        Task<int> CountAsync(Func<object, bool> value);
+        System.Threading.Tasks.Task<int> CountAsync(Func<object, bool> value);
     }
 }

@@ -197,7 +197,7 @@ builder.Services.AddScoped<IReportTypeRepository, ReportTypeRepository>();
 builder.Services.AddScoped<IFrequencyRepository, FrequencyRepository>();
 builder.Services.AddScoped<ICompanyReportConfigRepository, CompanyReportConfigRepository>();
 builder.Services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
-builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
 builder.Services.AddScoped<IWorkerRoleTypeRepository, WorkerRoleTypeRepository>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 

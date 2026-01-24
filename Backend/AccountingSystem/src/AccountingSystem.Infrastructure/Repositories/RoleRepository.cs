@@ -19,53 +19,52 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-<<<<<<< HEAD
-        public AccountingSystem.Domain.Entities.Task<Role> AddAsync(Role entity)
-=======
-        public System.Threading.Tasks.Task AddAsync(Role entity)
->>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
+        public Task<Role> AddAsync(Role entity)
+
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
+        public Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
+        public System.Threading.Tasks.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
+        public Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<IEnumerable<Role>> FindAsync(Expression<Func<Role, bool>> predicate)
+        public Task<IEnumerable<Role>> FindAsync(Expression<Func<Role, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<IEnumerable<Role>> GetAllAsync()
+        public Task<IEnumerable<Role>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<Role?> GetByIdAsync(int id)
+        public Task<Role?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<Role?> GetByNameAsync(string name)
+        public Task<Role?> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Role entity)
+        public System.Threading.Tasks.Task UpdateAsync(Role entity)
         {
             throw new NotImplementedException();
         }
+
+  
     }
 }

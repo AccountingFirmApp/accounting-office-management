@@ -6,6 +6,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface IReportTypeRepository : IGenericRepository<Reporttype>
     {
-        AccountingSystem.Domain.Entities.Task<Reporttype?> GetByShortcodeAsync(string shortcode);
+        System.Threading.Tasks.Task<Reporttype?> GetByShortcodeAsync(string shortcode);
     }
 }

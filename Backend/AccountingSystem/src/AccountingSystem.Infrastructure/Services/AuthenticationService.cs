@@ -24,7 +24,7 @@ public class AuthenticationService : IAuthenticationService
     }
 
 
-    //public async AccountingSystem.Domain.Entities.Task<LoginResponseDto> LoginAsync(
+    //public async Task<LoginResponseDto> LoginAsync(
     //string email,
     //string password,
     //CancellationToken cancellationToken = default)
@@ -76,7 +76,7 @@ public class AuthenticationService : IAuthenticationService
     //        }
     //    };
     //}
-    public async AccountingSystem.Domain.Entities.Task<LoginResponseDto> LoginAsync(
+    public async Task<LoginResponseDto> LoginAsync(
 string email,
 string password,
 CancellationToken cancellationToken = default)
@@ -132,7 +132,7 @@ CancellationToken cancellationToken = default)
 
 
 
-    //public async AccountingSystem.Domain.Entities.Task<LoginResponseDto> LoginAsync(
+    //public async Task<LoginResponseDto> LoginAsync(
     //    string email,
     //    string password,
     //    CancellationToken cancellationToken = default)
@@ -181,19 +181,19 @@ CancellationToken cancellationToken = default)
     /// <summary>
     /// יוצר Hash מוצפן מסיסמה
     /// </summary>
-    public async AccountingSystem.Domain.Entities.Task<string> HashPasswordAsync(string password)
+    public async Task<string> HashPasswordAsync(string password)
     {
-        return await AccountingSystem.Domain.Entities.Task.Run(() => BCrypt.Net.BCrypt.HashPassword(password));
+        return await Task.Run(() => BCrypt.Net.BCrypt.HashPassword(password));
     }
 
     /// <summary>
     /// בודק אם סיסמה תואמת ל-Hash
     /// </summary>
-    public async AccountingSystem.Domain.Entities.Task<bool> VerifyPasswordAsync(string password, string passwordHash)
+    public async Task<bool> VerifyPasswordAsync(string password, string passwordHash)
     {
-        return await AccountingSystem.Domain.Entities.Task.Run(() => BCrypt.Net.BCrypt.Verify(password, passwordHash));
+        return await Task.Run(() => BCrypt.Net.BCrypt.Verify(password, passwordHash));
     }
-    public async AccountingSystem.Domain.Entities.Task<LoginResponseDto> GoogleLoginAsync(
+    public async Task<LoginResponseDto> GoogleLoginAsync(
     string googleToken,
     CancellationToken cancellationToken = default)
     {

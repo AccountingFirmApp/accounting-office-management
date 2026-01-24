@@ -31,20 +31,20 @@
 //        /// שמור את כל השינויים לDB
 //        /// מחזיר: מספר השורות שהשתנו
 //        /// </summary>
-//        AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+//        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
 //        // ========== ניהול טרנזקציות ==========
 //        /// <summary>
 //        /// פתח טרנזקציה חדשה
 //        /// מעכשיו כל הפעולות "תלויות באוויר" עד לCommit
 //        /// </summary>
-//        AccountingSystem.Domain.Entities.Task BeginTransactionAsync();
+//        Task BeginTransactionAsync();
 
 //        /// <summary>
 //        /// אשר את כל הפעולות - עכשיו הן באמת יישמרו!
 //        /// </summary>
-//        AccountingSystem.Domain.Entities.Task CommitTransactionAsync();
-//        AccountingSystem.Domain.Entities.Task SaveChangesAsync();
+//        Task CommitTransactionAsync();
+//        Task SaveChangesAsync();
 //    }
 //}   
 //        /// <summary>
@@ -69,19 +69,19 @@ namespace AccountingSystem.Domain.Interfaces
         ICompanyReportConfigRepository CompanyReportConfigs { get; }
         IReportInstanceRepository ReportInstances { get; }
         ITaskTypeRepository TaskTypes { get; }
-        ITaskRepository Tasks { get; }
+        ICompanyTaskRepository Tasks { get; }
         IWorkerRoleTypeRepository WorkerRoleTypes { get; }
         IAuditLogRepository AuditLogs { get; }
 
         // ========== שמירת שינויים ==========
-        AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
         // ========== ניהול טרנזקציות ==========
-        AccountingSystem.Domain.Entities.Task BeginTransactionAsync();
-        AccountingSystem.Domain.Entities.Task CommitTransactionAsync();
-        AccountingSystem.Domain.Entities.Task SaveChangesAsync();
+        System.Threading.Tasks.Task BeginTransactionAsync();
+        System.Threading.Tasks.Task CommitTransactionAsync();
+        System.Threading.Tasks.Task SaveChangesAsync();
 
         // ← הוסף את זה! פונקציה לעדכון סטטוס
-        AccountingSystem.Domain.Entities.Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
     }
 }

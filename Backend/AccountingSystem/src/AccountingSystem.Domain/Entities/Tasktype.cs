@@ -13,5 +13,5 @@ public partial class Tasktype
     public TaskCategory Category { get; set; }
     public int? Defaultorder { get; set; }
     public DateTime? Createdat { get; set; }
-    public virtual ICollection<AccountingSystem.Domain.Entities.Task> Tasks { get; set; } = new List<AccountingSystem.Domain.Entities.Task>();
+    public virtual ICollection<CompanyTask> CompanyTasks { get; set; } = new List<CompanyTask>();
 }

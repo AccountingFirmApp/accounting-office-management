@@ -4,6 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
+
 
 namespace AccountingSystem.API.Controllers;
 
@@ -23,7 +25,7 @@ public class AuthController : ControllerBase
     /// </summary>
     [HttpPost("login")]
     [AllowAnonymous]
-    public async AccountingSystem.Domain.Entities.Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
+    public async System.Threading.Tasks.Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
     {
         try
         {
@@ -50,7 +52,7 @@ public class AuthController : ControllerBase
     /// </summary>
     [HttpPost("login-google")]
     [AllowAnonymous]
-    public async AccountingSystem.Domain.Entities.Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
+    public async System.Threading.Tasks.Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
     {
         try
         {

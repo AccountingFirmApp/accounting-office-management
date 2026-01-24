@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    public class ReportTypeRepository:IReportTypeRepository
+    public class ReportTypeRepository : IReportTypeRepository
     {
         private AccountingDbContext context;
 
@@ -20,53 +20,52 @@ namespace AccountingSystem.Infrastructure.Repositories
             this.context = context;
         }
 
-<<<<<<< HEAD
-        public AccountingSystem.Domain.Entities.Task<Reporttype> AddAsync(Reporttype entity)
-=======
-        public System.Threading.Tasks.Task AddAsync(Reporttype entity)
->>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
+        public Task<Reporttype> AddAsync(Reporttype entity)
+
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
+        public Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
+        public Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
+        public Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<IEnumerable<Reporttype>> FindAsync(Expression<Func<Reporttype, bool>> predicate)
+        public Task<IEnumerable<Reporttype>> FindAsync(Expression<Func<Reporttype, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Reporttype>> GetAllAsync()
+        public async Task<IEnumerable<Reporttype>> GetAllAsync()
         {
             return await context.Reporttypes.ToListAsync();
         }
 
-        public AccountingSystem.Domain.Entities.Task<Reporttype?> GetByIdAsync(int id)
+        public Task<Reporttype?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<Reporttype?> GetByShortcodeAsync(string shortcode)
+        public Task<Reporttype?> GetByShortcodeAsync(string shortcode)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Reporttype entity)
+        public Task UpdateAsync(Reporttype entity)
         {
             throw new NotImplementedException();
         }
+
+     
     }
 }

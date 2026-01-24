@@ -1,179 +1,10 @@
-﻿//// AccountingSystem.Infrastructure/Data/UnitOfWork.cs
-
-//using AccountingSystem.Domain.Interfaces;
-//using AccountingSystem.Domain.Interfaces.Repositories;
-//using AccountingSystem.Infrastructure.Data;
-//using AccountingSystem.Infrastructure.Repositories;
-
-//using Microsoft.EntityFrameworkCore.Storage;
-//using System;
-//using System.Threading.Tasks;
-
-//namespace AccountingSystem.Infrastructure.Data
-//{
-//    public class UnitOfWork : IUnitOfWork
-//    {
-//        private readonly AccountingDbContext _context;
-//        private IDbContextTransaction? _transaction;
-
-//        // ========== כל הRepositories ==========
-//        public IAccountingFirmRepository AccountingFirms { get; }
-//        public ICompanyRepository Companies { get; }
-//        public IWorkerRepository Workers { get; }
-//        public IRoleRepository Roles { get; }
-//        public ICompanyContactRepository CompanyContacts { get; }
-//        public ICompanyWorkerRepository CompanyWorkers { get; }
-//        public IReportTypeRepository ReportTypes { get; }
-//        public IFrequencyRepository Frequencies { get; }
-//        public ICompanyReportConfigRepository CompanyReportConfigs { get; }
-//        public IReportInstanceRepository ReportInstances { get; }
-//        public ITaskTypeRepository TaskTypes { get; }
-//        public ITaskRepository Tasks { get; }
-//        public IWorkerRoleTypeRepository WorkerRoleTypes { get; }
-//        public IAuditLogRepository AuditLogs { get; }
-
-//        // ========== Constructor - יוצר את כל הRepositories ==========
-//        public UnitOfWork(AccountingDbContext context)
-//        {
-//            _context = context;
-
-//            // צרי instance של כל repository
-//            AccountingFirms = new AccountingFirmRepository(_context);
-//            Companies = new CompanyRepository(_context);
-//            Workers = new WorkerRepository(_context);
-//            Roles = new RoleRepository(_context);
-//            CompanyContacts = new CompanyContactRepository(_context);
-//            CompanyWorkers = new CompanyWorkerRepository(_context);
-//            ReportTypes = new ReportTypeRepository(_context);
-//            Frequencies = new FrequencyRepository(_context);
-//            CompanyReportConfigs = new CompanyReportConfigRepository(_context);
-//            ReportInstances = new ReportInstanceRepository(_context);
-//            TaskTypes = new TaskTypeRepository(_context);
-//            Tasks = new TaskRepository(_context);
-//            WorkerRoleTypes = new WorkerRoleTypeRepository(_context);
-//            AuditLogs = new AuditLogRepository(_context);
-//        }
-
-//        // ========== שמירת שינויים ==========
-//        public async AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync()
-//        {
-//            return await _context.SaveChangesAsync();
-//        }
-
-//        // ========== ניהול טרנזקציות ==========
-//        public async AccountingSystem.Domain.Entities.Task BeginTransactionAsync()
-//        {
-//            _transaction = await _context.Database.BeginTransactionAsync();
-//        }
-
-//        public async AccountingSystem.Domain.Entities.Task CommitTransactionAsync()
-//        {
-//            try
-//            {
-//                await SaveChangesAsync();
-//                if (_transaction != null)
-//                {
-//                    await _transaction.CommitAsync();
-//                }
-//            }
-//            catch
-//            {
-//                await RollbackTransactionAsync();
-//                throw;
-//            }
-//            finally
-//            {
-//                if (_transaction != null)
-//                {
-//                    await _transaction.DisposeAsync();
-//                    _transaction = null;
-//                }
-//            }
-//        }
-
-//        public async AccountingSystem.Domain.Entities.Task RollbackTransactionAsync()
-//        {
-//            if (_transaction != null)
-//            {
-//                await _transaction.RollbackAsync();
-//                await _transaction.DisposeAsync();
-//                _transaction = null;
-//            }
-//        }
-
-//        // ========== Dispose - ניקוי משאבים ==========
-//        public void Dispose()
-//        {
-//            _transaction?.Dispose();
-//            _context.Dispose();
-//        }
-
-//        public AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        AccountingSystem.Domain.Entities.Task IUnitOfWork.SaveChangesAsync()
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
-//}
-//using AccountingSystem.Domain.Interfaces.Repositories;
-//using System;
-//using System.Threading.Tasks;
-
-//namespace AccountingSystem.Domain.Interfaces
-//{
-//    /// <summary>
-//    /// ממשק UnitOfWork - מנהל את כל הRepositories ואת הטרנזקציות
-//    /// מבטיח ACID: כל הפעולות מתבצעות ביחד או לא מתבצעות בכלל
-//    /// </summary>
-//    public interface IUnitOfWork : IDisposable
-//    {
-//        // ========== כל הRepositories במקום אחד ==========
-//        IAccountingFirmRepository AccountingFirms { get; }
-//        ICompanyRepository Companies { get; }
-//        IWorkerRepository Workers { get; }
-//        IRoleRepository Roles { get; }
-//        ICompanyContactRepository CompanyContacts { get; }
-//        ICompanyWorkerRepository CompanyWorkers { get; }
-//        IReportTypeRepository ReportTypes { get; }
-//        IFrequencyRepository Frequencies { get; }
-//        ICompanyReportConfigRepository CompanyReportConfigs { get; }
-//        IReportInstanceRepository ReportInstances { get; }
-//        ITaskTypeRepository TaskTypes { get; }
-//        ITaskRepository Tasks { get; }
-//        IWorkerRoleTypeRepository WorkerRoleTypes { get; }
-//        IAuditLogRepository AuditLogs { get; }
-
-//        // ========== שמירת שינויים ==========
-//        /// <summary>
-//        /// שמור את כל השינויים לDB
-//        /// מחזיר: מספר השורות שהשתנו
-//        /// </summary>
-//        AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-
-//        // ========== ניהול טרנזקציות ==========
-//        /// <summary>
-//        /// פתח טרנזקציה חדשה
-//        /// מעכשיו כל הפעולות "תלויות באוויר" עד לCommit
-//        /// </summary>
-//        AccountingSystem.Domain.Entities.Task BeginTransactionAsync();
-
-//        /// <summary>
-//        /// אשר את כל הפעולות - עכשיו הן באמת יישמרו!
-//        /// </summary>
-//        AccountingSystem.Domain.Entities.Task CommitTransactionAsync();
-//        AccountingSystem.Domain.Entities.Task SaveChangesAsync();
-//    }
-//}   
-//        /// <summary>
-//        /// בטל את כל הפעולות -
-using AccountingSystem.Domain.Interfaces;
+﻿using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Data;
 
@@ -193,7 +24,7 @@ public class UnitOfWork : IUnitOfWork
     private ICompanyReportConfigRepository? _companyReportConfigs;
     private IReportInstanceRepository? _reportInstances;
     private ITaskTypeRepository? _taskTypes;
-    private ITaskRepository? _tasks;
+    private ICompanyTaskRepository? _tasks;  // 👈 שונה מ-ITaskRepository!
     private IWorkerRoleTypeRepository? _workerRoleTypes;
     private IAuditLogRepository? _auditLogs;
 
@@ -236,8 +67,8 @@ public class UnitOfWork : IUnitOfWork
     public ITaskTypeRepository TaskTypes =>
         _taskTypes ??= new TaskTypeRepository(_context);
 
-    public ITaskRepository Tasks =>
-        _tasks ??= new TaskRepository(_context);
+    public ICompanyTaskRepository Tasks =>
+        _tasks ??= new CompanyTaskRepository(_context);  // 👈 שונה מ-TaskRepository!
 
     public IWorkerRoleTypeRepository WorkerRoleTypes =>
         _workerRoleTypes ??= new WorkerRoleTypeRepository(_context);
@@ -246,7 +77,7 @@ public class UnitOfWork : IUnitOfWork
         _auditLogs ??= new AuditLogRepository(_context);
 
     // ← הפונקציה החשובה!
-    public async AccountingSystem.Domain.Entities.Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         Console.WriteLine("💾 UnitOfWork.SaveChangesAsync נקרא");
         try
@@ -264,22 +95,23 @@ public class UnitOfWork : IUnitOfWork
     }
 
     // ← הפונקציה השנייה (ללא cancellationToken)
-    public async AccountingSystem.Domain.Entities.Task SaveChangesAsync()
+    public async Task SaveChangesAsync()
     {
         await SaveChangesAsync(CancellationToken.None);
     }
 
     // Transactions
-    public async AccountingSystem.Domain.Entities.Task BeginTransactionAsync()
+    public async Task BeginTransactionAsync()
     {
         await _context.Database.BeginTransactionAsync();
     }
 
-    public async AccountingSystem.Domain.Entities.Task CommitTransactionAsync()
+    public async Task CommitTransactionAsync()
     {
         await _context.Database.CommitTransactionAsync();
     }
-    public async AccountingSystem.Domain.Entities.Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default)
+
+    public async Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default)
     {
         Console.WriteLine($"💾 UnitOfWork.UpdateTaskStatusAsync - TaskId={taskId}, Status={status}");
 
@@ -292,24 +124,26 @@ public class UnitOfWork : IUnitOfWork
             if (isCompleted)
             {
                 rowsAffected = await _context.Database.ExecuteSqlRawAsync(
-                    @"UPDATE task 
+                    @"UPDATE companytask 
                   SET status = {0}::task_status, 
                       updatedat = NOW(),
                       completeddate = CURRENT_DATE
                   WHERE id = {1}",
                     status,
-                    taskId
+                    taskId,
+                    cancellationToken
                 );
             }
             else
             {
                 rowsAffected = await _context.Database.ExecuteSqlRawAsync(
-                    @"UPDATE task 
+                    @"UPDATE companytask 
                   SET status = {0}::task_status, 
                       updatedat = NOW()
                   WHERE id = {1}",
                     status,
-                    taskId
+                    taskId,
+                    cancellationToken
                 );
             }
 
@@ -323,6 +157,7 @@ public class UnitOfWork : IUnitOfWork
             throw;
         }
     }
+
     public void Dispose()
     {
         _context.Dispose();

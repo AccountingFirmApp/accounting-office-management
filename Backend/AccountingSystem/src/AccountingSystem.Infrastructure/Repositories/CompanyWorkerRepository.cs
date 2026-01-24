@@ -22,7 +22,7 @@
 
 
 //            // ⭐ המתודה החשובה ביותר
-//            public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
+//            public async Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
 //            {
 //                return await _context.Companyworkers
 //                    .Include(cw => cw.Company)   // טוען את פרטי החברה
@@ -31,7 +31,7 @@
 //                    .ToListAsync();
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId)
+//            public async Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId)
 //            {
 //                return await _context.Companyworkers
 //                    .Include(cw => cw.Worker)
@@ -40,13 +40,13 @@
 //                    .ToListAsync();
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<bool> AssignmentExistsAsync(int companyId, int workerId)
+//            public async Task<bool> AssignmentExistsAsync(int companyId, int workerId)
 //            {
 //                return await _context.Companyworkers
 //                    .AnyAsync(cw => cw.Companyid == companyId && cw.Workerid == workerId);
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<Companyworker?> GetByIdAsync(int id)
+//            public async Task<Companyworker?> GetByIdAsync(int id)
 //            {
 //                return await _context.Companyworkers
 //                    .Include(cw => cw.Company)
@@ -54,7 +54,7 @@
 //                    .FirstOrDefaultAsync(cw => cw.Id == id);
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetAllAsync()
+//            public async Task<IEnumerable<Companyworker>> GetAllAsync()
 //            {
 //                return await _context.Companyworkers
 //                    .Include(cw => cw.Company)
@@ -62,19 +62,19 @@
 //                    .ToListAsync();
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<Companyworker> AddAsync(Companyworker entity)
+//            public async Task<Companyworker> AddAsync(Companyworker entity)
 //            {
 //                await _context.Companyworkers.AddAsync(entity);
 //                return entity;
 //            }
 
-//            public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Companyworker entity)
+//            public async System.Threading.Tasks.Task UpdateAsync(Companyworker entity)
 //            {
 //                _context.Companyworkers.Update(entity);
-//                await System.Threading.Tasks.AccountingSystem.Domain.Entities.Task.CompletedTask;
+//                await System.Threading.Tasks.Task.CompletedTask;
 //            }
 
-//            public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
+//            public async System.Threading.Tasks.Task DeleteAsync(int id)
 //            {
 //                var entity = await _context.Companyworkers.FindAsync(id);
 //                if (entity != null)
@@ -83,12 +83,12 @@
 //                }
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
+//            public async Task<bool> ExistsAsync(int id)
 //            {
 //                return await _context.Companyworkers.AnyAsync(cw => cw.Id == id);
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> FindAsync(Expression<Func<Companyworker, bool>> predicate)
+//            public async Task<IEnumerable<Companyworker>> FindAsync(Expression<Func<Companyworker, bool>> predicate)
 //            {
 //                return await _context.Companyworkers
 //                    .Include(cw => cw.Company)
@@ -97,7 +97,7 @@
 //                    .ToListAsync();
 //            }
 
-//            public async AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
+//            public async Task<int> CountAsync(Func<object, bool> value)
 //            {
 //                return await _context.Companyworkers.CountAsync();
 //            }
@@ -128,21 +128,8 @@ namespace AccountingSystem.Infrastructure.Repositories
             _context = context;
         }
 
-        // ⭐ המתודה החשובה ביותר
-<<<<<<< HEAD
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
-=======
-        //public async Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
-        //{
-        //    return await _context.Companyworkers
-        //        .Include(cw => cw.Company)   // טוען את פרטי החברה
-        //        .Include(cw => cw.Worker)    // טוען את פרטי העובדת
-        //        .Where(cw => cw.Workerid == workerId)
-        //        .ToListAsync();
-        //}
-        // Infrastructure/Repositories/CompanyWorkerRepository.cs
         public async Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId)
->>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
+
         {
             try
             {
@@ -165,7 +152,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             }
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId)
         {
             return await _context.Companyworkers
                 .Include(cw => cw.Worker)
@@ -174,13 +161,13 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<bool> AssignmentExistsAsync(int companyId, int workerId)
+        public async Task<bool> AssignmentExistsAsync(int companyId, int workerId)
         {
             return await _context.Companyworkers
                 .AnyAsync(cw => cw.Companyid == companyId && cw.Workerid == workerId);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<Companyworker?> GetByIdAsync(int id)
+        public async Task<Companyworker?> GetByIdAsync(int id)
         {
             return await _context.Companyworkers
                 .Include(cw => cw.Company)
@@ -188,7 +175,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .FirstOrDefaultAsync(cw => cw.Id == id);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> GetAllAsync()
+        public async Task<IEnumerable<Companyworker>> GetAllAsync()
         {
             return await _context.Companyworkers
                 .Include(cw => cw.Company)
@@ -196,19 +183,19 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<Companyworker> AddAsync(Companyworker entity)
+        public async Task<Companyworker> AddAsync(Companyworker entity)
         {
             await _context.Companyworkers.AddAsync(entity);
             return entity;
         }
 
-        public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Companyworker entity)
+        public async System.Threading.Tasks.Task UpdateAsync(Companyworker entity)
         {
             _context.Companyworkers.Update(entity);
-            await System.Threading.Tasks.AccountingSystem.Domain.Entities.Task.CompletedTask;
+            await System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public async System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(int id)
         {
             var entity = await _context.Companyworkers.FindAsync(id);
             if (entity != null)
@@ -217,12 +204,12 @@ namespace AccountingSystem.Infrastructure.Repositories
             }
         }
 
-        public async AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
+        public async Task<bool> ExistsAsync(int id)
         {
             return await _context.Companyworkers.AnyAsync(cw => cw.Id == id);
         }
 
-        public async AccountingSystem.Domain.Entities.Task<IEnumerable<Companyworker>> FindAsync(Expression<Func<Companyworker, bool>> predicate)
+        public async Task<IEnumerable<Companyworker>> FindAsync(Expression<Func<Companyworker, bool>> predicate)
         {
             return await _context.Companyworkers
                 .Include(cw => cw.Company)
@@ -231,14 +218,12 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
+        public async Task<int> CountAsync(Func<object, bool> value)
         {
             return await _context.Companyworkers.CountAsync();
         }
 
-        System.Threading.Tasks.Task IGenericRepository<Companyworker>.AddAsync(Companyworker entity)
-        {
-            throw new NotImplementedException();
-        }
+     
+
     }
 }

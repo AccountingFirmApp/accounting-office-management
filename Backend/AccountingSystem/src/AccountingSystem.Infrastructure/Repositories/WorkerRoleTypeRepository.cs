@@ -18,51 +18,47 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             this.context = context;
         }
-<<<<<<< HEAD
-        public AccountingSystem.Domain.Entities.Task<Workerroletype> AddAsync(Workerroletype entity)
-=======
-        public System.Threading.Tasks.Task AddAsync(Workerroletype entity)
->>>>>>> 3a3e52f6f454f8a1f7839d1e39a03267125b0a43
+        public Task<Workerroletype> AddAsync(Workerroletype entity)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<int> CountAsync(Func<object, bool> value)
+        public Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task DeleteAsync(int id)
+        public System.Threading.Tasks.Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<bool> ExistsAsync(int id)
+        public Task<bool> ExistsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<IEnumerable<Workerroletype>> FindAsync(Expression<Func<Workerroletype, bool>> predicate)
+        public Task<IEnumerable<Workerroletype>> FindAsync(Expression<Func<Workerroletype, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<IEnumerable<Workerroletype>> GetAllAsync()
+        public Task<IEnumerable<Workerroletype>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<Workerroletype?> GetByIdAsync(int id)
+        public Task<Workerroletype?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public AccountingSystem.Domain.Entities.Task<Workerroletype?> GetByNameAsync(string name)
+        public Task<Workerroletype?> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public System.Threading.Tasks.AccountingSystem.Domain.Entities.Task UpdateAsync(Workerroletype entity)
+        public System.Threading.Tasks.Task UpdateAsync(Workerroletype entity)
         {
             throw new NotImplementedException();
         }

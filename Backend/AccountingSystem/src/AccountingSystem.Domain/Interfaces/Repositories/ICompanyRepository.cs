@@ -16,22 +16,24 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// <summary>
         /// תביא לי חברה + כל אנשי הקשר שלה
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithContactsAsync(int companyId);
+        System.Threading.Tasks.Task AddAsync(Company company);
+
+        System.Threading.Tasks.Task<Company?> GetCompanyWithContactsAsync(int companyId);
 
         /// <summary>
         /// תביא לי חברה + כל העובדים שעובדים בה
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithWorkersAsync(int companyId);
+        System.Threading.Tasks.Task<Company?> GetCompanyWithWorkersAsync(int companyId);
 
         /// <summary>
         /// תביא לי חברה + כל הגדרות הדוחות שלה
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithReportConfigsAsync(int companyId);
+        System.Threading.Tasks.Task<Company?> GetCompanyWithReportConfigsAsync(int companyId);
 
         /// <summary>
         /// תביא לי חברה + הכל (אנשי קשר, עובדים, הגדרות דוחות)
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<Company?> GetCompanyWithAllDetailsAsync(int companyId);
+        System.Threading.Tasks.Task<Company?> GetCompanyWithAllDetailsAsync(int companyId);
 
         // ========== חיפושים ==========
 
@@ -39,17 +41,17 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי את כל החברות של משרד מסוים
         /// למה? כי משרד רוצה לראות רק את החברות שלו!
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId);
+       System.Threading.Tasks.Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId);
 
         /// <summary>
         /// תביא לי רק חברות פעילות
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> GetActiveCompaniesAsync();
+        System.Threading.Tasks.Task<IEnumerable<Company>> GetActiveCompaniesAsync();
 
         /// <summary>
         /// תביא לי רק חברות לא פעילות
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Company>> GetInactiveCompaniesAsync();
+        System.Threading.Tasks.Task<IEnumerable<Company>> GetInactiveCompaniesAsync();
 
         // ========== בדיקות ==========
 
@@ -58,6 +60,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// למה? כדי למנוע חברות כפולות!
         /// excludeCompanyId = אל תבדוק את החברה הזאת (שימושי בעדכון)
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<bool> TaxIdExistsAsync(string taxId, int? excludeCompanyId = null);
+        System.Threading.Tasks.Task<bool> TaxIdExistsAsync(string taxId, int? excludeCompanyId = null);
     }
 }

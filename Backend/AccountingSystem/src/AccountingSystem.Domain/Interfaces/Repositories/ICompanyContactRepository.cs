@@ -7,7 +7,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     public interface ICompanyContactRepository : IGenericRepository<Companycontact>
     {
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Companycontact>> GetContactsByCompanyIdAsync(int companyId);
-        AccountingSystem.Domain.Entities.Task<Companycontact?> GetPrimaryContactAsync(int companyId);
+        System.Threading.Tasks.Task<IEnumerable<Companycontact>> GetContactsByCompanyIdAsync(int companyId);
+        System.Threading.Tasks.Task<Companycontact?> GetPrimaryContactAsync(int companyId);
     }
 }

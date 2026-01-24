@@ -42,5 +42,5 @@ public partial class Company
 
     public virtual Accountingfirm Firm { get; set; } = null!;
 
-    public virtual ICollection<AccountingSystem.Domain.Entities.Task> Tasks { get; set; } = new List<AccountingSystem.Domain.Entities.Task>();
+    public virtual ICollection<CompanyTask> CompanyTasks { get; set; } = new List<CompanyTask>();
 }

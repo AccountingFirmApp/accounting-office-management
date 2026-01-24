@@ -26,7 +26,7 @@ public class GetAllCompaniesQueryHandler : IRequestHandler<GetAllCompaniesQuery,
         _mapper = mapper;
     }
 
-    public async AccountingSystem.Domain.Entities.Task<List<CompanyDto>> Handle(GetAllCompaniesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CompanyDto>> Handle(GetAllCompaniesQuery request, CancellationToken cancellationToken)
     {
         var companies = await _unitOfWork.Companies.GetAllAsync();
         return _mapper.Map<List<CompanyDto>>(companies);
@@ -47,7 +47,7 @@ public class GetCompanyByIdQueryHandler : IRequestHandler<GetCompanyByIdQuery, C
         _mapper = mapper;
     }
 
-    public async AccountingSystem.Domain.Entities.Task<CompanyDto> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
+    public async Task<CompanyDto> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
     {
         var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
 
@@ -74,7 +74,7 @@ public class GetCompaniesByFirmIdQueryHandler : IRequestHandler<GetCompaniesByFi
         _mapper = mapper;
     }
 
-    public async AccountingSystem.Domain.Entities.Task<List<CompanyDto>> Handle(GetCompaniesByFirmIdQuery request, CancellationToken cancellationToken)
+    public async Task<List<CompanyDto>> Handle(GetCompaniesByFirmIdQuery request, CancellationToken cancellationToken)
     {
         var companies = await _unitOfWork.Companies.GetCompaniesByFirmIdAsync(request.FirmId);
         return _mapper.Map<List<CompanyDto>>(companies);
@@ -96,7 +96,7 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
         _mapper = mapper;
     }
 
-    public AccountingSystem.Domain.Entities.Task<List<CompanyWithPendingReportsDto>> Handle(GetCompaniesByFirmIdQueryWithReport request, CancellationToken cancellationToken)
+    public Task<List<CompanyWithPendingReportsDto>> Handle(GetCompaniesByFirmIdQueryWithReport request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -117,7 +117,7 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
             _mapper = mapper;
         }
 
-        public async AccountingSystem.Domain.Entities.Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
+        public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
             var company = new Company
             {
@@ -152,7 +152,7 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
             _mapper = mapper;
         }
 
-        public async AccountingSystem.Domain.Entities.Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
+        public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
         {
             var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
 
@@ -188,7 +188,7 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
             _unitOfWork = unitOfWork;
         }
 
-        public async AccountingSystem.Domain.Entities.Task<Unit> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
         {
             var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
 
@@ -204,7 +204,7 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
         }
     }
 }
-public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<TaskDto>>
+public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -215,7 +215,7 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
         _mapper = mapper;
     }
 
-    public async AccountingSystem.Domain.Entities.Task<List<TaskDto>> Handle(GetTasksByCompanyIdQuery request, CancellationToken cancellationToken)
+    public async Task<List<CompanyTaskDto>> Handle(GetTasksByCompanyIdQuery request, CancellationToken cancellationToken)
     {
         // 1. בדוק שהחברה קיימת
         var companyExists = await _unitOfWork.Companies.ExistsAsync(request.CompanyId);
@@ -228,7 +228,7 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
         var tasks = await _unitOfWork.Tasks.GetTasksByCompanyIdAsync(request.CompanyId);
 
         // 3. המר ל-DTOs
-        var taskDtos = tasks.Select(t => new TaskDto
+        var taskDtos = tasks.Select(t => new CompanyTaskDto
         {
             Id = t.Id,
             CompanyId = t.Companyid,

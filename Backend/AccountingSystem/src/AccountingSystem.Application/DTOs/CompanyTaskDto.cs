@@ -3,7 +3,7 @@ namespace AccountingSystem.Application.DTOs;
 /// <summary>
 /// DTO for AccountingSystem.Domain.Entities.Task - משימות
 /// </summary>
-public class TaskDto
+public class CompanyTaskDto
 {
     public int Id { get; set; }
     public int CompanyId { get; set; }
@@ -26,7 +26,7 @@ public class TaskDto
 /// <summary>
 /// DTO ליצירת משימה חדשה
 /// </summary>
-public class CreateTaskDto
+public class CreateCompanyTaskDto
 {
     public int CompanyId { get; set; }
     public int TaskTypeId { get; set; }
@@ -39,7 +39,7 @@ public class CreateTaskDto
 /// <summary>
 /// DTO לעדכון משימה
 /// </summary>
-public class UpdateTaskDto
+public class UpdateCompanyTaskDto
 {
     public int Id { get; set; }
     public string Status { get; set; } = string.Empty;
@@ -52,7 +52,7 @@ public class UpdateTaskDto
 /// <summary>
 /// DTO מורחב - עם כל הפרטים
 /// </summary>
-public class TaskDetailDto
+public class CompanyTaskDetailDto
 {
     public int Id { get; set; }
     
@@ -90,7 +90,7 @@ public class TaskDetailDto
 /// <summary>
 /// DTO לעדכון סטטוס מהיר
 /// </summary>
-public class UpdateTaskStatusDto
+public class UpdateCompanyTaskStatusDto
 {
     public int Id { get; set; }
     public string Status { get; set; } = string.Empty;
@@ -100,7 +100,7 @@ public class UpdateTaskStatusDto
 /// <summary>
 /// DTO להקצאת משימה לעובד
 /// </summary>
-public class AssignTaskToWorkerDto
+public class AssignCompanyTaskToWorkerDto
 {
     public int TaskId { get; set; }
     public int WorkerId { get; set; }
@@ -109,7 +109,7 @@ public class AssignTaskToWorkerDto
 /// <summary>
 /// DTO לרשימת משימות פעילות
 /// </summary>
-public class ActiveTaskDto
+public class ActiveCompanyTaskDto
 {
     public int Id { get; set; }
     public string CompanyName { get; set; } = string.Empty;

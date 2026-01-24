@@ -46,7 +46,6 @@
 
 	<ItemGroup>
 		<Folder Include="Persistence\" />
-		<Folder Include="Repositories\" />
 		<Folder Include="Security\" />
 	</ItemGroup>
 </Project>

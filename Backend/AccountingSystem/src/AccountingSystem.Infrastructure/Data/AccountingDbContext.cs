@@ -595,7 +595,7 @@ public partial class AccountingDbContext : DbContext
     public virtual DbSet<Reportinstance> Reportinstances { get; set; }
     public virtual DbSet<Reporttype> Reporttypes { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
-    public virtual DbSet<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task> Tasks { get; set; }
+    public virtual DbSet<CompanyTask> CompanyTasks { get; set; }
     public virtual DbSet<Tasktype> Tasktypes { get; set; }
 
     public virtual DbSet<Worker> Workers { get; set; }
@@ -1065,17 +1065,17 @@ public partial class AccountingDbContext : DbContext
         //          .OnDelete(DeleteBehavior.Restrict)
         //          .HasConstraintName("fk_task_tasktype");
         //});
-        modelBuilder.Entity<AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task>(entity =>
+        modelBuilder.Entity<CompanyTask>(entity =>
         {
-            entity.ToTable("task");
+            entity.ToTable("CompanyTask");
 
-            entity.HasKey(e => e.Id).HasName("task_pkey");
+            entity.HasKey(e => e.Id).HasName("companytask_pkey");
 
-            entity.HasIndex(e => e.Assignedworkerid).HasDatabaseName("idx_task_assigned");
-            entity.HasIndex(e => new { e.Companyid, e.Period }).HasDatabaseName("idx_task_company_period");
+            entity.HasIndex(e => e.Assignedworkerid).HasDatabaseName("idx_companytask_assigned");
+            entity.HasIndex(e => new { e.Companyid, e.Period }).HasDatabaseName("idx_companytask_company_period");
             entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period })
                   .IsUnique()
-                  .HasDatabaseName("uq_task_period");
+                  .HasDatabaseName("uq_companytask_period");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Companyid).HasColumnName("companyid");
@@ -1088,28 +1088,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Status)
          .HasColumnName("status")
          .HasConversion<string>()
-         .HasColumnType("task_status");  // או report_status לפי השדה
-
-            //Enum mapping – מאפשר ignore case
-            //entity.Property(e => e.Status)
-            //        .HasColumnName("status")
-
-            //      .HasColumnType("task_status");
-            //   var taskStatusConverter = new ValueConverter<TaskStatus, string>(
-            //v => v.ToString(), // כתיבה: enum -> string
-            //v =>
-            //{
-            //    // קריאה: string -> enum בצורה בטוחה
-            //    if (Enum.TryParse<TaskStatus>(v, true, out var result))
-            //        return result;
-            //    return TaskStatus.w; // ערך ברירת מחדל במקרה של ערך לא חוקי
-            //}
-            //);
-            //entity.Property(e => e.Status)
-            //      .HasConversion(
-            //          v => v.ToString(),
-            //          v => SafeParseTaskStatus(v)
-            //      );
+         .HasColumnType("task_status"); 
 
             entity.Property(e => e.Createdat)
                   .HasColumnType("timestamp without time zone")
@@ -1122,21 +1101,21 @@ public partial class AccountingDbContext : DbContext
 
             // יחסים
             entity.HasOne(d => d.Assignedworker)
-                  .WithMany(p => p.Tasks)
+                  .WithMany(p => p.CompanyTasks)
                   .HasForeignKey(d => d.Assignedworkerid)
                   .OnDelete(DeleteBehavior.SetNull)
-                  .HasConstraintName("fk_task_worker");
+                  .HasConstraintName("fk_companytask_worker");
 
             entity.HasOne(d => d.Company)
-                  .WithMany(p => p.Tasks)
+                  .WithMany(p => p.CompanyTasks)
                   .HasForeignKey(d => d.Companyid)
-                  .HasConstraintName("fk_task_company");
+                  .HasConstraintName("fk_companytask_company");
 
             entity.HasOne(d => d.Tasktype)
-                  .WithMany(p => p.Tasks)
+                  .WithMany(p => p.CompanyTasks)
                   .HasForeignKey(d => d.Tasktypeid)
                   .OnDelete(DeleteBehavior.Restrict)
-                  .HasConstraintName("fk_task_tasktype");
+                  .HasConstraintName("fk_companytask_tasktype");
         });
 
         // Tasktype Configuration

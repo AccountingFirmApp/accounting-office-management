@@ -89,7 +89,7 @@ namespace AccountingSystem.Domain.Entities
         // Navigation properties
         public virtual Accountingfirm Firm { get; set; } = null!;
         public virtual Role Role { get; set; } = null!;
-        public virtual ICollection<AccountingSystem.Domain.Entities.Task> Tasks { get; set; } = new List<AccountingSystem.Domain.Entities.Task>();
+        public virtual ICollection<CompanyTask> CompanyTasks { get; set; } = new List<CompanyTask>();
         public virtual ICollection<Auditlog> Auditlogs { get; set; } = new List<Auditlog>();
         public virtual ICollection<Companyworker> Companyworkers { get; set; } = new List<Companyworker>();
     }

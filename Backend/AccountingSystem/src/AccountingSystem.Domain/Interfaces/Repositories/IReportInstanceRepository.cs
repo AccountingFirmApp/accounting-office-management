@@ -15,24 +15,24 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// <summary>
         /// תביא לי את כל הדוחות של חברה
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId);
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId);
 
         /// <summary>
         /// תביא לי את כל הדוחות של הגדרה מסוימת
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId);
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsByConfigIdAsync(int configId);
 
         // ========== חיפושים לפי סטטוס ==========
 
         /// <summary>
         /// תביא לי דוחות לפי סטטוס (Draft, Submitted, Approved...)
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status);
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status);
 
         /// <summary>
         /// תביא לי דוחות שממתינים (Pending)
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync();
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync();
 
         // ========== חיפושים לפי תקופה ==========
 
@@ -40,12 +40,12 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי דוחות של תקופה מסוימת
         /// דוגמה: כל הדוחות של 01/2024
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period);
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsByPeriodAsync(DateTime period);
 
         /// <summary>
         /// תביא לי דוחות בטווח תאריכים
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate);
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsByDateRangeAsync(DateTime startDate, DateTime endDate);
 
         // ========== דוחות שדורשים תשומת לב! ==========
 
@@ -53,12 +53,14 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי דוחות שפספסו את תאריך היעד! (OVERDUE)
         /// זה קריטי! צריך להתריע על דוחות באיחור
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync();
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetOverdueReportsAsync();
 
         /// <summary>
         /// תביא לי דוחות שצריך להגיש בעוד X ימים
         /// למשל: תביא לי דוחות שצריך להגיש בשבוע הקרוב
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days);
+        System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days);
+        System.Threading.Tasks.Task AddAsync(Reportinstance report);
+
     }
 }

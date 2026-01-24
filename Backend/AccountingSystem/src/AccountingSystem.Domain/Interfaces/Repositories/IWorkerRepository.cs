@@ -2,48 +2,50 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 namespace AccountingSystem.Domain.Interfaces.Repositories
 {
     /// <summary>
     /// ממשק לפעולות ספציפיות של עובדים
     /// </summary>
     public interface IWorkerRepository : IGenericRepository<Worker>
+
     {
+        System.Threading.Tasks.Task AddAsync(Worker worker);
+
         // ========== קריאה עם קשרים ==========
 
         /// <summary>
         /// תביא לי עובד + התפקיד שלו
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<Worker?> GetWorkerWithRoleAsync(int workerId);
+        System.Threading.Tasks.Task<Worker?> GetWorkerWithRoleAsync(int workerId);
 
         /// <summary>
         /// תביא לי עובד + כל החברות שהוא עובד בהן
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<Worker?> GetWorkerWithCompaniesAsync(int workerId);
+        System.Threading.Tasks.Task<Worker?> GetWorkerWithCompaniesAsync(int workerId);
 
         // ========== חיפושים ==========
 
         /// <summary>
         /// תביא לי את כל העובדים של משרד מסוים
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetWorkersByFirmIdAsync(int firmId);
+        System.Threading.Tasks.Task<IEnumerable<Worker>> GetWorkersByFirmIdAsync(int firmId);
 
         /// <summary>
         /// תביא לי את כל העובדים שעובדים בחברה מסוימת
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId);
+        System.Threading.Tasks.Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId);
 
         /// <summary>
         /// תביא לי רק עובדים פעילים
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetActiveWorkersAsync();
+        System.Threading.Tasks.Task<IEnumerable<Worker>> GetActiveWorkersAsync();
 
         /// <summary>
         /// תביא לי את כל העובדים עם תפקיד מסוים
         /// דוגמה: כל המנהלים
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<IEnumerable<Worker>> GetWorkersByRoleIdAsync(int roleId);
+        System.Threading.Tasks.Task<IEnumerable<Worker>> GetWorkersByRoleIdAsync(int roleId);
 
         // ========== בדיקות ==========
 
@@ -51,7 +53,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// בדיקה: האם האימייל הזה כבר תפוס?
         /// חשוב! כל אימייל חייב להיות ייחודי
         /// </summary>
-        AccountingSystem.Domain.Entities.Task<bool> EmailExistsAsync(string email, int? excludeWorkerId = null);
+        System.Threading.Tasks.Task<bool> EmailExistsAsync(string email, int? excludeWorkerId = null);
 
 
 

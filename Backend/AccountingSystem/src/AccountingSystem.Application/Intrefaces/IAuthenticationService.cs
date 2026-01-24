@@ -9,10 +9,10 @@ namespace AccountingSystem.Application.Intrefaces
 {
     public interface IAuthenticationService
     {
-        AccountingSystem.Domain.Entities.Task<LoginResponseDto> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
-        AccountingSystem.Domain.Entities.Task<LoginResponseDto> GoogleLoginAsync(string googleToken, CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<LoginResponseDto> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<LoginResponseDto> GoogleLoginAsync(string googleToken, CancellationToken cancellationToken = default);
 
-        AccountingSystem.Domain.Entities.Task<string> HashPasswordAsync(string password);
-        AccountingSystem.Domain.Entities.Task<bool> VerifyPasswordAsync(string password, string passwordHash);
+        System.Threading.Tasks.Task<string> HashPasswordAsync(string password);
+        System.Threading.Tasks.Task<bool> VerifyPasswordAsync(string password, string passwordHash);
     }
 }

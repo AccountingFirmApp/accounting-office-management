@@ -3,6 +3,8 @@ using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.Workers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+
 
 namespace AccountingSystem.API.Controllers
 {
@@ -22,7 +24,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/workers
         /// </summary>
         [HttpGet]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<WorkerDto>>> GetAll()
+        public async System.Threading.Tasks.Task<ActionResult<List<WorkerDto>>> GetAll()
         {
             try
             {
@@ -41,7 +43,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/workers/5
         /// </summary>
         [HttpGet("{id}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<WorkerDto>> GetById(int id)
+        public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> GetById(int id)
         {
             try
             {
@@ -60,7 +62,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/workers/firm/1
         /// </summary>
         [HttpGet("firm/{firmId}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<WorkerDto>>> GetByFirmId(int firmId)
+        public async System.Threading.Tasks.Task<ActionResult<List<WorkerDto>>> GetByFirmId(int firmId)
         {
             try
             {
@@ -79,7 +81,7 @@ namespace AccountingSystem.API.Controllers
         /// POST: api/workers
         /// </summary>
         [HttpPost]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
+        public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
         {
             try
             {
@@ -97,7 +99,7 @@ namespace AccountingSystem.API.Controllers
         /// PUT: api/workers/5
         /// </summary>
         [HttpPut("{id}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<WorkerDto>> Update(int id, [FromBody] Application.Commands.Workers.UpdateWorkerCommand command)
+        public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Update(int id, [FromBody] Application.Commands.Workers.UpdateWorkerCommand command)
         {
             try
             {
@@ -120,7 +122,7 @@ namespace AccountingSystem.API.Controllers
         /// DELETE: api/workers/5
         /// </summary>
         [HttpDelete("{id}")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult> Delete(int id)
+        public async System.Threading.Tasks.Task<ActionResult> Delete(int id)
         {
             try
             {
@@ -141,7 +143,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/workers/5/companies
         /// </summary>
         [HttpGet("{workerId}/companies")]
-        public async AccountingSystem.Domain.Entities.Task<ActionResult<List<CompanyDto>>> GetWorkerCompanies(int workerId)
+        public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetWorkerCompanies(int workerId)
         {
             try
             {

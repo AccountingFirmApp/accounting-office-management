@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountingSystem.Domain.Entities;
 
-public partial class Task
+public partial class CompanyTask
 {
 
     public int Id { get; set; }

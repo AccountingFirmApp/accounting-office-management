@@ -22,7 +22,7 @@ using MediatR;
 
 namespace AccountingSystem.Application.Queries.Tasks
 {
-    public class GetTasksByCompanyIdQuery : IRequest<List<TaskDto>>
+    public class GetTasksByCompanyIdQuery : IRequest<List<CompanyTaskDto>>
     {
         public int CompanyId { get; }
 

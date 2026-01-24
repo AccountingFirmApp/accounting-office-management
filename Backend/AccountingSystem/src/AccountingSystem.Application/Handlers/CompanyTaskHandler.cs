@@ -2,7 +2,7 @@
 ////using AccountingSystem.Domain.Enums;
 ////using AccountingSystem.Domain.Interfaces;
 ////using MediatR;
-////using TaskEntity = AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task;
+////using TaskEntity = Task;
 
 ////namespace AccountingSystem.Application.Handlers.Tasks;
 
@@ -15,7 +15,7 @@
 ////        _unitOfWork = unitOfWork;
 ////    }
 
-////    public async AccountingSystem.Domain.Entities.Task<Unit> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
+////    public async Task<Unit> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
 ////    {
 ////        try
 ////        {
@@ -75,7 +75,7 @@
 //using AccountingSystem.Domain.Enums;
 //using AccountingSystem.Domain.Interfaces;
 //using MediatR;
-//using TaskEntity = AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task;
+//using TaskEntity = Task;
 
 //namespace AccountingSystem.Application.Handlers.Tasks;
 
@@ -88,7 +88,7 @@
 //        _unitOfWork = unitOfWork;
 //    }
 
-//    public async AccountingSystem.Domain.Entities.Task<Unit> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
+//    public async Task<Unit> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
 //    {
 //        try
 //        {
@@ -149,7 +149,7 @@ public class UpdateTaskStatusCommandHandler : IRequestHandler<UpdateTaskStatusCo
         _unitOfWork = unitOfWork;
     }
 
-    public async AccountingSystem.Domain.Entities.Task<Unit> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
     {
         try
         {
