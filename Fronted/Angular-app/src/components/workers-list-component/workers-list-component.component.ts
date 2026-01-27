@@ -60,23 +60,23 @@ export class WorkersListComponent implements OnInit {
     // אופציונלי – אם יש דף צפייה
     this.router.navigate(['/workers', worker.id]);
   }
-  deleteWorker(employeeId: number) {
-    // שואל את המשתמש לפני מחיקה
-    const confirmed = window.confirm('האם אתה בטוח שברצונך למחוק את העובד?');
+  // deleteWorker(employeeId: number) {
+  //   // שואל את המשתמש לפני מחיקה
+  //   const confirmed = window.confirm('האם אתה בטוח שברצונך למחוק את העובד?');
   
-    if (!confirmed) {
-      return; // אם המשתמש ביטל, לא מבצעים מחיקה
-    }
+  //   if (!confirmed) {
+  //     return; // אם המשתמש ביטל, לא מבצעים מחיקה
+  //   }
   
-    // אם המשתמש אישר, מבצעים מחיקה
-    this.WorkerService.deleteWorker(employeeId).subscribe({ 
-      next: () => {
-        this.loadWorkers(); // טען מחדש את רשימת העובדים לאחר המחיקה
-      },
-      error: (err) => {
-        console.error('❌ שגיאה במחיקת עובד', err);
-        this.errorMessage = 'אירעה שגיאה במחיקת העובד';
-      }
-    });
-  }
+  //   // אם המשתמש אישר, מבצעים מחיקה
+  //   this.WorkerService.deleteWorker(employeeId).subscribe({ 
+  //     next: () => {
+  //       this.loadWorkers(); // טען מחדש את רשימת העובדים לאחר המחיקה
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ שגיאה במחיקת עובד', err);
+  //       this.errorMessage = 'אירעה שגיאה במחיקת העובד';
+  //     }
+  //   });
+  // }
 }  

@@ -223,7 +223,6 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 // ========================================
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(MappingProfile).Assembly));
-
 // ========================================
 // 6. FluentValidation
 // ========================================

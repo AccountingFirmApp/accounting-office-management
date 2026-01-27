@@ -28,7 +28,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/companies
         /// </summary>
         /// 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetAll()
