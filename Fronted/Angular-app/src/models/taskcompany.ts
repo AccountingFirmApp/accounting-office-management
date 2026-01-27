@@ -1,4 +1,4 @@
-export interface TaskDto {
+export interface TaskcompanyDto {
     id: number;
     companyId: number;
     taskTypeId: number;

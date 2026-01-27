@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
 import { AuthService } from '../../services/auth.service';
+import { log } from 'console';
 
 @Component({
   selector: 'app-home',
@@ -27,14 +28,18 @@ export class HomeComponent implements OnInit{
   navigateToWorkerCompanies(): void {
     if(this.currentWorker!=null)
     this.router.navigate([`/workers/${this.currentWorker.id}/companies`]);
+
   }
-   navigateToReports() {
+    navigateToTaskCompanies(): void {
+    if(this.currentWorker!=null)
+    this.router.navigate([`companies/3/tasks`]);
+
+  }
+  navigateToReports() {
     this.router.navigate(['/reports']);
   }
-  navigateToCompany() {
-    this.router.navigate(['/companies']);
-  }
-  navigateToWorker() {
-    this.router.navigate(['/workers']);
+
+  navigateToManagement() {
+    this.router.navigate(['/management']);
   }
 }

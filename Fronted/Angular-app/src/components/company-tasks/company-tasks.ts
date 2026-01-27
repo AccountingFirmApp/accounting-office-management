@@ -107,7 +107,7 @@ import { CommonModule ,Location} from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/company';
-import { TaskDto } from '../../models/task';
+import { TaskcompanyDto } from '../../models/taskcompany';
 import { CompanyDto } from '../../models/Company';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 
@@ -121,7 +121,7 @@ import { BackButtonComponent } from '../../app/components/shared/back-button/bac
 export class CompanyTasksComponent implements OnInit {
   companyId!: number;
   company: CompanyDto | null = null;
-  tasks: TaskDto[] = [];
+  tasks: TaskcompanyDto[] = [];
   loading = false;
   error: string | null = null;
   updatingTaskId: number | null = null;  // ← הוסף - למעקב על המשימה שמתעדכנת
@@ -179,7 +179,7 @@ export class CompanyTasksComponent implements OnInit {
   }
 
   // ← הפונקציה המעודכנת!
-  onStatusChange(task: TaskDto, newStatus: string): void {
+  onStatusChange(task: TaskcompanyDto, newStatus: string): void {
     
     const oldStatus = task.status;  // שמור את הסטטוס הישן למקרה של שגיאה
     this.updatingTaskId = task.id;  // סמן שהמשימה הזו מתעדכנת

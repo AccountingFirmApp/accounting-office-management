@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { LoginRequestDto, GoogleLoginRequestDto } from '../../models/auth';
 import { environment } from '../../environments/environment';
 import { WorkerService } from '../../services/worker';
+import { log } from 'node:console';
 
 declare const google: any;
 
@@ -111,10 +112,21 @@ export class LoginComponent implements OnInit, AfterViewInit {
       next: (result) => {
         // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
         // ✅ שמירת פרטי העובד ב-WorkerService
+        try{
         this.workerService.currentWorker = result.worker;
-
+        alert(this.workerService.currentWorker );
+        
+  this.router.navigate(['/home']);
+  
+        }
+        catch(error){
+          console.log("error")
+        }
+finally{
         this.isLoading = false;
-        this.router.navigate(['/home']);
+
+}
+      
       },
       error: (error) => {
         console.error('🔴 שגיאה בהתחברות Google:', error);
