@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule,Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
@@ -22,17 +22,19 @@ export class WorkerCompaniesComponent implements OnInit {
     private workerService: WorkerService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private location:Location
+    private location: Location
   ) { 
   }
-  currentWorker!:WorkerInfoDto;
-ngOnInit(): void {
-  this.currentWorker = this.workerService.currentWorker;
+  
+  currentWorker!: WorkerInfoDto;
 
-  if (this.currentWorker) {
-    this.loadData();
+  ngOnInit(): void {
+    this.currentWorker = this.workerService.currentWorker;
+
+    if (this.currentWorker) {
+      this.loadData();
+    }
   }
-}
 
   goHome(): void {
     this.location.back();
@@ -45,9 +47,9 @@ ngOnInit(): void {
     this.workerService.getWorkerCompanies(this.currentWorker.id).subscribe({
       next: (response) => {
         this.companies = response;
+        console.log('🏢 טענת חברות עבור עובדת:', this.currentWorker.id, this.companies); // ← הוסף
         this.loading = false;
         this.cdr.detectChanges();
-        
       },
       error: (err) => {
         this.error = `שגיאה: ${err.status} - ${err.message}`;
@@ -63,7 +65,18 @@ ngOnInit(): void {
     this.error = '';
     this.cdr.detectChanges();
     this.loadData();
-          this.router.navigate([`./workers/${this.workerId}/companies`])
-
+    this.router.navigate([`./workers/${this.workerId}/companies`]);
   }
+
+  // מעבר למשימות של חברה
+  goToCompanyTasks(companyId: number): void {
+    this.router.navigate(['/companies', companyId, 'tasks']);
+  }
+goToCompanyReports(companyId: number): void {
+  console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
+  this.router.navigate(['/reports'], { 
+    queryParams: { companyId: companyId } 
+  });
+}
+
 }

@@ -5,8 +5,9 @@
     <div class="header-content">
       <app-back-button></app-back-button>
       <h1>ניהול דיווחים</h1>
-      <button class="add-button" (click)="createNewReport()">
-        + דוח חדש
+      <button class="add-button" *ngIf="auth.isAdmin()"
+       (click)="createNewReport()">
+        + דיווח חדש
       </button>
     </div>
   </header>

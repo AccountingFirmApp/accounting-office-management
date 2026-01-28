@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="form-header">
     <app-back-button></app-back-button>
-    <h2>{{ isEditMode ? 'עריכת דוח' : 'דוח חדש' }}</h2>
+    <h2>{{ isEditMode ? 'עריכת דיווח' : 'דיווח חדש' }}</h2>
   </div>
 
   <!-- Loading State -->
@@ -131,7 +131,7 @@
         ביטול
       </button>
       <button type="submit" class="btn-submit" [disabled]="submitting">
-        <span *ngIf="!submitting">{{ isEditMode ? 'שמור שינויים' : 'צור דוח' }}</span>
+        <span *ngIf="!submitting">{{ isEditMode ? 'שמור שינויים' : 'צור דיווח' }}</span>
         <span *ngIf="submitting">שומר...</span>
       </button>
     </div>

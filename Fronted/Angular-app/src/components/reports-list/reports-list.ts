@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router'; // ← הוסף ActivatedRoute
 import { ReportService } from '../../services/report';
 import { ReportInstanceDetail } from '../../models/report-instance';
 import { WorkerService } from '../../services/worker';
@@ -29,6 +29,9 @@ export class ReportsListComponent implements OnInit {
   selectedCompany: string = 'all';
   selectedReportType: string = 'all';
   
+  // ← הוסף משתנה לאחסון companyId מה-URL
+  filterByCompanyId: number | null = null;
+  
   // רשימות ייחודיות לפילטרים
   companies: string[] = [];
   reportTypes: string[] = [];
@@ -37,39 +40,67 @@ export class ReportsListComponent implements OnInit {
   constructor(
     private reportService: ReportService,
     public workerService: WorkerService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute // ← הוסף ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.loadReports();
+    // ← קרא את companyId מה-query params
+    this.route.queryParams.subscribe(params => {
+      this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+      this.loadReports();
+    });
+    
+    console.log('Worker in ReportsListComponent:', this.workerService.currentWorker);
   }
 
   loadReports(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+  this.isLoading = true;
+  this.errorMessage = '';
 
-    this.reportService.getAll().subscribe({
-      next: (data) => {
-        this.reports = data;
-        this.filteredReports = data;
-        this.companies = [...new Set(data.map(r => r.companyName))].sort();
-        this.reportTypes = [...new Set(data.map(r => r.reportTypeName))].sort();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.error('❌ שגיאה בטעינת דוחות:', error);
-        
-        if (error.status === 401) {
-          this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
-        } else if (error.status === 500) {
-          this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
-        } else {
-          this.errorMessage = 'שגיאה בטעינת הדוחות';
-        }
+  console.log('🔍 מחפש דוחות עבור companyId:', this.filterByCompanyId);
+
+  this.reportService.getAll().subscribe({
+    next: (data) => {
+      console.log('📊 כל הדוחות:', data);
+      
+      // הדפס את כל ה-companyId שיש בדוחות
+      const companyIds = data.map(r => r.companyId);
+      console.log('📊 רשימת companyId בדוחות:', companyIds);
+      
+      this.reports = data;
+      
+      if (this.filterByCompanyId) {
+        this.reports = data.filter(r => {
+          const match = r.companyId === this.filterByCompanyId;
+          if (match) {
+            console.log('✅ מצאתי דוח מתאים!', r);
+          }
+          return match;
+        });
+        console.log(`✅ סה"כ ${this.reports.length} דוחות מפולטרים`);
       }
-    });
-  }
+      
+      this.filteredReports = this.reports;
+      this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
+      this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+      
+      this.isLoading = false;
+    },
+     error: (error) => {
+      this.isLoading = false;
+      console.error('❌ שגיאה בטעינת דוחות:', error);
+      
+      if (error.status === 401) {
+        this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
+      } else if (error.status === 500) {
+        this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
+      } else {
+        this.errorMessage = 'שגיאה בטעינת הדוחות';
+      }}
+  });
+}
+
 
   applyFilters(): void {
     this.filteredReports = this.reports.filter(report => {
@@ -96,7 +127,13 @@ export class ReportsListComponent implements OnInit {
     this.selectedStatus = 'all';
     this.selectedCompany = 'all';
     this.selectedReportType = 'all';
-    this.filteredReports = this.reports;
+    
+    // ← אם יש פילטר לפי חברה, אל תנקה אותו
+    if (this.filterByCompanyId) {
+      this.filteredReports = this.reports; // כבר מפולטר לפי החברה
+    } else {
+      this.filteredReports = this.reports;
+    }
   }
 
   /**

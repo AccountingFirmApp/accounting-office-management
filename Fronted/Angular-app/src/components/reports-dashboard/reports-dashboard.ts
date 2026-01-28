@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { ReportService } from '../../services/report';
 import { CommonModule } from '@angular/common';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -22,7 +23,8 @@ export class ReportsDashboardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private reportService: ReportService
+    private reportService: ReportService,
+    public auth: AuthService
   ) {}
 
   ngOnInit() {

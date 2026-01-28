@@ -157,7 +157,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
         // ✅ שמירת פרטי העובד ב-WorkerService
         this.workerService.currentWorker = response.worker;
-
+        console.log('Worker details:', this.workerService.currentWorker);
         this.isLoading = false;
         this.router.navigate(['/home']);
       },

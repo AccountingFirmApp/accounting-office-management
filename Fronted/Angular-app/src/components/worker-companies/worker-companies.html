@@ -1,19 +1,18 @@
 <div class="container">
-
   <!-- כפתור חזרה לדף הבית -->
   <app-back-button [route]="'/home'" [text]="'חזרה לדף הבית'"></app-back-button>  
-
+  
   <!-- Loading -->
   <div *ngIf="loading" class="alert alert-warning">
     טוען נתונים...
   </div>
-
+  
   <!-- Error -->
   <div *ngIf="error" class="alert alert-error">
     <h3>שגיאה</h3>
     <pre>{{ error }}</pre>
   </div>
-
+  
   <!-- Success -->
   <div *ngIf="companies && !loading">
     <!-- רשימת חברות -->
@@ -21,6 +20,7 @@
       <ul class="company-list">
         <li *ngFor="let company of companies" class="company-card">
           <h5>{{ company.name }}</h5>
+          
           <p><strong>ח.פ:</strong> {{ company.taxId }}</p>
           <p><strong>כתובת:</strong> {{ company.address }}</p>
           <p><strong>טלפון:</strong> {{ company.phone }}</p>
@@ -32,14 +32,25 @@
             </span>
           </p>
           <p class="notes"><strong>הערות:</strong> {{ company.notes || 'אין הערות' }}</p>
+          
+          <!-- כפתורי פעולה -->
+          <div class="action-buttons">
+            <button class="btn-action btn-tasks" (click)="goToCompanyTasks(company.id)">
+              <span class="icon">📋</span>
+              משימות
+            </button>
+            <button class="btn-action btn-reports" (click)="goToCompanyReports(company.id)">
+              <span class="icon">📊</span>
+              דיווחים
+            </button>
+          </div>
         </li>
       </ul>
     </div>
-
+    
     <!-- אין חברות -->
     <div *ngIf="companies.length === 0" class="no-companies">
       לא נמצאו חברות עבור עובדת זו
     </div>
   </div>
-
 </div>

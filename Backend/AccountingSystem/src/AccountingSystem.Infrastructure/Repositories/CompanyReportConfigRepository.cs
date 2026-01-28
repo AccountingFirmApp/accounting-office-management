@@ -177,9 +177,19 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
+        //public Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public async Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(c => c.Company)
+                .Include(c => c.Reporttype)
+                .Include(c => c.Frequency)
+                .Where(c => c.Companyid == companyId)
+                .ToListAsync();
         }
     }
 }

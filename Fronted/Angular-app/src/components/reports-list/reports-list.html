@@ -11,9 +11,9 @@
 
   <!-- כותרת -->
   <div class="header">
-    <h1>הדוחות שלי</h1>
+    <h1>הדיווחים שלי</h1>
     <p class="subtitle" *ngIf="workerService.currentWorker">
-      שלום {{ workerService.currentWorker.firstName }} {{ workerService.currentWorker.lastName }}
+      שלום {{ workerService.currentWorker.firstname }} {{ workerService.currentWorker.lastname }}
     </p>
   </div>
 
@@ -24,7 +24,7 @@
         type="text" 
         [(ngModel)]="searchTerm" 
         (input)="applyFilters()"
-        placeholder="חפש לפי שם חברה או סוג דוח..."
+        placeholder="חפש לפי שם חברה או סוג דיווח..."
         class="search-input"
       />
     </div>
@@ -78,7 +78,7 @@
   <!-- טעינה -->
   <div *ngIf="isLoading" class="loading">
     <div class="spinner"></div>
-    <p>טוען דוחות...</p>
+    <p>טוען דיווחים...</p>
   </div>
 
   <!-- הודעת שגיאה -->
@@ -93,7 +93,7 @@
       <thead>
         <tr>
           <th>חברה</th>
-          <th>סוג דוח</th>
+          <th>סוג דיווח</th>
           <th>קוד</th>
           <th>תקופה</th>
           <th>סכום</th>
@@ -139,7 +139,7 @@
 
     <!-- אין תוצאות -->
     <div *ngIf="filteredReports.length === 0" class="no-results">
-      <p>לא נמצאו דוחות</p>
+      <p>לא נמצאו דיווחים</p>
       <button (click)="clearFilters()" class="btn-primary">נקה סינון</button>
     </div>
   </div>
