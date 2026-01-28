@@ -22,6 +22,8 @@ namespace AccountingSystem.Application.Commands.Companies
         public bool Isactive { get; set; } = true;
     }
 
+
+
     public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
     {
         private readonly IUnitOfWork _unitOfWork;

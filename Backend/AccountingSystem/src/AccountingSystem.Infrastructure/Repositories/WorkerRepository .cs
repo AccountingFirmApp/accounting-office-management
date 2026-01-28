@@ -14,10 +14,13 @@ namespace AccountingSystem.Infrastructure.Repositories
     public class WorkerRepository:IWorkerRepository
     {
         private AccountingDbContext context;
+        private readonly DbSet<Worker> _dbSet;
 
         public WorkerRepository(AccountingDbContext context)
         {
-            this.context = context;
+            this.context = context; 
+            _dbSet = context.Workers;
+
         }
 
         public async Task AddAsync(Worker entity)
@@ -64,9 +67,13 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        // WorkerRepository.cs
         public async Task<IEnumerable<Worker>> GetAllAsync()
         {
-            return await context.Workers.ToListAsync();
+            return await _dbSet
+                .Include(w => w.Role)        // ✅ Worker.Role
+                .Include(w => w.Firm)        // ✅ Worker.Firm (שזה Accountingfirm)
+                .ToListAsync();
         }
 
         public Task<Worker?> GetByIdAsync(int id)

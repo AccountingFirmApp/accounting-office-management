@@ -51,41 +51,41 @@ public class GetCompaniesByFirmIdQueryWithReport : IRequest<List<CompanyWithPend
 
 // ========================================
 // CREATE COMPANY COMMAND
-// ========================================
-public class CreateCompanyCommand : IRequest<CompanyDto>
-{
-    public string Name { get; set; } = string.Empty;
-    public string TaxId { get; set; } = string.Empty;
-    public int FirmId { get; set; }
-    public string? ContactPerson { get; set; }
-    public string? Phone { get; set; }
-    public string? Email { get; set; }
-    public string? Address { get; set; }
-}
+//// ========================================
+//public class CreateCompanyCommand : IRequest<CompanyDto>
+//{
+//    public string Name { get; set; } = string.Empty;
+//    public string TaxId { get; set; } = string.Empty;
+//    public int FirmId { get; set; }
+//    public string? ContactPerson { get; set; }
+//    public string? Phone { get; set; }
+//    public string? Email { get; set; }
+//    public string? Address { get; set; }
+//}
 
-// ========================================
-// UPDATE COMPANY COMMAND
-// ========================================
-public class UpdateCompanyCommand : IRequest<CompanyDto>
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string TaxId { get; set; } = string.Empty;
-    public string? ContactPerson { get; set; }
-    public string? Phone { get; set; }
-    public string? Email { get; set; }
-    public string? Address { get; set; }
-}
+//// ========================================
+//// UPDATE COMPANY COMMAND
+//// ========================================
+//public class UpdateCompanyCommand : IRequest<CompanyDto>
+//{
+//    public int Id { get; set; }
+//    public string Name { get; set; } = string.Empty;
+//    public string TaxId { get; set; } = string.Empty;
+//    public string? ContactPerson { get; set; }
+//    public string? Phone { get; set; }
+//    public string? Email { get; set; }
+//    public string? Address { get; set; }
+//}
 
-// ========================================
-// DELETE COMPANY COMMAND
-// ========================================
-public class DeleteCompanyCommand : IRequest<Unit>
-{
-    public int Id { get; set; }
+//// ========================================
+//// DELETE COMPANY COMMAND
+//// ========================================
+//public class DeleteCompanyCommand : IRequest<Unit>
+//{
+//    public int Id { get; set; }
 
-    public DeleteCompanyCommand(int id)
-    {
-        Id = id;
-    }
-}
+//    public DeleteCompanyCommand(int id)
+//    {
+//        Id = id;
+//    }
+//}

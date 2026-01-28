@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { WorkerDto } from '../../models/worker';
 
 @Component({
   selector: 'app-workers-list',
@@ -19,9 +20,10 @@ export class WorkersListComponent implements OnInit {
   workers: WorkerInfoDto[] = [];
   isLoading = false;
   errorMessage = '';
+  selectedWorker: WorkerInfoDto | null = null;
 
   constructor(private WorkerService: WorkerService,   private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
 
   ) {}
 
@@ -56,9 +58,19 @@ export class WorkersListComponent implements OnInit {
     this.router.navigate(['/workers', worker.id, 'edit']);
   }
   
-  viewWorker(worker: any) {
-    // אופציונלי – אם יש דף צפייה
-    this.router.navigate(['/workers', worker.id]);
+  // viewWorker(worker: any) {
+  //   // אופציונלי – אם יש דף צפייה
+  //   this.router.navigate(['/workers', worker.id]);
+  // }
+  viewWorker(worker: WorkerInfoDto): void {
+    this.selectedWorker= worker;
+    
+   
+  }
+
+  // ⭐ סגירת המודל
+  closeModal(): void {
+    this.selectedWorker = null;
   }
   // deleteWorker(employeeId: number) {
   //   // שואל את המשתמש לפני מחיקה
