@@ -8,9 +8,12 @@ import { CompanyCreateComponent } from '../components/company-create/company-cre
 import { CompanyTasksComponent } from '../components/company-tasks/company-tasks';
 import { WorkersListComponent } from '../components/workers-list-component/workers-list-component.component';
 import { WorkerFormComponent } from '../components/add-worker/add-worker.component';
+import { ManagementComponent } from './components/management/management.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'התחברות' },  // ⬅️ דף התחברות
   { path: 'home', component: HomeComponent, title: 'דף הבית' },  // ⬅️ דף הבית
+  { path: 'management', component: ManagementComponent, title: 'פאנל ניהול' },  // ⬅️ דף ניהול
    {path:'workers',component:WorkersListComponent,title:'רשימת עובדים'}, // ⬅️ דף רשימת עובדים
    { path: 'workers', component: WorkersListComponent, title:'רשימת עובדים' },
    { path: 'workers/create', component: WorkerFormComponent, title: 'הוספת עובד' },

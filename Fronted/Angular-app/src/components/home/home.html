@@ -27,7 +27,18 @@
 
   <!-- Menu Cards -->
   <div class="menu-grid">
-    
+ <div class="menu-card management-card"
+         *ngIf="auth.isAdmin()"
+         (click)="navigateToManagement()">
+      <svg class="card-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>פאנל ניהול</h3>
+      <p>ניהול מערכת מלא - חברות, עובדים ועוד</p>
+      <button class="card-button">כניסה ←</button>
+    </div>
     <!-- כרטיס 1: חברות לפי עובדת -->
     <div class="menu-card" (click)="navigateToWorkerCompanies()">
       <h3>חברות</h3>
@@ -35,38 +46,22 @@
       <button class="card-button">כניסה ←</button>
     </div>
 
-    <!-- כרטיס 2: דוחות -->
+    <!-- כרטיס 2: משימות -->
+    <div class="menu-card" (click)="navigateToTaskCompanies()">
+      <h3>משימות</h3>
+      <p>המשימות שלי</p>
+      <button class="card-button">כניסה ←</button>
+    </div>
+
+    <!-- כרטיס 3: דוחות -->
     <div class="menu-card" (click)="navigateToReports()">
       <h3>דיווחים</h3>
       <p>ניהול ומעקב אחר כל הדיווחים</p>
       <button class="card-button">כניסה ←</button>
     </div>
 
-    <div class="menu-card" 
-    *ngIf="auth.isAdmin()" (click)="navigateToCompany()">
-      <h3>חברות</h3>
-      <p>ניהול ומעקב אחר כל החברות</p>
-      <button class="card-button">כניסה ←</button>
-    </div>
-    <div class="menu-card" 
-    *ngIf="auth.isAdmin()" (click)="navigateToWorker()">
-      <h3>עובדים</h3>
-      <p>ניהול ומעקב אחר כל העובדים</p>
-      <button class="card-button">כניסה ←</button>
-    </div>
-    <!-- כרטיס 3: משימה עתידית -->
-    <div class="menu-card disabled">
-      <h3>סטטיסטיקות</h3>
-      <p>בקרוב...</p>
-      <button class="card-button" disabled>בקרוב</button>
-    </div>
-
-    <!-- כרטיס 4: משימה עתידית -->
-    <div class="menu-card disabled">
-      <h3>הגדרות</h3>
-      <p>בקרוב...</p>
-      <button class="card-button" disabled>בקרוב</button>
-    </div>
+    <!-- כרטיס 4: ניהול - רק למנהלים -->
+   
 
   </div>
 

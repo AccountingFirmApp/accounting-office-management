@@ -111,7 +111,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CompanyDto, CreateCompanyCommand, UpdateCompanyCommand } from '../models/Company';
-import { TaskDto } from '../models/task';
+import { TaskcompanyDto } from '../models/taskcompany';
 import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
@@ -149,9 +149,9 @@ export class CompanyService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  getTasksByCompanyId(companyId: number): Observable<TaskDto[]> {
+  getTasksByCompanyId(companyId: number): Observable<TaskcompanyDto[]> {
     const url = `${this.apiUrl}/${companyId}/tasks`;
-    return this.http.get<TaskDto[]>(url);
+    return this.http.get<TaskcompanyDto[]>(url);
   }
 
   // ← הפונקציה החדשה!

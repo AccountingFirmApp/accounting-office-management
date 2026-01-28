@@ -150,15 +150,16 @@
           *ngIf="auth.isAdmin()"
            (click)="editCompany(company.id)" class="btn-edit">ערוך</button>
 
-          <button 
+          <!-- <button 
           *ngIf="auth.isAdmin()"
-          (click)="deleteCompany(company.id)" class="btn-delete">מחק</button>
+          (click)="deleteCompany(company.id)" class="btn-delete">מחק</button> -->
         </td>
       </tr>
     </tbody>
   </table>
 <br>
   <button 
+  *ngIf="auth.isAdmin()"
   (click)="addCompany()" class="btn-delete">הוספת חברה +</button>  
   <div *ngIf="!loading && companies.length === 0" class="no-data">
     אין חברות להצגה

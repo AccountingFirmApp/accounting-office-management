@@ -96,17 +96,29 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
         _mapper = mapper;
     }
 
-    public Task<List<CompanyWithPendingReportsDto>> Handle(GetCompaniesByFirmIdQueryWithReport request, CancellationToken cancellationToken)
+    public async Task<List<CompanyWithPendingReportsDto>> Handle(GetCompaniesByFirmIdQueryWithReport request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var companies = await _unitOfWork.Companies.GetCompaniesByFirmIdAsync(request.FirmId);
+
+        // המרה ל־DTO מתאים
+        var result = companies.Select(c => new CompanyWithPendingReportsDto
+        {
+            Id = c.Id,
+            Name = c.Name,
+            PendingReportsCount = c.Companyreportconfigs.Count(r => /* תנאי לדוחות ממתינים */ true)
+        }).ToList();
+
+        return result;
     }
 
+}
+
+// ========================================
+// CREATE COMPANY COMMAND HANDLER
+// ========================================
 
 
-    // ========================================
-    // CREATE COMPANY COMMAND HANDLER
-    // ========================================
-    public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
+public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -203,7 +215,7 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
             return Unit.Value;
         }
     }
-}
+
 public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
