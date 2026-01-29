@@ -118,103 +118,103 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
 // ========================================
 
 
-public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+//public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
+//    {
+//        private readonly IUnitOfWork _unitOfWork;
+//        private readonly IMapper _mapper;
 
-        public CreateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+//        public CreateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+//        {
+//            _unitOfWork = unitOfWork;
+//            _mapper = mapper;
+//        }
 
-        public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
-        {
-            var company = new Company
-            {
-                Name = request.Name,
-                Taxid = request.TaxId,
-                Firmid = request.FirmId,
-                //Companycontacts = request.ContactPerson,
-                Phone = request.Phone,
-                Email = request.Email,
-                Address = request.Address,
-                Createdat = DateTime.UtcNow
-            };
+//        public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
+//        {
+//            var company = new Company
+//            {
+//                Name = request.Name,
+//                Taxid = request.TaxId,
+//                Firmid = request.FirmId,
+//                //Companycontacts = request.ContactPerson,
+//                Phone = request.Phone,
+//                Email = request.Email,
+//                Address = request.Address,
+//                Createdat = DateTime.UtcNow
+//            };
 
-            await _unitOfWork.Companies.AddAsync(company);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+//            await _unitOfWork.Companies.AddAsync(company);
+//            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<CompanyDto>(company);
-        }
-    }
+//            return _mapper.Map<CompanyDto>(company);
+//        }
+//    }
 
-    // ========================================
-    // UPDATE COMPANY COMMAND HANDLER
-    // ========================================
-    public class UpdateCompanyCommandHandler : IRequestHandler<UpdateCompanyCommand, CompanyDto>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+//    // ========================================
+//    // UPDATE COMPANY COMMAND HANDLER
+//    // ========================================
+//    public class UpdateCompanyCommandHandler : IRequestHandler<UpdateCompanyCommand, CompanyDto>
+//    {
+//        private readonly IUnitOfWork _unitOfWork;
+//        private readonly IMapper _mapper;
 
-        public UpdateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+//        public UpdateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+//        {
+//            _unitOfWork = unitOfWork;
+//            _mapper = mapper;
+//        }
 
-        public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
-        {
-            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
+//        public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
+//        {
+//            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
 
-            if (company == null)
-            {
-                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
-            }
+//            if (company == null)
+//            {
+//                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
+//            }
 
-            company.Name = request.Name;
-            company.Taxid = request.TaxId;
-            //company.Companycontacts = request.ContactPerson;
-            company.Phone = request.Phone;
-            company.Email = request.Email;
-            company.Address = request.Address;
-            company.Updatedat = DateTime.UtcNow;
+//            company.Name = request.Name;
+//            company.Taxid = request.TaxId;
+//            //company.Companycontacts = request.ContactPerson;
+//            company.Phone = request.Phone;
+//            company.Email = request.Email;
+//            company.Address = request.Address;
+//            company.Updatedat = DateTime.UtcNow;
 
-            await _unitOfWork.Companies.UpdateAsync(company);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+//            await _unitOfWork.Companies.UpdateAsync(company);
+//            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<CompanyDto>(company);
-        }
-    }
+//            return _mapper.Map<CompanyDto>(company);
+//        }
+//    }
 
-    // ========================================
-    // DELETE COMPANY COMMAND HANDLER
-    // ========================================
-    public class DeleteCompanyCommandHandler : IRequestHandler<DeleteCompanyCommand, Unit>
-    {
-        private readonly IUnitOfWork _unitOfWork;
+//    // ========================================
+//    // DELETE COMPANY COMMAND HANDLER
+//    // ========================================
+//    public class DeleteCompanyCommandHandler : IRequestHandler<DeleteCompanyCommand, Unit>
+//    {
+//        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteCompanyCommandHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+//        public DeleteCompanyCommandHandler(IUnitOfWork unitOfWork)
+//        {
+//            _unitOfWork = unitOfWork;
+//        }
 
-        public async Task<Unit> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
-        {
-            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
+//        public async Task<Unit> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
+//        {
+//            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
 
-            if (company == null)
-            {
-                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
-            }
+//            if (company == null)
+//            {
+//                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
+//            }
 
-            await _unitOfWork.Companies.DeleteAsync(request.Id);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+//            await _unitOfWork.Companies.DeleteAsync(request.Id);
+//            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
-        }
-    }
+//            return Unit.Value;
+//        }
+//    }
 
 public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
 {

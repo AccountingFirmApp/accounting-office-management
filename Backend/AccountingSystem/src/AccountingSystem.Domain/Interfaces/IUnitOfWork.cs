@@ -74,14 +74,14 @@ namespace AccountingSystem.Domain.Interfaces
         IAuditLogRepository AuditLogs { get; }
 
         // ========== שמירת שינויים ==========
-        System.Threading.Tasks.Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
         // ========== ניהול טרנזקציות ==========
-        System.Threading.Tasks.Task BeginTransactionAsync();
-        System.Threading.Tasks.Task CommitTransactionAsync();
-        System.Threading.Tasks.Task SaveChangesAsync();
+       Task BeginTransactionAsync();
+       Task CommitTransactionAsync();
+        Task SaveChangesAsync();
 
         // ← הוסף את זה! פונקציה לעדכון סטטוס
-        System.Threading.Tasks.Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
+       Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
     }
 }

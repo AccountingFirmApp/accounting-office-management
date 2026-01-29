@@ -31,7 +31,8 @@ export class CompanyCreateComponent implements OnInit {
       firmId: [null, Validators.required],
       phone: [''],
       email: ['', Validators.email],
-      address: ['']
+      address: [''],
+      isActive: [true]  
     });
   }
 

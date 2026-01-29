@@ -314,9 +314,24 @@ public class GetAllWorkersQueryHandler : IRequestHandler<GetAllWorkersQuery, Lis
     public async Task<List<WorkerDto>> Handle(GetAllWorkersQuery request, CancellationToken cancellationToken)
     {
         var workers = await _unitOfWork.Workers.GetAllAsync();
-        return _mapper.Map<List<WorkerDto>>(workers);
+
+        var workerDtos = workers.Select(w => new WorkerDto
+        {
+            Id = w.Id,
+            FirstName = w.Firstname,
+            LastName = w.Lastname,
+            Email = w.Email,
+            EmployeeId = w.Employeeid,
+            RoleId = w.Roleid,
+            RoleName = w.Role?.Name ?? "לא הוגדר", // ⭐ הוסף את זה!
+            IsActive = w.Isactive ?? true,
+            Phone = w.Phone
+        }).ToList();
+
+        return workerDtos;
     }
 }
+
 
 // ========================================
 // GET WORKER BY ID HANDLER
