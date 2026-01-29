@@ -1,4 +1,4 @@
-ï»¿using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companies;
         }
 
-        // ==================== ×¤×¢×•×œ×•×ª ×‘×¡×™×¡×™×•×ª ====================
+        // ==================== ôòåìåú áñéñéåú ====================
 
         public async Task<Company?> GetByIdAsync(int id)
         {
@@ -68,7 +68,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             return await _dbSet.CountAsync();
         }
 
-        // ==================== ×¤×¢×•×œ×•×ª ×™×™×—×•×“×™×•×ª ×œCompany ====================
+        // ==================== ôòåìåú ééçåãéåú ìCompany ====================
 
         public async Task<Company?> GetCompanyWithContactsAsync(int companyId)
         {
