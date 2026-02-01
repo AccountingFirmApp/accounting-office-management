@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using AccountingSystem.Domain.Entities;
 
-namespace AccountingSystem.Domain.Entities;
-
-
+namespace AccountingSystem.Domain.Entities
+{ 
 public partial class Companyreportconfig
 {
-
     public int Id { get; set; }
 
     public int Companyid { get; set; }
@@ -25,8 +22,14 @@ public partial class Companyreportconfig
 
     public DateTime? Updatedat { get; set; }
 
+    public int Year { get; set; }
+
     public virtual Company Company { get; set; } = null!;
+
     public virtual Frequency Frequency { get; set; } = null!;
+
     public virtual ICollection<Reportinstance> Reportinstances { get; set; } = new List<Reportinstance>();
+
     public virtual Reporttype Reporttype { get; set; } = null!;
+}
 }
