@@ -1,0 +1,104 @@
+<div class="container">
+  <app-back-button [route]="'/management'"></app-back-button>
+<h1 class="h1">הגדרות דיווחים</h1>
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>טוען נתונים...</p>
+  </div>
+
+  <!-- בורר שנה -->
+  <div *ngIf="!loading" class="year-selector">
+    <button class="btn-year-nav" (click)="nextYear()" title="שנה הבאה">→</button>
+    <div class="year-display">
+      <span class="year-text">{{ selectedYear }}</span>
+      <span *ngIf="isReadOnly()" class="read-only-badge">קריאה בלבד</span>
+    </div>
+    <button class="btn-year-nav" (click)="previousYear()" title="שנה קודמת">←</button>
+  </div>
+
+  <div *ngIf="!loading && configs.length === 0" class="empty-state">
+    <p>אין הגדרות דיווחים לשנת {{ selectedYear }}</p>
+    <button *ngIf="!isReadOnly()" class="btn-primary" (click)="navigateToCreate()">
+      יצירת הגדרה ראשונה
+    </button>
+  </div>
+
+  <!-- טבלה מטריצה -->
+  <table *ngIf="!loading && companies.length > 0 && reportTypes.length > 0" class="matrix-table">
+    <thead>
+      <tr>
+        <th class="company-header">חברה</th>
+        <th *ngFor="let reportType of reportTypes" class="report-type-header">
+          {{ reportType.name }}
+          <span class="report-code">({{ reportType.shortCode }})</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let company of companies">
+        <td class="company-cell">{{ company.name }}</td>
+        <td *ngFor="let reportType of reportTypes" class="action-cell">
+          
+          <!-- יש הגדרה פעילה ⭐ -->
+          <ng-container *ngIf="configMatrix[company.id] && configMatrix[company.id][reportType.id] as config">
+            <div class="action-buttons">
+              <button
+                *ngIf="!isReadOnly()"
+                class="btn-edit"
+                (click)="editConfig(config.id)"
+                title="עריכה">
+                ✏️ ערוך
+              </button>
+              <button class="btn-view" (click)="viewConfig(config)" title="הצגה">
+                👁️ הצג
+              </button>
+              <!-- ⭐ כפתור מחיקה -->
+              <button
+                *ngIf="!isReadOnly()"
+                class="btn-delete"
+                (click)="deleteConfig(config.id)"
+                title="מחיקה">
+                🗑️
+              </button>
+            </div>
+          </ng-container>
+
+          <!-- אין הגדרה פעילה ⭐ -->
+          <ng-container *ngIf="!configMatrix[company.id] || !configMatrix[company.id][reportType.id]">
+            
+            <!-- יש הגדרה מחוקה - כפתור שחזור ⭐ -->
+            <div *ngIf="hasDeletedConfig(company.id, reportType.id)" class="deleted-config">
+             <!-- ⭐ שלח את כל 3 הפרמטרים -->
+<button
+  *ngIf="!isReadOnly()"
+  class="btn-restore"
+  (click)="restoreConfig(
+    getDeletedConfig(company.id, reportType.id)!.id,
+    company.name,
+    reportType.name
+  )"
+  title="שחזר הגדרה מחוקה">
+  ↻ שחזר
+</button>
+              <span class="deleted-text">נמחק</span>
+            </div>
+
+            <!-- אין הגדרה בכלל - כפתור הוסף ⭐ -->
+            <div *ngIf="!hasDeletedConfig(company.id, reportType.id)">
+              <button
+                *ngIf="!isReadOnly()"
+                class="btn-add-cell"
+                (click)="addConfig(company.id, reportType.id)"
+                title="הוסף דיווח">
+                ➕ הוסף
+              </button>
+              <span *ngIf="isReadOnly()" class="no-config-text">-</span>
+            </div>
+
+          </ng-container>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

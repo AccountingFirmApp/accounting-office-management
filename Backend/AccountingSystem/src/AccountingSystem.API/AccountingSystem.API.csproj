@@ -1,24 +1,32 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<!-- Project References - API מכיר את כל השכבות -->
+	<ItemGroup>
+		<ProjectReference Include="..\AccountingSystem.Domain\AccountingSystem.Domain.csproj" />
+		<ProjectReference Include="..\AccountingSystem.Application\AccountingSystem.Application.csproj" />
+		<ProjectReference Include="..\AccountingSystem.Infrastructure\AccountingSystem.Infrastructure.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
-  </ItemGroup>
+	<!-- API/Web Packages -->
+	<ItemGroup>
+		<!-- Swagger/OpenAPI -->
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
 
-  <ItemGroup>
-    <ProjectReference Include="..\AccountingSystem.Domain\AccountingSystem.Domain.csproj" />
-    <ProjectReference Include="..\AccountingSystem.Application\AccountingSystem.Application.csproj" />
-    <ProjectReference Include="..\AccountingSystem.Infrastructure\AccountingSystem.Infrastructure.csproj" />
-  </ItemGroup>
+		<!-- Authentication (הגדרה ב-API, מימוש ב-Infrastructure) -->
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0" />
 
+		<!-- EF Core Design (למיגרציות מה-API) -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 </Project>
+

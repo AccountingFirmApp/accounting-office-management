@@ -1,0 +1,58 @@
+<div class="worker-form-container">
+  <h2 class="form-title">
+    {{ isEditMode ? 'עריכת עובד' : 'הוספת עובד חדש' }}
+  </h2>
+
+  <form [formGroup]="workerForm" (ngSubmit)="onSubmit()" class="worker-form">
+
+    <div class="form-group">
+      <label>שם פרטי</label>
+      <input formControlName="firstName" type="text" placeholder="הזן שם פרטי" />
+    </div>
+
+    <div class="form-group">
+      <label>שם משפחה</label>
+      <input formControlName="lastName" type="text" placeholder="הזן שם משפחה" />
+    </div>
+
+    <div class="form-group">
+      <label>אימייל</label>
+      <input formControlName="email" type="email" placeholder="example@email.com" />
+    </div>
+    <div class="form-group">
+      <label>סיסמה</label>
+      <input formControlName="PasswordHash" type="text" placeholder="123456789" />
+    </div>
+
+    <div class="form-group">
+      <label>תפקיד</label>
+      <select formControlName="roleId">
+        <option value="">בחר תפקיד</option>
+        <option *ngFor="let role of roles" [value]="role.id">
+          {{ role.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>מספר חברה</label>
+      <input formControlName="firmId" type="number" placeholder="מספר חברה" />
+    </div>
+
+    <div class="form-group checkbox">
+      <label>
+        <input type="checkbox" formControlName="isActive" />
+        עובד פעיל
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="workerForm.invalid" class="primary-btn">
+        {{ isEditMode ? 'שמור שינויים' : 'יצירת עובד' }}
+      </button>
+
+      <app-back-button [route]="'/workers'"></app-back-button>
+    </div>
+
+  </form>
+</div>

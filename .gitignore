@@ -1,18 +1,59 @@
-nul 
-Fronted/Angular-app/nul 
-# Build results
+# ==========================
+# Build directories
+# ==========================
 [Bb]in/
 [Oo]bj/
 [Dd]ebug/
 [Rr]elease/
+[Dd]ebugPublic/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
 
+# ==========================
 # Visual Studio files
+# ==========================
+.vs/
 *.user
 *.suo
 *.userosscache
-*.sln.docstates
+*.sln.docstates.json
 
-# Build artifacts
+# ==========================
+# Logs
+# ==========================
+[Ll]og/
+[Ll]ogs/
+
+# ==========================
+# NuGet
+# ==========================
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# ==========================
+# Rider
+# ==========================
+.idea/
+*.sln.iml
+
+# ==========================
+# VS Code
+# ==========================
+.vscode/
+
+# ==========================
+# Misc
+# ==========================
 *.dll
 *.exe
 *.pdb
+Fronted/Angular-app/nul

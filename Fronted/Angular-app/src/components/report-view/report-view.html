@@ -1,0 +1,136 @@
+ <div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        
+        <!-- Header -->
+        <div class="modal-header">
+          <h2>פרטי דוח מלאים</h2>
+          <button class="close-btn" (click)="close()">×</button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body" *ngIf="report">
+          
+          <!-- חברה ודיווח -->
+          <div class="section">
+            <h3>פרטי הדיווח</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">חברה:</span>
+                <span class="value strong">{{ report.companyName }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">ח.פ / ע.מ:</span>
+                <span class="value">{{ report.companyTaxId || '-' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">סוג דיווח:</span>
+                <span class="value">{{ report.reportTypeName }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">קוד:</span>
+                <span class="value">{{ report.reportTypeShortCode || '-' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- תקופה וסטטוס -->
+          <div class="section">
+            <h3>תקופה וסטטוס</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">תקופה:</span>
+                <span class="value strong">{{ formatPeriod(report.period) }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">סטטוס:</span>
+                <span class="status-badge" [class]="getStatusClass(report.status)">
+                  {{ getStatusLabel(report.status) }}
+                </span>
+              </div>
+              <div class="info-item" *ngIf="report.frequencyName">
+                <span class="label">תדירות:</span>
+                <span class="value">{{ report.frequencyName }}</span>
+              </div>
+              <div class="info-item" *ngIf="report.dayOfMonth">
+                <span class="label">יום בחודש:</span>
+                <span class="value">{{ report.dayOfMonth }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- סכומים ותשלום -->
+          <div class="section" *ngIf="report.amount || report.paymentMethod">
+            <h3>פרטי תשלום</h3>
+            <div class="info-grid">
+              <div class="info-item" *ngIf="report.amount">
+                <span class="label">סכום:</span>
+                <span class="value amount">{{ formatAmount(report.amount) }}</span>
+              </div>
+              <div class="info-item" *ngIf="report.paymentMethod">
+                <span class="label">אמצעי תשלום:</span>
+                <span class="value">{{ getPaymentMethodLabel(report.paymentMethod) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- תאריכים -->
+          <div class="section">
+            <h3>תאריכים חשובים</h3>
+            <div class="info-grid">
+              <div class="info-item" *ngIf="report.receiptDate">
+                <span class="label">תאריך קבלת חומרים:</span>
+                <span class="value">{{ formatDate(report.receiptDate) }}</span>
+              </div>
+              <div class="info-item" *ngIf="report.reportedDate">
+                <span class="label">תאריך דיווח:</span>
+                <span class="value">{{ formatDate(report.reportedDate) }}</span>
+              </div>
+              <div class="info-item" *ngIf="report.paidDate">
+                <span class="label">תאריך תשלום:</span>
+                <span class="value">{{ formatDate(report.paidDate) }}</span>
+              </div>
+              <div class="info-item" *ngIf="isOverdue()">
+                <span class="label overdue">איחור:</span>
+                <span class="value overdue">{{ getDaysOverdue() }} ימים</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- הערות -->
+          <div class="section" *ngIf="report.comments">
+            <h3>הערות</h3>
+            <div class="comments-box">
+              {{ report.comments }}
+            </div>
+          </div>
+
+          <!-- מטא-דאטה -->
+          <div class="section metadata">
+            <div class="info-grid">
+              <div class="info-item" *ngIf="report.createdAt">
+                <span class="label">נוצר בתאריך:</span>
+                <span class="value small">{{ formatDateTime(report.createdAt) }}</span>
+              </div>
+              <div class="info-item" *ngIf="report.updatedAt">
+                <span class="label">עודכן בתאריך:</span>
+                <span class="value small">{{ formatDateTime(report.updatedAt) }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="close()">
+            סגור
+          </button>
+          <button class="btn-primary" (click)="editReport()">
+            עריכה
+          </button>
+        </div>
+
+      </div>
+    </div>
+  
+ 

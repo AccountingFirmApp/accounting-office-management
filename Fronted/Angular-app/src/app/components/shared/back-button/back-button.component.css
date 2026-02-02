@@ -1,0 +1,35 @@
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  direction: rtl;
+}
+
+.back-button:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateX(-2px);
+}
+
+.back-button:active {
+  transform: translateX(-1px);
+}
+
+.back-button svg {
+  flex-shrink: 0;
+  transform: scaleX(-1);
+}
+
+.back-button span {
+  line-height: 1;
+}
