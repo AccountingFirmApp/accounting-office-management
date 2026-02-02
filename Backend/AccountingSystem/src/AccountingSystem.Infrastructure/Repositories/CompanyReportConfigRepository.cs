@@ -1,4 +1,4 @@
-ο»Ώusing AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    public class CompanyReportConfigRepository : ICompanyReportConfigRepository
+    public class CompanyReportConfigRepository : ICompanyreportconfigRepository
     {
         private readonly AccountingDbContext _context;
         private readonly DbSet<Companyreportconfig> _dbSet;
@@ -21,7 +21,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companyreportconfigs;
         }
 
-        // ==================== Χ¤ΧΆΧ•ΧΧ•Χª Χ‘Χ΅Χ™Χ΅Χ™Χ•Χª ====================
+        // ==================== τςεμεϊ αριριεϊ ====================
 
         public async Task<Companyreportconfig?> GetByIdAsync(int id)
         {
@@ -34,11 +34,12 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Companyreportconfig>> GetAllAsync()
         {
-            return await _dbSet
+            var res= await _dbSet
                 .Include(c => c.Company)
                 .Include(c => c.Reporttype)
                 .Include(c => c.Frequency)
                 .ToListAsync();
+            return res;
         }
 
         public async Task<IEnumerable<Companyreportconfig>> FindAsync(Expression<Func<Companyreportconfig, bool>> predicate)
@@ -53,6 +54,8 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public async Task AddAsync(Companyreportconfig entity)
         {
+            Console.WriteLine(entity.Year);
+
             await _dbSet.AddAsync(entity);
         }
 
@@ -77,10 +80,10 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
      
-        // ==================== Χ¤ΧΆΧ•ΧΧ•Χª Χ™Χ™Χ—Χ•Χ“Χ™Χ•Χª ====================
+        // ==================== τςεμεϊ ιιηεγιεϊ ====================
 
         /// <summary>
-        /// Χ§Χ‘ΧΧª Χ›Χ Χ”Χ”Χ’Χ“Χ¨Χ•Χª Χ©Χ Χ—Χ‘Χ¨Χ” ΧΧ΅Χ•Χ™ΧΧª
+        /// χαμϊ λμ δδβγψεϊ ωμ ηαψδ ξρειξϊ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId)
         {
@@ -94,7 +97,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Χ§Χ‘ΧΧª Χ›Χ Χ”Χ”Χ’Χ“Χ¨Χ•Χª Χ”Χ¤ΧΆΧ™ΧΧ•Χª Χ‘ΧΧ‘Χ“
+        /// χαμϊ λμ δδβγψεϊ δτςιμεϊ αμαγ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync()
         {
@@ -107,7 +110,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Χ§Χ‘ΧΧª Χ”Χ’Χ“Χ¨Χ•Χª Χ¤ΧΆΧ™ΧΧ•Χª ΧΧ¤Χ™ Χ—Χ‘Χ¨Χ”
+        /// χαμϊ δβγψεϊ τςιμεϊ μτι ηαψδ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsByCompanyIdAsync(int companyId)
         {
@@ -120,7 +123,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Χ§Χ‘ΧΧª Χ”Χ’Χ“Χ¨Χ•Χª ΧΧ¤Χ™ Χ΅Χ•Χ’ Χ“Χ™Χ•Χ•Χ—
+        /// χαμϊ δβγψεϊ μτι ρεβ γιεεη
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByReportTypeIdAsync(int reportTypeId)
         {
@@ -133,7 +136,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Χ§Χ‘ΧΧª Χ”Χ’Χ“Χ¨Χ•Χª ΧΧ¤Χ™ ΧªΧ“Χ™Χ¨Χ•Χª
+        /// χαμϊ δβγψεϊ μτι ϊγιψεϊ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByFrequencyIdAsync(int frequencyId)
         {
@@ -146,7 +149,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Χ‘Χ“Χ™Χ§Χ” ΧΧ Χ§Χ™Χ™ΧΧª Χ›Χ‘Χ¨ Χ”Χ’Χ“Χ¨Χ” ΧΧ—Χ‘Χ¨Χ” Χ•ΧΧ΅Χ•Χ’ Χ“Χ™Χ•Χ•Χ— ΧΧ΅Χ•Χ™Χ
+        /// αγιχδ ΰν χιιξϊ λαψ δβγψδ μηαψδ εμρεβ γιεεη ξρειν
         /// </summary>
         public async Task<bool> ConfigExistsAsync(int companyId, int reportTypeId)
         {
@@ -155,7 +158,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Χ§Χ‘ΧΧª Χ”Χ’Χ“Χ¨Χ” Χ΅Χ¤Χ¦Χ™Χ¤Χ™Χª ΧΧ—Χ‘Χ¨Χ” Χ•Χ΅Χ•Χ’ Χ“Χ™Χ•Χ•Χ—
+        /// χαμϊ δβγψδ ρτφιτιϊ μηαψδ ερεβ γιεεη
         /// </summary>
         public async Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId)
         {
@@ -174,12 +177,30 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public Task<int> CountAsync(Func<object, bool> value)
         {
-            throw new NotImplementedException();
+            return _dbSet.CountAsync();
+
         }
 
-        public Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                           .Where(c => c.Companyid == companyId)
+                           .Include(c => c.Company)
+                           .Include(c => c.Reporttype)
+                           .Include(c => c.Frequency)
+                           .OrderBy(c => c.Reporttype.Name)
+                           .ToListAsync();
+        }
+
+        public async Task<Companyreportconfig?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _dbSet
+                .Include(c => c.Company)
+                .Include(c => c.Reporttype)
+                .Include(c => c.Frequency)
+                .Include(c => c.Reportinstances)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
     }
+
 }

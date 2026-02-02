@@ -1,6 +1,7 @@
 ﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +35,10 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public async Task<bool> ExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await context.Frequencies.AnyAsync(c => c.Id == id);
+
         }
 
         public Task<IEnumerable<Frequency>> FindAsync(Expression<Func<Frequency, bool>> predicate)
@@ -49,9 +51,10 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Frequency?> GetByIdAsync(int id)
+        public async Task<Frequency?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await context.Frequencies.FirstOrDefaultAsync(c => c.Id == id);
+
         }
 
         public Task<Frequency?> GetByNameAsync(string name)

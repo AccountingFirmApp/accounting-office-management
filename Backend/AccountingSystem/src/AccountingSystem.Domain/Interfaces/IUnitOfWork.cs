@@ -66,7 +66,7 @@ namespace AccountingSystem.Domain.Interfaces
         ICompanyWorkerRepository CompanyWorkers { get; }
         IReportTypeRepository ReportTypes { get; }
         IFrequencyRepository Frequencies { get; }
-        ICompanyReportConfigRepository CompanyReportConfigs { get; }
+        ICompanyreportconfigRepository CompanyReportConfigs { get; }  
         IReportInstanceRepository ReportInstances { get; }
         ITaskTypeRepository TaskTypes { get; }
         ICompanyTaskRepository Tasks { get; }

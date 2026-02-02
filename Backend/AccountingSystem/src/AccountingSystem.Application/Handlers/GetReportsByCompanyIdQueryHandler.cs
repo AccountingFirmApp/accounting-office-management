@@ -1,4 +1,4 @@
-ο»Ώ
+
 using MediatR;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries;
@@ -28,17 +28,17 @@ namespace AccountingSystem.Application.Handlers
         {
             var reports = await _reportInstanceRepository.GetAllAsync();
 
-            // Χ΅Χ™Χ Χ•Χ ΧΧ¤Χ™ Χ—Χ‘Χ¨Χ”
+            // ριπεο μτι ηαψδ
             var filteredReports = reports
                 .Where(r => r.Config != null && r.Config.Companyid == request.CompanyId);
 
-            // Χ΅Χ™Χ Χ•Χ ΧΧ¤Χ™ Χ΅ΧΧΧ•Χ΅
+            // ριπεο μτι ρθθερ
             if (!string.IsNullOrEmpty(request.Status))
             {
                 filteredReports = filteredReports.Where(r => r.Status.ToString() == request.Status);
             }
 
-            // Χ΅Χ™Χ Χ•Χ ΧΧ¤Χ™ ΧªΧ§Χ•Χ¤Χ”
+            // ριπεο μτι ϊχετδ
             if (request.FromPeriod.HasValue)
             {
                 var fromDateOnly = DateOnly.FromDateTime(request.FromPeriod.Value);
@@ -51,10 +51,10 @@ namespace AccountingSystem.Application.Handlers
                 filteredReports = filteredReports.Where(r => r.Period <= toDateOnly);
             }
 
-            // Χ”ΧΧ¨Χ” Χ-DTO - β… ΧΧΧ null propagation operator
+            // δξψδ μ-DTO - ? μμΰ null propagation operator
             var result = filteredReports
                 .OrderByDescending(r => r.Period)
-                .ToList() // β… Χ§Χ•Χ“Χ ΧΧ‘Χ™ΧΧ™Χ ΧΧª Χ”Χ ΧªΧ•Χ Χ™Χ ΧΧ”-DB
+                .ToList() // ? χεγν ξαιΰιν ΰϊ δπϊεπιν ξδ-DB
                 .Select(r => new ReportInstanceDetailDto
                 {
                     Id = r.Id,
@@ -111,7 +111,7 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return null;
 
-            // β… Χ‘Χ Χ™Χ™Χª DTO Χ™Χ©Χ™Χ¨Χ•Χª Χ‘-memory (ΧΧ Χ‘ΧªΧ•Χ LINQ query)
+            // ? απιιϊ DTO ιωιψεϊ α-memory (μΰ αϊεκ LINQ query)
             return new ReportInstanceDetailDto
             {
                 Id = report.Id,
@@ -165,23 +165,23 @@ namespace AccountingSystem.Application.Handlers
             var today = DateOnly.FromDateTime(DateTime.Now);
             var futureDate = today.AddDays(request.DaysAhead);
 
-            // Χ΅Χ™Χ Χ•Χ
+            // ριπεο
             var upcomingReports = allReports
                 .Where(r =>
                     (r.Status == ReportStatus.Pending || r.Status == ReportStatus.Reported) &&
                     r.Period <= futureDate);
 
-            // Χ΅Χ™Χ Χ•Χ ΧΧ¤Χ™ Χ—Χ‘Χ¨Χ”
+            // ριπεο μτι ηαψδ
             if (request.CompanyId.HasValue)
             {
                 upcomingReports = upcomingReports
                     .Where(r => r.Config.Companyid == request.CompanyId.Value);
             }
 
-            // β… Χ§Χ•Χ“Χ ΧΧ‘Χ™ΧΧ™Χ ΧΧª Χ”Χ ΧªΧ•Χ Χ™Χ, ΧΧ—Χ¨ Χ›Χ ΧΆΧ•Χ©Χ™Χ Select
+            // ? χεγν ξαιΰιν ΰϊ δπϊεπιν, ΰηψ λκ ςεωιν Select
             var result = upcomingReports
                 .OrderBy(r => r.Period)
-                .ToList() // β… ΧΧ”Χ‘Χ™Χ ΧΧ”-DB
+                .ToList() // ? μδαιΰ ξδ-DB
                 .Select(r => new UpcomingReportDto
                 {
                     Id = r.Id,
@@ -200,7 +200,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 1: Χ§Χ‘ΧΧª Χ›Χ Χ”Χ“Χ™Χ•Χ•Χ—Χ™Χ ==========
+    // ========== Handler 1: χαμϊ λμ δγιεεηιν ==========
 
     //public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
     //{
@@ -242,17 +242,17 @@ namespace AccountingSystem.Application.Handlers
             GetAllReportsQuery request,
             CancellationToken cancellationToken)
         {
-            // Χ§Χ‘ΧΧª Χ›Χ Χ”Χ“Χ•Χ—Χ•Χª
+            // χαμϊ λμ δγεηεϊ
             var reports = await _repository.GetAllAsync();
 
-            // π”¥ ΧΧ Χ™Χ© WorkerId - ΧΧ΅Χ Χ Χ™Χ Χ¨Χ§ ΧΧ—Χ‘Χ¨Χ•Χª Χ©Χ Χ”ΧΆΧ•Χ‘Χ“Χª Χ”Χ–Χ•
+            // ?? ΰν ιω WorkerId - ξρππιν ψχ μηαψεϊ ωμ δςεαγϊ δζε
             if (request.WorkerId.HasValue)
             {
-                // Χ§Χ‘ΧΧª Χ›Χ Χ”Χ—Χ‘Χ¨Χ•Χª Χ©Χ Χ”ΧΆΧ•Χ‘Χ“Χª
+                // χαμϊ λμ δηαψεϊ ωμ δςεαγϊ
                 var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
                 var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
 
-                // Χ΅Χ™Χ Χ•Χ Χ”Χ“Χ•Χ—Χ•Χª Χ¨Χ§ ΧΧ—Χ‘Χ¨Χ•Χª Χ”ΧΧΧ”
+                // ριπεο δγεηεϊ ψχ μηαψεϊ δΰμδ
                 reports = reports
                     .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
                     .ToList();
@@ -263,7 +263,7 @@ namespace AccountingSystem.Application.Handlers
     }
 }
 
-    // ========== Handler 2: Χ“Χ™Χ•Χ•Χ—Χ™Χ ΧΧ¤Χ™ Config ==========
+    // ========== Handler 2: γιεεηιν μτι Config ==========
 
     public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
     {
@@ -283,7 +283,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 3: Χ“Χ™Χ•Χ•Χ—Χ™Χ ΧΧ¤Χ™ Χ΅ΧΧΧ•Χ΅ ==========
+    // ========== Handler 3: γιεεηιν μτι ρθθερ ==========
 
     public class GetReportsByStatusQueryHandler : IRequestHandler<GetReportsByStatusQuery, List<ReportInstanceDetailDto>>
     {
@@ -303,7 +303,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 4: Χ“Χ™Χ•Χ•Χ—Χ™Χ ΧΧΧªΧ™Χ Χ™Χ ==========
+    // ========== Handler 4: γιεεηιν ξξϊιπιν ==========
 
     public class GetPendingReportsQueryHandler : IRequestHandler<GetPendingReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -323,7 +323,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 5: Χ“Χ™Χ•Χ•Χ—Χ™Χ ΧΧ¤Χ™ ΧªΧ§Χ•Χ¤Χ” ==========
+    // ========== Handler 5: γιεεηιν μτι ϊχετδ ==========
 
     public class GetReportsByPeriodQueryHandler : IRequestHandler<GetReportsByPeriodQuery, List<ReportInstanceDetailDto>>
     {
@@ -343,7 +343,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 6: Χ“Χ™Χ•Χ•Χ—Χ™Χ Χ‘ΧΧ•Χ•Χ— ΧªΧΧ¨Χ™Χ›Χ™Χ ==========
+    // ========== Handler 6: γιεεηιν αθεεη ϊΰψιλιν ==========
 
     public class GetReportsByDateRangeQueryHandler : IRequestHandler<GetReportsByDateRangeQuery, List<ReportInstanceDetailDto>>
     {
@@ -363,7 +363,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 7: Χ“Χ™Χ•Χ•Χ—Χ™Χ Χ‘ΧΧ™Χ—Χ•Χ¨ (OVERDUE) ==========
+    // ========== Handler 7: γιεεηιν αΰιηεψ (OVERDUE) ==========
 
     public class GetOverdueReportsQueryHandler : IRequestHandler<GetOverdueReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -383,7 +383,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 8: Χ“Χ™Χ•Χ•Χ—Χ™Χ Χ©ΧΧ’Χ™ΧΆΧ™Χ Χ‘Χ§Χ¨Χ•Χ‘ ==========
+    // ========== Handler 8: γιεεηιν ωξβιςιν αχψεα ==========
 
     public class GetReportsDueInNextDaysQueryHandler : IRequestHandler<GetReportsDueInNextDaysQuery, List<ReportInstanceDetailDto>>
     {
@@ -449,10 +449,10 @@ namespace AccountingSystem.Application.Handlers
 
         public class GetAllConfigsQueryHandler : IRequestHandler<GetAllConfigsQuery, List<CompanyReportConfigDto>>
         {
-            private readonly ICompanyReportConfigRepository _repository;
+            private readonly ICompanyreportconfigRepository _repository;
             private readonly IMapper _mapper;
 
-            public GetAllConfigsQueryHandler(ICompanyReportConfigRepository repository, IMapper mapper)
+            public GetAllConfigsQueryHandler(ICompanyreportconfigRepository repository, IMapper mapper)
             {
                 _repository = repository;
                 _mapper = mapper;
@@ -472,16 +472,17 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive ?? true
+                    IsActive = c.Isactive ?? true,
+                    Year=c.Year
                 }).ToList();
             }
         }
 
         public class GetConfigsByCompanyIdQueryHandler : IRequestHandler<GetConfigsByCompanyIdQuery, List<CompanyReportConfigDto>>
         {
-            private readonly ICompanyReportConfigRepository _repository;
+            private readonly ICompanyreportconfigRepository _repository;
 
-            public GetConfigsByCompanyIdQueryHandler(ICompanyReportConfigRepository repository)
+            public GetConfigsByCompanyIdQueryHandler(ICompanyreportconfigRepository repository)
             {
                 _repository = repository;
             }
@@ -507,9 +508,9 @@ namespace AccountingSystem.Application.Handlers
 
         public class GetConfigByIdQueryHandler : IRequestHandler<GetConfigByIdQuery, CompanyReportConfigDto?>
         {
-            private readonly ICompanyReportConfigRepository _repository;
+            private readonly ICompanyreportconfigRepository _repository;
 
-            public GetConfigByIdQueryHandler(ICompanyReportConfigRepository repository)
+            public GetConfigByIdQueryHandler(ICompanyreportconfigRepository repository)
             {
                 _repository = repository;
             }
