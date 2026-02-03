@@ -32,6 +32,10 @@ export class CompanyReportConfigListComponent implements OnInit {
   selectedYear: number;
   currentYear: number;
 
+  // Modal להצגת פרטי דיווח
+  isModalOpen: boolean = false;
+  selectedConfig: CompanyReportConfigDto | null = null;
+
   constructor(
     private configService: CompanyReportConfigService,
     private router: Router,
@@ -336,18 +340,13 @@ export class CompanyReportConfigListComponent implements OnInit {
   }
 
   viewConfig(config: CompanyReportConfigDto): void {
-    const details = `
-📋 פרטי הגדרת דיווח:
-━━━━━━━━━━━━━━━━━━━━
-🏢 חברה: ${config.companyName}
-📊 סוג דיווח: ${config.reportTypeName} (${config.reportTypeShortCode})
-🔄 תדירות: ${config.frequencyName}
-📅 יום בחודש: ${config.dayOfMonth || 'לא מוגדר'}
-📆 שנה: ${config.year}
-✅ סטטוס: ${config.isActive ? 'פעיל' : 'לא פעיל'}
-    `.trim();
+    this.selectedConfig = config;
+    this.isModalOpen = true;
+  }
 
-    alert(details);
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedConfig = null;
   }
 
   previousYear(): void {

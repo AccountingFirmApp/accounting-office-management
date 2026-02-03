@@ -47,7 +47,7 @@
                 class="btn-edit"
                 (click)="editConfig(config.id)"
                 title="עריכה">
-                ✏️ ערוך
+                ערוך
               </button>
               <button class="btn-view" (click)="viewConfig(config)" title="הצגה">
                 👁️ הצג
@@ -58,7 +58,7 @@
                 class="btn-delete"
                 (click)="deleteConfig(config.id)"
                 title="מחיקה">
-                🗑️
+                מחק
               </button>
             </div>
           </ng-container>
@@ -78,7 +78,7 @@
     reportType.name
   )"
   title="שחזר הגדרה מחוקה">
-  ↻ שחזר
+  שחזר
 </button>
               <span class="deleted-text">נמחק</span>
             </div>
@@ -90,7 +90,7 @@
                 class="btn-add-cell"
                 (click)="addConfig(company.id, reportType.id)"
                 title="הוסף דיווח">
-                ➕ הוסף
+                + הוסף
               </button>
               <span *ngIf="isReadOnly()" class="no-config-text">-</span>
             </div>
@@ -101,4 +101,66 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- Modal להצגת פרטי דיווח - עיצוב 2026 -->
+  <div *ngIf="isModalOpen" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <!-- כותרת המודאל -->
+      <div class="modal-header">
+        <h2 class="modal-title">פרטי הגדרת דיווח</h2>
+        <button class="modal-close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <!-- תוכן המודאל -->
+      <div class="modal-body" *ngIf="selectedConfig">
+        <div class="info-grid">
+          <div class="info-row">
+            <span class="info-label">חברה</span>
+            <span class="info-value">{{ selectedConfig.companyName }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">סוג דיווח</span>
+            <div class="info-value-group">
+              <span class="info-value">{{ selectedConfig.reportTypeName }}</span>
+              <span class="info-badge">{{ selectedConfig.reportTypeShortCode }}</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">תדירות</span>
+            <span class="info-value">{{ selectedConfig.frequencyName }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">יום בחודש</span>
+            <span class="info-value">{{ selectedConfig.dayOfMonth || 'לא מוגדר' }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">שנה</span>
+            <span class="info-value">{{ selectedConfig.year }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">סטטוס</span>
+            <span class="info-value" [class.active]="selectedConfig.isActive" [class.inactive]="!selectedConfig.isActive">
+              {{ selectedConfig.isActive ? 'פעיל' : 'לא פעיל' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- כפתורי פעולה -->
+      <div class="modal-footer">
+        <button class="btn-modal-primary" (click)="closeModal()">סגור</button>
+        <button
+          *ngIf="selectedConfig && !isReadOnly()"
+          class="btn-modal-secondary"
+          (click)="editConfig(selectedConfig.id); closeModal()">
+          ערוך
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
