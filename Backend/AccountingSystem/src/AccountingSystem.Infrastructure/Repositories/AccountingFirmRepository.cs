@@ -1,6 +1,7 @@
 ﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,16 @@ using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    public class AccountingFirmRepository:IAccountingFirmRepository
+    public class AccountingFirmRepository : IAccountingFirmRepository
     {
         private AccountingDbContext context;
+        private readonly DbSet<Accountingfirm> _dbSet;
 
         public AccountingFirmRepository(AccountingDbContext context)
         {
             this.context = context;
+            _dbSet = context.Accountingfirms;
+
         }
 
         public async System.Threading.Tasks.Task AddAsync(Accountingfirm entity)
@@ -34,9 +38,9 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public async Task<bool> ExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AnyAsync(f => f.Id == id);
         }
 
         public Task<IEnumerable<Accountingfirm>> FindAsync(Expression<Func<Accountingfirm, bool>> predicate)
@@ -44,9 +48,9 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Accountingfirm>> GetAllAsync()
+        public async Task<IEnumerable<Accountingfirm>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet.ToListAsync();
         }
 
         public Task<Accountingfirm?> GetByIdAsync(int id)
@@ -74,4 +78,23 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
     }
-}
+    }
+
+
+//        public async Task<PagedResult<Accountingfirm>> GetPageAsync(int page, int pageSize)
+//        {
+//            var total = await _dbSet.CountAsync();
+//            var items = await _dbSet
+//            .Skip((page - 1) * pageSize)
+//            .Take(pageSize)
+//            .ToListAsync();
+
+
+//            return new PagedResult<Accountingfirm>
+//            {
+//                Items = items,
+//                TotalCount = total
+//            };
+//        }
+//    }
+//}

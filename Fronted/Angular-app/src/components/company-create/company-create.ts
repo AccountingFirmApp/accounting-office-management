@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CompanyService } from '../../services/company';
-
+import { AccountingFirmService } from '../../services/accounting-firm.ts.service'
+import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
 @Component({
   selector: 'app-company-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BackButtonComponent],
   templateUrl: './company-create.html',
   styleUrls: ['./company-create.css']
 })
@@ -16,24 +17,31 @@ export class CompanyCreateComponent implements OnInit {
   isEditMode = false;
   companyId: number | null = null;
   loading = false;
-
+  accountingFirms: any[] = [];
   constructor(
     private fb: FormBuilder,
     private companyService: CompanyService,
+    private accountingFirmService: AccountingFirmService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.companyForm = this.fb.group({
       name: ['', Validators.required],
       taxId: ['', Validators.required],
-      firmId: [1, Validators.required],
+      firmId: [null, Validators.required],
       phone: [''],
       email: ['', Validators.email],
-      address: ['']
+      address: [''],
+      isActive: [true]  
     });
   }
 
   ngOnInit(): void {
+      // טען את רשימת המשרדים
+      this.loadAccountingFirms();
+    
+      // בדוק אם זה מצב עריכה
+      
     // בדוק אם זה מצב עריכה
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -108,5 +116,16 @@ export class CompanyCreateComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/companies']);
+  }
+  loadAccountingFirms(): void {
+    this.accountingFirmService.getAll().subscribe({
+      next: (data) => {
+        this.accountingFirms = data;
+      },
+      error: (err) => {
+        console.error(err);
+        alert('שגיאה בטעינת רשימת המשרדים');
+      }
+    });
   }
 }

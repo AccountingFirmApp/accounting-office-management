@@ -201,7 +201,7 @@ export class ReportFormComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading report:', err);
-        alert('שגיאה בטעינת הדוח');
+        alert('שגיאה בטעינת הדיווח');
         this.goBack();
       }
     });
@@ -252,30 +252,6 @@ export class ReportFormComponent implements OnInit {
       this.createReport();
     }
   }
-
-  // createReport() {
-  //   const data: CreateReportInstance = {
-  //     configId: +this.formData.configId,
-  //     period: this.formData.period,
-  //     amount: this.formData.amount || undefined,
-  //     paymentMethod: this.formData.paymentMethod || undefined,
-  //     receiptDate: this.formData.receiptDate || undefined,
-  //     comments: this.formData.comments || ''
-  //   };
-
-  //   this.reportService.create(data).subscribe({
-  //     next: () => {
-  //       alert('הדוח נוצר בהצלחה! ✅');
-  //       this.goBack();
-  //     },
-  //     error: (err) => {
-  //       console.error('Error creating report:', err);
-  //       alert('שגיאה ביצירת הדוח');
-  //       this.submitting = false;
-  //     }
-  //   });
-  // }
-
 createReport() {
   const data: CreateReportInstance = {
     companyId: this.formData.companyId,        // מהטופס
@@ -290,12 +266,12 @@ createReport() {
 
   this.reportService.create(data).subscribe({
     next: () => {
-      alert('הדוח נוצר בהצלחה! ✅');
+      alert('הדיווח נוצר בהצלחה! ✅');
       this.goBack();
     },
     error: (err) => {
       console.error('Error creating report:', err);
-      alert('שגיאה ביצירת הדוח');
+      alert('שגיאה ביצירת הדיווח');
       this.submitting = false;
     }
   });
@@ -320,12 +296,12 @@ createReport() {
 
     this.reportService.update(this.reportId!, data).subscribe({
       next: () => {
-        alert('הדוח עודכן בהצלחה! ✅');
+        alert('הדיווח עודכן בהצלחה! ✅');
         this.goBack();
       },
       error: (err) => {
         console.error('Error updating report:', err);
-        alert('שגיאה בעדכון הדוח');
+        alert('שגיאה בעדכון הדיווח');
         this.submitting = false;
       }
     });

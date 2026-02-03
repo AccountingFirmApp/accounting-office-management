@@ -21,7 +21,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companyreportconfigs;
         }
 
-        // ==================== фтемеъ бсйсйеъ ====================
+        // ==================== пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
         public async Task<Companyreportconfig?> GetByIdAsync(int id)
         {
@@ -80,10 +80,10 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
      
-        // ==================== фтемеъ ййзегйеъ ====================
+        // ==================== пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
         /// <summary>
-        /// чбмъ лм ддвгшеъ щм збшд осейоъ
+        /// пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId)
         {
@@ -97,7 +97,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// чбмъ лм ддвгшеъ дфтймеъ бмбг
+        /// пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync()
         {
@@ -110,7 +110,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// чбмъ двгшеъ фтймеъ мфй збшд
+        /// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsByCompanyIdAsync(int companyId)
         {
@@ -123,7 +123,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// чбмъ двгшеъ мфй сев гйеез
+        /// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByReportTypeIdAsync(int reportTypeId)
         {
@@ -136,7 +136,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// чбмъ двгшеъ мфй ъгйшеъ
+        /// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByFrequencyIdAsync(int frequencyId)
         {
@@ -149,7 +149,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// бгйчд ан чййоъ лбш двгшд мзбшд емсев гйеез осейн
+        /// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         /// </summary>
         public async Task<bool> ConfigExistsAsync(int companyId, int reportTypeId)
         {
@@ -158,7 +158,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// чбмъ двгшд сфцйфйъ мзбшд есев гйеез
+        /// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         /// </summary>
         public async Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId)
         {

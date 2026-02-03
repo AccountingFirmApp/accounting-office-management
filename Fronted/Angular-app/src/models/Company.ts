@@ -6,6 +6,7 @@ export interface CompanyDto {
     phone?: string;
     email?: string;
     address?: string;
+    IsActive: boolean;
     createdAt?: Date;
     updatedAt?: Date;
   }

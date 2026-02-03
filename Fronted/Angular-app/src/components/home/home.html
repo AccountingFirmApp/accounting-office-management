@@ -15,11 +15,11 @@
       </div>
       <div class="user-info" *ngIf="currentWorker">
         <div class="user-details">
-          <span class="user-name">{{ currentWorker.firstName }} {{ currentWorker.lastName }}</span>
+          <span class="user-name">{{ currentWorker.firstname }} {{ currentWorker.lastname }}</span>
           <span class="user-role">{{ currentWorker.roleName }}</span>
         </div>
         <div class="user-avatar">
-          {{ currentWorker.firstName?currentWorker.firstName.charAt(0) :""}}{{ currentWorker.lastName.charAt(0) }}
+          {{ currentWorker.firstname?currentWorker.firstname.charAt(0) :""}}{{ currentWorker.lastname.charAt(0) }}
         </div>
       </div>
     </div>
@@ -55,8 +55,8 @@
 
     <!-- כרטיס 3: דוחות -->
     <div class="menu-card" (click)="navigateToReports()">
-      <h3>דוחות</h3>
-      <p>ניהול ומעקב אחר כל הדוחות</p>
+      <h3>דיווחים</h3>
+      <p>ניהול ומעקב אחר כל הדיווחים</p>
       <button class="card-button">כניסה ←</button>
     </div>
 

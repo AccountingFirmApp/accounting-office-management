@@ -111,6 +111,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { CompanyService } from '../../services/company';
 
 @Component({
   selector: 'app-worker-form',
@@ -138,12 +139,14 @@ export class WorkerFormComponent implements OnInit {
   ];
 
   workerForm: FormGroup;
-
+  companies: { id: number; name: string }[] = [];
   constructor(
     private fb: FormBuilder,
     private workerService: WorkerService,
+    private companyService: CompanyService, // ✅ הוסף שירות החברות
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    
   ) {
     this.workerForm = this.fb.group({
       id: [null],
@@ -153,11 +156,14 @@ export class WorkerFormComponent implements OnInit {
       roleId: [null, Validators.required],   // ✅ עכשיו יש roleId
       firmId: [null, Validators.required],
       isActive: [true],
-      PasswordHash: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]]
+      PasswordHash: ['', this.isEditMode ? [] : [Validators.minLength(6)]]
     });
   }
 
   ngOnInit() {
+    this.companyService.getAllCompanies().subscribe(data => {
+      this.companies = data;
+      });
     const workerId = this.route.snapshot.paramMap.get('id');
 
     if (workerId) {
