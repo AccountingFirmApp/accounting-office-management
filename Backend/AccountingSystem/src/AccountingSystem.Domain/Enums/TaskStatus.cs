@@ -4,27 +4,27 @@ namespace AccountingSystem.Domain.Enums;
 /// סטטוסים של משימות
 /// תואם ל-PostgreSQL ENUM: task_status
 /// </summary>
-public enum TaskStatus1
+public enum TaskStatus
 {
     /// <summary>
     /// ממתין - המשימה טרם החלה
     /// </summary>
-    Pending ,
+    Pending,
     
     /// <summary>
     /// בביצוע - המשימה החלה אך טרם הושלמה
     /// </summary>
-    InProgress ,
+    InProgress,
     
     /// <summary>
     /// בוצע - המשימה הושלמה
     /// </summary>
-    Done ,
+    Done,
     
     /// <summary>
     /// שולם - המשימה הושלמה והתשלום בוצע
     /// </summary>
-    Paid ,
+    Paid,
     
     /// <summary>
     /// לא נדרש - המשימה לא נדרשת לתקופה זו

@@ -173,6 +173,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models; // ← הוסף את זה!
 using System.Text;
+using AccountingSystem.Domain.Enums;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -180,9 +182,23 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // ========================================
 // 1. Database
 // ========================================
-builder.Services.AddDbContext<AccountingDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<AccountingDbContext>(options =>
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(
+    builder.Configuration.GetConnectionString("DefaultConnection"));
+
+// מיפוי כל ה-ENUMs
+dataSourceBuilder.MapEnum<AccountingSystem.Domain.Enums.TaskStatus>("task_status");
+dataSourceBuilder.MapEnum<ReportStatus>("report_status");
+dataSourceBuilder.MapEnum<PaymentMethod>("payment_method");
+dataSourceBuilder.MapEnum<TaskCategory>("task_category");
+
+var dataSource = dataSourceBuilder.Build();
+
+builder.Services.AddDbContext<AccountingDbContext>(options =>
+    options.UseNpgsql(dataSource));
 // ========================================
 // 2. Repositories
 // ========================================

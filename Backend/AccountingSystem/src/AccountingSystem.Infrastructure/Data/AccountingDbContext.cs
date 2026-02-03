@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using AccountingSystem.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using AccountingSystem.Domain.Entities;
+using TaskStatus = AccountingSystem.Domain.Enums.TaskStatus;
+
 
 namespace AccountingSystem.Infrastructure.Data;
 
@@ -240,7 +242,7 @@ public partial class AccountingDbContext : DbContext
 
             entity.HasIndex(e => e.Assignedworkerid, "idx_task_assigned");
 
-                entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
+            entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
 
             entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period }, "uq_task_period").IsUnique();
 
@@ -252,6 +254,10 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
+
+            entity.Property(e => e.Status)
+                .HasConversion<string>()
+                .HasColumnName("status");
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Period).HasColumnName("period");
@@ -276,6 +282,7 @@ public partial class AccountingDbContext : DbContext
                 .HasConstraintName("fk_task_tasktype");
         });
 
+      
         modelBuilder.Entity<Companyworker>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("companyworker_pkey");
@@ -615,6 +622,22 @@ entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
 
         OnModelCreatingPartial(modelBuilder);
     }
-
+   
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    //private static AccountingSystem.Domain.Enums.TaskStatus? ConvertToTaskStatus(string value)
+    //{
+    //    if (string.IsNullOrEmpty(value))
+    //        return null;
+
+    //    return value.ToLower() switch
+    //    {
+    //        "pending" => AccountingSystem.Domain.Enums.TaskStatus.Pending,
+    //        "inprogress" => AccountingSystem.Domain.Enums.TaskStatus.InProgress,
+    //        "done" => AccountingSystem.Domain.Enums.TaskStatus.Done,
+    //        "paid" => AccountingSystem.Domain.Enums.TaskStatus.Paid,
+    //        "notrequired" => AccountingSystem.Domain.Enums.TaskStatus.NotRequired,
+    //        _ => throw new ArgumentException($"Invalid TaskStatus value: {value}")
+    //    };
+    //}
 }
