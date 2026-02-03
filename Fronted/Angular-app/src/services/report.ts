@@ -11,6 +11,7 @@ import {
   UpcomingReport
 } from '../models/report-instance';
 import { environment } from '../environments/environment';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +27,42 @@ export class ReportService {
    * קבלת כל הדיווחים במערכת
    * GET: /api/reports/all
    */
-  getAll(): Observable<ReportInstanceDetail[]> {
-    return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`);
-  }
+//   getAll(): Observable<ReportInstanceDetail[]> {
+//     return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/all`);
+//   }
+// // reports.service.ts
+  
+//   // 🆕 מתודה חדשה עם פרמטר
+//   getAllReports(isAdminMode: boolean = false): Observable<ReportInstanceDetail[]> {
+//     const params = new HttpParams().set('isAdminMode', isAdminMode.toString());
+    
+//     return this.api.get<ReportInstanceDetail[]>(
+//       `${this.endpoint}/all`,
+//       { params }
+//     );
+//   }
 
+
+
+  
+  // getAll(isAdminMode: boolean = false): Observable<ReportInstanceDetail[]> {
+  //   const params = new HttpParams().set('isAdminMode', isAdminMode.toString());
+    
+  //   return this.api.get<ReportInstanceDetail[]>(
+  //     `${this.endpoint}/all`,
+  //     { params }
+  //   );
+  // }
+
+
+  getAll(isAdminMode: boolean = false): Observable<ReportInstanceDetail[]> {
+  const params = new HttpParams().set('isAdminMode', isAdminMode.toString());
+
+  return this.api.get<ReportInstanceDetail[]>(
+    `${this.endpoint}/all`,
+    { params }
+  );
+}
   /**
    * קבלת דיווח לפי ID
    * GET: /api/reports/{id}

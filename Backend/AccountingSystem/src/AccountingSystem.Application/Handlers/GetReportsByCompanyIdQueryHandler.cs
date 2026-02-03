@@ -238,34 +238,92 @@ namespace AccountingSystem.Application.Handlers
             _mapper = mapper;
         }
 
+        //    public async Task<List<ReportInstanceDetailDto>> Handle(
+        //        GetAllReportsQuery request,
+        //        CancellationToken cancellationToken)
+        //    {
+        //        // קבלת כל הדוחות
+        //        var reports = await _repository.GetAllAsync();
+
+        //        // 🔥 אם יש WorkerId - מסננים רק לחברות של העובדת הזו
+        //        if (request.WorkerId.HasValue)
+        //        {
+        //            // קבלת כל החברות של העובדת
+        //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
+        //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
+
+        //            // סינון הדוחות רק לחברות האלה
+        //            reports = reports
+        //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
+        //                .ToList();
+        //        }
+
+        //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        //    }
+        //}
+
+
+        //    public async Task<List<ReportInstanceDetailDto>> Handle(
+        //GetAllReportsQuery request,
+        //CancellationToken cancellationToken)
+        //    {
+        //        var reports = await _repository.GetAllAsync();
+
+        //        // 🔥 אם יש WorkerId - מסננים רק לחברות של העובד הזה
+        //        // אם אין WorkerId (null) - מחזירים הכל (מצב מנהל)
+        //        if (request.WorkerId.HasValue)
+        //        {
+        //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
+        //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
+
+        //            reports = reports
+        //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
+        //                .ToList();
+        //        }
+
+        //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+        //    }
+        //}
+
+
         public async Task<List<ReportInstanceDetailDto>> Handle(
-            GetAllReportsQuery request,
-            CancellationToken cancellationToken)
+    GetAllReportsQuery request,
+    CancellationToken cancellationToken)
         {
-            // קבלת כל הדוחות
+            Console.WriteLine($"🔍 Handler קיבל: WorkerId={request.WorkerId}, IsAdminMode={request.IsAdminMode}");
+
             var reports = await _repository.GetAllAsync();
 
-            // 🔥 אם יש WorkerId - מסננים רק לחברות של העובדת הזו
+            Console.WriteLine($"📊 סה\"כ דוחות במסד: {reports.Count()}");
+
             if (request.WorkerId.HasValue)
             {
-                // קבלת כל החברות של העובדת
+                Console.WriteLine($"🔍 מסנן לעובד {request.WorkerId.Value}");
+
                 var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
                 var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
 
-                // סינון הדוחות רק לחברות האלה
+                Console.WriteLine($"📊 העובד משויך ל-{companyIds.Count} חברות: {string.Join(", ", companyIds)}");
+
                 reports = reports
                     .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
                     .ToList();
+
+                Console.WriteLine($"✅ אחרי סינון: {reports.Count()} דוחות");
+            }
+            else
+            {
+                Console.WriteLine("✅ אין סינון - מחזיר הכל");
             }
 
             return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
         }
     }
-}
 
-    // ========== Handler 2: דיווחים לפי Config ==========
 
-    public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
+        // ========== Handler 2: דיווחים לפי Config ==========
+
+        public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
     {
         private readonly IReportInstanceRepository _repository;
         private readonly IMapper _mapper;
@@ -536,3 +594,4 @@ namespace AccountingSystem.Application.Handlers
             }
         }
     }
+}

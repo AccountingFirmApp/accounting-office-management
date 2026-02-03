@@ -40,9 +40,15 @@ export class ManagementComponent implements OnInit {
     this.router.navigate(['/workers']);
   }
 
-  navigateToReports(): void {
-    this.router.navigate(['/reports']);
-  }
+  // navigateToReports(): void {
+  //   this.router.navigate(['/reports']);
+  // }
+
+ navigateToReports(): void {
+ // 🔥 מוסיפים adminMode=true כשנכנסים מפאנל ניהול
+  this.router.navigate(['/reports'], { 
+    queryParams: { adminMode: 'true' } 
+  });}
 
   navigateToStatistics(): void {
     // בקרוב
