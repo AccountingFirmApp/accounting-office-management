@@ -1,0 +1,123 @@
+<div class="container">
+  <app-back-button [route]="'/settings/report-config'"></app-back-button>
+
+  <h2>{{ isEditMode ? 'עריכת הגדרת דיווח' : 'הגדרת דיווח חדשה' }}</h2>
+
+  <div *ngIf="isFixedYear && !isEditMode" class="info-message">
+    ℹ️ החברה, סוג הדיווח והשנה נקבעו מראש. מלא את שאר הפרטים להגדרת הדיווח.
+  </div>
+
+  <div *ngIf="isEditMode" class="info-message info-edit">
+    ℹ️ במצב עריכה: ניתן לשנות רק את <strong>התדירות</strong> ו<strong>יום בחודש</strong>. החברה, סוג הדיווח והשנה קבועים.
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>טוען נתונים...</p>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="configForm" (ngSubmit)="onSubmit()" class="form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="companyId">חברה <span class="required">*</span></label>
+        <select
+          id="companyId"
+          formControlName="companyId"
+          class="form-control"
+          [class.error]="configForm.get('companyId')?.invalid && configForm.get('companyId')?.touched">
+          <option value="">בחר חברה</option>
+          <option *ngFor="let company of companies" [value]="company.id">
+            {{ company.name }}
+          </option>
+        </select>
+        <div *ngIf="configForm.get('companyId')?.invalid && configForm.get('companyId')?.touched" class="error-message">
+          שדה חובה
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="reportTypeId">סוג דיווח <span class="required">*</span></label>
+        <select
+          id="reportTypeId"
+          formControlName="reportTypeId"
+          class="form-control"
+          [class.error]="configForm.get('reportTypeId')?.invalid && configForm.get('reportTypeId')?.touched">
+          <option value="">בחר סוג דיווח</option>
+          <option *ngFor="let type of reportTypes" [value]="type.id">
+            {{ type.name }} ({{ type.shortCode }})
+          </option>
+        </select>
+        <div *ngIf="configForm.get('reportTypeId')?.invalid && configForm.get('reportTypeId')?.touched" class="error-message">
+          שדה חובה
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="frequencyId">תדירות <span class="required">*</span></label>
+        <select
+          id="frequencyId"
+          formControlName="frequencyId"
+          class="form-control"
+          [class.error]="configForm.get('frequencyId')?.invalid && configForm.get('frequencyId')?.touched">
+          <option value="">בחר תדירות</option>
+          <option *ngFor="let freq of frequencies" [value]="freq.id">
+            {{ freq.name }}
+          </option>
+        </select>
+        <div *ngIf="configForm.get('frequencyId')?.invalid && configForm.get('frequencyId')?.touched" class="error-message">
+          שדה חובה
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="year">שנה <span class="required">*</span></label>
+        <select
+          id="year"
+          formControlName="year"
+          class="form-control"
+          [class.error]="configForm.get('year')?.invalid && configForm.get('year')?.touched">
+          <option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+        <div *ngIf="configForm.get('year')?.invalid && configForm.get('year')?.touched" class="error-message">
+          שדה חובה
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="dayOfMonth">יום בחודש (אופציונלי)</label>
+        <input
+          type="number"
+          id="dayOfMonth"
+          formControlName="dayOfMonth"
+          min="1"
+          max="31"
+          placeholder="1-31"
+          class="form-control"
+          [class.error]="configForm.get('dayOfMonth')?.invalid && configForm.get('dayOfMonth')?.touched" />
+        <div *ngIf="configForm.get('dayOfMonth')?.invalid && configForm.get('dayOfMonth')?.touched" class="error-message">
+          יש להזין מספר בין 1 ל-31
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="!configForm.valid || submitting">
+        {{ submitting ? 'שומר...' : (isEditMode ? 'עדכן' : 'שמור') }}
+      </button>
+      <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="submitting">
+        ביטול
+      </button>
+      <button
+        *ngIf="isEditMode"
+        type="button"
+        class="btn-delete"
+        (click)="deleteConfig()"
+        [disabled]="submitting"
+        title="מחק הגדרה">
+        🗑️ מחק
+      </button>
+    </div>
+  </form>
+</div>

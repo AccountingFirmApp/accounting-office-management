@@ -55,6 +55,6 @@ export class ManagementComponent implements OnInit {
   }
 
   navigateToSettings(): void {
-    // בקרוב
+    this.router.navigate(['/settings/report-config']);
   }
 }

@@ -1,0 +1,153 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-xl, 2rem);
+  direction: rtl;
+}
+
+.info-message {
+  background: #e0f2fe;
+  border: 2px solid #0ea5e9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: #0c4a6e;
+  font-weight: 600;
+  text-align: center;
+}
+
+.info-edit {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xxl, 3rem);
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid var(--color-primary, #3b82f6);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.form {
+  background: white;
+  padding: var(--spacing-xl, 2rem);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg, 1.5rem);
+  margin-bottom: var(--spacing-xl, 2rem);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.form-control {
+  padding: var(--spacing-md, 1rem);
+  border: 2px solid var(--color-gray-300, #d1d5db);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.form-control.error {
+  border-color: var(--color-error, #ef4444);
+}
+
+.error-message {
+  color: var(--color-error, #ef4444);
+  font-size: 0.875rem;
+}
+
+.required {
+  color: var(--color-error, #ef4444);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-md, 1rem);
+  justify-content: flex-start;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary, #3b82f6) 0%, #1e40af 100%);
+  color: white;
+  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--color-gray-700, #374151);
+  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
+  border: 2px solid var(--color-gray-300, #d1d5db);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background: var(--color-gray-50, #f9fafb);
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

@@ -1,4 +1,4 @@
-﻿
+
 using MediatR;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries;
@@ -28,17 +28,17 @@ namespace AccountingSystem.Application.Handlers
         {
             var reports = await _reportInstanceRepository.GetAllAsync();
 
-            // סינון לפי חברה
+            // ����� ��� ����
             var filteredReports = reports
                 .Where(r => r.Config != null && r.Config.Companyid == request.CompanyId);
 
-            // סינון לפי סטטוס
+            // ����� ��� �����
             if (!string.IsNullOrEmpty(request.Status))
             {
                 filteredReports = filteredReports.Where(r => r.Status.ToString() == request.Status);
             }
 
-            // סינון לפי תקופה
+            // ����� ��� �����
             if (request.FromPeriod.HasValue)
             {
                 var fromDateOnly = DateOnly.FromDateTime(request.FromPeriod.Value);
@@ -51,10 +51,10 @@ namespace AccountingSystem.Application.Handlers
                 filteredReports = filteredReports.Where(r => r.Period <= toDateOnly);
             }
 
-            // המרה ל-DTO - ✅ ללא null propagation operator
+            // ���� �-DTO - ? ��� null propagation operator
             var result = filteredReports
                 .OrderByDescending(r => r.Period)
-                .ToList() // ✅ קודם מביאים את הנתונים מה-DB
+                .ToList() // ? ���� ������ �� ������� ��-DB
                 .Select(r => new ReportInstanceDetailDto
                 {
                     Id = r.Id,
@@ -111,7 +111,7 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return null;
 
-            // ✅ בניית DTO ישירות ב-memory (לא בתוך LINQ query)
+            // ? ����� DTO ������ �-memory (�� ���� LINQ query)
             return new ReportInstanceDetailDto
             {
                 Id = report.Id,
@@ -165,23 +165,23 @@ namespace AccountingSystem.Application.Handlers
             var today = DateOnly.FromDateTime(DateTime.Now);
             var futureDate = today.AddDays(request.DaysAhead);
 
-            // סינון
+            // �����
             var upcomingReports = allReports
                 .Where(r =>
                     (r.Status == ReportStatus.Pending || r.Status == ReportStatus.Reported) &&
                     r.Period <= futureDate);
 
-            // סינון לפי חברה
+            // ����� ��� ����
             if (request.CompanyId.HasValue)
             {
                 upcomingReports = upcomingReports
                     .Where(r => r.Config.Companyid == request.CompanyId.Value);
             }
 
-            // ✅ קודם מביאים את הנתונים, אחר כך עושים Select
+            // ? ���� ������ �� �������, ��� �� ����� Select
             var result = upcomingReports
                 .OrderBy(r => r.Period)
-                .ToList() // ✅ להביא מה-DB
+                .ToList() // ? ����� ��-DB
                 .Select(r => new UpcomingReportDto
                 {
                     Id = r.Id,
@@ -200,7 +200,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 1: קבלת כל הדיווחים ==========
+    // ========== Handler 1: ���� �� �������� ==========
 
     //public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
     //{
@@ -341,7 +341,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 3: דיווחים לפי סטטוס ==========
+    // ========== Handler 3: ������� ��� ����� ==========
 
     public class GetReportsByStatusQueryHandler : IRequestHandler<GetReportsByStatusQuery, List<ReportInstanceDetailDto>>
     {
@@ -361,7 +361,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 4: דיווחים ממתינים ==========
+    // ========== Handler 4: ������� ������� ==========
 
     public class GetPendingReportsQueryHandler : IRequestHandler<GetPendingReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -381,7 +381,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 5: דיווחים לפי תקופה ==========
+    // ========== Handler 5: ������� ��� ����� ==========
 
     public class GetReportsByPeriodQueryHandler : IRequestHandler<GetReportsByPeriodQuery, List<ReportInstanceDetailDto>>
     {
@@ -401,7 +401,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 6: דיווחים בטווח תאריכים ==========
+    // ========== Handler 6: ������� ����� ������� ==========
 
     public class GetReportsByDateRangeQueryHandler : IRequestHandler<GetReportsByDateRangeQuery, List<ReportInstanceDetailDto>>
     {
@@ -421,7 +421,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 7: דיווחים באיחור (OVERDUE) ==========
+    // ========== Handler 7: ������� ������ (OVERDUE) ==========
 
     public class GetOverdueReportsQueryHandler : IRequestHandler<GetOverdueReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -441,7 +441,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 8: דיווחים שמגיעים בקרוב ==========
+    // ========== Handler 8: ������� ������� ����� ==========
 
     public class GetReportsDueInNextDaysQueryHandler : IRequestHandler<GetReportsDueInNextDaysQuery, List<ReportInstanceDetailDto>>
     {
@@ -507,10 +507,10 @@ namespace AccountingSystem.Application.Handlers
 
         public class GetAllConfigsQueryHandler : IRequestHandler<GetAllConfigsQuery, List<CompanyReportConfigDto>>
         {
-            private readonly ICompanyReportConfigRepository _repository;
+            private readonly ICompanyreportconfigRepository _repository;
             private readonly IMapper _mapper;
 
-            public GetAllConfigsQueryHandler(ICompanyReportConfigRepository repository, IMapper mapper)
+            public GetAllConfigsQueryHandler(ICompanyreportconfigRepository repository, IMapper mapper)
             {
                 _repository = repository;
                 _mapper = mapper;
@@ -530,16 +530,17 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive ?? true
+                    IsActive = c.Isactive ?? true,
+                    Year=c.Year
                 }).ToList();
             }
         }
 
         public class GetConfigsByCompanyIdQueryHandler : IRequestHandler<GetConfigsByCompanyIdQuery, List<CompanyReportConfigDto>>
         {
-            private readonly ICompanyReportConfigRepository _repository;
+            private readonly ICompanyreportconfigRepository _repository;
 
-            public GetConfigsByCompanyIdQueryHandler(ICompanyReportConfigRepository repository)
+            public GetConfigsByCompanyIdQueryHandler(ICompanyreportconfigRepository repository)
             {
                 _repository = repository;
             }
@@ -565,9 +566,9 @@ namespace AccountingSystem.Application.Handlers
 
         public class GetConfigByIdQueryHandler : IRequestHandler<GetConfigByIdQuery, CompanyReportConfigDto?>
         {
-            private readonly ICompanyReportConfigRepository _repository;
+            private readonly ICompanyreportconfigRepository _repository;
 
-            public GetConfigByIdQueryHandler(ICompanyReportConfigRepository repository)
+            public GetConfigByIdQueryHandler(ICompanyreportconfigRepository repository)
             {
                 _repository = repository;
             }

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using AccountingSystem.Application.Queries;
 using AccountingSystem.Application.DTOs;
 using System.Threading.Tasks;
+using AccountingSystem.Application.Commands;
+using Microsoft.AspNetCore.Components.Forms;
 
 
 namespace AccountingSystem.API.Controllers
@@ -56,6 +58,73 @@ namespace AccountingSystem.API.Controllers
                 return NotFound($"Config with ID {id} not found");
 
             return Ok(config);
+        }
+        //add config
+
+        [HttpPost]
+        public async Task<ActionResult<CompanyReportConfigDto>> AddAsync(CreateCompanyReportConfigDto request)
+        {
+            try
+            {
+                var command = new CreateCompanyConfigReportCommand
+                {
+                    CompanyId = request.CompanyId,
+                    ReportTypeId = request.ReportTypeId,
+                    FrequencyId = request.FrequencyId,
+                    DayOfMonth = request.DayOfMonth,
+                    Year = request.Year
+                };
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+
+            }
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<CompanyReportConfigDto>> UpdateAsync(
+            int id,
+            UpdateCompanyReportConfigDto request)
+        {
+            try
+            {
+                var command = new UpdateCompanyConfigReportCommand
+                {
+                    Id = id,
+                    FrequencyId = request.FrequencyId,
+                    DayOfMonth = request.DayOfMonth,
+                    IsActive=request.IsActive
+                };
+
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+                {
+                    return NotFound(new { message = ex.Message });
+            }
+   }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<CompanyReportConfigDto>> DeleteAsync(int id  )
+        {
+            try
+            {
+                var command = new DeleteCompanyConfigReportCommand
+                {
+                    Id = id
+                };
+
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }

@@ -240,7 +240,7 @@ public partial class AccountingDbContext : DbContext
 
             entity.HasIndex(e => e.Assignedworkerid, "idx_task_assigned");
 
-            entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
+                entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
 
             entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period }, "uq_task_period").IsUnique();
 
@@ -355,6 +355,15 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updatedat");
+
+
+            entity.Property(e => e.Status)
+                .HasConversion<string>()
+                .HasColumnName("status");
+            
+            entity.Property(e => e.PaymentMethod)
+                .HasConversion<string>()
+                .HasColumnName("paymentmethod");
 
 entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
                 .HasForeignKey(d => d.Configid)
