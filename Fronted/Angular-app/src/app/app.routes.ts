@@ -32,7 +32,7 @@ export const routes: Routes = [
     { path: 'companies/create', component: CompanyCreateComponent },  // ← חייב להיות לפני :id
     { path: 'companies/:id/edit', component: CompanyCreateComponent }, // ← עריכה
     { path: 'companies/:id/tasks', component: CompanyTasksComponent }, // ← משימות
-      { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
+      // { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // ⬅️ דף ראשי -> התחברות
   { path: '**', redirectTo: '/login' }  // ⬅️ כל דף לא קיים -> חזרה להתחברות

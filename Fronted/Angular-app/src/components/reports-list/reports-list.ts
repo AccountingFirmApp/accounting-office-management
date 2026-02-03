@@ -14,6 +14,96 @@ import { ReportViewModalComponent } from '../report-view/report-view';
   templateUrl: './reports-list.html',
   styleUrls: ['./reports-list.css']
 })
+// export class ReportsListComponent implements OnInit {
+//   reports: ReportInstanceDetail[] = [];
+//   filteredReports: ReportInstanceDetail[] = [];
+//   isLoading: boolean = false;
+//   errorMessage: string = '';
+  
+//   selectedReport: ReportInstanceDetail | null = null;
+//   isModalOpen: boolean = false;
+  
+//   // פילטרים
+//   searchTerm: string = '';
+//   selectedStatus: string = 'all';
+//   selectedCompany: string = 'all';
+//   selectedReportType: string = 'all';
+  
+//   // ← הוסף משתנה לאחסון companyId מה-URL
+//   filterByCompanyId: number | null = null;
+  
+//   // רשימות ייחודיות לפילטרים
+//   companies: string[] = [];
+//   reportTypes: string[] = [];
+//   statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
+
+//   constructor(
+//     private reportService: ReportService,
+//     public workerService: WorkerService,
+//     private router: Router,
+//     private route: ActivatedRoute // ← הוסף ActivatedRoute
+//   ) { }
+//   isAdminMode: boolean = false; // 🆕 דגל מצב
+
+//   ngOnInit(): void {
+//     // ← קרא את companyId מה-query params
+//     this.route.queryParams.subscribe(params => {
+//       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+//       this.loadReports();
+//     });
+    
+//     console.log('Worker in ReportsListComponent:', this.workerService.currentWorker);
+//   }
+
+//   loadReports(): void {
+//   this.isLoading = true;
+//   this.errorMessage = '';
+
+//   console.log('🔍 מחפש דוחות עבור companyId:', this.filterByCompanyId);
+
+//   this.reportService.getAll().subscribe({
+//     next: (data) => {
+//       console.log('📊 כל הדוחות:', data);
+      
+//       // הדפס את כל ה-companyId שיש בדוחות
+//       const companyIds = data.map(r => r.companyId);
+//       console.log('📊 רשימת companyId בדוחות:', companyIds);
+      
+//       this.reports = data;
+      
+//       if (this.filterByCompanyId) {
+//         this.reports = data.filter(r => {
+//           const match = r.companyId === this.filterByCompanyId;
+//           if (match) {
+//             console.log('✅ מצאתי דוח מתאים!', r);
+//           }
+//           return match;
+//         });
+//         console.log(`✅ סה"כ ${this.reports.length} דוחות מפולטרים`);
+//       }
+      
+//       this.filteredReports = this.reports;
+//       this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
+//       this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+      
+//       this.isLoading = false;
+//     },
+//      error: (error) => {
+//       this.isLoading = false;
+//       console.error('❌ שגיאה בטעינת דוחות:', error);
+      
+//       if (error.status === 401) {
+//         this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
+//       } else if (error.status === 500) {
+//         this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
+//       } else {
+//         this.errorMessage = 'שגיאה בטעינת הדוחות';
+//       }}
+//   });
+// }
+
+
+// reports-list.component.ts
 export class ReportsListComponent implements OnInit {
   reports: ReportInstanceDetail[] = [];
   filteredReports: ReportInstanceDetail[] = [];
@@ -23,16 +113,14 @@ export class ReportsListComponent implements OnInit {
   selectedReport: ReportInstanceDetail | null = null;
   isModalOpen: boolean = false;
   
-  // פילטרים
   searchTerm: string = '';
   selectedStatus: string = 'all';
   selectedCompany: string = 'all';
   selectedReportType: string = 'all';
   
-  // ← הוסף משתנה לאחסון companyId מה-URL
   filterByCompanyId: number | null = null;
+  isAdminMode: boolean = false; // 🆕 דגל מצב מנהל
   
-  // רשימות ייחודיות לפילטרים
   companies: string[] = [];
   reportTypes: string[] = [];
   statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
@@ -41,65 +129,124 @@ export class ReportsListComponent implements OnInit {
     private reportService: ReportService,
     public workerService: WorkerService,
     private router: Router,
-    private route: ActivatedRoute // ← הוסף ActivatedRoute
+    private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
-    // ← קרא את companyId מה-query params
-    this.route.queryParams.subscribe(params => {
-      this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-      this.loadReports();
-    });
-    
-    console.log('Worker in ReportsListComponent:', this.workerService.currentWorker);
-  }
+  // ngOnInit(): void {
+  //   // 🔥 קריאת query params (גם companyId וגם adminMode)
+  //   this.route.queryParams.subscribe(params => {
+  //     this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+  //     this.isAdminMode = params['adminMode'] === 'true';
+      
+  //     console.log('🔍 פרמטרים:', {
+  //       companyId: this.filterByCompanyId,
+  //       adminMode: this.isAdminMode
+  //     });
+      
+  //     this.loadReports();
+  //   });
+  // }
 
-  loadReports(): void {
+  // loadReports(): void {
+  //   this.isLoading = true;
+  //   this.errorMessage = '';
+
+  //   console.log('🔍 טוען דוחות במצב:', {
+  //     isAdminMode: this.isAdminMode,
+  //     filterByCompanyId: this.filterByCompanyId
+  //   });
+
+  //   // 🔥 שליחת isAdminMode לשרת
+  //   this.reportService.getAll(this.isAdminMode).subscribe({
+  //     next: (data) => {
+  //       console.log('📊 קיבלתי מהשרת:', data.length, 'דוחות');
+        
+  //       this.reports = data;
+        
+  //       // 🔥 פילטור לפי companyId (אם יש) - זה פילטור בצד לקוח
+  //       if (this.filterByCompanyId) {
+  //         console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
+          
+  //         this.reports = data.filter(r => {
+  //           const match = r.companyId === this.filterByCompanyId;
+  //           if (match) {
+  //             console.log('✅ מצאתי דוח מתאים:', r);
+  //           }
+  //           return match;
+  //         });
+          
+  //         console.log(`✅ סה"כ ${this.reports.length} דוחות אחרי פילטור`);
+  //       }
+        
+  //       this.filteredReports = this.reports;
+  //       this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
+  //       this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+        
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       this.isLoading = false;
+  //       console.error('❌ שגיאה בטעינת דוחות:', error);
+        
+  //       if (error.status === 401) {
+  //         this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
+  //       } else if (error.status === 500) {
+  //         this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
+  //       } else {
+  //         this.errorMessage = 'שגיאה בטעינת הדוחות';
+  //       }
+  //     }
+  //   });
+  // }
+
+
+ngOnInit(): void {
+  this.route.queryParams.subscribe(params => {
+    this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+    this.isAdminMode = params['adminMode'] === 'true';
+    
+    console.log('🔍 Query Params שהתקבלו:', params);
+    console.log('🔍 isAdminMode:', this.isAdminMode);
+    console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
+    
+    this.loadReports();
+  });
+}
+
+loadReports(): void {
   this.isLoading = true;
   this.errorMessage = '';
 
-  console.log('🔍 מחפש דוחות עבור companyId:', this.filterByCompanyId);
+  console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
 
-  this.reportService.getAll().subscribe({
+  this.reportService.getAll(this.isAdminMode).subscribe({
     next: (data) => {
-      console.log('📊 כל הדוחות:', data);
-      
-      // הדפס את כל ה-companyId שיש בדוחות
-      const companyIds = data.map(r => r.companyId);
-      console.log('📊 רשימת companyId בדוחות:', companyIds);
+      console.log('✅ התקבלו דוחות מהשרת:', data);
+      console.log('✅ כמות דוחות:', data.length);
       
       this.reports = data;
       
       if (this.filterByCompanyId) {
-        this.reports = data.filter(r => {
-          const match = r.companyId === this.filterByCompanyId;
-          if (match) {
-            console.log('✅ מצאתי דוח מתאים!', r);
-          }
-          return match;
-        });
-        console.log(`✅ סה"כ ${this.reports.length} דוחות מפולטרים`);
+        console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
+        this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+        console.log('✅ אחרי פילטור:', this.reports.length);
       }
       
       this.filteredReports = this.reports;
-      this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
-      this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
-      
       this.isLoading = false;
     },
-     error: (error) => {
+    error: (error) => {
+      console.error('❌ שגיאה:', error);
       this.isLoading = false;
-      console.error('❌ שגיאה בטעינת דוחות:', error);
-      
-      if (error.status === 401) {
-        this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
-      } else if (error.status === 500) {
-        this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
-      } else {
-        this.errorMessage = 'שגיאה בטעינת הדוחות';
-      }}
+      this.errorMessage = 'שגיאה בטעינת הדוחות';
+    }
   });
 }
+
+
+  // שאר הקוד נשאר אותו דבר...
+
+
 
 
   applyFilters(): void {

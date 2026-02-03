@@ -1,10 +1,15 @@
-
 <div class="reports-dashboard">
   <!-- Header -->
   <header class="dashboard-header">
     <div class="header-content">
-      <app-back-button></app-back-button>
-      <h1>ניהול דיווחים</h1>
+      <!-- <app-back-button></app-back-button> -->
+      <h1>
+        ניהול דיווחים
+        <!-- ← הצג את שם החברה אם מפולטר -->
+        <span *ngIf="companyName" style="font-size: 0.7em; font-weight: 400; opacity: 0.9;">
+          - {{ companyName }}
+        </span>
+      </h1>
       <button class="add-button" *ngIf="auth.isAdmin()"
        (click)="createNewReport()">
         + דיווח חדש
@@ -48,4 +53,3 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-

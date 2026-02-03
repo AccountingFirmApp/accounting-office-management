@@ -119,6 +119,7 @@ import { BackButtonComponent } from '../../app/components/shared/back-button/bac
   styleUrls: ['./company-tasks.css']
 })
 export class CompanyTasksComponent implements OnInit {
+[x: string]: any;
   companyId!: number;
   company: CompanyDto | null = null;
   tasks: TaskcompanyDto[] = [];

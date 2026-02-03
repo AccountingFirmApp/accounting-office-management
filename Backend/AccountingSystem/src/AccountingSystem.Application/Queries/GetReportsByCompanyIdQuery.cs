@@ -33,6 +33,7 @@ namespace AccountingSystem.Application.Queries
         public class GetAllReportsQuery : IRequest<List<ReportInstanceDetailDto>>
         {
         public int? WorkerId { get; set; } // 🆕 הוספנו WorkerId אופציונלי
+        public bool IsAdminMode { get; set; } = false; // 🆕 דגל חדש
 
     }
 

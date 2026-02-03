@@ -385,30 +385,127 @@ namespace AccountingSystem.API.Controllers
         //    return Ok(reports);
         //}
 
+        //[HttpGet("all")]
+        //public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
+        //{
+        //    try
+        //    {
+        //        // 🔥 מחלץ את ה-WorkerId מה-Token
+        //        var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        //        if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
+        //        {
+        //            return Unauthorized(new { message = "משתמש לא מזוהה" });
+        //        }
+
+        //        // שליחת Query עם WorkerId
+        //        var query = new GetAllReportsQuery { WorkerId = workerId };
+        //        var reports = await _mediator.Send(query);
+
+        //        return Ok(reports);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
+        //    }
+        //}
+
+        //    [HttpGet("all")]
+        //    public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports(
+        //[FromQuery] bool isAdminMode = false) // 🆕 פרמטר חדש
+        //    {
+        //        try
+        //        {
+        //            // 🔥 מחלץ את ה-WorkerId וה-Role מה-Token
+        //            var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //            var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+
+        //            if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
+        //            {
+        //                return Unauthorized(new { message = "משתמש לא מזוהה" });
+        //            }
+
+        //            // 🔥 אם זה מנהל במצב ניהול - לא שולחים WorkerId
+        //            int? filterByWorkerId = null;
+
+        //            if (isAdminMode && roleClaim == "Admin")
+        //            {
+        //                // מנהל במצב ניהול - רואה הכל
+        //                filterByWorkerId = null;
+        //            }
+        //            else
+        //            {
+        //                // כל המשתמשים האחרים (כולל מנהל שלא במצב ניהול) - רואים רק את שלהם
+        //                filterByWorkerId = workerId;
+        //            }
+
+        //            var query = new GetAllReportsQuery
+        //            {
+        //                WorkerId = filterByWorkerId,
+        //                IsAdminMode = isAdminMode
+        //            };
+
+        //            var reports = await _mediator.Send(query);
+        //            return Ok(reports);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
+        //        }
+        //    }
+
+
         [HttpGet("all")]
-        public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
+        public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports(
+    [FromQuery] bool isAdminMode = false)
         {
             try
             {
-                // 🔥 מחלץ את ה-WorkerId מה-Token
+                Console.WriteLine($"🔍 GetAllReports נקרא עם isAdminMode={isAdminMode}");
+
                 var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+
+                Console.WriteLine($"🔍 WorkerId={workerIdClaim}, Role={roleClaim}");
 
                 if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
                 {
                     return Unauthorized(new { message = "משתמש לא מזוהה" });
                 }
 
-                // שליחת Query עם WorkerId
-                var query = new GetAllReportsQuery { WorkerId = workerId };
+                int? filterByWorkerId = null;
+
+                if (isAdminMode && roleClaim == "Admin")
+                {
+                    Console.WriteLine("✅ מנהל במצב ניהול - מחזיר הכל");
+                    filterByWorkerId = null;
+                }
+                else
+                {
+                    Console.WriteLine($"✅ מצב רגיל - מסנן לעובד {workerId}");
+                    filterByWorkerId = workerId;
+                }
+
+                var query = new GetAllReportsQuery
+                {
+                    WorkerId = filterByWorkerId,
+                    IsAdminMode = isAdminMode
+                };
+
                 var reports = await _mediator.Send(query);
+
+                Console.WriteLine($"✅ מחזיר {reports.Count} דוחות");
 
                 return Ok(reports);
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ שגיאה: {ex.Message}");
                 return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
             }
         }
+
+
 
 
         /// <summary>
