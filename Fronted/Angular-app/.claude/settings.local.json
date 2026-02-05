@@ -6,7 +6,12 @@
       "Bash(git add:*)",
       "Bash(git checkout:*)",
       "Bash(ng generate:*)",
-      "Bash(ng build:*)"
+      "Bash(ng build:*)",
+      "Bash(psql:*)",
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(dotnet ef database update:*)",
+      "Bash(dotnet ef migrations list:*)",
+      "Bash(dotnet ef dbcontext script:*)"
     ]
   }
 }

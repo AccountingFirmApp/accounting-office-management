@@ -9,25 +9,25 @@ public enum PaymentMethod
     /// <summary>
     /// כרטיס אשראי
     /// </summary>
-    Credit ,
+    Credit,
     
     /// <summary>
     /// העברה בנקאית
     /// </summary>
-    Transfer ,
+    Transfer,
     
     /// <summary>
     /// צ'ק
     /// </summary>
-    Check ,
+    Check,
     
     /// <summary>
     /// תשלום מקוון (אתר הרשות)
     /// </summary>
-    Online ,
+    Online,
     
     /// <summary>
     /// מזומן
     /// </summary>
-    Cash 
+    Cash
 }

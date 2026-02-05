@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Enums;
 
 namespace AccountingSystem.Domain.Entities
 {
@@ -25,7 +26,7 @@ namespace AccountingSystem.Domain.Entities
         public DateTime? Createdat { get; set; }
 
         public DateTime? Updatedat { get; set; }
-        public TaskStatus? Status { get; set; }
+        public TaskStatus1? Status { get; set; }
 
         public virtual Worker? Assignedworker { get; set; }
 
