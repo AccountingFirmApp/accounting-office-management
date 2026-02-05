@@ -180,6 +180,7 @@ using AccountingSystem.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AccountingSystem.Domain.Entities;
 
 
 namespace AccountingSystem.API.Controllers
@@ -308,7 +309,8 @@ namespace AccountingSystem.API.Controllers
                 Id = dto.Id,
                 Status = dto.Status
             };
-
+            Console.WriteLine($"Status before save: '{dto.Status}'");
+            Console.WriteLine($"Status length: {dto.Status.ToString().Length}");
             var success = await _mediator.Send(command);
 
             if (!success)

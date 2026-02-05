@@ -29,5 +29,5 @@ public enum TaskStatus
     /// <summary>
     /// לא נדרש - המשימה לא נדרשת לתקופה זו
     /// </summary>
-    NotRequired 
+    NotRequired
 }
