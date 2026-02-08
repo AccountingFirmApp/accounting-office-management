@@ -1,4 +1,4 @@
-﻿using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    public class CompanyReportConfigRepository : ICompanyReportConfigRepository
+    public class CompanyReportConfigRepository : ICompanyreportconfigRepository
     {
         private readonly AccountingDbContext _context;
         private readonly DbSet<Companyreportconfig> _dbSet;
@@ -21,7 +21,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companyreportconfigs;
         }
 
-        // ==================== פעולות בסיסיות ====================
+        // ==================== ������ ������� ====================
 
         public async Task<Companyreportconfig?> GetByIdAsync(int id)
         {
@@ -34,11 +34,12 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Companyreportconfig>> GetAllAsync()
         {
-            return await _dbSet
+            var res= await _dbSet
                 .Include(c => c.Company)
                 .Include(c => c.Reporttype)
                 .Include(c => c.Frequency)
                 .ToListAsync();
+            return res;
         }
 
         public async Task<IEnumerable<Companyreportconfig>> FindAsync(Expression<Func<Companyreportconfig, bool>> predicate)
@@ -53,6 +54,8 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public async Task AddAsync(Companyreportconfig entity)
         {
+            Console.WriteLine(entity.Year);
+
             await _dbSet.AddAsync(entity);
         }
 
@@ -77,10 +80,10 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
      
-        // ==================== פעולות ייחודיות ====================
+        // ==================== ������ �������� ====================
 
         /// <summary>
-        /// קבלת כל ההגדרות של חברה מסוימת
+        /// ���� �� ������� �� ���� ������
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId)
         {
@@ -94,7 +97,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// קבלת כל ההגדרות הפעילות בלבד
+        /// ���� �� ������� ������� ����
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync()
         {
@@ -107,7 +110,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// קבלת הגדרות פעילות לפי חברה
+        /// ���� ������ ������ ��� ����
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsByCompanyIdAsync(int companyId)
         {
@@ -120,7 +123,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// קבלת הגדרות לפי סוג דיווח
+        /// ���� ������ ��� ��� �����
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByReportTypeIdAsync(int reportTypeId)
         {
@@ -133,7 +136,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// קבלת הגדרות לפי תדירות
+        /// ���� ������ ��� ������
         /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByFrequencyIdAsync(int frequencyId)
         {
@@ -146,7 +149,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// בדיקה אם קיימת כבר הגדרה לחברה ולסוג דיווח מסוים
+        /// ����� �� ����� ��� ����� ����� ����� ����� �����
         /// </summary>
         public async Task<bool> ConfigExistsAsync(int companyId, int reportTypeId)
         {
@@ -155,7 +158,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// קבלת הגדרה ספציפית לחברה וסוג דיווח
+        /// ���� ����� ������� ����� ���� �����
         /// </summary>
         public async Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId)
         {
@@ -174,22 +177,30 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public Task<int> CountAsync(Func<object, bool> value)
         {
-            throw new NotImplementedException();
+            return _dbSet.CountAsync();
+
         }
 
-        //public Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public async Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId)
+        {
+            return await _dbSet
+                           .Where(c => c.Companyid == companyId)
+                           .Include(c => c.Company)
+                           .Include(c => c.Reporttype)
+                           .Include(c => c.Frequency)
+                           .OrderBy(c => c.Reporttype.Name)
+                           .ToListAsync();
+        }
+
+        public async Task<Companyreportconfig?> GetByIdWithDetailsAsync(int id)
         {
             return await _dbSet
                 .Include(c => c.Company)
                 .Include(c => c.Reporttype)
                 .Include(c => c.Frequency)
-                .Where(c => c.Companyid == companyId)
-                .ToListAsync();
+                .Include(c => c.Reportinstances)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
     }
+
 }

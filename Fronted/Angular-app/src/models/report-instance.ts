@@ -15,6 +15,7 @@ export interface ReportInstance {
   comments?: string;
   createdAt?: Date;
   updatedAt?: Date;
+
 }
 
 /**
@@ -57,6 +58,8 @@ export interface ReportInstanceDetail {
   // Calculated fields (אם השרת מחזיר אותם)
   periodFormatted?: string;
   daysOverdue?: number;
+  workerNames: string[];
+  // workerNamesDisplay: string;
 }
 
 /**

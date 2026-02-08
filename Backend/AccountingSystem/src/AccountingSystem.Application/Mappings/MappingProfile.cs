@@ -2,7 +2,7 @@
 using AccountingSystem.Domain.DTOs;
 using AccountingSystem.Domain.Entities;
 using AutoMapper;
-
+using AccountingSystem.Application.Mappings.Resolvers;
 namespace AccountingSystem.Application.Mappings
 {
     /// <summary>
@@ -182,16 +182,70 @@ namespace AccountingSystem.Application.Mappings
             // ========================================
             // CompanyReportConfig Mappings
             // ========================================
+            //CreateMap<Companyreportconfig, CompanyReportConfigDto>()
+            //    .ForMember(d => d.CompanyName,
+            //        opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : string.Empty))
+            //    .ForMember(d => d.ReportTypeName,
+            //        opt => opt.MapFrom(s => s.Reporttype != null ? s.Reporttype.Name : string.Empty))
+            //    .ForMember(d => d.FrequencyName,
+            //        opt => opt.MapFrom(s => s.Frequency != null ? s.Frequency.Name : string.Empty));
+            //.ForMember(d => d.Year,
+            //        opt => opt.MapFrom(s => s. != null ? s.Frequency.Name : string.Empty));
+
+            //CreateMap<CreateCompanyReportConfigDto, Companyreportconfig>()
+            //    .ForMember(d => d.Id, opt => opt.Ignore())
+            //    .ForMember(d => d.Createdat, opt => opt.Ignore())
+            //    .ForMember(d => d.Updatedat, opt => opt.Ignore())
+            //    .ForMember(d => d.Company, opt => opt.Ignore())
+            //    .ForMember(d => d.Reporttype, opt => opt.Ignore())
+            //    .ForMember(d => d.Frequency, opt => opt.Ignore())
+            //    .ForMember(d => d.Reportinstances, opt => opt.Ignore());
+
+            //CreateMap<UpdateCompanyReportConfigDto, Companyreportconfig>()
+            //    .ForMember(d => d.Id, opt => opt.Ignore())
+            //    .ForMember(d => d.Createdat, opt => opt.Ignore())
+            //    .ForMember(d => d.Updatedat, opt => opt.Ignore())
+            //    .ForMember(d => d.Company, opt => opt.Ignore())
+            //    .ForMember(d => d.Reporttype, opt => opt.Ignore())
+            //    .ForMember(d => d.Frequency, opt => opt.Ignore())
+            //    .ForMember(d => d.Reportinstances, opt => opt.Ignore());
             CreateMap<Companyreportconfig, CompanyReportConfigDto>()
-                .ForMember(d => d.CompanyName,
-                    opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : string.Empty))
-                .ForMember(d => d.ReportTypeName,
-                    opt => opt.MapFrom(s => s.Reporttype != null ? s.Reporttype.Name : string.Empty))
-                .ForMember(d => d.FrequencyName,
-                    opt => opt.MapFrom(s => s.Frequency != null ? s.Frequency.Name : string.Empty));
+              .ForMember(d => d.CompanyId, opt => opt.MapFrom(s => s.Companyid))
+              .ForMember(d => d.ReportTypeId, opt => opt.MapFrom(s => s.Reporttypeid))
+              .ForMember(d => d.FrequencyId, opt => opt.MapFrom(s => s.Frequencyid))
+              .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Dayofmonth))
+              .ForMember(d => d.IsActive, opt => opt.MapFrom(s => s.Isactive))
+              .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.Createdat ?? DateTime.MinValue))
+              .ForMember(d => d.UpdatedAt, opt => opt.MapFrom(s => s.Updatedat ?? DateTime.MinValue))
+              .ForMember(d => d.Year, opt => opt.MapFrom(s => s.Year))
+              .ForMember(d => d.CompanyName,
+                  opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : null))
+              .ForMember(d => d.ReportTypeName,
+                  opt => opt.MapFrom(s => s.Reporttype != null ? s.Reporttype.Name : null))
+              .ForMember(d => d.ReportTypeShortCode,
+                  opt => opt.MapFrom(s => s.Reporttype != null ? s.Reporttype.Shortcode : null))
+              .ForMember(d => d.FrequencyName,
+                  opt => opt.MapFrom(s => s.Frequency != null ? s.Frequency.Name : null));
+
+            //CreateMap<Companyreportconfig, CompanyReport>()
+            //    .ForMember(d => d.CompanyId, opt => opt.MapFrom(s => s.Companyid))
+            //    .ForMember(d => d.CompanyName, opt => opt.MapFrom(s => s.Company.Name))
+            //    .ForMember(d => d.ReportTypeId, opt => opt.MapFrom(s => s.Reporttypeid))
+            //    .ForMember(d => d.ReportTypeName, opt => opt.MapFrom(s => s.Reporttype.Name))
+            //    .ForMember(d => d.ReportTypeShortCode, opt => opt.MapFrom(s => s.Reporttype.Shortcode))
+            //    .ForMember(d => d.FrequencyId, opt => opt.MapFrom(s => s.Frequencyid))
+            //    .ForMember(d => d.FrequencyName, opt => opt.MapFrom(s => s.Frequency.Name))
+            //    .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Dayofmonth))
+            //    .ForMember(d => d.IsActive, opt => opt.MapFrom(s => s.Isactive ?? false));
 
             CreateMap<CreateCompanyReportConfigDto, Companyreportconfig>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.Companyid, opt => opt.MapFrom(s => s.CompanyId))
+                .ForMember(d => d.Reporttypeid, opt => opt.MapFrom(s => s.ReportTypeId))
+                .ForMember(d => d.Frequencyid, opt => opt.MapFrom(s => s.FrequencyId))
+                .ForMember(d => d.Dayofmonth, opt => opt.MapFrom(s => s.DayOfMonth))
+                .ForMember(d => d.Year, opt => opt.MapFrom(s => s.Year))
+                .ForMember(d => d.Isactive, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
                 .ForMember(d => d.Company, opt => opt.Ignore())
@@ -201,18 +255,22 @@ namespace AccountingSystem.Application.Mappings
 
             CreateMap<UpdateCompanyReportConfigDto, Companyreportconfig>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
-                .ForMember(d => d.Createdat, opt => opt.Ignore())
+                .ForMember(d => d.Frequencyid, opt => opt.MapFrom(s => s.FrequencyId))
+                .ForMember(d => d.Dayofmonth, opt => opt.MapFrom(s => s.DayOfMonth))
+               .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
+                 .ForMember(d => d.Isactive, opt => opt.Ignore())
                 .ForMember(d => d.Company, opt => opt.Ignore())
                 .ForMember(d => d.Reporttype, opt => opt.Ignore())
                 .ForMember(d => d.Frequency, opt => opt.Ignore())
                 .ForMember(d => d.Reportinstances, opt => opt.Ignore());
+      
 
-            // ========================================
-            // ReportInstance Mappings
-            // ========================================
-            // מיפוי בסיסי - ל-ReportInstanceDto (ללא נתונים מורחבים)
-            CreateMap<Reportinstance, ReportInstanceDto>()
+// ========================================
+// ReportInstance Mappings
+// ========================================
+// מיפוי בסיסי - ל-ReportInstanceDto (ללא נתונים מורחבים)
+CreateMap<Reportinstance, ReportInstanceDto>()
                 .ForMember(d => d.Period, opt => opt.MapFrom(s => s.Period.ToDateTime(TimeOnly.MinValue)))
                 .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.ToString()))
                 .ForMember(d => d.PaymentMethod, opt => opt.MapFrom(s => s.PaymentMethod.HasValue ? s.PaymentMethod.Value.ToString() : null))
@@ -239,7 +297,10 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.ReportTypeName, opt => opt.MapFrom(s => s.Config != null && s.Config.Reporttype != null ? s.Config.Reporttype.Name : string.Empty))
                 .ForMember(d => d.ReportTypeShortCode, opt => opt.MapFrom(s => s.Config != null && s.Config.Reporttype != null ? s.Config.Reporttype.Shortcode : string.Empty))
                 .ForMember(d => d.FrequencyName, opt => opt.MapFrom(s => s.Config != null && s.Config.Frequency != null ? s.Config.Frequency.Name : string.Empty))
-                .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Config != null ? s.Config.Dayofmonth : null));
+                .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Config != null ? s.Config.Dayofmonth : null))
+                                //.ForMember(d => d.WorkerNames,
+                                //    opt => opt.MapFrom<WorkerNamesResolver>());
+                                .ForMember(d => d.WorkerNames, opt => opt.MapFrom<WorkerNamesResolver>()); // 🆕
 
             CreateMap<CreateReportInstanceDto, Reportinstance>()
                 .ForMember(d => d.Id, opt => opt.Ignore())

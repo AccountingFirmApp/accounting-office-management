@@ -28,6 +28,5 @@
 
 	<ItemGroup>
 		<Folder Include="Validators\" />
-		<Folder Include="Mappings\" />
 	</ItemGroup>
 </Project>

@@ -1,0 +1,706 @@
+/* ===========================
+   CLEAN PROFESSIONAL CONTAINER
+   =========================== */
+.container {
+  padding: 2.5rem;
+  direction: rtl;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Clean Typography */
+.h1 {
+  text-align: center;
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #3b82f6;
+  margin-bottom: 2rem;
+  letter-spacing: -0.025em;
+}
+/* בורר שנה - נקי ומקצועי */
+.year-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn-year-nav {
+  background: white;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-year-nav:hover {
+  background: #f8fafc;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.btn-year-nav:active {
+  background: #f1f5f9;
+}
+
+.year-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 120px;
+}
+
+.year-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.read-only-badge {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.25rem 0.625rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #fde68a;
+}
+
+.no-config-text {
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl, 2rem);
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xxl, 3rem);
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid var(--color-primary, #3b82f6);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xxl, 3rem);
+}
+
+.config-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.config-table th {
+  background: var(--color-primary, #3b82f6);
+  color: white;
+  padding: var(--spacing-md, 1rem);
+  text-align: right;
+}
+
+.config-table td {
+  padding: var(--spacing-md, 1rem);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.config-table tr:hover {
+  background: var(--color-gray-50, #f9fafb);
+}
+
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive {
+  color: red;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary, #3b82f6) 0%, #1e40af 100%);
+  color: white;
+  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: var(--spacing-sm, 0.5rem);
+}
+
+.btn-icon:hover {
+  background: var(--color-gray-100, #f3f4f6);
+  border-radius: 4px;
+}
+
+.status-success {
+  color: green;
+  font-weight: 600;
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-add:active {
+  transform: translateY(0);
+}
+
+/* ===========================
+   CLEAN PROFESSIONAL TABLE
+   =========================== */
+.matrix-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  font-size: 0.875rem;
+  border: 1px solid #e2e8f0;
+}
+
+.matrix-table th {
+  background: #3b82f6;
+  color: white;
+  padding: 0.875rem 0.75rem;
+  text-align: center;
+  font-weight: 600;
+  border: 1px solid #2563eb;
+  font-size: 0.8125rem;
+  position: relative;
+}
+
+.company-header {
+  text-align: right !important;
+  min-width: 150px;
+  position: sticky;
+  right: 0;
+  z-index: 2;
+}
+
+.report-type-header {
+  min-width: 150px;
+}
+
+.report-code {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.9;
+  margin-top: 0.25rem;
+}
+
+.matrix-table td {
+  padding: 0.75rem 0.625rem;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  background: white;
+  transition: background 0.15s ease;
+}
+
+.matrix-table tr:hover td {
+  background: #f8fafc;
+}
+
+.company-cell {
+  background: #f8fafc;
+  font-weight: 600;
+  text-align: right !important;
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  border-right: 2px solid #3b82f6;
+  color: #0f172a;
+  font-size: 0.875rem;
+}
+
+.matrix-table tr:hover .company-cell {
+  background: #f1f5f9;
+}
+
+.action-cell {
+  vertical-align: middle;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* כפתור הוסף בתא */
+.btn-add-cell {
+  background: #3b82f6;
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-add-cell:hover {
+  background: #2563eb;
+}
+
+/* כפתור ערוך */
+.btn-edit {
+  background: white;
+  color: #475569;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-edit:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* כפתור הצג */
+.btn-view {
+  background: white;
+  color: #475569;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-view:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* ===========================
+   🎨 2026 MODERN MODAL DESIGN
+   Glass Morphism + Soft UI
+   =========================== */
+
+/* Modal Overlay - Clean */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Card - Clean & Professional */
+.modal-card {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: slideUp 0.2s ease-out;
+  direction: rtl;
+  border: 1px solid #e2e8f0;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header - Clean & Professional */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #3b82f6;
+  letter-spacing: -0.025em;
+}
+
+/* Close Button - Minimal */
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-weight: 300;
+}
+
+.modal-close-btn:hover {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.modal-close-btn:active {
+  background: #e2e8f0;
+}
+
+/* Modal Body - Clean Spacing */
+.modal-body {
+  padding: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: white;
+}
+
+/* Custom Scrollbar - Minimal */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+}
+
+/* Info Grid - Clean Table-like Layout */
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Info Row - Professional Table Row */
+.info-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  border-bottom: 1px solid #e2e8f0;
+  background: white;
+  transition: background 0.15s ease;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row:hover {
+  background: #f8fafc;
+}
+
+.info-label {
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+  border-left: 1px solid #e2e8f0;
+}
+
+.info-value {
+  padding: 1rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.info-value.active {
+  color: #059669;
+  font-weight: 600;
+}
+
+.info-value.inactive {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.info-value-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Badge - Minimal & Professional */
+.info-badge {
+  display: inline-flex;
+  padding: 0.25rem 0.625rem;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+/* Modal Footer - Clean & Professional */
+.modal-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  justify-content: flex-end;
+}
+
+/* Primary Button - Clean & Minimal */
+.btn-modal-primary {
+  padding: 0.625rem 1.5rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-modal-primary:hover {
+  background: #2563eb;
+}
+
+.btn-modal-primary:active {
+  background: #1d4ed8;
+}
+
+/* Secondary Button - Outlined & Clean */
+.btn-modal-secondary {
+  padding: 0.625rem 1.5rem;
+  background: white;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-modal-secondary:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.btn-modal-secondary:active {
+  background: #f1f5f9;
+}
+
+/* Delete & Restore Buttons */
+.btn-delete {
+  background: white;
+  color: #dc2626;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-delete:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.btn-restore {
+  background: white;
+  color: #059669;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #a7f3d0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-restore:hover {
+  background: #f0fdf4;
+  border-color: #6ee7b7;
+}
+
+.deleted-config {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.deleted-text {
+  font-size: 0.75rem;
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .matrix-table {
+    font-size: 0.8rem;
+  }
+
+  .report-type-header {
+    min-width: 120px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .btn-add-cell,
+  .btn-edit,
+  .btn-view {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-card {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .modal-header {
+    padding: 1.5rem 1rem;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem 1rem;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+    padding: 1rem;
+  }
+
+  .btn-modal-primary,
+  .btn-modal-secondary {
+    width: 100%;
+  }
+}

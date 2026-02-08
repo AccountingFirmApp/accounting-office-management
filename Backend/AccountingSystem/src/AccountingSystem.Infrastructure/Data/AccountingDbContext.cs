@@ -1,8 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using AccountingSystem.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using AccountingSystem.Domain.Entities;
+using TaskStatus = AccountingSystem.Domain.Enums.TaskStatus1;
+
 
 namespace AccountingSystem.Infrastructure.Data;
 
@@ -39,7 +41,7 @@ public partial class AccountingDbContext : DbContext
             .HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
             .HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
             .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
-            .HasPostgresEnum("task_status", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });
+            .HasPostgresEnum("TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });  // ⭐ שונה ל-TaskStatus1
 
         modelBuilder.Entity<Accountingfirm>(entity =>
         {
@@ -241,6 +243,7 @@ public partial class AccountingDbContext : DbContext
             entity.HasIndex(e => e.Assignedworkerid, "idx_task_assigned");
 
             entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
+            entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
 
             entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period }, "uq_task_period").IsUnique();
 
@@ -252,9 +255,16 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
+
+            entity.Property(e => e.Status)
+                .HasConversion<string>()
+                .HasColumnName("status");
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Period).HasColumnName("period");
+            entity.Property(e => e.Status)
+                .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
+                .HasColumnName("status");
             entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
             entity.Property(e => e.Updatedat)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -276,6 +286,7 @@ public partial class AccountingDbContext : DbContext
                 .HasConstraintName("fk_task_tasktype");
         });
 
+      
         modelBuilder.Entity<Companyworker>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("companyworker_pkey");
@@ -356,7 +367,15 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updatedat");
 
-entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
+            entity.Property(e => e.Status)
+                .HasColumnType("report_status")
+                .HasColumnName("status");
+
+            entity.Property(e => e.PaymentMethod)
+                .HasColumnType("payment_method")
+                .HasColumnName("paymentmethod");
+
+            entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
                 .HasForeignKey(d => d.Configid)
                 .HasConstraintName("fk_instance_config");
         });
@@ -414,6 +433,8 @@ entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
+            entity.Property(e => e.Category)  // ⭐ הוסף
+                .HasColumnName("category");
             entity.Property(e => e.Defaultorder)
                 .HasDefaultValue(99)
                 .HasColumnName("defaultorder");
@@ -429,6 +450,8 @@ entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
                 .ToView("vw_activetasks");
 
             entity.Property(e => e.Assignedworkername).HasColumnName("assignedworkername");
+            entity.Property(e => e.Category)  // ⭐ הוסף
+                .HasColumnName("category");
             entity.Property(e => e.Companyname)
                 .HasMaxLength(255)
                 .HasColumnName("companyname");
@@ -438,6 +461,8 @@ entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Period).HasColumnName("period");
+            entity.Property(e => e.Status)  // ⭐ הוסף
+                .HasColumnName("status");
             entity.Property(e => e.Tasktypename)
                 .HasMaxLength(255)
                 .HasColumnName("tasktypename");
@@ -502,6 +527,8 @@ entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
             entity.Property(e => e.Shortcode)
                 .HasMaxLength(20)
                 .HasColumnName("shortcode");
+            entity.Property(e => e.Status)  // ⭐ הוסף
+                .HasColumnName("status");
         });
 
         modelBuilder.Entity<VwWorkercompanies>(entity =>
@@ -606,6 +633,6 @@ entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
 
         OnModelCreatingPartial(modelBuilder);
     }
-
+   
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

@@ -114,13 +114,13 @@
   </div>
 -->
 
-<div class="container">
+<!-- <div class="container">
   <div class="header">
     <h2>רשימת חברות</h2>
-  </div>
-  <app-back-button [route]="'/home'"></app-back-button>  
+  </div> -->
+  <!-- <app-back-button [route]="'/home'"></app-back-button>   -->
 
-  <div *ngIf="loading" class="loading">טוען...</div>
+  <!-- <div *ngIf="loading" class="loading">טוען...</div>
   
   <div *ngIf="error" class="error">{{ error }}</div>
 
@@ -148,12 +148,12 @@
 
           <button
           *ngIf="auth.isAdmin()"
-           (click)="editCompany(company.id)" class="btn-edit">ערוך</button>
+           (click)="editCompany(company.id)" class="btn-edit">ערוך</button> -->
 
           <!-- <button 
           *ngIf="auth.isAdmin()"
           (click)="deleteCompany(company.id)" class="btn-delete">מחק</button> -->
-        </td>
+        <!-- </td>
       </tr>
     </tbody>
   </table>
@@ -163,5 +163,90 @@
   (click)="addCompany()" class="btn-delete">הוספת חברה +</button>  
   <div *ngIf="!loading && companies.length === 0" class="no-data">
     אין חברות להצגה
+  </div>
+</div> -->
+
+
+
+<div class="container">
+  <!-- כפתור חזרה לדף הבית -->
+  <app-back-button [route]="'/home'" [text]="'חזרה לדף הבית'"></app-back-button>
+  
+  <!-- כותרת ראשית -->
+  <div class="page-header">
+    <h1 class="page-title">
+      <span class="icon-header">🏢</span>
+      החברות שלנו
+    </h1>
+    <p class="page-subtitle">ניהול וצפייה בכל החברות במערכת</p>
+  </div>
+  
+  <!-- Loading -->
+  <div *ngIf="loading" class="alert alert-warning">
+    טוען נתונים...
+  </div>
+  
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+  
+  <!-- Success -->
+  <div *ngIf="companies && !loading">
+    <!-- רשימת חברות -->
+    <div *ngIf="companies.length > 0">
+      <ul class="company-list">
+      <li *ngFor="let company of companies" class="company-card">
+        <h5>{{ company.name }}</h5>
+        
+        <p><strong>ח.פ/ע.מ:</strong> {{ company.taxId }}</p>
+        <p><strong>כתובת:</strong> {{ company.address || '-' }}</p>
+        <p><strong>טלפון:</strong> {{ company.phone || '-' }}</p>
+        <p><strong>אימייל:</strong> {{ company.email || '-' }}</p>
+        <p *ngIf="company.IsActive !== undefined">
+          <strong>סטטוס:</strong>
+          <span [class.active]="company.IsActive" [class.inactive]="!company.IsActive">
+            {{ company.IsActive ? 'פעילה' : 'לא פעילה' }}
+          </span>
+        </p>
+        <!-- <p *ngIf="company.notes" class="notes"><strong>הערות:</strong> {{ company.notes }}</p> -->
+        
+        <!-- כפתורי פעולה -->
+        <div class="action-buttons">
+          <button class="btn-action btn-tasks" (click)="viewCompanyTasks(company.id)">
+            <span class="icon">📋</span>
+            משימות
+          </button>
+          <button class="btn-action btn-reports" (click)="viewCompanyReports(company.id)">
+            <span class="icon">📊</span>
+            דיווחים
+          </button>
+          <button 
+            *ngIf="auth.isAdmin()" 
+            class="btn-action btn-edit" 
+            (click)="editCompany(company.id)">
+            <span class="icon">✏️</span>
+            ערוך
+          </button>
+        </div>
+      </li>
+      </ul>
+    </div>
+    
+    <!-- אין חברות -->
+    <div *ngIf="companies.length === 0" class="no-companies">
+      אין חברות להצגה
+    </div>
+  </div>
+  
+  <!-- כפתור הוספת חברה -->
+  <div *ngIf="!loading" class="add-company-container">
+    <button 
+      *ngIf="auth.isAdmin()"
+      (click)="addCompany()" 
+      class="btn-add-company">
+      <span class="icon">➕</span>
+      הוספת חברה
+    </button>
   </div>
 </div>

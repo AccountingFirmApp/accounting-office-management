@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Enums;
 
 namespace AccountingSystem.Domain.Entities
 {
@@ -13,6 +14,7 @@ namespace AccountingSystem.Domain.Entities
         public string? Reporttypename { get; set; }
 
         public string? Shortcode { get; set; }
+        public ReportStatus? Status { get; set; }
 
         public DateOnly? Period { get; set; }
 

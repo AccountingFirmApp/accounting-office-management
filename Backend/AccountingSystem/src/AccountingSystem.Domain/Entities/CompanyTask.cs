@@ -25,7 +25,7 @@ namespace AccountingSystem.Domain.Entities
         public DateTime? Createdat { get; set; }
 
         public DateTime? Updatedat { get; set; }
-        public AccountingSystem.Domain.Enums.TaskStatus  ? Status { get; set; }
+        public TaskStatus1? Status { get; set; }
 
         public virtual Worker? Assignedworker { get; set; }
 

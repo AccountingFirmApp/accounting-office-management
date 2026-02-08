@@ -308,6 +308,9 @@ createReport() {
   }
 
   goBack() {
-    this.router.navigate(['/reports']);
-  }
+    this.router.navigate(['/reports'], { 
+    queryParams: { adminMode: 'true' } 
+  });}
+    // this.router.navigate(['/reports']);
+  
 }

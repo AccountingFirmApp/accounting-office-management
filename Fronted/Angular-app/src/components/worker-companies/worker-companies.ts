@@ -72,6 +72,7 @@ export class WorkerCompaniesComponent implements OnInit {
   goToCompanyTasks(companyId: number): void {
     this.router.navigate(['/companies', companyId, 'tasks']);
   }
+  // מעבר לדוחות של חברה
 goToCompanyReports(companyId: number): void {
   console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
   this.router.navigate(['/reports'], { 

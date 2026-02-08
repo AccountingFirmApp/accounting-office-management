@@ -1,5 +1,41 @@
+// import { Injectable } from '@angular/core';
+// import { HttpClient } from '@angular/common/http';
+// import { environment } from '../../src/environments/environment';
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class ApiService {
+//   private baseUrl = environment.apiUrl;
+
+//   constructor(private http: HttpClient) {}
+
+//   get<T>(endpoint: string,options?: any) {
+//     return this.http.get<T>(`${this.baseUrl}${endpoint}`,options);
+//   }
+
+//   post<T>(endpoint: string, data: any) {
+//     return this.http.post<T>(`${this.baseUrl}${endpoint}`, data);
+//   }
+
+//   put<T>(endpoint: string, data: any) {
+//     return this.http.put<T>(`${this.baseUrl}${endpoint}`, data);
+//   }
+
+//   delete<T>(endpoint: string) {
+//     return this.http.delete<T>(`${this.baseUrl}${endpoint}`);
+//   }
+
+//   patch<T>(endpoint: string, data: any) {
+//     return this.http.patch<T>(`${this.baseUrl}${endpoint}`, data);
+//   }
+// }
+
+
+
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../src/environments/environment';
 
 @Injectable({
@@ -10,23 +46,31 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  get<T>(endpoint: string) {
-    return this.http.get<T>(`${this.baseUrl}${endpoint}`);
+  // get<T>(endpoint: string, options?: any): Observable<T> {
+  //   return this.http.get<T>(`${this.baseUrl}${endpoint}`, options);
+  // }
+get<T>(
+    endpoint: string, 
+    options?: {
+      headers?: HttpHeaders | { [header: string]: string | string[] };
+      params?: HttpParams | { [param: string]: string | string[] };
+    }
+  ): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}${endpoint}`, options);
   }
-
-  post<T>(endpoint: string, data: any) {
+  post<T>(endpoint: string, data: any): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, data);
   }
 
-  put<T>(endpoint: string, data: any) {
+  put<T>(endpoint: string, data: any): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, data);
   }
 
-  delete<T>(endpoint: string) {
+  delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(`${this.baseUrl}${endpoint}`);
   }
 
-  patch<T>(endpoint: string, data: any) {
+  patch<T>(endpoint: string, data: any): Observable<T> {
     return this.http.patch<T>(`${this.baseUrl}${endpoint}`, data);
   }
 }

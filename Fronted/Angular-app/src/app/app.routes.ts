@@ -9,11 +9,16 @@ import { CompanyTasksComponent } from '../components/company-tasks/company-tasks
 import { WorkersListComponent } from '../components/workers-list-component/workers-list-component.component';
 import { WorkerFormComponent } from '../components/add-worker/add-worker.component';
 import { ManagementComponent } from './components/management/management.component';
+import { CompanyReportConfigListComponent } from './components/settings/company-report-config-list/company-report-config-list.component';
+import { CompanyReportConfigFormComponent } from './components/settings/company-report-config-form/company-report-config-form.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'התחברות' },  // ⬅️ דף התחברות
   { path: 'home', component: HomeComponent, title: 'דף הבית' },  // ⬅️ דף הבית
   { path: 'management', component: ManagementComponent, title: 'פאנל ניהול' },  // ⬅️ דף ניהול
+  { path: 'settings/report-config', component: CompanyReportConfigListComponent, title: 'הגדרות דיווחים' },  // ⬅️ הגדרות דיווחים
+  { path: 'settings/report-config/create', component: CompanyReportConfigFormComponent, title: 'הגדרת דיווח חדשה' },  // ⬅️ יצירת הגדרה
+  { path: 'settings/report-config/:id/edit', component: CompanyReportConfigFormComponent, title: 'עריכת הגדרת דיווח' },  // ⬅️ עריכת הגדרה
    {path:'workers',component:WorkersListComponent,title:'רשימת עובדים'}, // ⬅️ דף רשימת עובדים
    { path: 'workers', component: WorkersListComponent, title:'רשימת עובדים' },
    { path: 'workers/create', component: WorkerFormComponent, title: 'הוספת עובד' },
@@ -27,7 +32,7 @@ export const routes: Routes = [
     { path: 'companies/create', component: CompanyCreateComponent },  // ← חייב להיות לפני :id
     { path: 'companies/:id/edit', component: CompanyCreateComponent }, // ← עריכה
     { path: 'companies/:id/tasks', component: CompanyTasksComponent }, // ← משימות
-      { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
+      // { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // ⬅️ דף ראשי -> התחברות
   { path: '**', redirectTo: '/login' }  // ⬅️ כל דף לא קיים -> חזרה להתחברות

@@ -1,4 +1,4 @@
-ο»Ώusing MediatR;
+using MediatR;
 using AccountingSystem.Application.Commands;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Domain.Entities;
@@ -13,12 +13,12 @@ namespace AccountingSystem.Application.Handlers
     : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
         {
             private readonly IReportInstanceRepository _reportInstanceRepository;
-            private readonly ICompanyReportConfigRepository _configRepository;
+            private readonly ICompanyreportconfigRepository _configRepository;
             private readonly IUnitOfWork _unitOfWork;
 
             public CreateReportInstanceCommandHandler(
                 IReportInstanceRepository reportInstanceRepository,
-                ICompanyReportConfigRepository configRepository,
+                ICompanyreportconfigRepository configRepository,
                 IUnitOfWork unitOfWork)
             {
                 _reportInstanceRepository = reportInstanceRepository;
@@ -30,7 +30,7 @@ namespace AccountingSystem.Application.Handlers
                 CreateReportInstanceCommand request,
                 CancellationToken cancellationToken)
             {
-                // π” Χ©ΧΧ‘ 1: Χ‘Χ“Χ•Χ§ ΧΧ Χ§Χ™Χ™Χ Config ΧΆΧ Χ”Χ¦Χ™Χ¨Χ•Χ£ Χ”Χ–Χ”
+                // ?? ωμα 1: αγεχ ΰν χιιν Config ςν δφιψεσ δζδ
                 var configs = await _configRepository.GetByCompanyIdAsync(request.CompanyId);
                 var existingConfig = configs.FirstOrDefault(c =>
                     c.Reporttypeid == request.ReportTypeId);
@@ -39,18 +39,18 @@ namespace AccountingSystem.Application.Handlers
 
                 if (existingConfig != null)
                 {
-                    // β… Config Χ§Χ™Χ™Χ - Χ”Χ©ΧªΧΧ© Χ‘Χ•
+                    // ? Config χιιν - δωϊξω αε
                     configId = existingConfig.Id;
                 }
                 else
                 {
-                    // π†• Config ΧΧ Χ§Χ™Χ™Χ - Χ¦Χ•Χ¨ Χ—Χ“Χ©
+                    // ?? Config μΰ χιιν - φεψ ηγω
                     var newConfig = new Companyreportconfig
                     {
                         Companyid = request.CompanyId,
                         Reporttypeid = request.ReportTypeId,
-                        Frequencyid = request.FrequencyId ?? 1, // Χ‘Χ¨Χ™Χ¨Χª ΧΧ—Χ“Χ: Χ—Χ•Χ“Χ©Χ™
-                        Dayofmonth = null, // ΧΧ• ΧΆΧ¨Χ Χ‘Χ¨Χ™Χ¨Χª ΧΧ—Χ“Χ
+                        Frequencyid = request.FrequencyId ?? 1, // αψιψϊ ξηγμ: ηεγωι
+                        Dayofmonth = null, // ΰε ςψκ αψιψϊ ξηγμ
                         Isactive = true,
                         Createdat = DateTime.UtcNow,
                         Updatedat = DateTime.UtcNow
@@ -62,7 +62,7 @@ namespace AccountingSystem.Application.Handlers
                     configId = newConfig.Id;
                 }
 
-                // π“ Χ©ΧΧ‘ 2: Χ¦Χ•Χ¨ ΧΧª Χ”-ReportInstance ΧΆΧ Χ”-ConfigId
+                // ?? ωμα 2: φεψ ΰϊ δ-ReportInstance ςν δ-ConfigId
                 PaymentMethod? paymentMethod = null;
                 if (!string.IsNullOrEmpty(request.PaymentMethod) &&
                     Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var parsedMethod))
@@ -72,7 +72,7 @@ namespace AccountingSystem.Application.Handlers
 
                 var reportInstance = new Reportinstance
                 {
-                    Configid = configId, // β… ΧΧ©ΧªΧΧ© Χ‘-Config Χ©Χ ΧΧ¦Χ ΧΧ• Χ Χ•Χ¦Χ¨
+                    Configid = configId, // ? ξωϊξω α-Config ωπξφΰ ΰε πεφψ
                     Period = DateOnly.FromDateTime(request.Period),
                     Amount = request.Amount,
                     Status = ReportStatus.Pending,
@@ -129,19 +129,19 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return false;
 
-            // Χ”ΧΧ¨Χª string Χ-Enum
+            // δξψϊ string μ-Enum
             if (Enum.TryParse<ReportStatus>(request.Status, out var status))
             {
                 report.Status = status;
             }
             else
             {
-                return false; // Χ΅ΧΧΧ•Χ΅ ΧΧ ΧªΧ§Χ™Χ
+                return false; // ρθθερ μΰ ϊχιο
             }
 
             report.Updatedat = DateTime.UtcNow;
 
-            // ΧΆΧ“Χ›Χ•Χ ΧΧ•ΧΧ•ΧΧΧ™ Χ©Χ ΧªΧΧ¨Χ™Χ›Χ™Χ
+            // ςγλεο ΰεθεξθι ωμ ϊΰψιλιν
             if (status == ReportStatus.Reported && !report.Reporteddate.HasValue)
             {
                 report.Reporteddate = DateOnly.FromDateTime(DateTime.Now);
@@ -187,7 +187,7 @@ namespace AccountingSystem.Application.Handlers
 
             report.Amount = request.Amount;
 
-            // Χ”ΧΧ¨Χª string Χ-Enum
+            // δξψϊ string μ-Enum
             if (Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var paymentMethod))
             {
                 report.PaymentMethod = paymentMethod;
@@ -227,16 +227,16 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return false;
 
-            // ΧΆΧ“Χ›Χ•Χ Χ”Χ©Χ“Χ•Χª
+            // ςγλεο δωγεϊ
             report.Amount = request.Amount;
 
-            // Χ”ΧΧ¨Χª Χ΅ΧΧΧ•Χ΅
+            // δξψϊ ρθθερ
             if (Enum.TryParse<ReportStatus>(request.Status, out var status))
             {
                 report.Status = status;
             }
 
-            // Χ”ΧΧ¨Χª ΧΧΧ¦ΧΆΧ™ ΧªΧ©ΧΧ•Χ
+            // δξψϊ ΰξφςι ϊωμεν
             if (!string.IsNullOrEmpty(request.PaymentMethod) &&
                 Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var paymentMethod))
             {

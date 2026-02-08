@@ -1,4 +1,4 @@
-ο»Ώusing AccountingSystem.Domain.Interfaces;
+using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly AccountingDbContext _context;
 
-    // Lazy initialization Χ©Χ repositories
+    // Lazy initialization ωμ repositories
     private IAccountingFirmRepository? _accountingFirms;
     private ICompanyRepository? _companies;
     private IWorkerRepository? _workers;
@@ -21,10 +21,10 @@ public class UnitOfWork : IUnitOfWork
     private ICompanyWorkerRepository? _companyWorkers;
     private IReportTypeRepository? _reportTypes;
     private IFrequencyRepository? _frequencies;
-    private ICompanyReportConfigRepository? _companyReportConfigs;
+    private ICompanyreportconfigRepository? _companyReportConfigs;
     private IReportInstanceRepository? _reportInstances;
     private ITaskTypeRepository? _taskTypes;
-    private ICompanyTaskRepository? _tasks;  // π‘ Χ©Χ•Χ Χ” Χ-ITaskRepository!
+    private ICompanyTaskRepository? _tasks;  // ?? ωεπδ ξ-ITaskRepository!
     private IWorkerRoleTypeRepository? _workerRoleTypes;
     private IAuditLogRepository? _auditLogs;
 
@@ -58,7 +58,7 @@ public class UnitOfWork : IUnitOfWork
     public IFrequencyRepository Frequencies =>
         _frequencies ??= new FrequencyRepository(_context);
 
-    public ICompanyReportConfigRepository CompanyReportConfigs =>
+    public ICompanyreportconfigRepository CompanyReportConfigs =>
         _companyReportConfigs ??= new CompanyReportConfigRepository(_context);
 
     public IReportInstanceRepository ReportInstances =>
@@ -68,7 +68,7 @@ public class UnitOfWork : IUnitOfWork
         _taskTypes ??= new TaskTypeRepository(_context);
 
     public ICompanyTaskRepository Tasks =>
-        _tasks ??= new CompanyTaskRepository(_context);  // π‘ Χ©Χ•Χ Χ” Χ-TaskRepository!
+        _tasks ??= new CompanyTaskRepository(_context);  // ?? ωεπδ ξ-TaskRepository!
 
     public IWorkerRoleTypeRepository WorkerRoleTypes =>
         _workerRoleTypes ??= new WorkerRoleTypeRepository(_context);
@@ -76,25 +76,25 @@ public class UnitOfWork : IUnitOfWork
     public IAuditLogRepository AuditLogs =>
         _auditLogs ??= new AuditLogRepository(_context);
 
-    // β† Χ”Χ¤Χ•Χ Χ§Χ¦Χ™Χ” Χ”Χ—Χ©Χ•Χ‘Χ”!
+    // ? δτεπχφιδ δηωεαδ!
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        Console.WriteLine("π’Ύ UnitOfWork.SaveChangesAsync Χ Χ§Χ¨Χ");
+        Console.WriteLine("?? UnitOfWork.SaveChangesAsync πχψΰ");
         try
         {
             var result = await _context.SaveChangesAsync(cancellationToken);
-            Console.WriteLine($"β… Χ Χ©ΧΧ¨Χ• {result} Χ©Χ•Χ¨Χ•Χª Χ‘Χ”Χ¦ΧΧ—Χ”");
+            Console.WriteLine($"? πωξψε {result} ωεψεϊ αδφμηδ");
             return result;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"β Χ©Χ’Χ™ΧΧ” Χ‘Χ©ΧΧ™Χ¨Χ”: {ex.Message}");
-            Console.WriteLine($"β Stack: {ex.StackTrace}");
+            Console.WriteLine($"? ωβιΰδ αωξιψδ: {ex.Message}");
+            Console.WriteLine($"? Stack: {ex.StackTrace}");
             throw;
         }
     }
 
-    // β† Χ”Χ¤Χ•Χ Χ§Χ¦Χ™Χ” Χ”Χ©Χ Χ™Χ™Χ” (ΧΧΧ cancellationToken)
+    // ? δτεπχφιδ δωπιιδ (μμΰ cancellationToken)
     public async Task SaveChangesAsync()
     {
         await SaveChangesAsync(CancellationToken.None);
@@ -113,11 +113,11 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine($"π’Ύ UnitOfWork.UpdateTaskStatusAsync - TaskId={taskId}, Status={status}");
+        Console.WriteLine($"?? UnitOfWork.UpdateTaskStatusAsync - TaskId={taskId}, Status={status}");
 
         try
         {
-            // Χ‘Χ“Χ•Χ§ ΧΧ Χ”Χ΅ΧΧΧ•Χ΅ Χ”Χ•Χ Completed
+            // αγεχ ΰν δρθθερ δεΰ Completed
             bool isCompleted = status.Equals("Completed", StringComparison.OrdinalIgnoreCase);
 
             int rowsAffected;
@@ -147,13 +147,13 @@ public class UnitOfWork : IUnitOfWork
                 );
             }
 
-            Console.WriteLine($"β… ΧΆΧ•Χ“Χ›Χ Χ• {rowsAffected} Χ©Χ•Χ¨Χ•Χª");
+            Console.WriteLine($"? ςεγλπε {rowsAffected} ωεψεϊ");
             return rowsAffected;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"β Χ©Χ’Χ™ΧΧ” Χ‘ΧΆΧ“Χ›Χ•Χ Χ΅ΧΧΧ•Χ΅: {ex.Message}");
-            Console.WriteLine($"β Inner: {ex.InnerException?.Message}");
+            Console.WriteLine($"? ωβιΰδ αςγλεο ρθθερ: {ex.Message}");
+            Console.WriteLine($"? Inner: {ex.InnerException?.Message}");
             throw;
         }
     }
