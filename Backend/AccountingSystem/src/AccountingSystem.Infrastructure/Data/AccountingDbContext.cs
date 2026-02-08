@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AccountingSystem.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using AccountingSystem.Domain.Entities;
-using TaskStatus = AccountingSystem.Domain.Enums.TaskStatus;
+using TaskStatus = AccountingSystem.Domain.Enums.TaskStatus1;
 
 
 namespace AccountingSystem.Infrastructure.Data;

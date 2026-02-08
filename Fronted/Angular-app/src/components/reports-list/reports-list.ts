@@ -1,7 +1,813 @@
-import { Component, OnInit } from '@angular/core';
+// // // import { Component, OnInit } from '@angular/core';
+// // // import { CommonModule } from '@angular/common';
+// // // import { FormsModule } from '@angular/forms';
+// // // import { Router, ActivatedRoute } from '@angular/router'; // ← הוסף ActivatedRoute
+// // // import { ReportService } from '../../services/report';
+// // // import { ReportInstanceDetail } from '../../models/report-instance';
+// // // import { WorkerService } from '../../services/worker';
+// // // import { ReportViewModalComponent } from '../report-view/report-view';
+
+// // // @Component({
+// // //   selector: 'app-reports-list',
+// // //   standalone: true,
+// // //   imports: [CommonModule, FormsModule, ReportViewModalComponent],
+// // //   templateUrl: './reports-list.html',
+// // //   styleUrls: ['./reports-list.css']
+// // // })
+
+
+// // // // reports-list.component.ts
+// // // export class ReportsListComponent implements OnInit {
+// // //   reports: ReportInstanceDetail[] = [];
+// // //   filteredReports: ReportInstanceDetail[] = [];
+// // //   isLoading: boolean = false;
+// // //   errorMessage: string = '';
+  
+// // //   selectedReport: ReportInstanceDetail | null = null;
+// // //   isModalOpen: boolean = false;
+  
+// // //   searchTerm: string = '';
+// // //   selectedStatus: string = 'all';
+// // //   selectedCompany: string = 'all';
+// // //   selectedReportType: string = 'all';
+  
+// // //   filterByCompanyId: number | null = null;
+// // //   isAdminMode: boolean = false; // 🆕 דגל מצב מנהל
+  
+// // //   companies: string[] = [];
+// // //   reportTypes: string[] = [];
+// // //   statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
+
+// // //   constructor(
+// // //     private reportService: ReportService,
+// // //     public workerService: WorkerService,
+// // //     private router: Router,
+// // //     private route: ActivatedRoute
+// // //   ) { }
+
+
+// // // ngOnInit(): void {
+// // //   this.route.queryParams.subscribe(params => {
+// // //     this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+// // //     this.isAdminMode = params['adminMode'] === 'true';
+    
+// // //     console.log('🔍 Query Params שהתקבלו:', params);
+// // //     console.log('🔍 isAdminMode:', this.isAdminMode);
+// // //     console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
+    
+// // //     this.loadReports();
+// // //   });
+// // // }
+
+// // // loadReports(): void {
+// // //   this.isLoading = true;
+// // //   this.errorMessage = '';
+
+// // //   console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
+
+// // //   this.reportService.getAll(this.isAdminMode).subscribe({
+// // //     next: (data) => {
+// // //       console.log('✅ התקבלו דוחות מהשרת:', data);
+// // //       console.log('✅ כמות דוחות:', data.length);
+      
+// // //       this.reports = data;
+      
+// // //       if (this.filterByCompanyId) {
+// // //         console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
+// // //         this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+// // //         console.log('✅ אחרי פילטור:', this.reports.length);
+// // //       }
+      
+// // //       this.filteredReports = this.reports;
+// // //       this.isLoading = false;
+// // //     },
+// // //     error: (error) => {
+// // //       console.error('❌ שגיאה:', error);
+// // //       this.isLoading = false;
+// // //       this.errorMessage = 'שגיאה בטעינת הדוחות';
+// // //     }
+// // //   });
+// // // }
+
+
+// // //   // שאר הקוד נשאר אותו דבר...
+
+
+
+
+// // //   applyFilters(): void {
+// // //     this.filteredReports = this.reports.filter(report => {
+// // //       const matchesSearch = !this.searchTerm || 
+// // //         report.companyName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+// // //         report.reportTypeName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+// // //         report.reportTypeShortCode?.toLowerCase().includes(this.searchTerm.toLowerCase());
+
+// // //       const matchesStatus = this.selectedStatus === 'all' || 
+// // //         report.status === this.selectedStatus;
+
+// // //       const matchesCompany = this.selectedCompany === 'all' || 
+// // //         report.companyName === this.selectedCompany;
+
+// // //       const matchesReportType = this.selectedReportType === 'all' ||
+// // //         report.reportTypeName === this.selectedReportType;
+
+// // //       return matchesSearch && matchesStatus && matchesCompany && matchesReportType;
+// // //     });
+// // //   }
+
+// // //   clearFilters(): void {
+// // //     this.searchTerm = '';
+// // //     this.selectedStatus = 'all';
+// // //     this.selectedCompany = 'all';
+// // //     this.selectedReportType = 'all';
+    
+// // //     // ← אם יש פילטר לפי חברה, אל תנקה אותו
+// // //     if (this.filterByCompanyId) {
+// // //       this.filteredReports = this.reports; // כבר מפולטר לפי החברה
+// // //     } else {
+// // //       this.filteredReports = this.reports;
+// // //     }
+// // //   }
+
+// // //   /**
+// // //    * 🔥 בדיקה האם הדוח באיחור
+// // //    */
+// // //   isReportDelayed(report: ReportInstanceDetail): boolean {
+// // //     return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
+// // //   }
+
+// // //   /**
+// // //    * 🔥 קבלת טקסט איחור
+// // //    */
+// // //   getDelayText(report: ReportInstanceDetail): string {
+// // //     if (!this.isReportDelayed(report)) return '';
+// // //     const days = report.daysOverdue!;
+// // //     return days === 1 ? 'איחור של יום אחד' : `איחור של ${days} ימים`;
+// // //   }
+
+// // //   viewReport(reportId: number): void {
+// // //     const report = this.reports.find(r => r.id === reportId);
+// // //     if (report) {
+// // //       this.selectedReport = report;
+// // //       this.isModalOpen = true;
+// // //     }
+// // //   }
+
+// // //   closeModal(): void {
+// // //     this.isModalOpen = false;
+// // //     this.selectedReport = null;
+// // //   }
+
+// // //   onEditFromModal(reportId: number): void {
+// // //     this.router.navigate(['/reports/edit', reportId]);
+// // //   }
+
+// // //   editReport(reportId: number): void {
+// // //     this.router.navigate(['/reports/edit', reportId]);
+// // //   }
+
+// // //   getStatusColor(status: string): string {
+// // //     switch (status) {
+// // //       case 'Pending': return 'status-pending';
+// // //       case 'Reported': return 'status-reported';
+// // //       case 'Approved': return 'status-approved';
+// // //       case 'Paid': return 'status-paid';
+// // //       default: return '';
+// // //     }
+// // //   }
+
+// // //   getStatusText(status: string): string {
+// // //     switch (status) {
+// // //       case 'Pending': return 'ממתין';
+// // //       case 'Reported': return 'דווח';
+// // //       case 'Approved': return 'אושר';
+// // //       case 'Paid': return 'שולם';
+// // //       default: return status;
+// // //     }
+// // //   }
+
+// // //   getPaymentMethodText(method: string): string {
+// // //     switch (method) {
+// // //       case 'Transfer': return 'העברה בנקאית';
+// // //       case 'Credit': return 'כרטיס אשראי';
+// // //       case 'Check': return 'צ\'ק';
+// // //       case 'Cash': return 'מזומן';
+// // //       case 'Online': return 'תשלום מקוון';
+// // //       default: return method;
+// // //     }
+// // //   }
+
+// // //   formatDate(date: Date | null | undefined): string {
+// // //     if (!date) return '-';
+// // //     return new Date(date).toLocaleDateString('he-IL');
+// // //   }
+
+// // //   formatAmount(amount: number | null | undefined): string {
+// // //     if (!amount) return '-';
+// // //     return new Intl.NumberFormat('he-IL', {
+// // //       style: 'currency',
+// // //       currency: 'ILS'
+// // //     }).format(amount);
+// // //   }
+
+// // //   getPendingCount(): number {
+// // //     return this.filteredReports.filter(r => r.status === 'Pending').length;
+// // //   }
+
+// // //   getReportedCount(): number {
+// // //     return this.filteredReports.filter(r => r.status === 'Reported').length;
+// // //   }
+
+// // //   getPaidCount(): number {
+// // //     return this.filteredReports.filter(r => r.status === 'Paid').length;
+// // //   }
+// // // }
+
+
+// // import { Component, OnDestroy, OnInit } from '@angular/core';
+// // import { CommonModule } from '@angular/common';
+// // import { FormsModule } from '@angular/forms';
+// // import { Router, ActivatedRoute } from '@angular/router'; // ← הוסף ActivatedRoute
+// // import { ReportService } from '../../services/report';
+// // import { ReportInstanceDetail } from '../../models/report-instance';
+// // import { WorkerService } from '../../services/worker';
+// // import { ReportViewModalComponent } from '../report-view/report-view';
+
+// // @Component({
+// //   selector: 'app-reports-list',
+// //   standalone: true,
+// //   imports: [CommonModule, FormsModule, ReportViewModalComponent],
+// //   templateUrl: './reports-list.html',
+// //   styleUrls: ['./reports-list.css']
+// // })
+
+
+// // // reports-list.component.ts
+// // export class ReportsListComponent implements OnInit  {
+// //   reports: ReportInstanceDetail[] = [];
+// //   filteredReports: ReportInstanceDetail[] = [];
+// //   isLoading: boolean = false;
+// //   errorMessage: string = '';
+  
+// //   selectedReport: ReportInstanceDetail | null = null;
+// //   isModalOpen: boolean = false;
+// //     // openWorkerPopoverId: number | null = null;
+// //     openWorkerPopoverId: number | null = null;
+// //   selectedReportWorkers: string[] = [];
+// //   popoverPosition = { top: 0, left: 0 };
+
+// //   searchTerm: string = '';
+// //   selectedStatus: string = 'all';
+// //   selectedCompany: string = 'all';
+// //   selectedReportType: string = 'all';
+  
+// //   filterByCompanyId: number | null = null;
+// //   isAdminMode: boolean = false; // 🆕 דגל מצב מנהל
+  
+// //   companies: string[] = [];
+// //   reportTypes: string[] = [];
+// //   statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
+
+// //   constructor(
+// //     private reportService: ReportService,
+// //     public workerService: WorkerService,
+// //     private router: Router,
+// //     private route: ActivatedRoute
+// //   ) { }
+
+
+// // ngOnInit(): void {
+// //   this.route.queryParams.subscribe(params => {
+// //     this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+// //     this.isAdminMode = params['adminMode'] === 'true';
+    
+// //     console.log('🔍 Query Params שהתקבלו:', params);
+// //     console.log('🔍 isAdminMode:', this.isAdminMode);
+// //     console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
+    
+// //     this.loadReports();
+// //   });
+// //   document.addEventListener('click', () => {
+// //     this.closeWorkerPopover();
+// //   });
+// // }
+// // ngOnDestroy(): void {
+// //   document.removeEventListener('click', () => {
+// //     this.closeWorkerPopover();
+// //   });
+// // }
+
+// // openWorkerPopover(report: ReportInstanceDetail, event: Event): void {
+// //     event.stopPropagation();
+    
+// //     const button = event.target as HTMLElement;
+// //     const rect = button.getBoundingClientRect();
+    
+// //     // חישוב מיקום הפופאובר
+// //     this.popoverPosition = {
+// //       top: rect.bottom + window.scrollY + 10,  // מתחת לכפתור
+// //       left: rect.left + window.scrollX - 100   // ממורכז יחסית לכפתור
+// //     };
+    
+// //     this.selectedReportWorkers = report.workerNames || [];
+// //     this.openWorkerPopoverId = report.id;
+// //   }
+
+// //   // 🆕 סגירת פופאובר
+// //   closeWorkerPopover(): void {
+// //     this.openWorkerPopoverId = null;
+// //     this.selectedReportWorkers = [];
+// //   }
+
+// //   // 🆕 קבלת מספר עובדות
+// //   getWorkerCount(report: ReportInstanceDetail): number {
+// //     return report.workerNames?.length || 0;
+// //   }
+
+// //   // 🆕 האם יש עובדות
+// //   hasWorkers(report: ReportInstanceDetail): boolean {
+// //     return report.workerNames && report.workerNames.length > 0;
+// //   }
+
+// // loadReports(): void {
+// //   this.isLoading = true;
+// //   this.errorMessage = '';
+
+// //   console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
+
+// //   this.reportService.getAll(this.isAdminMode).subscribe({
+// //     next: (data) => {
+// //       console.log('✅ התקבלו דוחות מהשרת:', data);
+// //       console.log('✅ כמות דוחות:', data.length);
+      
+// //       this.reports = data;
+      
+// //       if (this.filterByCompanyId) {
+// //         console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
+// //         this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+// //         console.log('✅ אחרי פילטור:', this.reports.length);
+// //       }
+      
+// //       this.filteredReports = this.reports;
+      
+// //       // 🔥 מילוי רשימת החברות וסוגי הדיווח מתוך הדוחות
+// //       this.populateFilterOptions();
+      
+// //       this.isLoading = false;
+// //     },
+// //     error: (error) => {
+// //       console.error('❌ שגיאה:', error);
+// //       this.isLoading = false;
+// //       this.errorMessage = 'שגיאה בטעינת הדוחות';
+// //     }
+// //   });
+// // }
+
+// // /**
+// //  * 🔥 מילוי אופציות הפילטרים מתוך הדוחות
+// //  */
+// // populateFilterOptions(): void {
+// //   // שליפת כל שמות החברות הייחודיים
+// //   this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
+  
+// //   // שליפת כל סוגי הדיווח הייחודיים
+// //   this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+  
+// //   console.log('✅ חברות זמינות:', this.companies);
+// //   console.log('✅ סוגי דיווח זמינים:', this.reportTypes);
+// // }
+
+
+// //   // שאר הקוד נשאר אותו דבר...
+
+
+
+
+// //   applyFilters(): void {
+// //     this.filteredReports = this.reports.filter(report => {
+// //       const matchesSearch = !this.searchTerm || 
+// //         report.companyName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+// //         report.reportTypeName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+// //         report.reportTypeShortCode?.toLowerCase().includes(this.searchTerm.toLowerCase());
+
+// //       const matchesStatus = this.selectedStatus === 'all' || 
+// //         report.status === this.selectedStatus;
+
+// //       const matchesCompany = this.selectedCompany === 'all' || 
+// //         report.companyName === this.selectedCompany;
+
+// //       const matchesReportType = this.selectedReportType === 'all' ||
+// //         report.reportTypeName === this.selectedReportType;
+
+// //       return matchesSearch && matchesStatus && matchesCompany && matchesReportType;
+// //     });
+// //   }
+
+// //   clearFilters(): void {
+// //     this.searchTerm = '';
+// //     this.selectedStatus = 'all';
+// //     this.selectedCompany = 'all';
+// //     this.selectedReportType = 'all';
+    
+// //     // ← אם יש פילטר לפי חברה, אל תנקה אותו
+// //     if (this.filterByCompanyId) {
+// //       this.filteredReports = this.reports; // כבר מפולטר לפי החברה
+// //     } else {
+// //       this.filteredReports = this.reports;
+// //     }
+// //   }
+
+// //   /**
+// //    * 🔥 בדיקה האם הדוח באיחור
+// //    */
+// //   isReportDelayed(report: ReportInstanceDetail): boolean {
+// //     return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
+// //   }
+
+// //   /**
+// //    * 🔥 קבלת טקסט איחור
+// //    */
+// //   getDelayText(report: ReportInstanceDetail): string {
+// //     if (!this.isReportDelayed(report)) return '';
+// //     const days = report.daysOverdue!;
+// //     return days === 1 ? 'איחור של יום אחד' : `איחור של ${days} ימים`;
+// //   }
+
+// //   viewReport(reportId: number): void {
+// //     const report = this.reports.find(r => r.id === reportId);
+// //     if (report) {
+// //       this.selectedReport = report;
+// //       this.isModalOpen = true;
+// //     }
+// //   }
+
+// //   closeModal(): void {
+// //     this.isModalOpen = false;
+// //     this.selectedReport = null;
+// //   }
+
+// //   onEditFromModal(reportId: number): void {
+// //     this.router.navigate(['/reports/edit', reportId]);
+// //   }
+
+// //   editReport(reportId: number): void {
+// //     this.router.navigate(['/reports/edit', reportId]);
+// //   }
+
+// //   getStatusColor(status: string): string {
+// //     switch (status) {
+// //       case 'Pending': return 'status-pending';
+// //       case 'Reported': return 'status-reported';
+// //       case 'Approved': return 'status-approved';
+// //       case 'Paid': return 'status-paid';
+// //       default: return '';
+// //     }
+// //   }
+
+// //   getStatusText(status: string): string {
+// //     switch (status) {
+// //       case 'Pending': return 'ממתין';
+// //       case 'Reported': return 'דווח';
+// //       case 'Approved': return 'אושר';
+// //       case 'Paid': return 'שולם';
+// //       default: return status;
+// //     }
+// //   }
+
+// //   getPaymentMethodText(method: string): string {
+// //     switch (method) {
+// //       case 'Transfer': return 'העברה בנקאית';
+// //       case 'Credit': return 'כרטיס אשראי';
+// //       case 'Check': return 'צ\'ק';
+// //       case 'Cash': return 'מזומן';
+// //       case 'Online': return 'תשלום מקוון';
+// //       default: return method;
+// //     }
+// //   }
+
+// //   formatDate(date: Date | null | undefined): string {
+// //     if (!date) return '-';
+// //     return new Date(date).toLocaleDateString('he-IL');
+// //   }
+
+// //   formatAmount(amount: number | null | undefined): string {
+// //     if (!amount) return '-';
+// //     return new Intl.NumberFormat('he-IL', {
+// //       style: 'currency',
+// //       currency: 'ILS'
+// //     }).format(amount);
+// //   }
+
+// //   getPendingCount(): number {
+// //     return this.filteredReports.filter(r => r.status === 'Pending').length;
+// //   }
+
+// //   getReportedCount(): number {
+// //     return this.filteredReports.filter(r => r.status === 'Reported').length;
+// //   }
+
+// //   getPaidCount(): number {
+// //     return this.filteredReports.filter(r => r.status === 'Paid').length;
+// //   }
+
+
+// //   toggleWorkerPopover(reportId: number, event: Event): void {
+// //     event.stopPropagation(); // מונע סגירה מיידית
+    
+// //     if (this.openWorkerPopoverId === reportId) {
+// //       this.openWorkerPopoverId = null; // סגור אם כבר פתוח
+// //     } else {
+// //       this.openWorkerPopoverId = reportId; // פתח חדש
+// //     }
+// //   }
+
+// //   /**
+// //    * בדיקה האם הפופאובר פתוח
+// //    */
+// //   isWorkerPopoverOpen(reportId: number): boolean {
+// //     return this.openWorkerPopoverId === reportId;
+// //   }
+
+  
+// // }
+
+
+
+// import { Component, OnDestroy, OnInit } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+// import { Router, ActivatedRoute } from '@angular/router';
+// import { ReportService } from '../../services/report';
+// import { ReportInstanceDetail } from '../../models/report-instance';
+// import { WorkerService } from '../../services/worker';
+// import { ReportViewModalComponent } from '../report-view/report-view';
+
+// @Component({
+//   selector: 'app-reports-list',
+//   standalone: true,
+//   imports: [CommonModule, FormsModule, ReportViewModalComponent],
+//   templateUrl: './reports-list.html',
+//   styleUrls: ['./reports-list.css']
+// })
+// export class ReportsListComponent implements OnInit, OnDestroy {
+//   reports: ReportInstanceDetail[] = [];
+//   filteredReports: ReportInstanceDetail[] = [];
+//   isLoading: boolean = false;
+//   errorMessage: string = '';
+  
+//   selectedReport: ReportInstanceDetail | null = null;
+//   isModalOpen: boolean = false;
+  
+//   // 🆕 למודל העובדות
+//   openWorkerPopoverId: number | null = null;
+//   selectedReportWorkers: string[] = [];
+
+//   // פילטרים
+//   searchTerm: string = '';
+//   selectedStatus: string = 'all';
+//   selectedCompany: string = 'all';
+//   selectedReportType: string = 'all';
+  
+//   filterByCompanyId: number | null = null;
+//   isAdminMode: boolean = false;
+  
+//   companies: string[] = [];
+//   reportTypes: string[] = [];
+//   statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
+
+//   constructor(
+//     private reportService: ReportService,
+//     public workerService: WorkerService,
+//     private router: Router,
+//     private route: ActivatedRoute
+//   ) { }
+
+//   ngOnInit(): void {
+//     this.route.queryParams.subscribe(params => {
+//       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+//       this.isAdminMode = params['adminMode'] === 'true';
+      
+//       console.log('🔍 Query Params שהתקבלו:', params);
+//       console.log('🔍 isAdminMode:', this.isAdminMode);
+//       console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
+      
+//       this.loadReports();
+//     });
+    
+//     document.addEventListener('click', () => {
+//       this.closeWorkerPopover();
+//     });
+//   }
+
+//   ngOnDestroy(): void {
+//     document.removeEventListener('click', () => {
+//       this.closeWorkerPopover();
+//     });
+//   }
+
+//   // ========================================
+//   // 🆕 פונקציות למודל העובדות
+//   // ========================================
+
+//   openWorkerPopover(report: ReportInstanceDetail, event: Event): void {
+//     event.stopPropagation();
+//     this.selectedReportWorkers = report.workerNames || [];
+//     this.openWorkerPopoverId = report.id;
+//   }
+
+//   closeWorkerPopover(): void {
+//     this.openWorkerPopoverId = null;
+//     this.selectedReportWorkers = [];
+//   }
+
+//   getWorkerCount(report: ReportInstanceDetail): number {
+//     return report.workerNames?.length || 0;
+//   }
+
+//   hasWorkers(report: ReportInstanceDetail): boolean {
+//     return report.workerNames && report.workerNames.length > 0;
+//   }
+
+//   // ========================================
+//   // טעינת דוחות
+//   // ========================================
+
+//   loadReports(): void {
+//     this.isLoading = true;
+//     this.errorMessage = '';
+
+//     console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
+
+//     this.reportService.getAll(this.isAdminMode).subscribe({
+//       next: (data) => {
+//         console.log('✅ התקבלו דוחות מהשרת:', data);
+//         console.log('✅ כמות דוחות:', data.length);
+        
+//         this.reports = data;
+        
+//         if (this.filterByCompanyId) {
+//           console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
+//           this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+//           console.log('✅ אחרי פילטור:', this.reports.length);
+//         }
+        
+//         this.filteredReports = this.reports;
+//         this.populateFilterOptions();
+//         this.isLoading = false;
+//       },
+//       error: (error) => {
+//         console.error('❌ שגיאה:', error);
+//         this.isLoading = false;
+//         this.errorMessage = 'שגיאה בטעינת הדוחות';
+//       }
+//     });
+//   }
+
+//   populateFilterOptions(): void {
+//     this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
+//     this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+    
+//     console.log('✅ חברות זמינות:', this.companies);
+//     console.log('✅ סוגי דיווח זמינים:', this.reportTypes);
+//   }
+
+//   // ========================================
+//   // פילטרים
+//   // ========================================
+
+//   applyFilters(): void {
+//     this.filteredReports = this.reports.filter(report => {
+//       const matchesSearch = !this.searchTerm || 
+//         report.companyName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+//         report.reportTypeName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+//         report.reportTypeShortCode?.toLowerCase().includes(this.searchTerm.toLowerCase());
+
+//       const matchesStatus = this.selectedStatus === 'all' || 
+//         report.status === this.selectedStatus;
+
+//       const matchesCompany = this.selectedCompany === 'all' || 
+//         report.companyName === this.selectedCompany;
+
+//       const matchesReportType = this.selectedReportType === 'all' ||
+//         report.reportTypeName === this.selectedReportType;
+
+//       return matchesSearch && matchesStatus && matchesCompany && matchesReportType;
+//     });
+//   }
+
+//   clearFilters(): void {
+//     this.searchTerm = '';
+//     this.selectedStatus = 'all';
+//     this.selectedCompany = 'all';
+//     this.selectedReportType = 'all';
+//     this.filteredReports = this.reports;
+//   }
+
+//   // ========================================
+//   // פונקציות עזר
+//   // ========================================
+
+//   isReportDelayed(report: ReportInstanceDetail): boolean {
+//     return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
+//   }
+
+//   getDelayText(report: ReportInstanceDetail): string {
+//     if (!this.isReportDelayed(report)) return '';
+//     const days = report.daysOverdue!;
+//     return days === 1 ? 'איחור של יום אחד' : `איחור של ${days} ימים`;
+//   }
+
+//   // ========================================
+//   // פעולות על דוחות
+//   // ========================================
+
+//   viewReport(reportId: number): void {
+//     const report = this.reports.find(r => r.id === reportId);
+//     if (report) {
+//       this.selectedReport = report;
+//       this.isModalOpen = true;
+//     }
+//   }
+
+//   closeModal(): void {
+//     this.isModalOpen = false;
+//     this.selectedReport = null;
+//   }
+
+//   onEditFromModal(reportId: number): void {
+//     this.router.navigate(['/reports/edit', reportId]);
+//   }
+
+//   editReport(reportId: number): void {
+//     this.router.navigate(['/reports/edit', reportId]);
+//   }
+
+//   // ========================================
+//   // פורמט וטקסטים
+//   // ========================================
+
+//   getStatusColor(status: string): string {
+//     switch (status) {
+//       case 'Pending': return 'status-pending';
+//       case 'Reported': return 'status-reported';
+//       case 'Approved': return 'status-approved';
+//       case 'Paid': return 'status-paid';
+//       default: return '';
+//     }
+//   }
+
+//   getStatusText(status: string): string {
+//     switch (status) {
+//       case 'Pending': return 'ממתין';
+//       case 'Reported': return 'דווח';
+//       case 'Approved': return 'אושר';
+//       case 'Paid': return 'שולם';
+//       default: return status;
+//     }
+//   }
+
+//   getPaymentMethodText(method: string): string {
+//     switch (method) {
+//       case 'Transfer': return 'העברה בנקאית';
+//       case 'Credit': return 'כרטיס אשראי';
+//       case 'Check': return 'צ\'ק';
+//       case 'Cash': return 'מזומן';
+//       case 'Online': return 'תשלום מקוון';
+//       default: return method;
+//     }
+//   }
+
+//   formatDate(date: Date | null | undefined): string {
+//     if (!date) return '-';
+//     return new Date(date).toLocaleDateString('he-IL');
+//   }
+
+//   formatAmount(amount: number | null | undefined): string {
+//     if (!amount) return '-';
+//     return new Intl.NumberFormat('he-IL', {
+//       style: 'currency',
+//       currency: 'ILS'
+//     }).format(amount);
+//   }
+
+//   getPendingCount(): number {
+//     return this.filteredReports.filter(r => r.status === 'Pending').length;
+//   }
+
+//   getReportedCount(): number {
+//     return this.filteredReports.filter(r => r.status === 'Reported').length;
+//   }
+
+//   getPaidCount(): number {
+//     return this.filteredReports.filter(r => r.status === 'Paid').length;
+//   }
+// }
+
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router'; // ← הוסף ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReportService } from '../../services/report';
 import { ReportInstanceDetail } from '../../models/report-instance';
 import { WorkerService } from '../../services/worker';
@@ -14,97 +820,7 @@ import { ReportViewModalComponent } from '../report-view/report-view';
   templateUrl: './reports-list.html',
   styleUrls: ['./reports-list.css']
 })
-// export class ReportsListComponent implements OnInit {
-//   reports: ReportInstanceDetail[] = [];
-//   filteredReports: ReportInstanceDetail[] = [];
-//   isLoading: boolean = false;
-//   errorMessage: string = '';
-  
-//   selectedReport: ReportInstanceDetail | null = null;
-//   isModalOpen: boolean = false;
-  
-//   // פילטרים
-//   searchTerm: string = '';
-//   selectedStatus: string = 'all';
-//   selectedCompany: string = 'all';
-//   selectedReportType: string = 'all';
-  
-//   // ← הוסף משתנה לאחסון companyId מה-URL
-//   filterByCompanyId: number | null = null;
-  
-//   // רשימות ייחודיות לפילטרים
-//   companies: string[] = [];
-//   reportTypes: string[] = [];
-//   statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
-
-//   constructor(
-//     private reportService: ReportService,
-//     public workerService: WorkerService,
-//     private router: Router,
-//     private route: ActivatedRoute // ← הוסף ActivatedRoute
-//   ) { }
-//   isAdminMode: boolean = false; // 🆕 דגל מצב
-
-//   ngOnInit(): void {
-//     // ← קרא את companyId מה-query params
-//     this.route.queryParams.subscribe(params => {
-//       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-//       this.loadReports();
-//     });
-    
-//     console.log('Worker in ReportsListComponent:', this.workerService.currentWorker);
-//   }
-
-//   loadReports(): void {
-//   this.isLoading = true;
-//   this.errorMessage = '';
-
-//   console.log('🔍 מחפש דוחות עבור companyId:', this.filterByCompanyId);
-
-//   this.reportService.getAll().subscribe({
-//     next: (data) => {
-//       console.log('📊 כל הדוחות:', data);
-      
-//       // הדפס את כל ה-companyId שיש בדוחות
-//       const companyIds = data.map(r => r.companyId);
-//       console.log('📊 רשימת companyId בדוחות:', companyIds);
-      
-//       this.reports = data;
-      
-//       if (this.filterByCompanyId) {
-//         this.reports = data.filter(r => {
-//           const match = r.companyId === this.filterByCompanyId;
-//           if (match) {
-//             console.log('✅ מצאתי דוח מתאים!', r);
-//           }
-//           return match;
-//         });
-//         console.log(`✅ סה"כ ${this.reports.length} דוחות מפולטרים`);
-//       }
-      
-//       this.filteredReports = this.reports;
-//       this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
-//       this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
-      
-//       this.isLoading = false;
-//     },
-//      error: (error) => {
-//       this.isLoading = false;
-//       console.error('❌ שגיאה בטעינת דוחות:', error);
-      
-//       if (error.status === 401) {
-//         this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
-//       } else if (error.status === 500) {
-//         this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
-//       } else {
-//         this.errorMessage = 'שגיאה בטעינת הדוחות';
-//       }}
-//   });
-// }
-
-
-// reports-list.component.ts
-export class ReportsListComponent implements OnInit {
+export class ReportsListComponent implements OnInit, OnDestroy {
   reports: ReportInstanceDetail[] = [];
   filteredReports: ReportInstanceDetail[] = [];
   isLoading: boolean = false;
@@ -113,13 +829,18 @@ export class ReportsListComponent implements OnInit {
   selectedReport: ReportInstanceDetail | null = null;
   isModalOpen: boolean = false;
   
+  // 🆕 למודל העובדות
+  openWorkerPopoverId: number | null = null;
+  selectedReportWorkers: string[] = [];
+
+  // פילטרים
   searchTerm: string = '';
   selectedStatus: string = 'all';
   selectedCompany: string = 'all';
   selectedReportType: string = 'all';
   
   filterByCompanyId: number | null = null;
-  isAdminMode: boolean = false; // 🆕 דגל מצב מנהל
+  isAdminMode: boolean = false;
   
   companies: string[] = [];
   reportTypes: string[] = [];
@@ -132,122 +853,98 @@ export class ReportsListComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  // ngOnInit(): void {
-  //   // 🔥 קריאת query params (גם companyId וגם adminMode)
-  //   this.route.queryParams.subscribe(params => {
-  //     this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-  //     this.isAdminMode = params['adminMode'] === 'true';
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+      this.isAdminMode = params['adminMode'] === 'true';
       
-  //     console.log('🔍 פרמטרים:', {
-  //       companyId: this.filterByCompanyId,
-  //       adminMode: this.isAdminMode
-  //     });
+      console.log('🔍 Query Params שהתקבלו:', params);
+      console.log('🔍 isAdminMode:', this.isAdminMode);
+      console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
       
-  //     this.loadReports();
-  //   });
-  // }
-
-  // loadReports(): void {
-  //   this.isLoading = true;
-  //   this.errorMessage = '';
-
-  //   console.log('🔍 טוען דוחות במצב:', {
-  //     isAdminMode: this.isAdminMode,
-  //     filterByCompanyId: this.filterByCompanyId
-  //   });
-
-  //   // 🔥 שליחת isAdminMode לשרת
-  //   this.reportService.getAll(this.isAdminMode).subscribe({
-  //     next: (data) => {
-  //       console.log('📊 קיבלתי מהשרת:', data.length, 'דוחות');
-        
-  //       this.reports = data;
-        
-  //       // 🔥 פילטור לפי companyId (אם יש) - זה פילטור בצד לקוח
-  //       if (this.filterByCompanyId) {
-  //         console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
-          
-  //         this.reports = data.filter(r => {
-  //           const match = r.companyId === this.filterByCompanyId;
-  //           if (match) {
-  //             console.log('✅ מצאתי דוח מתאים:', r);
-  //           }
-  //           return match;
-  //         });
-          
-  //         console.log(`✅ סה"כ ${this.reports.length} דוחות אחרי פילטור`);
-  //       }
-        
-  //       this.filteredReports = this.reports;
-  //       this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
-  //       this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
-        
-  //       this.isLoading = false;
-  //     },
-  //     error: (error) => {
-  //       this.isLoading = false;
-  //       console.error('❌ שגיאה בטעינת דוחות:', error);
-        
-  //       if (error.status === 401) {
-  //         this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
-  //       } else if (error.status === 500) {
-  //         this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
-  //       } else {
-  //         this.errorMessage = 'שגיאה בטעינת הדוחות';
-  //       }
-  //     }
-  //   });
-  // }
-
-
-ngOnInit(): void {
-  this.route.queryParams.subscribe(params => {
-    this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-    this.isAdminMode = params['adminMode'] === 'true';
+      this.loadReports();
+    });
     
-    console.log('🔍 Query Params שהתקבלו:', params);
-    console.log('🔍 isAdminMode:', this.isAdminMode);
-    console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
-    
-    this.loadReports();
-  });
-}
+    document.addEventListener('click', () => {
+      this.closeWorkerPopover();
+    });
+  }
 
-loadReports(): void {
-  this.isLoading = true;
-  this.errorMessage = '';
+  ngOnDestroy(): void {
+    document.removeEventListener('click', () => {
+      this.closeWorkerPopover();
+    });
+  }
 
-  console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
+  // ========================================
+  // 🆕 פונקציות למודל העובדות
+  // ========================================
 
-  this.reportService.getAll(this.isAdminMode).subscribe({
-    next: (data) => {
-      console.log('✅ התקבלו דוחות מהשרת:', data);
-      console.log('✅ כמות דוחות:', data.length);
-      
-      this.reports = data;
-      
-      if (this.filterByCompanyId) {
-        console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
-        this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
-        console.log('✅ אחרי פילטור:', this.reports.length);
+  openWorkerPopover(report: ReportInstanceDetail, event: Event): void {
+    event.stopPropagation();
+    this.selectedReportWorkers = report.workerNames || [];
+    this.openWorkerPopoverId = report.id;
+  }
+
+  closeWorkerPopover(): void {
+    this.openWorkerPopoverId = null;
+    this.selectedReportWorkers = [];
+  }
+
+  getWorkerCount(report: ReportInstanceDetail): number {
+    return report.workerNames?.length || 0;
+  }
+
+  hasWorkers(report: ReportInstanceDetail): boolean {
+    return report.workerNames && report.workerNames.length > 0;
+  }
+
+  // ========================================
+  // טעינת דוחות
+  // ========================================
+
+  loadReports(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
+
+    this.reportService.getAll(this.isAdminMode).subscribe({
+      next: (data) => {
+        console.log('✅ התקבלו דוחות מהשרת:', data);
+        console.log('✅ כמות דוחות:', data.length);
+        
+        this.reports = data;
+        
+        if (this.filterByCompanyId) {
+          console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
+          this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+          console.log('✅ אחרי פילטור:', this.reports.length);
+        }
+        
+        this.filteredReports = this.reports;
+        this.populateFilterOptions();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('❌ שגיאה:', error);
+        this.isLoading = false;
+        this.errorMessage = 'שגיאה בטעינת הדוחות';
       }
-      
-      this.filteredReports = this.reports;
-      this.isLoading = false;
-    },
-    error: (error) => {
-      console.error('❌ שגיאה:', error);
-      this.isLoading = false;
-      this.errorMessage = 'שגיאה בטעינת הדוחות';
-    }
-  });
-}
+    });
+  }
 
+  populateFilterOptions(): void {
+    this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
+    this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+    
+    console.log('✅ חברות זמינות:', this.companies);
+    console.log('✅ סוגי דיווח זמינים:', this.reportTypes);
+  }
 
-  // שאר הקוד נשאר אותו דבר...
-
-
-
+  // ========================================
+  // פילטרים
+  // ========================================
 
   applyFilters(): void {
     this.filteredReports = this.reports.filter(report => {
@@ -274,30 +971,26 @@ loadReports(): void {
     this.selectedStatus = 'all';
     this.selectedCompany = 'all';
     this.selectedReportType = 'all';
-    
-    // ← אם יש פילטר לפי חברה, אל תנקה אותו
-    if (this.filterByCompanyId) {
-      this.filteredReports = this.reports; // כבר מפולטר לפי החברה
-    } else {
-      this.filteredReports = this.reports;
-    }
+    this.filteredReports = this.reports;
   }
 
-  /**
-   * 🔥 בדיקה האם הדוח באיחור
-   */
+  // ========================================
+  // פונקציות עזר
+  // ========================================
+
   isReportDelayed(report: ReportInstanceDetail): boolean {
     return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
   }
 
-  /**
-   * 🔥 קבלת טקסט איחור
-   */
   getDelayText(report: ReportInstanceDetail): string {
     if (!this.isReportDelayed(report)) return '';
     const days = report.daysOverdue!;
     return days === 1 ? 'איחור של יום אחד' : `איחור של ${days} ימים`;
   }
+
+  // ========================================
+  // פעולות על דוחות
+  // ========================================
 
   viewReport(reportId: number): void {
     const report = this.reports.find(r => r.id === reportId);
@@ -319,6 +1012,10 @@ loadReports(): void {
   editReport(reportId: number): void {
     this.router.navigate(['/reports/edit', reportId]);
   }
+
+  // ========================================
+  // פורמט וטקסטים
+  // ========================================
 
   getStatusColor(status: string): string {
     switch (status) {

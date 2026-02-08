@@ -2,7 +2,7 @@
 using AccountingSystem.Domain.DTOs;
 using AccountingSystem.Domain.Entities;
 using AutoMapper;
-
+using AccountingSystem.Application.Mappings.Resolvers;
 namespace AccountingSystem.Application.Mappings
 {
     /// <summary>
@@ -297,7 +297,10 @@ CreateMap<Reportinstance, ReportInstanceDto>()
                 .ForMember(d => d.ReportTypeName, opt => opt.MapFrom(s => s.Config != null && s.Config.Reporttype != null ? s.Config.Reporttype.Name : string.Empty))
                 .ForMember(d => d.ReportTypeShortCode, opt => opt.MapFrom(s => s.Config != null && s.Config.Reporttype != null ? s.Config.Reporttype.Shortcode : string.Empty))
                 .ForMember(d => d.FrequencyName, opt => opt.MapFrom(s => s.Config != null && s.Config.Frequency != null ? s.Config.Frequency.Name : string.Empty))
-                .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Config != null ? s.Config.Dayofmonth : null));
+                .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Config != null ? s.Config.Dayofmonth : null))
+                                //.ForMember(d => d.WorkerNames,
+                                //    opt => opt.MapFrom<WorkerNamesResolver>());
+                                .ForMember(d => d.WorkerNames, opt => opt.MapFrom<WorkerNamesResolver>()); // 🆕
 
             CreateMap<CreateReportInstanceDto, Reportinstance>()
                 .ForMember(d => d.Id, opt => opt.Ignore())

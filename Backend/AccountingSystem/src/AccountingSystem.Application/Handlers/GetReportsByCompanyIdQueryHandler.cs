@@ -218,10 +218,6 @@ namespace AccountingSystem.Application.Handlers
     //        var reports = await _repository.GetAllAsync();
     //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
     //    }
-
-
-
-    // Application/Handlers/GetAllReportsQueryHandler.cs
     public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
     {
         private readonly IReportInstanceRepository _repository;
@@ -286,44 +282,81 @@ namespace AccountingSystem.Application.Handlers
         //}
 
 
-        public async Task<List<ReportInstanceDetailDto>> Handle(
-    GetAllReportsQuery request,
-    CancellationToken cancellationToken)
-        {
-            Console.WriteLine($"🔍 Handler קיבל: WorkerId={request.WorkerId}, IsAdminMode={request.IsAdminMode}");
+    //    public async Task<List<ReportInstanceDetailDto>> Handle(
+    //GetAllReportsQuery request,
+    //CancellationToken cancellationToken)
+    //    {
+    //        Console.WriteLine($"🔍 Handler קיבל: WorkerId={request.WorkerId}, IsAdminMode={request.IsAdminMode}");
 
-            var reports = await _repository.GetAllAsync();
+    //        var reports = await _repository.GetAllAsync();
 
-            Console.WriteLine($"📊 סה\"כ דוחות במסד: {reports.Count()}");
+    //        Console.WriteLine($"📊 סה\"כ דוחות במסד: {reports.Count()}");
 
-            if (request.WorkerId.HasValue)
+    //        if (request.WorkerId.HasValue)
+    //        {
+    //            Console.WriteLine($"🔍 מסנן לעובד {request.WorkerId.Value}");
+
+    //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
+    //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
+
+    //            Console.WriteLine($"📊 העובד משויך ל-{companyIds.Count} חברות: {string.Join(", ", companyIds)}");
+
+    //            reports = reports
+    //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
+    //                .ToList();
+
+    //            Console.WriteLine($"✅ אחרי סינון: {reports.Count()} דוחות");
+    //        }
+    //        else
+    //        {
+    //            Console.WriteLine("✅ אין סינון - מחזיר הכל");
+    //        }
+
+    //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
+    //    }
+    //}
+
+
+            public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
             {
-                Console.WriteLine($"🔍 מסנן לעובד {request.WorkerId.Value}");
+                Console.WriteLine($"📋 Handler: IsAdminMode={request.IsAdminMode}, WorkerId={request.WorkerId}");
 
-                var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
-                var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
+                // שליפת כל הדוחות
+                var reports = await _repository.GetAllAsync();
 
-                Console.WriteLine($"📊 העובד משויך ל-{companyIds.Count} חברות: {string.Join(", ", companyIds)}");
+                // 🔥 אם יש WorkerId - סנן לפי העובד
+                if (request.WorkerId.HasValue)
+                {
+                    Console.WriteLine($"🔍 מסנן לפי WorkerId={request.WorkerId.Value}");
 
-                reports = reports
-                    .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
-                    .ToList();
+                    reports = reports.Where(r =>
+                        r.Config != null &&
+                        r.Config.Company != null &&
+                        r.Config.Company.Companyworkers.Any(cw =>
+                            cw.Workerid == request.WorkerId.Value &&
+                            cw.Isactive == true
+                        )
+                    ).ToList();
+                }
 
-                Console.WriteLine($"✅ אחרי סינון: {reports.Count()} דוחות");
+                Console.WriteLine($"✅ אחרי פילטור: {reports.Count()} דוחות");
+
+                // 🔒 העברת isAdminMode ל-AutoMapper דרך context.Items
+                var mappedReports = _mapper.Map<List<ReportInstanceDetailDto>>(
+                    reports,
+                    opt => opt.Items["IsAdminMode"] = request.IsAdminMode
+                );
+
+                Console.WriteLine($"✅ החזרת {mappedReports.Count} דוחות");
+
+                return mappedReports;
             }
-            else
-            {
-                Console.WriteLine("✅ אין סינון - מחזיר הכל");
-            }
-
-            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
         }
     }
 
+    // ========== Handler 2: דיווחים לפי Config ==========
 
-        // ========== Handler 2: דיווחים לפי Config ==========
-
-        public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
+    public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
     {
         private readonly IReportInstanceRepository _repository;
         private readonly IMapper _mapper;
@@ -595,4 +628,3 @@ namespace AccountingSystem.Application.Handlers
             }
         }
     }
-}

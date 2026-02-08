@@ -41,18 +41,37 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי את כל הדוחות
         /// </summary>
-        public async Task<IEnumerable<Reportinstance>> GetAllAsync()
-        {
-            return await _context.Reportinstances
-                .Include(r => r.Config)
-                    .ThenInclude(c => c.Company)
-                .Include(r => r.Config)
-                    .ThenInclude(c => c.Reporttype)
-                .Include(r => r.Config)
-                    .ThenInclude(c => c.Frequency)
-                .OrderByDescending(r => r.Period)
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<Reportinstance>> GetAllAsync()
+        //{
+        //    return await _context.Reportinstances
+        //        .Include(r => r.Config)
+        //            .ThenInclude(c => c.Company)
+        //        .Include(r => r.Config)
+        //            .ThenInclude(c => c.Reporttype)
+        //        .Include(r => r.Config)
+        //            .ThenInclude(c => c.Frequency)
+        //        .OrderByDescending(r => r.Period)
+        //        .ToListAsync();
+        //}
+
+        
+            public async Task<IEnumerable<Reportinstance>> GetAllAsync()
+            {
+                return await _context.Reportinstances
+                    .Include(r => r.Config)
+                        .ThenInclude(c => c.Company)
+                            .ThenInclude(co => co.Companyworkers.Where(cw => cw.Isactive == true)) // 🔥 רק עובדות פעילות
+                                .ThenInclude(cw => cw.Worker)
+                    .Include(r => r.Config)
+                        .ThenInclude(c => c.Reporttype)
+                    .Include(r => r.Config)
+                        .ThenInclude(c => c.Frequency)
+                    .AsNoTracking() // 🚀 ביצועים טובים יותר
+                    .ToListAsync();
+            }
+        
+
+
 
         /// <summary>
         /// תביא לי דוחות לפי תנאי
