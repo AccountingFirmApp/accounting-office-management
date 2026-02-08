@@ -38,20 +38,6 @@ builder.Services.AddDbContext<AccountingDbContext>(options =>
         });
 });
 
-
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(
-    builder.Configuration.GetConnectionString("DefaultConnection"));
-
-// מיפוי כל ה-ENUMs
-dataSourceBuilder.MapEnum<AccountingSystem.Domain.Enums.TaskStatus1>("task_status");
-dataSourceBuilder.MapEnum<ReportStatus>("report_status");
-dataSourceBuilder.MapEnum<PaymentMethod>("payment_method");
-dataSourceBuilder.MapEnum<TaskCategory>("task_category");
-
-var dataSource = dataSourceBuilder.Build();
-
-builder.Services.AddDbContext<AccountingDbContext>(options =>
-    options.UseNpgsql(dataSource));
 // ========================================
 // 2. Repositories
 // ========================================
