@@ -1,4 +1,4 @@
-<!-- <!-- <app-back-button [route]="'/home'"></app-back-button>
+<!--  <app-back-button [route]="'/home'"></app-back-button>
 
 <div class="workers-page">
   <div class="workers-grid">
@@ -178,7 +178,7 @@
       <!-- Header -->
       <div class="card-header">
         <div class="worker-avatar">
-          {{ worker.firstName.charAt(0) }}{{ worker.lastName.charAt(0) }}
+          {{worker.firstName&& worker.firstName.charAt(0) }}{{ worker.lastName&&worker.lastName.charAt(0) }}
         </div>
         <div class="worker-info">
           <h3>{{ worker.firstName }} {{ worker.lastName }}</h3>
@@ -237,7 +237,7 @@
     <!-- כותרת עם אווטר -->
     <div class="modal-header">
       <div class="header-avatar">
-        {{ selectedWorker.firstName.charAt(0) }}{{ selectedWorker.lastName.charAt(0) }}
+        {{ selectedWorker.firstName&&selectedWorker.firstName.charAt(0) }}{{ selectedWorker.lastName&&selectedWorker.lastName.charAt(0) }}
       </div>
       <h2>{{ selectedWorker.firstName }} {{ selectedWorker.lastName }}</h2>
       <p class="subtitle">פרטי עובד מלאים</p>
