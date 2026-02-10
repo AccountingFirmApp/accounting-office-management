@@ -26,3 +26,19 @@ export interface WorkerInfoDto {
   firmId: number;
   isActive: boolean;
 }
+export interface WorkerTask {
+  id: number;
+  companyid: number;
+  companyName: string;
+  tasktypeid: number;
+  taskTypeName: string;
+  period: string;
+  duedate?: string;
+  completeddate?: string;
+  status: number;
+  notes?: string;
+  assignedworkerid?: number;
+  assignedWorkerName?: string;
+  createdat: string;
+  updatedat: string;
+}

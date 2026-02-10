@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkerCompanies } from '../models/worker-companies';
-import { WorkerInfoDto } from '../models/auth';
+import { WorkerInfoDto, WorkerTask } from '../models/auth';
 import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
@@ -44,5 +44,21 @@ getWorkerById(id: number): Observable<WorkerInfoDto> {
       Authorization: `Bearer ${token}`
     }
   });
-}}
+}
+// ⭐ קבל את העובד הנוכחי
+getCurrentWorker(): WorkerInfoDto | null {
+  return this.authService.getWorkerInfo();
+}
+
+// ⭐ קבל את ה-workerId הנוכחי
+getCurrentWorkerId(): number | null {
+  const worker = this.getCurrentWorker();
+  return worker ? worker.id : null;
+}
+
+getWorkerTasks(workerId: number): Observable<WorkerTask[]> {
+  return this.http.get<WorkerTask[]>(`${this.apiUrl}/${workerId}/tasks`);
+}
+
+}
 

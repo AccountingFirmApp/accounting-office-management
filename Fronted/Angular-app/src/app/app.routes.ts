@@ -11,6 +11,7 @@ import { WorkerFormComponent } from '../components/add-worker/add-worker.compone
 import { ManagementComponent } from './components/management/management.component';
 import { CompanyReportConfigListComponent } from './components/settings/company-report-config-list/company-report-config-list.component';
 import { CompanyReportConfigFormComponent } from './components/settings/company-report-config-form/company-report-config-form.component';
+import { WorkerTasksComponent } from '../components/worker-tasks/worker-tasks';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'התחברות' },  // ⬅️ דף התחברות
@@ -33,7 +34,8 @@ export const routes: Routes = [
     { path: 'companies/:id/edit', component: CompanyCreateComponent }, // ← עריכה
     { path: 'companies/:id/tasks', component: CompanyTasksComponent }, // ← משימות
       // { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
+      { path: 'workers/:workerId/tasks', component: WorkerTasksComponent },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // ⬅️ דף ראשי -> התחברות
-  { path: '**', redirectTo: '/login' }  // ⬅️ כל דף לא קיים -> חזרה להתחברות
+  // { path: '**', redirectTo: '/log/in' }  // ⬅️ כל דף לא קיים -> חזרה להתחברות
 ];

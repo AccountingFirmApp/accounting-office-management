@@ -82,6 +82,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          this.saveWorkerInfo(response.worker);
         })
       );
   }
@@ -94,6 +95,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          this.saveWorkerInfo(response.worker); 
         })
       );
   }
@@ -128,10 +130,11 @@ export class AuthService {
   // =========================
   // Logout
   // =========================
+  
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem('workerInfo'); // ⭐ הוסף את זה!
   }
-
   // =========================
   // Authentication Helpers
   // =========================
