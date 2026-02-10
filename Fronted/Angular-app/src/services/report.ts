@@ -272,6 +272,7 @@ export class ReportService {
   getReportTypes(): Observable<any[]> {
     return this.api.get<any[]>('/report-types');
   }
+ 
 
   /**
    * קבלת רשימת כל הקונפיגורציות (שילובי חברה + סוג דיווח)

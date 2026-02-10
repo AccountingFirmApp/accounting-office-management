@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using AccountingSystem.Application.Queries;
 using AccountingSystem.Application.DTOs;
 using System.Threading.Tasks;
+using static GetReportsDueInNextDaysQueryHandler;
 
 namespace AccountingSystem.API.Controllers
 {
@@ -25,6 +26,13 @@ namespace AccountingSystem.API.Controllers
         public async Task<ActionResult<List<ReportTypeDto>>> GetAllReportTypes()  // 👈 שונה!
         {
             var query = new GetAllReportTypesQuery();
+            var reportTypes = await _mediator.Send(query);
+            return Ok(reportTypes);
+        }
+        [HttpGet("ToEdit")]
+        public async Task<ActionResult<List<ReportTypeDto>>> GetReportTypesToEdit()  // 👈 שונה!
+        {
+            var query = new GetAllReportTypesToEditQuery();
             var reportTypes = await _mediator.Send(query);
             return Ok(reportTypes);
         }

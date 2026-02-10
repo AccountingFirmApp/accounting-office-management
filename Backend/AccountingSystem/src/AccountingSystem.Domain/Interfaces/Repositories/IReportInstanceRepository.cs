@@ -16,6 +16,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי את כל הדוחות של חברה
         /// </summary>
         System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsByCompanyIdAsync(int companyId);
+        public  Task<List<Reportinstance>> GenerateReportsAsync(DateTime date);
 
         /// <summary>
         /// תביא לי את כל הדוחות של הגדרה מסוימת
@@ -61,6 +62,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// </summary>
         System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsDueInNextDaysAsync(int days);
         System.Threading.Tasks.Task AddAsync(Reportinstance report);
+
 
     }
 }
