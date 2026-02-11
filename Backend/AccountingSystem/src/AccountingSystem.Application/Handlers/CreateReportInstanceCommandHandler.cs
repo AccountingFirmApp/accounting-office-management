@@ -9,14 +9,13 @@ using AccountingSystem.Domain.Interfaces.Repositories;
 namespace AccountingSystem.Application.Handlers
 {
 
-        public class CreateReportInstanceCommandHandler
-    : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
+        public class GenerateReportInstanceCommand: IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
         {
             private readonly IReportInstanceRepository _reportInstanceRepository;
             private readonly ICompanyreportconfigRepository _configRepository;
             private readonly IUnitOfWork _unitOfWork;
 
-            public CreateReportInstanceCommandHandler(
+            public GenerateReportInstanceCommand(
                 IReportInstanceRepository reportInstanceRepository,
                 ICompanyreportconfigRepository configRepository,
                 IUnitOfWork unitOfWork)

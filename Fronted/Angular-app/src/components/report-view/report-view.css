@@ -49,7 +49,7 @@
       align-items: center;
       padding: 1.5rem 2rem;
       border-bottom: 2px solid #e2e8f0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
       color: white;
       border-radius: 16px 16px 0 0;
     }
@@ -161,12 +161,12 @@
 
     /* Comments Box */
     .comments-box {
-      background: #f7fafc;
+      background: #f8fafc;
       padding: 1rem;
       border-radius: 8px;
-      border-right: 4px solid #667eea;
+      border-right: 4px solid #3b82f6;
       white-space: pre-wrap;
-      color: #2d3748;
+      color: #1e293b;
       line-height: 1.6;
     }
 
@@ -211,13 +211,14 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #3b82f6;
       color: white;
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     /* Responsive */

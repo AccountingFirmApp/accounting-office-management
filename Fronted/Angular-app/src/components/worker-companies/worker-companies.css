@@ -11,7 +11,7 @@
 /* Back Button */
 .btn-primary {
   background: white;
-  color: #2563EB;
+  color: #3b82f6;
   border: 1px solid #e2e8f0;
   padding: 10px 20px;
   border-radius: 8px;
@@ -27,7 +27,7 @@
 
 .btn-primary:hover {
   background: #f8fafc;
-  border-color: #2563EB;
+  border-color: #3b82f6;
 }
 
 /* Alerts */
@@ -84,7 +84,7 @@
   right: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(180deg, #2563EB, #3b82f6);
+  background: linear-gradient(180deg, #3b82f6, #3b82f6);
   transform: scaleY(0);
   transition: transform 0.3s ease;
 }
@@ -95,7 +95,7 @@
 
 .company-card:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.08);
   transform: translateY(-3px);
   background: white;
 }
@@ -219,14 +219,14 @@
 
 /* Tasks Button */
 .btn-tasks {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563EB 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #3b82f6 100%);
   color: white;
 }
 
 .btn-tasks:hover {
-  background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 /* Reports Button */
