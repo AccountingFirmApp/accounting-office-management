@@ -62,7 +62,7 @@ namespace AccountingSystem.Application.Mappings
     .ForMember(d => d.RoleId, opt => opt.MapFrom(s => s.Roleid))
     .ForMember(d => d.FirstName, opt => opt.MapFrom(s => s.Firstname))
     .ForMember(d => d.LastName, opt => opt.MapFrom(s => s.Lastname))
-    .ForMember(d => d.EmployeeId, opt => opt.MapFrom(s => s.Employeeid ?? string.Empty))
+    .ForMember(d => d.Employeeid, opt => opt.MapFrom(s => s.Employeeid ?? string.Empty))
     .ForMember(d => d.IsActive, opt => opt.MapFrom(s => s.Isactive ?? false))
     .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.Createdat ?? DateTime.MinValue))
     .ForMember(d => d.UpdatedAt, opt => opt.MapFrom(s => s.Updatedat ?? DateTime.MinValue))
@@ -76,8 +76,9 @@ namespace AccountingSystem.Application.Mappings
         opt => opt.MapFrom(s => s.Firm != null ? s.Firm.Name : string.Empty))
     .ForMember(d => d.RoleName,
         opt => opt.MapFrom(s => s.Role != null ? s.Role.Name : string.Empty))
-    .ForMember(d => d.FullName, opt => opt.Ignore()); // ⛔ מחושב אוטומטית
-
+    .ForMember(d => d.FullName, opt => opt.Ignore()) // ⛔ מחושב אוטומטית
+   .ForMember(d => d.CompanyIds,
+                opt => opt.MapFrom(src => src.Companyworkers.Select(wc => wc.Companyid).ToList()));
             CreateMap<CreateWorkerDto, Worker>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())

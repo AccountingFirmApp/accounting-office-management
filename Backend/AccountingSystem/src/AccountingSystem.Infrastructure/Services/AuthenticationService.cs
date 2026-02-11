@@ -119,7 +119,7 @@ CancellationToken cancellationToken = default)
             Worker = new WorkerInfoDto
             {
                 Id = worker.Id,
-                EmployeeId = worker.Employeeid ?? "",
+                Employeeid = worker.Employeeid ?? "",
                 Firstname = worker.Firstname,
                 Lastname = worker.Lastname,
                 Email = worker.Email,
@@ -258,7 +258,7 @@ CancellationToken cancellationToken = default)
                 Worker = new WorkerInfoDto
                 {
                     Id = worker.Id,
-                    EmployeeId = worker.Employeeid ?? "",
+                    Employeeid = worker.Employeeid ?? "",
                     Firstname = worker.Firstname,
                     Lastname = worker.Lastname,
                     Email = worker.Email,

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { CompanyDto, WorkerCompanies } from '../../models/worker-companies';
+import { log } from 'node:console';
 
 @Component({
   selector: 'app-worker-companies',
@@ -13,7 +15,10 @@ import { BackButtonComponent } from '../../app/components/shared/back-button/bac
   styleUrls: ['./worker-companies.css']
 })
 export class WorkerCompaniesComponent implements OnInit {
-  companies: any = null;
+  
+  companies: CompanyDto[] | null = null;
+    // companies: CompanyDto[] | null = null;
+  
   loading = false;
   error = '';
   workerId = 3;
@@ -70,6 +75,7 @@ export class WorkerCompaniesComponent implements OnInit {
 
   // מעבר למשימות של חברה
   goToCompanyTasks(companyId: number): void {
+    console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
     this.router.navigate(['/companies', companyId, 'tasks']);
   }
   // מעבר לדוחות של חברה

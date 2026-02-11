@@ -15,6 +15,7 @@ export class WorkerService {
   // מחזיר מערך של CompanyDto
   getWorkerCompanies(workerId: number): Observable<WorkerCompanies> {
     return this.http.get<WorkerCompanies>(`${this.apiUrl}/${workerId}/companies`);
+    
   }
   getallWorkers(): Observable<WorkerInfoDto[]> {
     const token = this.authService.getToken();

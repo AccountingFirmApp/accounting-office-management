@@ -14,7 +14,7 @@ public class WorkerDto
     public string Email { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public string EmployeeId { get; set; } = string.Empty;
+    public string Employeeid { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     public DateTime? HireDate { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -23,6 +23,8 @@ public class WorkerDto
     // Navigation properties (optional - for display)
     public string? FirmName { get; set; }
     public string? RoleName { get; set; }
+    public List<int> CompanyIds { get; set; } = new(); // ✅ הוסף!
+
 }
 
 /// <summary>
@@ -36,7 +38,7 @@ public class CreateWorkerDto
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public string EmployeeId { get; set; } = string.Empty;
+    public string Employeeid { get; set; } = string.Empty;
     public DateTime? HireDate { get; set; }
 }
 
@@ -51,7 +53,7 @@ public class UpdateWorkerDto
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public string EmployeeId { get; set; } = string.Empty;
+    public string Employeeid { get; set; } = string.Empty;
     public bool IsActive { get; set; }
 }
 
@@ -89,7 +91,7 @@ public class LoginResponseDto
 public class WorkerInfoDto
 {
     public int Id { get; set; }
-    public string EmployeeId { get; set; } = null!;
+    public string Employeeid { get; set; } = null!;
     public string Firstname { get; set; } = null!;
     public string Lastname { get; set; } = null!;
     public string Email { get; set; } = null!;

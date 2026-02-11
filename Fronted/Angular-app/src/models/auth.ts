@@ -16,13 +16,16 @@ export interface LoginResponseDto {
 
 export interface WorkerInfoDto {
   id: number;
-  employeeId: string;
-  firstname: string;
-  lastname: string;
+  employeeid: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phone?: string;
   roleName: string;
   roleId: number;        // ← מוסיפים את זה
   password: string;
-  firmId: number;
+  firmid: number;
   isActive: boolean;
+  companyIds?: number[]; // 🆕 אופציונלי - רשימת מזהי חברות שהעובד קשור אליהן
+  hireDate?: Date;
 }

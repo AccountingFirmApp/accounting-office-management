@@ -1,55 +1,210 @@
+/* 📦 Container ראשי */
 .worker-form-container {
-  max-width: 480px;
+  max-width: 500px; /* ✅ הגבלת רוחב מקסימלי */
   margin: 40px auto;
-  padding: 32px;
+  padding: 40px;
   background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', sans-serif;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* 📝 כותרת */
 .form-title {
   text-align: center;
-  margin-bottom: 24px;
-  font-size: 22px;
-  font-weight: 600;
+  margin-bottom: 32px;
+  font-size: 28px;
+  font-weight: 700;
   color: #1f2937;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* 📋 הטופס עצמו */
 .worker-form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: 1fr; /* ✅ 2 עמודות */
+  gap: 24px;
+  direction: rtl;
 }
 
+/* 🔄 שדות שתופסים שתי עמודות */
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* 📝 קבוצת שדה */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
+/* 🏷️ תוויות */
 .form-group label {
   font-size: 14px;
   color: #374151;
-  font-weight: 500;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
+/* 📥 שדות קלט */
 .form-group input,
 .form-group select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  color: #1f2937;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
   border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background: #f9fafb;
 }
 
+.form-group input:hover:not(:disabled):not([readonly]),
+.form-group select:hover:not(:disabled) {
+  border-color: #93c5fd;
+}
+
+/* 🔒 שדות readonly */
+.readonly-field {
+  background-color: #f3f4f6 !important;
+  color: #6b7280 !important;
+  cursor: not-allowed !important;
+  border-color: #d1d5db !important;
+}
+
+.readonly-field:focus {
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
+  background-color: #f3f4f6 !important;
+}
+
+.readonly-field::placeholder {
+  color: #6b7280 !important;
+  opacity: 1;
+  font-weight: 500;
+}
+
+/* 📋 Select styling */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  padding-left: 36px;
+}
+
+select.placeholder-shown {
+  color: #9ca3af;
+}
+
+select option {
+  color: #1f2937;
+}
+
+/* 🔐 שדה סיסמה עם עינית */
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrapper .password-input {
+  width: 100%;
+  padding-right: 45px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: color 0.2s;
+  z-index: 10;
+}
+
+.password-toggle-btn:hover {
+  color: #2563eb;
+}
+
+.password-toggle-btn svg {
+  display: block;
+}
+
+/* ☑️ Checkbox לחברות */
+.companies-checklist {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  max-height: 240px;
+  overflow-y: auto;
+  background-color: #f9fafb;
+  direction: rtl;
+}
+
+.checkbox-item {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.checkbox-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.checkbox-item:hover {
+  background-color: #eff6ff;
+}
+
+.checkbox-item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 0;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.checkbox-item span {
+  font-size: 14px;
+  color: #374151;
+}
+
+.no-companies {
+  color: #9ca3af;
+  text-align: center;
+  padding: 24px;
+  font-style: italic;
+}
+
+/* ✅ Checkbox עובד פעיל */
 .form-group.checkbox {
   flex-direction: row;
   align-items: center;
@@ -58,46 +213,96 @@
 .form-group.checkbox label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.form-group.checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+/* ❌ הודעות שגיאה */
+.error {
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.error::before {
+  content: "⚠️";
   font-size: 14px;
 }
 
+/* 🎯 כפתורים */
 .form-actions {
+  grid-column: 1 / -1; /* ✅ תופס את כל הרוחב */
   display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
+  gap: 16px;
+  margin-top: 24px;
+  justify-content: flex-start;
+  padding-top: 24px;
+  border-top: 2px solid #f3f4f6;
 }
 
 .primary-btn {
-  background: #2563eb;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-.primary-btn:hover {
-  background: #1d4ed8;
+.primary-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+  transform: translateY(-2px);
+}
+
+.primary-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .primary-btn:disabled {
   background: #9ca3af;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-.secondary-btn {
-  background: transparent;
-  border: 1px solid #d1d5db;
-  color: #374151;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-}
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .worker-form-container {
+    margin: 20px;
+    padding: 24px;
+  }
 
-.secondary-btn:hover {
-  background: #f3f4f6;
+  .worker-form {
+    grid-template-columns: 1fr; /* ✅ עמודה אחת במובייל */
+  }
+
+  .form-title {
+    font-size: 24px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .primary-btn {
+    width: 100%;
+  }
 }

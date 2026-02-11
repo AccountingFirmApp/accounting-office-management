@@ -2,7 +2,9 @@
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.Workers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -80,12 +82,48 @@ namespace AccountingSystem.API.Controllers
         /// יצירת עובד חדש
         /// POST: api/workers
         /// </summary>
+        //[HttpPost]
+        //public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
+        //{
+        //    try
+        //    {
+        //        var result = await _mediator.Send(command);
+        //        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
+
+
         [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
+        [Authorize] // ✅ חובה!
+        public async Task<ActionResult<WorkerDto>> Create([FromBody] CreateWorkerCommand command)
         {
             try
             {
+                // 🔥 שלב 1: קבלת FirmId מה-Token
+                var firmIdClaim = User.FindFirst("FirmId")?.Value;
+
+                if (string.IsNullOrEmpty(firmIdClaim) || !int.TryParse(firmIdClaim, out int firmId))
+                {
+                    return Unauthorized(new { message = "לא נמצא FirmId עבור המשתמש המחובר" });
+                }
+
+                // 🔥 שלב 2: בדיקה שהמשתמש הוא מנהל
+                var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+                if (roleClaim != "Admin") // שנה ל-"Admin" או מה שמתאים לך
+                {
+                    return Forbid();
+                }
+
+                // ✅ שלב 3: הזרקת FirmId לתוך ה-Command
+                command.Firmid = firmId;
+
+                // ✅ שלב 4: שליחה ל-Handler
                 var result = await _mediator.Send(command);
+
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
             }
             catch (Exception ex)
@@ -93,7 +131,6 @@ namespace AccountingSystem.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
         /// <summary>
         /// עדכון עובד
         /// PUT: api/workers/5

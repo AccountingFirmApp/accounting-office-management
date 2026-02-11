@@ -1,5 +1,6 @@
 ﻿using AccountingSystem.Application.DTOs;
 using MediatR;
+using System.Text.Json.Serialization;
 
 namespace AccountingSystem.Application.Commands.Workers;
 
@@ -8,6 +9,7 @@ namespace AccountingSystem.Application.Commands.Workers;
 // ========================================
 public class CreateWorkerCommand : IRequest<WorkerDto>
 {
+    [JsonIgnore]
     public int Firmid { get; set; }
     public int Roleid { get; set; }
     public string Firstname { get; set; } = string.Empty;
@@ -17,6 +19,10 @@ public class CreateWorkerCommand : IRequest<WorkerDto>
     public string? Employeeid { get; set; }
     public bool Isactive { get; set; } = true;
     public DateOnly? Hiredate { get; set; }
+    public List<int>? CompanyIds { get; set; }
+    public string Password { get; set; } = string.Empty; // חובה!
+
+
 }
 
 // ========================================
@@ -25,11 +31,15 @@ public class CreateWorkerCommand : IRequest<WorkerDto>
 public class UpdateWorkerCommand : IRequest<WorkerDto>
 {
     public int Id { get; set; }
-    public string Firstname { get; set; } = string.Empty;
-    public string Lastname { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
+    public string? Firstname { get; set; } = string.Empty;
+    public string? Lastname { get; set; } = string.Empty;
+    public string? Email { get; set; } = string.Empty;
     public string? Phone { get; set; }
     public bool Isactive { get; set; }
+    public int? Roleid { get; set; }        // ✅ הוסף
+    public string? Employeeid { get; set; } // ✅ הוסף
+    public DateOnly? Hiredate { get; set; } // ✅ הוסף
+    public List<int>? CompanyIds { get; set; } // ✅ הוסף חברות
 }
 
 // ========================================

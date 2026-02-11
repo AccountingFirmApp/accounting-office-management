@@ -222,8 +222,15 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await _context.Companyworkers.CountAsync();
         }
+        public async Task DeleteByWorkerIdAsync(int workerId)
+        {
+            var companyWorkers = await _context.Companyworkers
+                .Where(cw => cw.Workerid == workerId)
+                .ToListAsync();
 
-     
+            _context.Companyworkers.RemoveRange(companyWorkers);
+        }
+
 
     }
 }

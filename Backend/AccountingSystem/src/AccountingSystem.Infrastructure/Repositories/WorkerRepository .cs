@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
+
 {
     public class WorkerRepository:IWorkerRepository
     {
@@ -76,12 +77,18 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public Task<Worker?> GetByIdAsync(int id)
+        //public Task<Worker?> GetByIdAsync(int id)
+        //{
+        //    return  context.Workers
+        //           .FirstOrDefaultAsync(w => w.Id == id);
+        //}
+        public async Task<Worker?> GetByIdAsync(int id)
         {
-            return  context.Workers
-                   .FirstOrDefaultAsync(w => w.Id == id);
+            return await context.Workers
+                .Include(w => w.Companyworkers) // ✅ טען גם את הקשרים
+                    .ThenInclude(wc => wc.Company)
+                .FirstOrDefaultAsync(w => w.Id == id);
         }
-
         public Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId)
         {
             throw new NotImplementedException();
@@ -122,6 +129,8 @@ namespace AccountingSystem.Infrastructure.Repositories
 
             await context.SaveChangesAsync(); // ✅ בסוף המתודה יש Task שמסתיים
         }
+
+
 
  
     }

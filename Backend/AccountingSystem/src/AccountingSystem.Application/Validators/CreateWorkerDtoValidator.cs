@@ -42,9 +42,9 @@ namespace AccountingSystem.Application.Validators.Worker
                 .GreaterThan(0).WithMessage("תפקיד לא תקין");
 
             // מספר עובד - אופציונלי
-            RuleFor(x => x.EmployeeId)
+            RuleFor(x => x.Employeeid)
                 .MaximumLength(50).WithMessage("מספר עובד לא יכול להיות יותר מ-50 תווים")
-                .When(x => !string.IsNullOrEmpty(x.EmployeeId));
+                .When(x => !string.IsNullOrEmpty(x.Employeeid));
         }
     }
 }

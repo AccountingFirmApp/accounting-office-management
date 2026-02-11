@@ -12,7 +12,9 @@ namespace AccountingSystem.Application.Intrefaces
         System.Threading.Tasks.Task<LoginResponseDto> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task<LoginResponseDto> GoogleLoginAsync(string googleToken, CancellationToken cancellationToken = default);
 
-        System.Threading.Tasks.Task<string> HashPasswordAsync(string password);
-        System.Threading.Tasks.Task<bool> VerifyPasswordAsync(string password, string passwordHash);
+        //System.Threading.Tasks.Task<string> HashPasswordAsync(string password);
+        //System.Threading.Tasks.Task<bool> VerifyPasswordAsync(string password, string passwordHash);
+        Task<string> HashPasswordAsync(string password);
+        Task<bool> VerifyPasswordAsync(string password, string passwordHash);
     }
 }
