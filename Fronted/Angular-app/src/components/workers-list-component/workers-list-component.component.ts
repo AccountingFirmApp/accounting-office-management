@@ -64,7 +64,7 @@ export class WorkersListComponent implements OnInit {
   // }
   viewWorker(worker: WorkerInfoDto): void {
     this.selectedWorker= worker;
-    
+    console.log('Selected worker:', worker);
    
   }
 
