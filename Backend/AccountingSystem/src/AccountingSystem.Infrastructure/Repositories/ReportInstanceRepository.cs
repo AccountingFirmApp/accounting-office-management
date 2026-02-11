@@ -4,6 +4,7 @@ using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,12 @@ namespace AccountingSystem.Infrastructure.Repositories
     public class ReportInstanceRepository : IReportInstanceRepository
     {
         private readonly AccountingDbContext _context;
+        private readonly ILogger _logger;
 
-        public ReportInstanceRepository(AccountingDbContext context)
+        public ReportInstanceRepository(AccountingDbContext context,ILogger logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // ========== פונקציות בסיסיות מ-IGenericRepository ==========
@@ -81,7 +84,27 @@ namespace AccountingSystem.Infrastructure.Repositories
 
 
 
-
+        public async Task<bool> CheckReportsAsync()
+        {
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT check_report_health()";
+                var result = await command.ExecuteScalarAsync();
+                return result is true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Health check failed");
+                return false;
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
+        }
         public async Task<IEnumerable<Reportinstance>> GetAllAsync()
             {
                 return await _context.Reportinstances
@@ -353,5 +376,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             await _context.Reportinstances.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
+
+     
     }
 }
