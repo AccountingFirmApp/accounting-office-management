@@ -236,6 +236,7 @@ public partial class AccountingDbContext : DbContext
 
         modelBuilder.Entity<CompanyTask>(entity =>
         {
+          
             entity.HasKey(e => e.Id).HasName("task_pkey");
 
             entity.ToTable("companytask");
@@ -255,16 +256,21 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
-
             entity.Property(e => e.Status)
-                .HasConversion<string>()
-                .HasColumnName("status");
+      //.HasColumnType("\"TaskStatus1\"")  // ← הוסף את זה!
+      .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
+      //.HasConversion<string>()
+      .HasColumnName("status")
+      ;
+            //entity.Property(e => e.Status)
+            //    .HasConversion<string>()
+            //    .HasColumnName("status");
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Period).HasColumnName("period");
-            entity.Property(e => e.Status)
-                .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
-                .HasColumnName("status");
+            //entity.Property(e => e.Status)
+            //    .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
+            //    .HasColumnName("status");
             entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
             entity.Property(e => e.Updatedat)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")

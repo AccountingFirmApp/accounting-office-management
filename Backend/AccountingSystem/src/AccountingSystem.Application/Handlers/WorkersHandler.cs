@@ -331,7 +331,20 @@ public class GetAllWorkersQueryHandler : IRequestHandler<GetAllWorkersQuery, Lis
         return workerDtos;
     }
 }
+public class GetWorkerTasksQueryHandler : IRequestHandler<GetWorkerTasksQuery, IEnumerable<CompanyTask>>
+{
+    private readonly IUnitOfWork _unitOfWork;
 
+    public GetWorkerTasksQueryHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<IEnumerable<CompanyTask>> Handle(GetWorkerTasksQuery request, CancellationToken cancellationToken)
+    {
+        return await _unitOfWork.Tasks.GetTasksByWorkerIdAsync(request.WorkerId);
+    }
+}
 
 // ========================================
 // GET WORKER BY ID HANDLER
@@ -575,3 +588,6 @@ public class GoogleLoginCommandHandler : IRequestHandler<GoogleLoginCommand, Log
         return await _authService.GoogleLoginAsync(request.GoogleToken, cancellationToken);
     }
 }
+
+
+

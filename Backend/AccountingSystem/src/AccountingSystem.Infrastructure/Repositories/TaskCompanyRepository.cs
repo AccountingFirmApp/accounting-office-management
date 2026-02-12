@@ -92,15 +92,15 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<CompanyTask>> GetTasksByWorkerIdAsync(int workerId)
-        {
-            return await _dbSet
-                .Where(t => t.Assignedworkerid == workerId)
-                .Include(t => t.Company)
-                .Include(t => t.Tasktype)
-                .OrderBy(t => t.Duedate)
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<CompanyTask>> GetTasksByWorkerIdAsync(int workerId)
+        //{
+        //    return await _dbSet
+        //        .Where(t => t.Assignedworkerid == workerId)
+        //        .Include(t => t.Company)
+        //        .Include(t => t.Tasktype)
+        //        .OrderBy(t => t.Duedate)
+        //        .ToListAsync();
+        //}
 
         public async Task<IEnumerable<CompanyTask>> GetTasksByStatusAsync(string status)
         {
@@ -175,6 +175,22 @@ namespace AccountingSystem.Infrastructure.Repositories
         public Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
+        }
+        public async Task<IEnumerable<CompanyTask>> GetTasksByWorkerIdAsync(int workerId)
+        {
+            return await _context.CompanyTasks
+                .Include(t => t.Company)
+                .Include(t => t.Tasktype)
+                .Include(t => t.Assignedworker)
+                .Where(t =>
+                    // משימות שהוקצו ישירות לעובד
+                    t.Assignedworkerid == workerId
+                    ||
+                    // או משימות של חברות שהעובד משויך אליהן
+                    t.Company.Companyworkers.Any(cw => cw.Workerid == workerId)
+                )
+                .OrderByDescending(t => t.Createdat)
+                .ToListAsync();
         }
     }
 }

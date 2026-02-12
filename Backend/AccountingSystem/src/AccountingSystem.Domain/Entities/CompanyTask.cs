@@ -32,5 +32,12 @@ namespace AccountingSystem.Domain.Entities
         public virtual Company Company { get; set; } = null!;
 
         public virtual Tasktype Tasktype { get; set; } = null!;
+        /// <summary>
+        /// עדיפות המשימה
+        /// </summary>
+        //public TaskPriority Priority { get; set; } = TaskPriority.Normal;
+        //    public virtual ICollection<CompanyTaskChecklistItem> ChecklistItems { get; set; }
+        //= new List<CompanyTaskChecklistItem>();
+        //}
     }
 }
