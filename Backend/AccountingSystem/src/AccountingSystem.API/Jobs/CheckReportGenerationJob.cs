@@ -17,6 +17,8 @@ namespace AccountingSystem.API.Jobs
         }
         public async Task RunDailyCheckReport()
         {
+            var today = DateTime.Now.Day;
+            if (today < 26) return;
             var query = new CheckReportInstanceQuery();
             var check = await _mediator.Send(query);
             if (!check)
