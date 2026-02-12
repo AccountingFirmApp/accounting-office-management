@@ -126,6 +126,13 @@ export class CompanyTasksComponent implements OnInit {
   loading = false;
   error: string | null = null;
   updatingTaskId: number | null = null;  // ← הוסף - למעקב על המשימה שמתעדכנת
+  statusToNumber: { [key: string]: number } = {
+    'Pending': 0,
+    'InProgress': 1,
+    'Done': 2,
+    'Paid': 3,
+    'NotRequired': 4
+  };
 
   availableStatuses = ['Pending', 'InProgress', 'Done', 'Paid', 'NotRequired'];
 

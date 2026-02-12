@@ -1,3 +1,6 @@
+
+<!--  <app-back-button [route]="'/home'"></app-back-button>
+
 <div class="workers-page">
 
   <!-- כותרת -->
@@ -16,7 +19,7 @@
       <!-- Header -->
       <div class="card-header">
         <div class="worker-avatar">
-          {{ worker.firstname.charAt(0) }}{{ worker.lastname.charAt(0) }}
+          {{worker.firstname&& worker.firstname.charAt(0) }}{{ worker.lastname&&worker.lastname.charAt(0) }}
         </div>
         <div class="worker-info">
           <h3>{{ worker.firstname }} {{ worker.lastname }}</h3>
@@ -71,6 +74,9 @@
 
     <!-- כותרת -->
     <div class="modal-header">
+      <div class="header-avatar">
+        {{ selectedWorker.firstname&&selectedWorker.firstname.charAt(0) }}{{ selectedWorker.lastname&&selectedWorker.lastname.charAt(0) }}
+      </div>
       <h2>{{ selectedWorker.firstname }} {{ selectedWorker.lastname }}</h2>
     </div>
 

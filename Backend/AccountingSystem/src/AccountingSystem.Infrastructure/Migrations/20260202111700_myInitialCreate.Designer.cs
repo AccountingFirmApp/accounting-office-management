@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AccountingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20260113160325_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260202111700_myInitialCreate")]
+    partial class myInitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +23,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_entity", new[] { "ReportInstance", "AccountingSystem.Domain.Entities.Task", "Company", "Worker" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" });
@@ -123,14 +123,11 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("auditlog_pkey");
 
-                    b.HasIndex("Createdat")
-                        .HasDatabaseName("idx_audit_created");
+                    b.HasIndex(new[] { "Createdat" }, "idx_audit_created");
 
-                    b.HasIndex("Workerid")
-                        .HasDatabaseName("idx_audit_worker");
+                    b.HasIndex(new[] { "Entitytype", "Entityid" }, "idx_audit_entity");
 
-                    b.HasIndex("Entitytype", "Entityid")
-                        .HasDatabaseName("idx_audit_entity");
+                    b.HasIndex(new[] { "Workerid" }, "idx_audit_worker");
 
                     b.ToTable("auditlog", (string)null);
                 });
@@ -198,14 +195,81 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("company_pkey");
 
-                    b.HasIndex("Firmid")
-                        .HasDatabaseName("idx_company_firm");
+                    b.HasIndex(new[] { "Taxid" }, "company_taxid_key")
+                        .IsUnique();
 
-                    b.HasIndex("Taxid")
-                        .IsUnique()
-                        .HasDatabaseName("idx_company_taxid");
+                    b.HasIndex(new[] { "Firmid" }, "idx_company_firm");
+
+                    b.HasIndex(new[] { "Taxid" }, "idx_company_taxid");
 
                     b.ToTable("company", (string)null);
+                });
+
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("Assignedworkerid")
+                        .HasColumnType("integer")
+                        .HasColumnName("assignedworkerid");
+
+                    b.Property<int>("Companyid")
+                        .HasColumnType("integer")
+                        .HasColumnName("companyid");
+
+                    b.Property<DateOnly?>("Completeddate")
+                        .HasColumnType("date")
+                        .HasColumnName("completeddate");
+
+                    b.Property<DateTime?>("Createdat")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("createdat")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateOnly?>("Duedate")
+                        .HasColumnType("date")
+                        .HasColumnName("duedate");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text")
+                        .HasColumnName("notes");
+
+                    b.Property<DateOnly>("Period")
+                        .HasColumnType("date")
+                        .HasColumnName("period");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Tasktypeid")
+                        .HasColumnType("integer")
+                        .HasColumnName("tasktypeid");
+
+                    b.Property<DateTime?>("Updatedat")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updatedat")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.HasKey("Id")
+                        .HasName("task_pkey");
+
+                    b.HasIndex("Tasktypeid");
+
+                    b.HasIndex(new[] { "Assignedworkerid" }, "idx_task_assigned");
+
+                    b.HasIndex(new[] { "Companyid", "Period" }, "idx_task_company_period");
+
+                    b.HasIndex(new[] { "Companyid", "Tasktypeid", "Period" }, "uq_task_period")
+                        .IsUnique();
+
+                    b.ToTable("companytask", (string)null);
                 });
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Companycontact", b =>
@@ -269,8 +333,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("companycontact_pkey");
 
-                    b.HasIndex("Companyid")
-                        .HasDatabaseName("idx_contact_company");
+                    b.HasIndex(new[] { "Companyid" }, "idx_contact_company");
 
                     b.ToTable("companycontact", (string)null);
                 });
@@ -318,19 +381,23 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnName("updatedat")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<int>("Year")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("year")
+                        .HasDefaultValueSql("EXTRACT(year FROM CURRENT_DATE)");
+
                     b.HasKey("Id")
                         .HasName("companyreportconfig_pkey");
-
-                    b.HasIndex("Companyid")
-                        .HasDatabaseName("idx_config_company");
 
                     b.HasIndex("Frequencyid");
 
                     b.HasIndex("Reporttypeid");
 
-                    b.HasIndex("Companyid", "Reporttypeid")
-                        .IsUnique()
-                        .HasDatabaseName("uq_company_report");
+                    b.HasIndex(new[] { "Companyid" }, "idx_config_company");
+
+                    b.HasIndex(new[] { "Companyid", "Reporttypeid", "Year" }, "uq_company_report_year")
+                        .IsUnique();
 
                     b.ToTable("companyreportconfig", (string)null);
                 });
@@ -369,9 +436,10 @@ namespace AccountingSystem.Infrastructure.Migrations
 
                     b.HasIndex("Workerid");
 
-                    b.HasIndex("Companyid", "Workerid")
-                        .IsUnique()
-                        .HasDatabaseName("uq_company_worker");
+                    b.HasIndex(new[] { "Companyid", "Workerid" }, "idx_company_worker");
+
+                    b.HasIndex(new[] { "Companyid", "Workerid" }, "uq_company_worker")
+                        .IsUnique();
 
                     b.ToTable("companyworker", (string)null);
                 });
@@ -405,9 +473,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("frequency_pkey");
 
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("frequency_name_key");
+                    b.HasIndex(new[] { "Name" }, "frequency_name_key")
+                        .IsUnique();
 
                     b.ToTable("frequency", (string)null);
                 });
@@ -444,9 +511,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("paiddate");
 
-                    b.Property<string>("PaymentMethod")
-                        .HasColumnType("text")
-                        .HasColumnName("paymentmethod");
+                    b.Property<int?>("PaymentMethod")
+                        .HasColumnType("integer");
 
                     b.Property<DateOnly>("Period")
                         .HasColumnType("date")
@@ -460,10 +526,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("reporteddate");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("status");
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("Updatedat")
                         .ValueGeneratedOnAdd()
@@ -474,11 +538,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("reportinstance_pkey");
 
-                    b.HasIndex("Configid")
-                        .HasDatabaseName("idx_report_config");
+                    b.HasIndex(new[] { "Configid" }, "idx_report_config");
 
-                    b.HasIndex("Period")
-                        .HasDatabaseName("idx_report_period");
+                    b.HasIndex(new[] { "Period" }, "idx_report_period");
 
                     b.ToTable("reportinstance", (string)null);
                 });
@@ -552,83 +614,10 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("role_pkey");
 
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("role_name_key");
+                    b.HasIndex(new[] { "Name" }, "role_name_key")
+                        .IsUnique();
 
                     b.ToTable("role", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("Assignedworkerid")
-                        .HasColumnType("integer")
-                        .HasColumnName("assignedworkerid");
-
-                    b.Property<int>("Companyid")
-                        .HasColumnType("integer")
-                        .HasColumnName("companyid");
-
-                    b.Property<DateOnly?>("Completeddate")
-                        .HasColumnType("date")
-                        .HasColumnName("completeddate");
-
-                    b.Property<DateTime?>("Createdat")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdat")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateOnly?>("Duedate")
-                        .HasColumnType("date")
-                        .HasColumnName("duedate");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<DateOnly>("Period")
-                        .HasColumnType("date")
-                        .HasColumnName("period");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("status");
-
-                    b.Property<int>("Tasktypeid")
-                        .HasColumnType("integer")
-                        .HasColumnName("tasktypeid");
-
-                    b.Property<DateTime?>("Updatedat")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedat")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("Id")
-                        .HasName("task_pkey");
-
-                    b.HasIndex("Assignedworkerid")
-                        .HasDatabaseName("idx_task_assigned");
-
-                    b.HasIndex("Tasktypeid");
-
-                    b.HasIndex("Companyid", "Period")
-                        .HasDatabaseName("idx_task_company_period");
-
-                    b.HasIndex("Companyid", "Tasktypeid", "Period")
-                        .IsUnique()
-                        .HasDatabaseName("uq_task_period");
-
-                    b.ToTable("task", (string)null);
                 });
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Tasktype", b =>
@@ -639,11 +628,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("category");
 
                     b.Property<DateTime?>("Createdat")
                         .ValueGeneratedOnAdd()
@@ -669,6 +653,180 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.ToTable("tasktype", (string)null);
                 });
 
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.VwActivetasks", b =>
+                {
+                    b.Property<string>("Assignedworkername")
+                        .HasColumnType("text")
+                        .HasColumnName("assignedworkername");
+
+                    b.Property<string>("Companyname")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("companyname");
+
+                    b.Property<DateTime?>("Createdat")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("createdat");
+
+                    b.Property<DateOnly?>("Duedate")
+                        .HasColumnType("date")
+                        .HasColumnName("duedate");
+
+                    b.Property<int?>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<DateOnly?>("Period")
+                        .HasColumnType("date")
+                        .HasColumnName("period");
+
+                    b.Property<string>("Tasktypename")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("tasktypename");
+
+                    b.Property<DateTime?>("Updatedat")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updatedat");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_activetasks", (string)null);
+                });
+
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.VwCompanydetails", b =>
+                {
+                    b.Property<string>("Companyname")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("companyname");
+
+                    b.Property<DateTime?>("Createdat")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("createdat");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Firmemail")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("firmemail");
+
+                    b.Property<string>("Firmname")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("firmname");
+
+                    b.Property<int?>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<bool?>("Isactive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isactive");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("Taxid")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("taxid");
+
+                    b.Property<DateTime?>("Updatedat")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updatedat");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_companydetails", (string)null);
+                });
+
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.VwUpcomingreports", b =>
+                {
+                    b.Property<decimal?>("Amount")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<string>("Companyname")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("companyname");
+
+                    b.Property<short?>("Dayofmonth")
+                        .HasColumnType("smallint")
+                        .HasColumnName("dayofmonth");
+
+                    b.Property<int?>("Daysoverdue")
+                        .HasColumnType("integer")
+                        .HasColumnName("daysoverdue");
+
+                    b.Property<int?>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<DateOnly?>("Period")
+                        .HasColumnType("date")
+                        .HasColumnName("period");
+
+                    b.Property<string>("Reporttypename")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("reporttypename");
+
+                    b.Property<string>("Shortcode")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("shortcode");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_upcomingreports", (string)null);
+                });
+
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.VwWorkercompanies", b =>
+                {
+                    b.Property<DateTime?>("Assignedat")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("assignedat");
+
+                    b.Property<int?>("Companyid")
+                        .HasColumnType("integer")
+                        .HasColumnName("companyid");
+
+                    b.Property<string>("Companyname")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("companyname");
+
+                    b.Property<bool?>("Isactive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isactive");
+
+                    b.Property<string>("Workeremail")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("workeremail");
+
+                    b.Property<int?>("Workerid")
+                        .HasColumnType("integer")
+                        .HasColumnName("workerid");
+
+                    b.Property<string>("Workername")
+                        .HasColumnType("text")
+                        .HasColumnName("workername");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_workercompanies", (string)null);
+                });
+
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Worker", b =>
                 {
                     b.Property<int>("Id")
@@ -682,8 +840,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
-                        .HasDefaultValue("Local")
-                        .HasColumnName("authprovider");
+                        .HasColumnName("authprovider")
+                        .HasDefaultValueSql("'Local'::character varying");
 
                     b.Property<DateTime?>("Createdat")
                         .ValueGeneratedOnAdd()
@@ -734,9 +892,12 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnName("lastname");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
-                        .HasColumnName("passwordhash");
+                        .HasColumnName("passwordhash")
+                        .HasDefaultValueSql("''::character varying");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(50)
@@ -756,14 +917,14 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("worker_pkey");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("worker_email_key");
-
-                    b.HasIndex("Firmid")
-                        .HasDatabaseName("idx_worker_firm");
-
                     b.HasIndex("Roleid");
+
+                    b.HasIndex(new[] { "Email" }, "idx_worker_email");
+
+                    b.HasIndex(new[] { "Firmid" }, "idx_worker_firm");
+
+                    b.HasIndex(new[] { "Email" }, "worker_email_key")
+                        .IsUnique();
 
                     b.ToTable("worker", (string)null);
                 });
@@ -790,9 +951,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("workerroletype_pkey");
 
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("workerroletype_name_key");
+                    b.HasIndex(new[] { "Name" }, "workerroletype_name_key")
+                        .IsUnique();
 
                     b.ToTable("workerroletype", (string)null);
                 });
@@ -819,6 +979,35 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasConstraintName("fk_company_firm");
 
                     b.Navigation("Firm");
+                });
+
+            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTask", b =>
+                {
+                    b.HasOne("AccountingSystem.Domain.Entities.Worker", "Assignedworker")
+                        .WithMany("CompanyTasks")
+                        .HasForeignKey("Assignedworkerid")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_task_worker");
+
+                    b.HasOne("AccountingSystem.Domain.Entities.Company", "Company")
+                        .WithMany("CompanyTasks")
+                        .HasForeignKey("Companyid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_task_company");
+
+                    b.HasOne("AccountingSystem.Domain.Entities.Tasktype", "Tasktype")
+                        .WithMany("CompanyTasks")
+                        .HasForeignKey("Tasktypeid")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_task_tasktype");
+
+                    b.Navigation("Assignedworker");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Tasktype");
                 });
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Companycontact", b =>
@@ -896,35 +1085,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.Navigation("Config");
                 });
 
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.AccountingSystem.Domain.Entities.Task", b =>
-                {
-                    b.HasOne("AccountingSystem.Domain.Entities.Worker", "Assignedworker")
-                        .WithMany("Tasks")
-                        .HasForeignKey("Assignedworkerid")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_task_worker");
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Company", "Company")
-                        .WithMany("Tasks")
-                        .HasForeignKey("Companyid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_task_company");
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Tasktype", "Tasktype")
-                        .WithMany("Tasks")
-                        .HasForeignKey("Tasktypeid")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_task_tasktype");
-
-                    b.Navigation("Assignedworker");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Tasktype");
-                });
-
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Worker", b =>
                 {
                     b.HasOne("AccountingSystem.Domain.Entities.Accountingfirm", "Firm")
@@ -955,13 +1115,13 @@ namespace AccountingSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Company", b =>
                 {
+                    b.Navigation("CompanyTasks");
+
                     b.Navigation("Companycontacts");
 
                     b.Navigation("Companyreportconfigs");
 
                     b.Navigation("Companyworkers");
-
-                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Companyreportconfig", b =>
@@ -986,16 +1146,16 @@ namespace AccountingSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Tasktype", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("CompanyTasks");
                 });
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Worker", b =>
                 {
                     b.Navigation("Auditlogs");
 
-                    b.Navigation("Companyworkers");
+                    b.Navigation("CompanyTasks");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("Companyworkers");
                 });
 #pragma warning restore 612, 618
         }
