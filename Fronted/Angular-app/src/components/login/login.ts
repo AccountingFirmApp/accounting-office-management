@@ -114,13 +114,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
         // ✅ שמירת פרטי העובד ב-WorkerService
         try{
         this.workerService.currentWorker = result.worker;
-        alert(this.workerService.currentWorker );
         
   this.router.navigate(['/home']);
   
         }
         catch(error){
-          console.log("error")
+          // console.log("error")
         }
 finally{
         this.isLoading = false;
@@ -129,7 +128,7 @@ finally{
       
       },
       error: (error) => {
-        console.error('🔴 שגיאה בהתחברות Google:', error);
+        // console.error('🔴 שגיאה בהתחברות Google:', error);
         this.isLoading = false;
 
         if (error.status === 0) {
@@ -169,7 +168,7 @@ finally{
         // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
         // ✅ שמירת פרטי העובד ב-WorkerService
         this.workerService.currentWorker = response.worker;
-        console.log('Worker details:', this.workerService.currentWorker);
+        // console.log('Worker details:', this.workerService.currentWorker);
         this.isLoading = false;
         this.router.navigate(['/home']);
       },

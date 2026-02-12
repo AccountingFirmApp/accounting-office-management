@@ -4,15 +4,18 @@ import { Router } from '@angular/router';
 import { CompanyReportConfigService } from '../../../../services/company-report-config.service';
 import { CompanyReportConfigDto } from '../../../../models/company-report-config';
 import { BackButtonComponent } from '../../shared/back-button/back-button.component';
+import { LoadingComponent } from '../../shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
 import { CompanyService } from '../../../../services/company';
-import { CompanyDto } from '../../../../models/Company';
+import { CompanyDto } from '../../../../models/company.dto';
+import { ReportTypeDto } from '../../../../models/report-type.dto';
 import { ReportService } from '../../../../services/report';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-company-report-config-list',
   standalone: true,
-  imports: [CommonModule, BackButtonComponent],
+  imports: [CommonModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent],
   templateUrl: './company-report-config-list.component.html',
   styleUrls: ['./company-report-config-list.component.css']
 })
@@ -20,17 +23,21 @@ export class CompanyReportConfigListComponent implements OnInit {
   configs: CompanyReportConfigDto[] = []; // ⭐ רק פעילות
   deletedConfigs: CompanyReportConfigDto[] = []; // ⭐ רק מחוקות
   companies: CompanyDto[] = [];
-  reportTypes: any[] = [];
-  
+  reportTypes: ReportTypeDto[] = [];
+
   // מטריצה: companyId -> reportTypeId -> config פעיל
   configMatrix: { [companyId: number]: { [reportTypeId: number]: CompanyReportConfigDto | null } } = {};
-  
+
   // ⭐ מטריצה למחוקות: companyId -> reportTypeId -> config מחוק
   deletedMatrix: { [companyId: number]: { [reportTypeId: number]: CompanyReportConfigDto | null } } = {};
-  
+
   loading = false;
   selectedYear: number;
   currentYear: number;
+
+  // Success/Error messages
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
 
   // Modal להצגת פרטי דיווח
   isModalOpen: boolean = false;
@@ -64,8 +71,7 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.buildDeletedMatrix(); // ⭐
       this.loading = false;
     }).catch(err => {
-      console.error(err);
-      alert('שגיאה בטעינת הנתונים');
+      // console.error(err);
       this.loading = false;
     });
   }
@@ -121,11 +127,11 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.companySer.getAllCompanies().subscribe({
         next: (data) => {
           this.companies = data;
-          console.log('חברות:', data);
+          // console.log('חברות:', data);
           resolve();
         },
         error: (err) => {
-          console.error(err);
+          // console.error(err);
           reject(err);
         }
       });
@@ -137,11 +143,11 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.reportService.getReportTypes().subscribe({
         next: (data) => {
           this.reportTypes = data;
-          console.log('סוגי דיווחים:', data);
+          // console.log('סוגי דיווחים:', data);
           resolve();
         },
         error: (err) => {
-          console.error(err);
+          // console.error(err);
           reject(err);
         }
       });
@@ -156,12 +162,12 @@ export class CompanyReportConfigListComponent implements OnInit {
           this.configs = data.filter(c => c.isActive === true);
           this.deletedConfigs = data.filter(c => c.isActive === false);
           
-          console.log('הגדרות פעילות:', this.configs);
-          console.log('הגדרות מחוקות:', this.deletedConfigs);
+          // console.log('הגדרות פעילות:', this.configs);
+          // console.log('הגדרות מחוקות:', this.deletedConfigs);
           resolve();
         },
         error: (err) => {
-          console.error(err);
+          // console.error(err);
           reject(err);
         }
       });
@@ -176,22 +182,16 @@ export class CompanyReportConfigListComponent implements OnInit {
    * ⭐ מחיקת הגדרה (שינוי סטטוס ל-false)
    */
   deleteConfig(configId: number): void {
-    const confirmed = confirm(
-      `האם למחוק את הגדרת ?\n\n(ניתן לשחזר את ההגדרה בכל עת)`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     this.configService.delete(configId).subscribe({
       next: () => {
-        alert('✅ ההגדרה נמחקה בהצלחה');
+        this.successMessage = 'ההגדרה נמחקה בהצלחה';
         this.loadAll(); // רענן
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
       },
       error: (err) => {
-        console.error('שגיאה במחיקת הגדרה:', err);
-        alert('❌ שגיאה במחיקת ההגדרה');
+        this.errorMessage = 'שגיאה במחיקת ההגדרה';
       }
     });
   }
@@ -200,14 +200,6 @@ export class CompanyReportConfigListComponent implements OnInit {
    * ⭐ שחזור הגדרה מחוקה (שינוי סטטוס ל-true)
    */
   restoreConfig(configId: number, companyName: string, reportTypeName: string): void {
-    const confirmed = confirm(
-      `האם לשחזר את הגדרת "${reportTypeName}" עבור "${companyName}"?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     // עדכן רק את הסטטוס ל-true
     const updateDto = {
       isActive: true
@@ -215,12 +207,14 @@ export class CompanyReportConfigListComponent implements OnInit {
 
     this.configService.update(configId, updateDto).subscribe({
       next: () => {
-        alert('✅ ההגדרה שוחזרה בהצלחה');
+        this.successMessage = 'ההגדרה שוחזרה בהצלחה';
         this.loadAll(); // רענן
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
       },
       error: (err) => {
-        console.error('שגיאה בשחזור הגדרה:', err);
-        alert('❌ שגיאה בשחזור ההגדרה');
+        this.errorMessage = 'שגיאה בשחזור ההגדרה';
       }
     });
   }
@@ -270,13 +264,6 @@ export class CompanyReportConfigListComponent implements OnInit {
           .map(c => `${c.reportTypeName} (${c.frequencyName})`)
           .join('\n- ');
 
-        const confirmed = confirm(
-          `נמצאו ${previousYearConfigs.length} הגדרות לחברה "${companyName}" משנת ${previousYear}:\n\n- ${configNames}\n\nלהעתיק את כל ההגדרות לשנת ${this.selectedYear}?`
-        );
-
-        if (!confirmed) {
-          return;
-        }
 
         let successCount = 0;
         let errorCount = 0;
@@ -300,7 +287,7 @@ export class CompanyReportConfigListComponent implements OnInit {
             },
             error: (err) => {
               errorCount++;
-              console.error('שגיאה ביצירת הגדרה:', err);
+              // console.error('שגיאה ביצירת הגדרה:', err);
               if (successCount + errorCount === totalConfigs) {
                 this.handleCopyComplete(successCount, errorCount, companyName, this.selectedYear);
               }
@@ -309,17 +296,14 @@ export class CompanyReportConfigListComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error(err);
-        alert(`שגיאה בטעינת הגדרות החברה "${companyName}"`);
+        // console.error(err);
       }
     });
   }
 
   private handleCopyComplete(successCount: number, errorCount: number, companyName: string, year: number): void {
     if (errorCount === 0) {
-      alert(`✅ הצלחה!\nכל ${successCount} ההגדרות הועתקו בהצלחה לשנת ${year} עבור "${companyName}"`);
     } else {
-      alert(`⚠️ הושלם עם שגיאות:\n- ${successCount} הגדרות הועתקו בהצלחה\n- ${errorCount} הגדרות נכשלו`);
     }
     this.loadAll();
   }

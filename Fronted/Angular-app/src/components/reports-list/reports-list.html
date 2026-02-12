@@ -1,206 +1,4 @@
 
-<!-- <div class="reports-container">
-
-  🔥 המודל לצפייה
-  <app-report-view-modal
-    [report]="selectedReport" 
-    [isOpen]="isModalOpen"
-    (closeModal)="closeModal()"
-    (editClicked)="onEditFromModal($event)"
-  ></app-report-view-modal>
-
-  🆕 Modal מרכזי לעובדות - יפה ומעוצב!
-  <div 
-    *ngIf="openWorkerPopoverId !== null" 
-    class="workers-modal-overlay"
-    (click)="closeWorkerPopover()"
-  >
-    <div 
-      class="workers-modal"
-      (click)="$event.stopPropagation()"
-    >
-      כותרת
-      <div class="modal-header">
-        <h3 class="modal-title">עובדות משויכות</h3>
-        <button 
-          class="modal-close-btn" 
-          (click)="closeWorkerPopover()"
-        >
-          ✕
-        </button>
-      </div>
-      
-      תוכן
-      <div class="modal-body">
-        <ul class="workers-list">
-          <li *ngFor="let worker of selectedReportWorkers; let i = index" class="worker-item">
-            <span class="worker-number">{{ i + 1 }}</span>
-            <span class="worker-name">{{ worker }}</span>
-          </li>
-        </ul>
-      </div>
-      
-      תחתית
-      <div class="modal-footer">
-        <span class="workers-count">סה"כ {{ selectedReportWorkers.length }} עובדות</span>
-        <button class="btn-close-modal" (click)="closeWorkerPopover()">
-          סגור
-        </button>
-      </div>
-    </div>
-  </div>
-
-  פילטרים
-  <div class="filters-section">
-    <div class="search-box">
-      <input 
-        type="text" 
-        [(ngModel)]="searchTerm" 
-        (input)="applyFilters()"
-        placeholder="חפש לפי שם חברה או סוג דיווח..."
-        class="search-input"
-      />
-    </div>
-
-    <div class="filter-controls">
-      <select 
-        [(ngModel)]="selectedStatus" 
-        (change)="applyFilters()"
-        class="filter-select"
-      >
-        <option value="all">כל הסטטוסים</option>
-        <option value="Pending">ממתין</option>
-        <option value="Reported">דווח</option>
-        <option value="Approved">אושר</option>
-        <option value="Paid">שולם</option>
-      </select>
-
-      <select 
-        [(ngModel)]="selectedCompany" 
-        (change)="applyFilters()"
-        class="filter-select"
-      >
-        <option value="all">כל החברות</option>
-        <option *ngFor="let company of companies" [value]="company">
-          {{ company }}
-        </option>
-      </select>
-
-      🔥 סינון לפי סוג דיווח
-      <select 
-        [(ngModel)]="selectedReportType" 
-        (change)="applyFilters()"
-        class="filter-select"
-      >
-        <option value="all">כל סוגי הדיווח</option>
-        <option *ngFor="let reportType of reportTypes" [value]="reportType">
-          {{ reportType }}
-        </option>
-      </select>
-
-      <button 
-        (click)="clearFilters()" 
-        class="btn-clear"
-        [disabled]="searchTerm === '' && selectedStatus === 'all' && selectedCompany === 'all' && selectedReportType === 'all'"
-      >
-        נקה סינון
-      </button>
-    </div>
-  </div>
-
-  טעינה
-  <div *ngIf="isLoading" class="loading">
-    <div class="spinner"></div>
-    <p>טוען דיווחים...</p>
-  </div>
-
-  הודעת שגיאה
-  <div *ngIf="errorMessage" class="error-message">
-    <span class="error-icon">⚠️</span>
-    {{ errorMessage }}
-  </div>
-
-  טבלת דוחות
-  <div *ngIf="!isLoading && !errorMessage" class="reports-table-wrapper">
-    <table class="reports-table">
-      <thead>
-        <tr>
-          <th>חברה</th>
-          <th>סוג דיווח</th>
-          <th>קוד</th>
-          <th>תקופה</th>
-          <th>סכום</th>
-          <th>אמצעי תשלום</th>
-          <th>סטטוס</th>
-          <th>תאריך דיווח</th>
-          <th>תאריך תשלום</th>
-          <th>עובדות משויכות</th>
-          <th>פעולות</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let report of filteredReports" class="report-row" [class.delayed-report]="isReportDelayed(report)">
-          <td class="company-name">
-            <span *ngIf="isReportDelayed(report)" class="delay-badge" [title]="getDelayText(report)">⚠️</span>
-            {{ report.companyName }}
-          </td>
-          <td>{{ report.reportTypeName }}</td>
-          <td class="short-code">{{ report.reportTypeShortCode }}</td>
-          <td>{{ formatDate(report.period) }}</td>
-          <td class="amount">{{ formatAmount(report.amount) }}</td>
-          <td>
-            <span *ngIf="report.paymentMethod">{{ getPaymentMethodText(report.paymentMethod) }}</span>
-            <span *ngIf="!report.paymentMethod" class="no-data">-</span>
-          </td>
-          <td>
-            <span class="status-badge" [ngClass]="getStatusColor(report.status)">
-              {{ getStatusText(report.status) }}
-            </span>
-          </td>
-          <td>{{ formatDate(report.reportedDate) }}</td>
-          <td>{{ formatDate(report.paidDate) }}</td>
-        
-          <td class="worker-names-cell">
-            אם יש עובדות
-            <div *ngIf="hasWorkers(report)" class="workers-preview">
-              <span class="first-worker">{{ report.workerNames[0] }}</span>
-              
-              כפתור +
-              <button 
-                *ngIf="getWorkerCount(report) > 1"
-                class="more-workers-btn"
-                (click)="openWorkerPopover(report, $event)"
-              >
-                +{{ getWorkerCount(report) - 1 }}
-              </button>
-            </div>
-
-            אם אין עובדות
-            <span *ngIf="!hasWorkers(report)" class="no-workers">
-              -
-            </span>
-          </td>
-
-          <td class="actions">
-            <button (click)="viewReport(report.id)" class="btn-view" title="צפייה">
-              👁️
-            </button>
-            <button (click)="editReport(report.id)" class="btn-edit" title="עריכה">
-              ✏️
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    אין תוצאות
-    <div *ngIf="filteredReports.length === 0" class="no-results">
-      <p>לא נמצאו דיווחים</p>
-      <button (click)="clearFilters()" class="btn-primary">נקה סינון</button>
-    </div>
-  </div>
-</div> -->
-
 <div class="reports-container">
 
   <!-- 🔥 המודל לצפייה -->
@@ -224,11 +22,15 @@
       <!-- כותרת -->
       <div class="modal-header">
         <h3 class="modal-title">עובדות משויכות</h3>
-        <button 
-          class="modal-close-btn" 
+        <button
+          class="modal-close-btn"
           (click)="closeWorkerPopover()"
+          aria-label="סגור"
         >
-          ✕
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
       </div>
       
@@ -311,16 +113,10 @@
   </div>
 
   <!-- טעינה -->
-  <div *ngIf="isLoading" class="loading">
-    <div class="spinner"></div>
-    <p>טוען דיווחים...</p>
-  </div>
+  <app-loading *ngIf="isLoading" message="טוען דיווחים..." size="large"></app-loading>
 
   <!-- הודעת שגיאה -->
-  <div *ngIf="errorMessage" class="error-message">
-    <span class="error-icon">⚠️</span>
-    {{ errorMessage }}
-  </div>
+  <app-error-message *ngIf="errorMessage" [message]="errorMessage" type="error"></app-error-message>
 
   <!-- טבלת דוחות -->
   <div *ngIf="!isLoading && !errorMessage" class="reports-table-wrapper">
@@ -343,7 +139,11 @@
       <tbody>
         <tr *ngFor="let report of filteredReports" class="report-row" [class.delayed-report]="isReportDelayed(report)">
           <td class="company-name">
-            <span *ngIf="isReportDelayed(report)" class="delay-badge" [title]="getDelayText(report)">⚠️</span>
+            <svg *ngIf="isReportDelayed(report)" class="delay-badge" [title]="getDelayText(report)" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
             {{ report.companyName }}
           </td>
           <td>{{ report.reportTypeName }}</td>
@@ -384,11 +184,17 @@
           </td>
 
           <td class="actions">
-            <button (click)="viewReport(report.id)" class="btn-view" title="צפייה">
-              👁️
+            <button (click)="viewReport(report.id)" class="btn-view" title="צפייה" aria-label="צפייה בדוח">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
             </button>
-            <button (click)="editReport(report.id)" class="btn-edit" title="עריכה">
-              ✏️
+            <button (click)="editReport(report.id)" class="btn-edit" title="עריכה" aria-label="ערוך דוח">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
             </button>
           </td>
         </tr>
@@ -396,9 +202,20 @@
     </table>
 
     <!-- אין תוצאות -->
-    <div *ngIf="filteredReports.length === 0" class="no-results">
-      <p>לא נמצאו דיווחים</p>
-      <button (click)="clearFilters()" class="btn-primary">נקה סינון</button>
+    <div *ngIf="filteredReports.length === 0" class="empty-state">
+      <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      <h3 class="empty-title">לא נמצאו דיווחים</h3>
+      <p class="empty-description">נסה לשנות את הסינון או לנקות את חיפוש המילים</p>
+      <button (click)="clearFilters()" class="btn btn-secondary empty-action" aria-label="נקה סינון">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        נקה סינון
+      </button>
     </div>
   </div>
 </div>

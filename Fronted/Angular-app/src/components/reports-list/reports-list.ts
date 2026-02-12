@@ -812,11 +812,13 @@ import { ReportService } from '../../services/report';
 import { ReportInstanceDetail } from '../../models/report-instance';
 import { WorkerService } from '../../services/worker';
 import { ReportViewModalComponent } from '../report-view/report-view';
+import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-reports-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReportViewModalComponent],
+  imports: [CommonModule, FormsModule, ReportViewModalComponent, LoadingComponent, ErrorMessageComponent],
   templateUrl: './reports-list.html',
   styleUrls: ['./reports-list.css']
 })
@@ -857,11 +859,11 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
       this.isAdminMode = params['adminMode'] === 'true';
-      
-      console.log('🔍 Query Params שהתקבלו:', params);
-      console.log('🔍 isAdminMode:', this.isAdminMode);
-      console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
-      
+
+      // console.log('🔍 Query Params שהתקבלו:', params);
+      // console.log('🔍 isAdminMode:', this.isAdminMode);
+      // console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
+
       this.loadReports();
     });
     
@@ -907,27 +909,27 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.errorMessage = '';
 
-    console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
+    // console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
 
     this.reportService.getAll(this.isAdminMode).subscribe({
       next: (data) => {
-        console.log('✅ התקבלו דוחות מהשרת:', data);
-        console.log('✅ כמות דוחות:', data.length);
-        
+        // console.log('✅ התקבלו דוחות מהשרת:', data);
+        // console.log('✅ כמות דוחות:', data.length);
+
         this.reports = data;
-        
+
         if (this.filterByCompanyId) {
-          console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
+          // console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
           this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
-          console.log('✅ אחרי פילטור:', this.reports.length);
+          // console.log('✅ אחרי פילטור:', this.reports.length);
         }
-        
+
         this.filteredReports = this.reports;
         this.populateFilterOptions();
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('❌ שגיאה:', error);
+        // console.error('❌ שגיאה:', error);
         this.isLoading = false;
         this.errorMessage = 'שגיאה בטעינת הדוחות';
       }
@@ -937,9 +939,9 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   populateFilterOptions(): void {
     this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
     this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
-    
-    console.log('✅ חברות זמינות:', this.companies);
-    console.log('✅ סוגי דיווח זמינים:', this.reportTypes);
+
+    // console.log('✅ חברות זמינות:', this.companies);
+    // console.log('✅ סוגי דיווח זמינים:', this.reportTypes);
   }
 
   // ========================================

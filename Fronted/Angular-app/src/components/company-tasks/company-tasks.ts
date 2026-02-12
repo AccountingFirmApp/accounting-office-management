@@ -110,11 +110,13 @@ import { CompanyService } from '../../services/company';
 import { TaskcompanyDto } from '../../models/taskcompany';
 import { CompanyDto } from '../../models/Company';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-company-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule, BackButtonComponent],
+  imports: [CommonModule, FormsModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent],
   templateUrl: './company-tasks.html',
   styleUrls: ['./company-tasks.css']
 })
@@ -161,7 +163,7 @@ export class CompanyTasksComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ שגיאה בטעינת פרטי החברה:', err);
+        // console.error('❌ שגיאה בטעינת פרטי החברה:', err);
       }
     });
   }
@@ -178,7 +180,7 @@ export class CompanyTasksComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ שגיאה בטעינת המשימות:', err);
+        // console.error('❌ שגיאה בטעינת המשימות:', err);
         this.error = `שגיאה בטעינת המשימות: ${err.message}`;
         this.loading = false;
         this.cdr.detectChanges();
@@ -203,17 +205,15 @@ export class CompanyTasksComponent implements OnInit {
         this.cdr.detectChanges();
         
         // הצג הודעת הצלחה (אופציונלי)
-        // alert('הסטטוס עודכן בהצלחה');
       },
       error: (err) => {
-        console.error('❌ שגיאה בעדכון סטטוס:', err);
+        // console.error('❌ שגיאה בעדכון סטטוס:', err);
         
         // החזר את הסטטוס הישן
         task.status = oldStatus;
         this.updatingTaskId = null;
         this.cdr.detectChanges();
         
-        alert('שגיאה בעדכון הסטטוס: ' + (err.error?.message || err.message));
       }
     });
   }
