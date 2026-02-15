@@ -1,4 +1,3 @@
-// components/login/login.component.ts
 import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,7 +6,6 @@ import { AuthService } from '../../services/auth.service';
 import { LoginRequestDto, GoogleLoginRequestDto } from '../../models/auth';
 import { environment } from '../../environments/environment';
 import { WorkerService } from '../../services/worker';
-import { log } from 'node:console';
 
 declare const google: any;
 
@@ -110,17 +108,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     this.authService.googleLogin(request).subscribe({
       next: (result) => {
-        // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
-        // ✅ שמירת פרטי העובד ב-WorkerService
         try{
-        this.workerService.currentWorker = result.worker;
-        alert(this.workerService.currentWorker );
-        
+        this.workerService.currentWorker = result.worker;        
   this.router.navigate(['/home']);
   
         }
         catch(error){
-          console.log("error")
         }
 finally{
         this.isLoading = false;
@@ -129,9 +122,7 @@ finally{
       
       },
       error: (error) => {
-        console.error('🔴 שגיאה בהתחברות Google:', error);
         this.isLoading = false;
-
         if (error.status === 0) {
           this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט';
         } else if (error.status === 401) {
@@ -166,10 +157,8 @@ finally{
 
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
-        // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
-        // ✅ שמירת פרטי העובד ב-WorkerService
+       
         this.workerService.currentWorker = response.worker;
-        console.log('Worker details:', this.workerService.currentWorker);
         this.isLoading = false;
         this.router.navigate(['/home']);
       },

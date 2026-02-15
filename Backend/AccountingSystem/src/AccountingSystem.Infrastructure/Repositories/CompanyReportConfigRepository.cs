@@ -21,7 +21,6 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companyreportconfigs;
         }
 
-        // ==================== ������ ������� ====================
 
         public async Task<Companyreportconfig?> GetByIdAsync(int id)
         {
@@ -54,7 +53,6 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public async Task AddAsync(Companyreportconfig entity)
         {
-            Console.WriteLine(entity.Year);
 
             await _dbSet.AddAsync(entity);
         }
@@ -80,11 +78,6 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
      
-        // ==================== ������ �������� ====================
-
-        /// <summary>
-        /// ���� �� ������� �� ���� ������
-        /// </summary>
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId)
         {
             return await _dbSet
@@ -96,9 +89,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� �� ������� ������� ����
-        /// </summary>
+        
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync()
         {
             return await _dbSet
@@ -109,9 +100,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� ������ ������ ��� ����
-        /// </summary>
+      
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsByCompanyIdAsync(int companyId)
         {
             return await _dbSet
@@ -122,9 +111,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� ������ ��� ��� �����
-        /// </summary>
+       
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByReportTypeIdAsync(int reportTypeId)
         {
             return await _dbSet
@@ -135,9 +122,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� ������ ��� ������
-        /// </summary>
+       
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByFrequencyIdAsync(int frequencyId)
         {
             return await _dbSet
@@ -148,18 +133,14 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ����� �� ����� ��� ����� ����� ����� ����� �����
-        /// </summary>
+       
         public async Task<bool> ConfigExistsAsync(int companyId, int reportTypeId)
         {
             return await _dbSet
                 .AnyAsync(c => c.Companyid == companyId && c.Reporttypeid == reportTypeId);
         }
 
-        /// <summary>
-        /// ���� ����� ������� ����� ���� �����
-        /// </summary>
+        
         public async Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId)
         {
             return await _dbSet
@@ -200,6 +181,15 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .Include(c => c.Frequency)
                 .Include(c => c.Reportinstances)
                 .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task DeleteByCompanyIdAsync(int companyId)
+        {
+            var configs = await _dbSet
+                .Where(c => c.Companyid == companyId)
+                .ToListAsync();
+
+            _dbSet.RemoveRange(configs);
         }
     }
 

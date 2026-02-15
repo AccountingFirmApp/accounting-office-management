@@ -4,12 +4,11 @@ export interface CompanyReportConfigDto {
   reportTypeId: number;
   frequencyId: number;
   dayOfMonth?: number;
-  isActive?: boolean;
+  isactive?: boolean;
   createdAt: Date;
   updatedAt: Date;
   year: number;
 
-  // Navigation properties
   companyName?: string;
   reportTypeName?: string;
   reportTypeShortCode?: string;

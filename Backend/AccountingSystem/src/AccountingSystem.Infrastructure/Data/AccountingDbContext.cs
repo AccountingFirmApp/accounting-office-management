@@ -433,7 +433,7 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
-            entity.Property(e => e.Category)  // ⭐ הוסף
+            entity.Property(e => e.Category) 
                 .HasColumnName("category");
             entity.Property(e => e.Defaultorder)
                 .HasDefaultValue(99)
@@ -450,7 +450,7 @@ public partial class AccountingDbContext : DbContext
                 .ToView("vw_activetasks");
 
             entity.Property(e => e.Assignedworkername).HasColumnName("assignedworkername");
-            entity.Property(e => e.Category)  // ⭐ הוסף
+            entity.Property(e => e.Category) 
                 .HasColumnName("category");
             entity.Property(e => e.Companyname)
                 .HasMaxLength(255)
@@ -461,7 +461,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Period).HasColumnName("period");
-            entity.Property(e => e.Status)  // ⭐ הוסף
+            entity.Property(e => e.Status)  
                 .HasColumnName("status");
             entity.Property(e => e.Tasktypename)
                 .HasMaxLength(255)
@@ -527,7 +527,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Shortcode)
                 .HasMaxLength(20)
                 .HasColumnName("shortcode");
-            entity.Property(e => e.Status)  // ⭐ הוסף
+            entity.Property(e => e.Status)  
                 .HasColumnName("status");
         });
 

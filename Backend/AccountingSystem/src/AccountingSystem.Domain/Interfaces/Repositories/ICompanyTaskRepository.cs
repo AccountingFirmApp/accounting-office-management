@@ -25,5 +25,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         System.Threading.Tasks.Task<IEnumerable<CompanyTask>> GetOverdueTasksAsync();
         System.Threading.Tasks.Task<IEnumerable<CompanyTask>> GetTasksDueInNextDaysAsync(int days);
         System.Threading.Tasks.Task<IEnumerable<CompanyTask>> GetPendingTasksAsync();
+
+        Task DeleteByCompanyIdAsync(int companyId);
     }
 }

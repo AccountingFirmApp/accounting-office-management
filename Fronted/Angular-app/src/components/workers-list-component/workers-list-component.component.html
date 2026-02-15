@@ -1,165 +1,3 @@
-<!-- <!-- <app-back-button [route]="'/home'"></app-back-button>
-
-<div class="workers-page">
-  <div class="workers-grid">
-
-    <div class="worker-card" *ngFor="let worker of workers">
-
-     Header 
-      <div class="card-header">
-        <div class="worker-info">
-          <h3>{{ worker.firstname }}</h3>
-          <h3>{{ worker.lastname }}</h3>
-          <span class="role-badge">{{ worker.roleName }}</span>
-        </div>
-
-        <span
-          class="status-badge"
-          [class.active]="worker.isActive"
-          [class.inactive]="!worker.isActive"
-        >
-          {{ worker.isActive ? 'פעיל' : 'לא פעיל' }}
-        </span>
-      </div>
-
-      Content 
-      <div class="card-content">
-        <div class="info-row">
-          <span class="label">אימייל</span>
-          <span class="value">{{ worker.email }}</span>
-        </div>
-
-        <div class="info-row">
-          <span class="label">מספר עובד</span>
-          <span class="value">{{ worker.employeeId }}</span>
-        </div>
-      </div>
-
-     Footer 
-      <div class="card-footer">
-        <button class="btn-action view" (click)="viewWorker(worker)">צפייה</button>
-        <button class="btn-action edit" (click)="openEdit(worker)">עריכה</button>
-        <button class="btn-action delete" (click)="deleteWorker(worker.id)">מחיקה</button> 
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-<button class="floating-add" (click)="openCreate()">＋</button> -->
-<!-- <app-back-button [route]="'/home'"></app-back-button> -->
-
-<div class="workers-page">
-  <div class="workers-grid">
-    <div class="worker-card" *ngFor="let worker of workers">
-      <!-- Header -->
-      <div class="card-header">
-        <div class="worker-info">
-          <h3>{{ worker.firstName }} {{ worker.lastName }}</h3>
-          <span class="role-badge">{{ worker.roleName }}</span>
-        </div>
-        <span
-          class="status-badge"
-          [class.active]="worker.isActive"
-          [class.inactive]="!worker.isActive"
-        >
-          {{ worker.isActive ? 'פעיל' : 'לא פעיל' }}
-        </span>
-      </div>
-
-      <!-- Content -->
-      <div class="card-content">
-        <div class="info-row">
-          <span class="label">אימייל</span>
-          <span class="value">{{ worker.email }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">מספר עובד</span>
-          <span class="value">{{ worker.employeeid }}</span>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="card-footer">
-        <button class="btn-action view" (click)="viewWorker(worker)">צפייה</button>
-        <button class="btn-action edit" (click)="openEdit(worker)">עריכה</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 🎯 Modal לצפייה בעובד -->
-<div class="modal-overlay" *ngIf="selectedWorker" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    
-    <!-- כפתור סגירה -->
-    <button class="close-btn" (click)="closeModal()">✕</button>
-    
-    <!-- כותרת -->
-    <div class="modal-header">
-      <h2>פרטי עובד</h2>
-    </div>
-    
-    <!-- תוכן -->
-    <div class="modal-body">
-      <div class="detail-section">
-        <h3>מידע אישי</h3>
-        <div class="detail-row">
-          <span class="detail-label">שם פרטי:</span>
-          <span class="detail-value">{{ selectedWorker.firstName }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">שם משפחה:</span>
-          <span class="detail-value">{{ selectedWorker.lastName }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">אימייל:</span>
-          <span class="detail-value">{{ selectedWorker.email }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">מספר עובד:</span>
-          <span class="detail-value">{{ selectedWorker.employeeid}}</span>
-        </div>
-      </div>
-
-      <div class="detail-section">
-        <h3>תפקיד ומצב</h3>
-        <div class="detail-row">
-          <span class="detail-label">תפקיד:</span>
-          <span class="detail-value">{{ selectedWorker.roleName}}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">סטטוס:</span>
-          <span class="detail-value" 
-                [class.active-text]="selectedWorker.isActive"
-                [class.inactive-text]="!selectedWorker.isActive">
-            {{ selectedWorker.isActive ? 'פעיל' : 'לא פעיל' }}
-          </span>
-        </div>
-      </div>
-
-      <!-- אפשר להוסיף עוד מידע כאן -->
-      <!-- <div class="detail-section" *ngIf="selectedWorker.">
-        <h3>יצירת קשר</h3>
-        <div class="detail-row">
-          <span class="detail-label">טלפון:</span>
-          <span class="detail-value">{{ selectedWorker.phone }}</span>
-        </div>
-      </div>
-    </div> -->
-    
-    <!-- כפתורים בתחתית 
-    <div class="modal-footer">
-      <button class="btn-secondary" (click)="closeModal()">סגור</button>
-      <button class="btn-primary" (click)="openEdit(selectedWorker)">עריכה</button>
-    </div>
-  </div>
-</div>
-
-<button class="floating-add" (click)="openCreate()">＋</button> -->
-<!-- <app-back-button [route]="'/home'"></app-back-button> -->
-
 <div class="workers-page">
   
   <!-- כותרת -->
@@ -175,22 +13,27 @@
   <div class="workers-grid">
     <div class="worker-card" *ngFor="let worker of workers">
       
+      <!-- ✅ כפתור מחיקה בפינה -->
+      <button class="delete-icon-btn" (click)="deleteWorker(worker)" title="מחיקת עובד">
+        🗑️
+      </button>
+      
       <!-- Header -->
       <div class="card-header">
         <div class="worker-avatar">
-          {{ worker.firstName.charAt(0) || '?' }}{{ worker.lastName.charAt(0) || '?'  }}
+          {{ worker.firstName.charAt(0) || '?' }}{{ worker.lastName.charAt(0) || '?' }}
         </div>
         <div class="worker-info">
-          <h3>{{( worker.firstName || '?') }} {{ (worker.lastName|| '?' )}}</h3>
-          <span class="role-badge">{{ worker.roleName|| '?' }}</span>
+          <h3>{{ worker.firstName || '?' }} {{ worker.lastName || '?' }}</h3>
+          <span class="role-badge">{{ worker.roleName || '?' }}</span>
         </div>
         <span
           class="status-badge"
-          [class.active]="worker.isActive"
-          [class.inactive]="!worker.isActive"
+          [class.active]="worker.isactive"
+          [class.inactive]="!worker.isactive"
         >
           <span class="status-dot"></span>
-          {{ worker.isActive ? 'פעיל' : 'לא פעיל' }}
+          {{ worker.isactive ? 'פעיל' : 'לא פעיל' }}
         </span>
       </div>
 
@@ -237,7 +80,7 @@
     <!-- כותרת עם אווטר -->
     <div class="modal-header">
       <div class="header-avatar">
-        {{ (selectedWorker.firstName.charAt(0)|| '?') }}{{ (selectedWorker.lastName.charAt(0) || '?')}}
+        {{ selectedWorker.firstName.charAt(0) || '?' }}{{ selectedWorker.lastName.charAt(0) || '?' }}
       </div>
       <h2>{{ selectedWorker.firstName }} {{ selectedWorker.lastName }}</h2>
       <p class="subtitle">פרטי עובד מלאים</p>
@@ -295,22 +138,14 @@
               <span class="detail-value email">{{ selectedWorker.email }}</span>
             </div>
           </div>
-          
-          <!-- <div class="detail-item" *ngIf="selectedWorker.phone">
-            <span class="item-icon">📱</span>
-            <div class="item-content">
-              <span class="detail-label">טלפון</span>
-              <span class="detail-value">{{ selectedWorker.phone }}</span>
-            </div>
-          </div>
         </div>
-      </div> -->
+      </div>
 
       <!-- תפקיד ומצב -->
       <div class="detail-section">
         <div class="section-title">
           <span class="title-icon">💼</span>
-          <h3>תפקיד ומצב</h3>
+          <h3>תפקיד</h3>
         </div>
         
         <div class="detail-grid">
@@ -318,24 +153,22 @@
             <span class="item-icon">💼</span>
             <div class="item-content">
               <span class="detail-label">תפקיד</span>
-              <span class="detail-value role-name">
-                {{ selectedWorker.roleName }}
-              </span>
+              <span class="detail-value role-name">{{ selectedWorker.roleName }}</span>
             </div>
           </div>
           
-          <div class="detail-item">
+          <!-- <div class="detail-item">
             <span class="item-icon">⚡</span>
             <div class="item-content">
               <span class="detail-label">סטטוס</span>
               <span class="status-pill" 
-                    [class.active]="selectedWorker.isActive"
-                    [class.inactive]="!selectedWorker.isActive">
+                    [class.active]="selectedWorker.isactive"
+                    [class.inactive]="!selectedWorker.isactive">
                 <span class="status-dot"></span>
-                {{ selectedWorker.isActive ? 'פעיל' : 'לא פעיל' }}
+                {{ selectedWorker.isactive ? 'פעיל' : 'לא פעיל' }}
               </span>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 

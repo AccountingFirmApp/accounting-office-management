@@ -82,21 +82,6 @@ namespace AccountingSystem.API.Controllers
         /// יצירת עובד חדש
         /// POST: api/workers
         /// </summary>
-        //[HttpPost]
-        //public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
-        //{
-        //    try
-        //    {
-        //        var result = await _mediator.Send(command);
-        //        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
-
-
         [HttpPost]
         [Authorize] // ✅ חובה!
         public async Task<ActionResult<WorkerDto>> Create([FromBody] CreateWorkerCommand command)

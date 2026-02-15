@@ -5,7 +5,6 @@ import { WorkerService } from '../../../services/worker';
 import { WorkerInfoDto } from '../../../models/auth';
 import { AuthService } from '../../../services/auth.service';
 import { BackButtonComponent } from '../shared/back-button/back-button.component';
-import { log } from 'node:console';
 
 @Component({
   selector: 'app-management',
@@ -25,7 +24,6 @@ export class ManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentWorker = this.workerService.currentWorker;
-    console.log(this.workerService)
     // אם לא מנהל, חזור לדף הבית
     if (!this.auth.isAdmin()) {
       this.router.navigate(['/home']);

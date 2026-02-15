@@ -20,7 +20,6 @@ export class ReportFormComponent implements OnInit {
   loading = false;
   submitting = false;
 
-  // Form data
   formData: any = {
     companyId: '',
     reportTypeId: '',
@@ -35,17 +34,15 @@ export class ReportFormComponent implements OnInit {
     comments: ''
   };
 
-  // Date strings for input binding
   periodString = '';
   receiptDateString = '';
   reportedDateString = '';
   paidDateString = '';
 
-  // רשימות מהשרת
   companies: any[] = [];
   reportTypes: any[] = [];
   availableReportTypes: any[] = [];
-  configs: any[] = []; // לשמירת כל ה-configs לצורך מציאת configId
+  configs: any[] = []; 
 
   constructor(
     private route: ActivatedRoute,
@@ -60,13 +57,11 @@ export class ReportFormComponent implements OnInit {
   loadData() {
     this.loading = true;
     
-    // טען את כל הנתונים במקביל
     Promise.all([
       this.loadCompanies(),
       this.loadReportTypes(),
       this.loadConfigs()
     ]).then(() => {
-      // אחרי שכל הנתונים נטענו, בדוק אם זה מצב עריכה
       this.route.params.subscribe(params => {
         if (params['id']) {
           this.isEditMode = true;
@@ -78,8 +73,6 @@ export class ReportFormComponent implements OnInit {
         }
       });
     }).catch(err => {
-      console.error('Error loading data:', err);
-      alert('שגיאה בטעינת הנתונים');
       this.loading = false;
     });
   }
@@ -92,7 +85,6 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
-          console.error('Error loading companies:', err);
           reject(err);
         }
       });
@@ -104,11 +96,10 @@ export class ReportFormComponent implements OnInit {
       this.reportService.getReportTypes().subscribe({
         next: (data) => {
           this.reportTypes = data;
-          this.availableReportTypes = data; // הצג את כל סוגי הדיווחים
+          this.availableReportTypes = data; 
           resolve();
         },
         error: (err) => {
-          console.error('Error loading report types:', err);
           reject(err);
         }
       });
@@ -123,7 +114,6 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
-          console.error('Error loading configs:', err);
           reject(err);
         }
       });
@@ -131,7 +121,6 @@ export class ReportFormComponent implements OnInit {
   }
 
   onCompanyChange() {
-    // איפוס בחירות
     this.formData.reportTypeId = '';
     this.formData.configId = '';
     this.updateConfigId();
@@ -143,7 +132,6 @@ export class ReportFormComponent implements OnInit {
 
   updateConfigId() {
     if (this.formData.companyId && this.formData.reportTypeId) {
-      // מצא את ה-config המתאים
       const config = this.configs.find(c => 
         c.companyId === +this.formData.companyId && 
         c.reportTypeId === +this.formData.reportTypeId
@@ -152,8 +140,6 @@ export class ReportFormComponent implements OnInit {
       if (config) {
         this.formData.configId = config.id;
       } else {
-        // אם לא נמצא config - אולי צריך ליצור אחד או להציג הודעה
-        console.warn('No matching config found for company and report type');
         this.formData.configId = '';
       }
     } else {
@@ -162,7 +148,6 @@ export class ReportFormComponent implements OnInit {
   }
 
   initNewReport() {
-    // Set default period to current month
     const now = new Date();
     this.periodString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     this.formData.period = now;
@@ -191,7 +176,6 @@ export class ReportFormComponent implements OnInit {
           comments: report.comments || ''
         };
 
-        // Convert to string format for inputs
         this.periodString = this.dateToMonthString(this.formData.period);
         this.receiptDateString = this.dateToDateString(this.formData.receiptDate);
         this.reportedDateString = this.dateToDateString(this.formData.reportedDate);
@@ -200,8 +184,6 @@ export class ReportFormComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading report:', err);
-        alert('שגיאה בטעינת הדיווח');
         this.goBack();
       }
     });
@@ -239,11 +221,6 @@ export class ReportFormComponent implements OnInit {
   }
 
   onSubmit() {
-    // if (!this.formData.configId) {
-    //   alert('יש לבחור חברה וסוג דיווח');
-    //   return;
-    // }
-
     this.submitting = true;
 
     if (this.isEditMode) {
@@ -254,9 +231,9 @@ export class ReportFormComponent implements OnInit {
   }
 createReport() {
   const data: CreateReportInstance = {
-    companyId: this.formData.companyId,        // מהטופס
-    reportTypeId: this.formData.reportTypeId,  // מהטופס
-    frequencyId: this.formData.frequencyId,    // אופציונלי
+    companyId: this.formData.companyId,        
+    reportTypeId: this.formData.reportTypeId,  
+    frequencyId: this.formData.frequencyId,
     period: this.formData.period,
     amount: this.formData.amount || undefined,
     paymentMethod: this.formData.paymentMethod || undefined,
@@ -266,22 +243,13 @@ createReport() {
 
   this.reportService.create(data).subscribe({
     next: () => {
-      alert('הדיווח נוצר בהצלחה! ✅');
       this.goBack();
     },
     error: (err) => {
-      console.error('Error creating report:', err);
-      alert('שגיאה ביצירת הדיווח');
       this.submitting = false;
     }
   });
 }
-
-
-
-
-
-
   updateReport() {
     const data: UpdateReportInstance = {
       id: this.reportId!,
@@ -296,12 +264,9 @@ createReport() {
 
     this.reportService.update(this.reportId!, data).subscribe({
       next: () => {
-        alert('הדיווח עודכן בהצלחה! ✅');
         this.goBack();
       },
       error: (err) => {
-        console.error('Error updating report:', err);
-        alert('שגיאה בעדכון הדיווח');
         this.submitting = false;
       }
     });
@@ -311,6 +276,5 @@ createReport() {
     this.router.navigate(['/reports'], { 
     queryParams: { adminMode: 'true' } 
   });}
-    // this.router.navigate(['/reports']);
   
 }

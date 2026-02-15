@@ -1,14 +1,17 @@
-﻿// Application/Handlers/Companies/CompaniesHandler.cs
-using AccountingSystem.Application.DTOs;
+﻿using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application;
 using AccountingSystem.Application.Queries.Companies;
 using AccountingSystem.Application.Queries.Tasks;
+using AccountingSystem.Application.Intrefaces;
 
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
 using AutoMapper;
 using MediatR;
+using AccountingSystem.Application.Commands.Companies;
+using AccountingSystem.Domain.Interfaces.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AccountingSystem.Application.Handlers.Companies;
 
@@ -19,20 +22,27 @@ public class GetAllCompaniesQueryHandler : IRequestHandler<GetAllCompaniesQuery,
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ICurrentUserService _currentUserService;
 
-    public GetAllCompaniesQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetAllCompaniesQueryHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        ICurrentUserService currentUserService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _currentUserService = currentUserService;
     }
 
     public async Task<List<CompanyDto>> Handle(GetAllCompaniesQuery request, CancellationToken cancellationToken)
     {
-        var companies = await _unitOfWork.Companies.GetAllAsync();
+        int firmId = _currentUserService.GetFirmId();
+
+        var companies = await _unitOfWork.Companies.GetAllByFirmIdAsync(firmId, request.IsActive);
+
         return _mapper.Map<List<CompanyDto>>(companies);
     }
 }
-
 // ========================================
 // GET COMPANY BY ID HANDLER
 // ========================================
@@ -100,12 +110,11 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
     {
         var companies = await _unitOfWork.Companies.GetCompaniesByFirmIdAsync(request.FirmId);
 
-        // המרה ל־DTO מתאים
         var result = companies.Select(c => new CompanyWithPendingReportsDto
         {
             Id = c.Id,
             Name = c.Name,
-            PendingReportsCount = c.Companyreportconfigs.Count(r => /* תנאי לדוחות ממתינים */ true)
+            PendingReportsCount = c.Companyreportconfigs.Count(r =>  true)
         }).ToList();
 
         return result;
@@ -113,159 +122,154 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
 
 }
 
+
 // ========================================
-// CREATE COMPANY COMMAND HANDLER
+// CREATE
 // ========================================
+public class CreateCompanyCommandHandler
+    : IRequestHandler<CreateCompanyCommand, CompanyDto>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+    private readonly ILogger<CreateCompanyCommandHandler> _logger;
 
+    public CreateCompanyCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        ILogger<CreateCompanyCommandHandler> logger)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+        _logger = logger;
+    }
 
-//public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-//        private readonly IMapper _mapper;
+    public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken ct)
+    {
+        if (!await _unitOfWork.AccountingFirms.ExistsAsync(request.Firmid))
+            throw new Exception($"Firm {request.Firmid} not found");
 
-//        public CreateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-//        {
-//            _unitOfWork = unitOfWork;
-//            _mapper = mapper;
-//        }
+        var existing = await _unitOfWork.Companies.GetByTaxIdAsync(request.Taxid);
 
-//        public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
-//        {
-//            var company = new Company
-//            {
-//                Name = request.Name,
-//                Taxid = request.TaxId,
-//                Firmid = request.FirmId,
-//                //Companycontacts = request.ContactPerson,
-//                Phone = request.Phone,
-//                Email = request.Email,
-//                Address = request.Address,
-//                Createdat = DateTime.UtcNow
-//            };
+        if (existing != null)
+        {
+            if (existing.Isactive == true)
+                throw new Exception("Company already exists");
 
-//            await _unitOfWork.Companies.AddAsync(company);
-//            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            existing.Isactive = true;
+            existing.Name = request.Name;
+            existing.Address = request.Address;
+            existing.Phone = request.Phone;
+            existing.Email = request.Email;
+            existing.Notes = request.Notes;
+            existing.Updatedat = DateTime.UtcNow;
 
-//            return _mapper.Map<CompanyDto>(company);
-//        }
-//    }
+            await _unitOfWork.Companies.UpdateAsync(existing);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-//    // ========================================
-//    // UPDATE COMPANY COMMAND HANDLER
-//    // ========================================
-//    public class UpdateCompanyCommandHandler : IRequestHandler<UpdateCompanyCommand, CompanyDto>
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-//        private readonly IMapper _mapper;
+            return _mapper.Map<CompanyDto>(existing);
+        }
 
-//        public UpdateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-//        {
-//            _unitOfWork = unitOfWork;
-//            _mapper = mapper;
-//        }
+        var company = new Company
+        {
+            Name = request.Name,
+            Taxid = request.Taxid,
+            Firmid = request.Firmid,
+            Address = request.Address,
+            Phone = request.Phone,
+            Email = request.Email,
+            Notes = request.Notes,
+            Isactive = true,
+            Createdat = DateTime.UtcNow,
+            Updatedat = DateTime.UtcNow
+        };
 
-//        public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
-//        {
-//            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
+        await _unitOfWork.Companies.AddAsync(company);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-//            if (company == null)
-//            {
-//                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
-//            }
+        return _mapper.Map<CompanyDto>(company);
+    }
+}
 
-//            company.Name = request.Name;
-//            company.Taxid = request.TaxId;
-//            //company.Companycontacts = request.ContactPerson;
-//            company.Phone = request.Phone;
-//            company.Email = request.Email;
-//            company.Address = request.Address;
-//            company.Updatedat = DateTime.UtcNow;
-
-//            await _unitOfWork.Companies.UpdateAsync(company);
-//            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-//            return _mapper.Map<CompanyDto>(company);
-//        }
-//    }
-
-//    // ========================================
-//    // DELETE COMPANY COMMAND HANDLER
-//    // ========================================
-//    public class DeleteCompanyCommandHandler : IRequestHandler<DeleteCompanyCommand, Unit>
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-
-//        public DeleteCompanyCommandHandler(IUnitOfWork unitOfWork)
-//        {
-//            _unitOfWork = unitOfWork;
-//        }
-
-//        public async Task<Unit> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
-//        {
-//            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
-
-//            if (company == null)
-//            {
-//                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
-//            }
-
-//            await _unitOfWork.Companies.DeleteAsync(request.Id);
-//            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-//            return Unit.Value;
-//        }
-//    }
-
-public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
+// ========================================
+// UPDATE
+// ========================================
+public class UpdateCompanyCommandHandler
+    : IRequestHandler<UpdateCompanyCommand, CompanyDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetTasksByCompanyIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public UpdateCompanyCommandHandler(IUnitOfWork uow, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
+        _unitOfWork = uow;
         _mapper = mapper;
     }
 
-    public async Task<List<CompanyTaskDto>> Handle(GetTasksByCompanyIdQuery request, CancellationToken cancellationToken)
+    public async Task<CompanyDto> Handle(UpdateCompanyCommand r, CancellationToken ct)
     {
-        // 1. בדוק שהחברה קיימת
-        var companyExists = await _unitOfWork.Companies.ExistsAsync(request.CompanyId);
-        if (!companyExists)
-        {
-            throw new Exception($"חברה עם ID {request.CompanyId} לא נמצאה");
-        }
+        var company = await _unitOfWork.Companies.GetByIdAsync(r.Id)
+            ?? throw new Exception("Company not found");
 
-        // 2. קבל את כל המשימות של החברה
-        var tasks = await _unitOfWork.Tasks.GetTasksByCompanyIdAsync(request.CompanyId);
+        company.Name = r.Name;
+        company.Address = r.Address;
+        company.Phone = r.Phone;
+        company.Email = r.Email;
+        company.Notes = r.Notes;
+        company.Updatedat = DateTime.UtcNow;
 
-        // 3. המר ל-DTOs
-        var taskDtos = tasks.Select(t => new CompanyTaskDto
-        {
-            Id = t.Id,
-            CompanyId = t.Companyid,
-            TaskTypeId = t.Tasktypeid,
-            Period = t.Period.ToDateTime(TimeOnly.MinValue),
-            DueDate = t.Duedate.HasValue
-? t.Duedate.Value.ToDateTime(TimeOnly.MinValue)
-: null,
-            CompletedDate = t.Completeddate.HasValue
-? t.Completeddate.Value.ToDateTime(TimeOnly.MinValue)
-: null,
-            AssignedWorkerId = t.Assignedworkerid,
-            Notes = t.Notes,
-            Status = t.Status.ToString(),
-            CreatedAt = t.Createdat ?? DateTime.MinValue,
-            UpdatedAt = t.Updatedat ?? DateTime.MinValue,
+        await _unitOfWork.Companies.UpdateAsync(company);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-            CompanyName = t.Company?.Name ?? string.Empty,
-            TaskTypeName = t.Tasktype?.Name ?? string.Empty,
-            AssignedWorkerName = t.Assignedworker != null
-                ? $"{t.Assignedworker.Firstname} {t.Assignedworker.Lastname}"
-                : null
-        }).ToList();
+        return _mapper.Map<CompanyDto>(company);
+    }
+}
 
-        return taskDtos;
+// ========================================
+// SOFT DELETE
+// ========================================
+public class DeleteCompanyCommandHandler
+    : IRequestHandler<DeleteCompanyCommand, Unit>
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public DeleteCompanyCommandHandler(IUnitOfWork uow)
+    {
+        _unitOfWork = uow;
     }
 
+    public async Task<Unit> Handle(DeleteCompanyCommand r, CancellationToken ct)
+    {
+        var company = await _unitOfWork.Companies.GetByIdAsync(r.Id)
+            ?? throw new Exception("Company not found");
+
+        company.Isactive = false;
+        company.Updatedat = DateTime.UtcNow;
+
+        await _unitOfWork.Companies.UpdateAsync(company);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        return Unit.Value;
+    }
+}
+
+// ========================================
+// HARD DELETE
+// ========================================
+public class DeleteCompanyPermanentlyCommandHandler
+    : IRequestHandler<DeleteCompanyPermanentlyCommand, Unit>
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public DeleteCompanyPermanentlyCommandHandler(IUnitOfWork uow)
+    {
+        _unitOfWork = uow;
+    }
+
+    public async Task<Unit> Handle(DeleteCompanyPermanentlyCommand r, CancellationToken ct)
+    {
+        await _unitOfWork.Companies.DeleteAsync(r.Id);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        return Unit.Value;
+    }
 }

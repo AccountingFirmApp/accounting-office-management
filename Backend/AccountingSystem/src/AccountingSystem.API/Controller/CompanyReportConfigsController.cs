@@ -96,7 +96,7 @@ namespace AccountingSystem.API.Controllers
                     Id = id,
                     FrequencyId = request.FrequencyId,
                     DayOfMonth = request.DayOfMonth,
-                    IsActive=request.IsActive
+                    Isactive=request.Isactive
                 };
 
                 var result = await _mediator.Send(command);

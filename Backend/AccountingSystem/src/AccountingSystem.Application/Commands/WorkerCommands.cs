@@ -20,7 +20,7 @@ public class CreateWorkerCommand : IRequest<WorkerDto>
     public bool Isactive { get; set; } = true;
     public DateOnly? Hiredate { get; set; }
     public List<int>? CompanyIds { get; set; }
-    public string Password { get; set; } = string.Empty; // חובה!
+    public string Password { get; set; } = string.Empty; 
 
 
 }
@@ -35,11 +35,10 @@ public class UpdateWorkerCommand : IRequest<WorkerDto>
     public string? Lastname { get; set; } = string.Empty;
     public string? Email { get; set; } = string.Empty;
     public string? Phone { get; set; }
-    public bool Isactive { get; set; }
-    public int? Roleid { get; set; }        // ✅ הוסף
-    public string? Employeeid { get; set; } // ✅ הוסף
-    public DateOnly? Hiredate { get; set; } // ✅ הוסף
-    public List<int>? CompanyIds { get; set; } // ✅ הוסף חברות
+    public int? Roleid { get; set; }       
+    public string? Employeeid { get; set; }
+    public DateOnly? Hiredate { get; set; } 
+    public List<int>? CompanyIds { get; set; } 
 }
 
 // ========================================

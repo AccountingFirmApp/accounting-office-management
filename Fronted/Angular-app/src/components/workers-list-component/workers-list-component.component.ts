@@ -1,4 +1,3 @@
-// src/app/components/workers-list/workers-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
@@ -41,7 +40,6 @@ export class WorkersListComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('❌ שגיאה בטעינת עובדים', err);
         this.errorMessage = 'אירעה שגיאה בטעינת העובדים';
         this.isLoading = false;
       }
@@ -58,37 +56,29 @@ export class WorkersListComponent implements OnInit {
     this.router.navigate(['/workers', worker.id, 'edit']);
   }
   
-  // viewWorker(worker: any) {
-  //   // אופציונלי – אם יש דף צפייה
-  //   this.router.navigate(['/workers', worker.id]);
-  // }
   viewWorker(worker: WorkerInfoDto): void {
     this.selectedWorker= worker;
     
    
   }
 
-  // ⭐ סגירת המודל
   closeModal(): void {
     this.selectedWorker = null;
   }
-  // deleteWorker(employeeId: number) {
-  //   // שואל את המשתמש לפני מחיקה
-  //   const confirmed = window.confirm('האם אתה בטוח שברצונך למחוק את העובד?');
+
+  deleteWorker(worker: WorkerInfoDto): void {
+  const confirmed = confirm(`האם אתה בטוח שברצונך למחוק את ${worker.firstName} ${worker.lastName}?`);
   
-  //   if (!confirmed) {
-  //     return; // אם המשתמש ביטל, לא מבצעים מחיקה
-  //   }
-  
-  //   // אם המשתמש אישר, מבצעים מחיקה
-  //   this.WorkerService.deleteWorker(employeeId).subscribe({ 
-  //     next: () => {
-  //       this.loadWorkers(); // טען מחדש את רשימת העובדים לאחר המחיקה
-  //     },
-  //     error: (err) => {
-  //       console.error('❌ שגיאה במחיקת עובד', err);
-  //       this.errorMessage = 'אירעה שגיאה במחיקת העובד';
-  //     }
-  //   });
-  // }
+  if (!confirmed) {
+    return;
+  }
+
+  this.WorkerService.deleteWorker(worker.id).subscribe({
+    next: () => {
+      this.loadWorkers();
+    },
+    error: (err) => {
+    }
+  });
+}
 }  

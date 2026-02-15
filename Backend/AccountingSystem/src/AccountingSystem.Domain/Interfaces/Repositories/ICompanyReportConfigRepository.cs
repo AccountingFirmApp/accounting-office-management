@@ -26,5 +26,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         // בדיקות
         System.Threading.Tasks.Task<bool> ConfigExistsAsync(int companyId, int reportTypeId);
         System.Threading.Tasks.Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId);
+        Task DeleteByCompanyIdAsync(int companyId);
+
     }
 }

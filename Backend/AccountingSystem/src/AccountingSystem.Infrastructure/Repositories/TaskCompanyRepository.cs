@@ -21,7 +21,6 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.CompanyTasks;
         }
 
-        // ==================== פעולות בסיסיות ====================
 
         public async Task<CompanyTask?> GetByIdAsync(int id)
         {
@@ -66,6 +65,14 @@ namespace AccountingSystem.Infrastructure.Repositories
             }
         }
 
+        public async Task DeleteByCompanyIdAsync(int companyId)
+        {
+            var tasks = await _context.CompanyTasks
+                .Where(t => t.Companyid == companyId)
+                .ToListAsync();
+
+            _context.CompanyTasks.RemoveRange(tasks);
+        }
         public async Task<bool> ExistsAsync(int id)
         {
             return await _dbSet.AnyAsync(t => t.Id == id);
@@ -76,11 +83,8 @@ namespace AccountingSystem.Infrastructure.Repositories
             return await _dbSet.CountAsync();
         }
 
-        // ==================== פעולות ייחודיות למשימות ====================
 
-        /// <summary>
-        /// קבלת כל המשימות של חברה מסוימת
-        /// </summary>
+      
         public async Task<IEnumerable<CompanyTask>> GetTasksByCompanyIdAsync(int companyId)
         {
             return await _dbSet

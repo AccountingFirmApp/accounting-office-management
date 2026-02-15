@@ -22,10 +22,10 @@ export interface WorkerInfoDto {
   email: string;
   phone?: string;
   roleName: string;
-  roleId: number;        // ← מוסיפים את זה
+  roleId: number;     
   password: string;
   firmid: number;
-  isActive: boolean;
-  companyIds?: number[]; // 🆕 אופציונלי - רשימת מזהי חברות שהעובד קשור אליהן
+  isactive: boolean;
+  companyIds?: number[]; 
   hireDate?: Date;
 }

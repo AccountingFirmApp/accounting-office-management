@@ -11,7 +11,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         System.Threading.Tasks.Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId);
         System.Threading.Tasks.Task<bool> AssignmentExistsAsync(int companyId, int workerId);
         Task<Companyworker> AddAsync(Companyworker entity);
-        Task DeleteByWorkerIdAsync(int workerId); // ✅ הוסף את זה!
+        Task DeleteByWorkerIdAsync(int workerId); 
+        Task DeleteByCompanyIdAsync(int companyId);
 
     }
 }

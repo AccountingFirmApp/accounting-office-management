@@ -17,7 +17,6 @@ namespace AccountingSystem.Application.Queries.AccountingFirmQuery
         {
         }
     public record GetAccountingFirmByIdQuery(int Id) : IRequest<AccountingFirmDto>;
-    //public record GetAccountingFirmPageQuery(int Page, int PageSize) : IRequest<PagedResult<AccountingFirmDto>>;
 
 }
 

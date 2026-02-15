@@ -55,6 +55,8 @@ builder.Services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
 builder.Services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
 builder.Services.AddScoped<IWorkerRoleTypeRepository, WorkerRoleTypeRepository>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>(); // ✅
+builder.Services.AddHttpContextAccessor(); // ✅ חשוב!
 
 // ========================================
 // 3. AutoMapper

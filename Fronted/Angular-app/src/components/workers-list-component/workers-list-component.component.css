@@ -6,7 +6,33 @@
   }
    */
   /* Card */
+.worker-card {
+  position: relative; /* ✅ חשוב! */
+}
 
+.delete-icon-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px; /* או right: 12px; אם את/ה רוצה מצד שמאל */
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.delete-icon-btn:hover {
+  background: rgba(255, 107, 107, 0.2);
+  transform: scale(1.1);
+  border-color: rgba(255, 107, 107, 0.5);
+}
 .modal-overlay {
   position: fixed;
   top: 0;

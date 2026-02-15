@@ -9,9 +9,7 @@ using System.Linq.Expressions;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    /// <summary>
-    /// מימוש של פעולות Repository עבור דוחות
-    /// </summary>
+   
     public class ReportInstanceRepository : IReportInstanceRepository
     {
         private readonly AccountingDbContext _context;
@@ -41,20 +39,6 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// <summary>
         /// תביא לי את כל הדוחות
         /// </summary>
-        //public async Task<IEnumerable<Reportinstance>> GetAllAsync()
-        //{
-        //    return await _context.Reportinstances
-        //        .Include(r => r.Config)
-        //            .ThenInclude(c => c.Company)
-        //        .Include(r => r.Config)
-        //            .ThenInclude(c => c.Reporttype)
-        //        .Include(r => r.Config)
-        //            .ThenInclude(c => c.Frequency)
-        //        .OrderByDescending(r => r.Period)
-        //        .ToListAsync();
-        //}
-
-        
             public async Task<IEnumerable<Reportinstance>> GetAllAsync()
             {
                 return await _context.Reportinstances
@@ -109,6 +93,25 @@ namespace AccountingSystem.Infrastructure.Repositories
             {
                 _context.Reportinstances.Remove(entity);
             }
+        }
+
+
+        public async Task DeleteByConfigIdAsync(int configId)
+        {
+            var instances = await _context.Reportinstances
+                .Where(r => r.Configid == configId)
+                .ToListAsync();
+
+            _context.Reportinstances.RemoveRange(instances);
+        }
+
+        public async Task DeleteByConfigIdsAsync(List<int> configIds)
+        {
+            var instances = await _context.Reportinstances
+                .Where(r => configIds.Contains(r.Configid))
+                .ToListAsync();
+
+            _context.Reportinstances.RemoveRange(instances);
         }
 
         /// <summary>
@@ -290,36 +293,6 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .OrderBy(r => r.Period)
                 .ToListAsync();
         }
-
-        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
-        //{
-
-        //    throw new NotImplementedException();
-        //}
-
-        //public async Task<Reportinstance> AddAsync(Reportinstance entity)
-        //{
-        //    if (entity == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(entity));
-        //    }
-
-        //    // הוספת תאריך יצירה אם לא הוגדר
-        //    if (entity.Createdat == default)
-        //    {
-        //        entity.Createdat = DateTime.UtcNow;
-        //    }
-
-        //    await _context.Reportinstances.AddAsync(entity);
-        //    await _context.SaveChangesAsync();
-
-        //    return entity;
-        //}
-
-        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
-        //{
-        //    return AddAsync(entity);
-        //}
 
         public async Task AddAsync(Reportinstance entity)
         {

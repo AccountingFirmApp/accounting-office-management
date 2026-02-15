@@ -6,19 +6,19 @@ export interface CompanyDto {
     phone?: string;
     email?: string;
     address?: string;
-    IsActive: boolean;
+    isactive: boolean;
+    notes?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    // notes?: string;
   }
   
   export interface CreateCompanyCommand {
     name: string;
     taxId: string;
-    firmId: number;
     phone?: string;
     email?: string;
     address?: string;
+    notes?: string; 
   }
   
   export interface UpdateCompanyCommand {
@@ -28,6 +28,7 @@ export interface CompanyDto {
     phone?: string;
     email?: string;
     address?: string;
+    notes?: string; 
   }
   
   export interface CompanyWithPendingReportsDto extends CompanyDto {

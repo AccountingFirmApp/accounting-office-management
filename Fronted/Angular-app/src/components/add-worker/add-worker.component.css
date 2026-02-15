@@ -95,7 +95,6 @@
   font-weight: 500;
 }
 
-/* 📋 Select styling */
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
@@ -112,7 +111,6 @@ select option {
   color: #1f2937;
 }
 
-/* 🔐 שדה סיסמה עם עינית */
 .password-input-wrapper {
   position: relative;
   width: 100%;
@@ -148,7 +146,6 @@ select option {
   display: block;
 }
 
-/* ☑️ Checkbox לחברות */
 .companies-checklist {
   border: 2px solid #e5e7eb;
   border-radius: 12px;
@@ -204,7 +201,6 @@ select option {
   font-style: italic;
 }
 
-/* ✅ Checkbox עובד פעיל */
 .form-group.checkbox {
   flex-direction: row;
   align-items: center;
@@ -227,7 +223,6 @@ select option {
   accent-color: #2563eb;
 }
 
-/* ❌ הודעות שגיאה */
 .error {
   color: #ef4444;
   font-size: 13px;
@@ -243,9 +238,8 @@ select option {
   font-size: 14px;
 }
 
-/* 🎯 כפתורים */
 .form-actions {
-  grid-column: 1 / -1; /* ✅ תופס את כל הרוחב */
+  grid-column: 1 / -1; 
   display: flex;
   gap: 16px;
   margin-top: 24px;
@@ -283,7 +277,6 @@ select option {
   box-shadow: none;
 }
 
-/* 📱 Responsive */
 @media (max-width: 768px) {
   .worker-form-container {
     margin: 20px;
@@ -291,7 +284,7 @@ select option {
   }
 
   .worker-form {
-    grid-template-columns: 1fr; /* ✅ עמודה אחת במובייל */
+    grid-template-columns: 1fr; 
   }
 
   .form-title {

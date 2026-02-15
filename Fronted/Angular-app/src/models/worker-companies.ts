@@ -7,7 +7,9 @@ export interface CompanyDto {
   notes: string;
   firmId: number;
   email: string;
-  isActive: boolean;
+  isactive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type WorkerCompanies = CompanyDto[];

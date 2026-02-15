@@ -15,15 +15,13 @@ public class WorkerDto
     public string PasswordHash { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string Employeeid { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public bool Isactive { get; set; }
     public DateTime? HireDate { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-
-    // Navigation properties (optional - for display)
     public string? FirmName { get; set; }
     public string? RoleName { get; set; }
-    public List<int> CompanyIds { get; set; } = new(); // ✅ הוסף!
+    public List<int> CompanyIds { get; set; } = new(); 
 
 }
 
@@ -54,7 +52,7 @@ public class UpdateWorkerDto
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string Employeeid { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public bool Isactive { get; set; }
 }
 
 /// <summary>
@@ -68,7 +66,7 @@ public class WorkerListDto
     public string FullName => $"{FirstName} {LastName}";
     public string Email { get; set; } = string.Empty;
     public string RoleName { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public bool Isactive { get; set; }
 }
 
 public class LoginRequestDto
@@ -84,7 +82,7 @@ public class LoginResponseDto
 {
     public string Token { get; set; } = null!;
     public string TokenType { get; set; } = "Bearer";
-    public int ExpiresIn { get; set; } // בשניות
+    public int ExpiresIn { get; set; } 
     public WorkerInfoDto Worker { get; set; } = null!;
 }
 
@@ -92,8 +90,8 @@ public class WorkerInfoDto
 {
     public int Id { get; set; }
     public string Employeeid { get; set; } = null!;
-    public string Firstname { get; set; } = null!;
-    public string Lastname { get; set; } = null!;
+    public string FirstName { get; set; } = null!;
+    public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string RoleName { get; set; } = null!;
     public int FirmId { get; set; }

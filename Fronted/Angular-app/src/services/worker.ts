@@ -12,7 +12,6 @@ export class WorkerService {
   currentWorker!:WorkerInfoDto;
   constructor(private http: HttpClient,private authService: AuthService) { }
 
-  // מחזיר מערך של CompanyDto
   getWorkerCompanies(workerId: number): Observable<WorkerCompanies> {
     return this.http.get<WorkerCompanies>(`${this.apiUrl}/${workerId}/companies`);
     
@@ -37,7 +36,6 @@ export class WorkerService {
       return this.http.post<WorkerInfoDto>(this.apiUrl, worker);  
     }
 
-    // WorkerService
 getWorkerById(id: number): Observable<WorkerInfoDto> {
   const token = this.authService.getToken();
   return this.http.get<WorkerInfoDto>(`${this.apiUrl}/${id}`, {

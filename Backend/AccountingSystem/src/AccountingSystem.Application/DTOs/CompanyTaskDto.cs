@@ -8,16 +8,15 @@ public class CompanyTaskDto
     public int Id { get; set; }
     public int CompanyId { get; set; }
     public int TaskTypeId { get; set; }
-    public DateTime Period { get; set; }
-    public string Status { get; set; } = string.Empty; // Pending, InProgress, Done, Paid, NotRequired
-    public DateTime? DueDate { get; set; }
-    public DateTime? CompletedDate { get; set; }
+    public DateOnly Period { get; set; }
+    public string Status { get; set; } = string.Empty; 
+    public DateOnly? DueDate { get; set; }
+    public DateOnly? CompletedDate { get; set; }
     public int? AssignedWorkerId { get; set; }
     public string Notes { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     
-    // Navigation (optional)
     public string? CompanyName { get; set; }
     public string? TaskTypeName { get; set; }
     public string? AssignedWorkerName { get; set; }
@@ -55,35 +54,27 @@ public class UpdateCompanyTaskDto
 public class CompanyTaskDetailDto
 {
     public int Id { get; set; }
-    
-    // Company info
     public int CompanyId { get; set; }
     public string CompanyName { get; set; } = string.Empty;
     public string CompanyTaxId { get; set; } = string.Empty;
-    
-    // AccountingSystem.Domain.Entities.Task Type info
     public int TaskTypeId { get; set; }
     public string TaskTypeName { get; set; } = string.Empty;
     public string TaskTypeCategory { get; set; } = string.Empty;
     
-    // AccountingSystem.Domain.Entities.Task data
     public DateTime Period { get; set; }
-    public string PeriodFormatted => Period.ToString("MM/yyyy"); // 09/2025
+    public string PeriodFormatted => Period.ToString("MM/yyyy"); 
     public string Status { get; set; } = string.Empty;
     public DateTime? DueDate { get; set; }
     public DateTime? CompletedDate { get; set; }
     
-    // Worker info
     public int? AssignedWorkerId { get; set; }
     public string? AssignedWorkerFirstName { get; set; }
     public string? AssignedWorkerLastName { get; set; }
     public string? AssignedWorkerFullName => AssignedWorkerFirstName != null && AssignedWorkerLastName != null 
         ? $"{AssignedWorkerFirstName} {AssignedWorkerLastName}" 
         : null;
-    
     public string Notes { get; set; } = string.Empty;
     
-    // Calculated fields
     public bool IsOverdue => DueDate.HasValue && DueDate.Value < DateTime.Now.Date && Status != "Done" && Status != "Paid";
 }
 

@@ -23,7 +23,40 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Workers;
 
         }
+        
+        public async Task<IEnumerable<Worker>> GetAllByFirmIdAsync(int firmId)
+        {
+            return await _dbSet
+                .Include(w => w.Role)      
+                .Include(w => w.Firm)      
+                .Where(w => w.Firmid == firmId && w.Isactive == true)
+                .OrderBy(w => w.Lastname)
+                .ThenBy(w => w.Firstname)
+                .ToListAsync();
+        }
 
+    
+        public async Task<Worker?> GetByIdAndFirmIdAsync(int id, int firmId)
+        {
+            return await _dbSet
+                .Include(w => w.Role)
+                .Include(w => w.Firm)
+                .FirstOrDefaultAsync(w => w.Id == id && w.Firmid == firmId);
+        }
+
+       
+        public async Task<Worker?> GetByEmailAsync(string email)
+        {
+            return await _dbSet
+                .Include(w => w.Role)
+                .Include(w => w.Firm)
+                .FirstOrDefaultAsync(w => w.Email == email);
+        }
+        public async Task<Worker?> GetByEmailAsync(string email, int firmId)
+        {
+            return await _dbSet
+                .FirstOrDefaultAsync(w => w.Email == email && w.Firmid == firmId);
+        }
         public async Task AddAsync(Worker entity)
         {
             await context.AddAsync(entity);
@@ -68,24 +101,17 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        // WorkerRepository.cs
         public async Task<IEnumerable<Worker>> GetAllAsync()
         {
             return await _dbSet
-                .Include(w => w.Role)        // ✅ Worker.Role
-                .Include(w => w.Firm)        // ✅ Worker.Firm (שזה Accountingfirm)
+                .Include(w => w.Role)      
+                .Include(w => w.Firm)      
                 .ToListAsync();
         }
-
-        //public Task<Worker?> GetByIdAsync(int id)
-        //{
-        //    return  context.Workers
-        //           .FirstOrDefaultAsync(w => w.Id == id);
-        //}
         public async Task<Worker?> GetByIdAsync(int id)
         {
             return await context.Workers
-                .Include(w => w.Companyworkers) // ✅ טען גם את הקשרים
+                .Include(w => w.Companyworkers) 
                     .ThenInclude(wc => wc.Company)
                 .FirstOrDefaultAsync(w => w.Id == id);
         }
@@ -118,7 +144,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             var existingWorker = await context.Workers.FindAsync(entity.Id);
             if (existingWorker == null)
-                throw new KeyNotFoundException("Worker not found."); // זה יזרוק חריגה אם לא קיים
+                throw new KeyNotFoundException("Worker not found."); 
 
             existingWorker.Firstname = entity.Firstname;
             existingWorker.Lastname = entity.Lastname;
@@ -127,7 +153,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             existingWorker.Firmid = entity.Firmid;
             existingWorker.Isactive = entity.Isactive;
 
-            await context.SaveChangesAsync(); // ✅ בסוף המתודה יש Task שמסתיים
+            await context.SaveChangesAsync(); 
         }
 
 

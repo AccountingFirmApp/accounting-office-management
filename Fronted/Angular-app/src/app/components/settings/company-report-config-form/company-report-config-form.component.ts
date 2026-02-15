@@ -21,7 +21,7 @@ export class CompanyReportConfigFormComponent implements OnInit {
   configId: number | null = null;
   loading = false;
   submitting = false;
-  isFixedYear = false; // האם השנה קבועה (לא ניתנת לשינוי)
+  isFixedYear = false; 
 
   companies: any[] = [];
   reportTypes: any[] = [];
@@ -57,12 +57,9 @@ export class CompanyReportConfigFormComponent implements OnInit {
       }
     });
 
-    // בדיקה אם יש query parameters (מגיעים מכפתור "הוסף")
     this.route.queryParams.subscribe(queryParams => {
       if (queryParams['fixedYear'] === 'true') {
         this.isFixedYear = true;
-
-        // ממלא את השדות מראש
         const companyId = queryParams['companyId'];
         const reportTypeId = queryParams['reportTypeId'];
         const year = +queryParams['year'];
@@ -72,8 +69,6 @@ export class CompanyReportConfigFormComponent implements OnInit {
           reportTypeId: reportTypeId ? +reportTypeId : '',
           year: year || new Date().getFullYear() + 1
         });
-
-        // הופך את השדות לקבועים (לא ניתנים לעריכה)
         this.configForm.get('companyId')?.disable();
         this.configForm.get('reportTypeId')?.disable();
         this.configForm.get('year')?.disable();
@@ -100,8 +95,6 @@ export class CompanyReportConfigFormComponent implements OnInit {
         this.loadConfig();
       }
     }).catch(err => {
-      console.error(err);
-      alert('שגיאה בטעינת הנתונים');
       this.loading = false;
     });
   }
@@ -153,15 +146,11 @@ export class CompanyReportConfigFormComponent implements OnInit {
           dayOfMonth: data.dayOfMonth,
           year: data.year
         });
-
-        // במצב עריכה - השבתת שדות שלא ניתנים לשינוי
         this.configForm.get('companyId')?.disable();
         this.configForm.get('reportTypeId')?.disable();
         this.configForm.get('year')?.disable();
       },
       error: (err) => {
-        console.error(err);
-        alert('שגיאה בטעינת ההגדרה');
       }
     });
   }
@@ -170,9 +159,8 @@ export class CompanyReportConfigFormComponent implements OnInit {
     if (this.configForm.valid || this.isFixedYear || this.isEditMode) {
       this.submitting = true;
 
-      // אם יש שדות מושבתים, צריך להשתמש ב-getRawValue() במקום value
       const formData = (this.isFixedYear || this.isEditMode)
-        ? this.configForm.getRawValue() // כולל גם שדות disabled
+        ? this.configForm.getRawValue() 
         : this.configForm.value;
 
       let request$: Observable<any>;
@@ -184,27 +172,19 @@ export class CompanyReportConfigFormComponent implements OnInit {
 
       request$.subscribe({
         next: () => {
-          alert(this.isEditMode ? 'ההגדרה עודכנה בהצלחה' : 'ההגדרה נוצרה בהצלחה');
           this.router.navigate(['/settings/report-config']);
         },
         error: (err: any) => {
-          console.error(err);
-          alert('שגיאה בשמירה: ' + (err.error?.message || 'שגיאה לא ידועה'));
           this.submitting = false;
         }
       });
     } else {
-      alert('נא למלא את כל השדות החובה');
     }
   }
 
   cancel(): void {
     this.router.navigate(['/settings/report-config']);
   }
-
-  /**
-   * מוחק את ההגדרה הנוכחית
-   */
   deleteConfig(): void {
     if (!this.configId) return;
 
@@ -225,12 +205,9 @@ export class CompanyReportConfigFormComponent implements OnInit {
     this.submitting = true;
     this.configService.delete(this.configId).subscribe({
       next: () => {
-        alert('✅ ההגדרה נמחקה בהצלחה');
         this.router.navigate(['/settings/report-config']);
       },
       error: (err) => {
-        console.error(err);
-        alert('❌ שגיאה במחיקת ההגדרה: ' + (err.error?.message || 'שגיאה לא ידועה'));
         this.submitting = false;
       }
     });

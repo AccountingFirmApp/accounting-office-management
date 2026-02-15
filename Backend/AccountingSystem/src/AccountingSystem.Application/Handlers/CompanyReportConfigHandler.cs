@@ -26,7 +26,6 @@ namespace AccountingSystem.Application.Handlers
         }
         public async Task<CompanyReportConfigDto> Handle(CreateCompanyConfigReportCommand request, CancellationToken cancellationToken)
         {
-            //בדיקות תקינות לערכים שנשלחו לפונקציה
             var company =await _unitOfWork.Companies.ExistsAsync(request.CompanyId);
             if (!company)
             {
@@ -91,7 +90,6 @@ namespace AccountingSystem.Application.Handlers
             }
             public async Task<bool> Handle(DeleteCompanyConfigReportCommand request, CancellationToken cancellationToken)
             {
-                //בדיקות תקינות לערכים שנשלחו לפונקציה
                 var config = await _unitOfWork.CompanyReportConfigs.GetByIdAsync(request.Id);
                 if (config == null)
                 {

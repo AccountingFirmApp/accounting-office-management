@@ -7,7 +7,7 @@ public class TaskTypeDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty; // Banks, Income, Expenses, Reconciliations, Other
+    public string Category { get; set; } = string.Empty; 
     public int DefaultOrder { get; set; }
     public DateTime CreatedAt { get; set; }
 }

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace AccountingSystem.Application.Handlers
 {
     using AccountingSystem.Application.DTOs;
-    //using AccountingSystem.Application.Pagination;
     using AccountingSystem.Application.Queries.AccountingFirmQuery;
     using AccountingSystem.Domain.Interfaces;
     using AutoMapper;
@@ -16,7 +15,6 @@ namespace AccountingSystem.Application.Handlers
     public class AccountingFirmQueryHandler :
         IRequestHandler<GetAllAccountingFirmQuery, List<AccountingFirmDto>>,
         IRequestHandler<GetAccountingFirmByIdQuery, AccountingFirmDto>
-        //IRequestHandler<GetAccountingFirmPageQuery, PagedResult<AccountingFirmDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -48,17 +46,6 @@ namespace AccountingSystem.Application.Handlers
             return _mapper.Map<AccountingFirmDto>(firm);
         }
 
-        // =======================
-        // Get Accounting Firms with Pagination
-        // =======================
-        //public async Task<PagedResult<AccountingFirmDto>> Handle(GetAccountingFirmPageQuery request, CancellationToken cancellationToken)
-        //{
-        //    var pagedResult = await _unitOfWork.AccountingFirms.GetPageAsync(request.Page, request.PageSize);
-        //    return new PagedResult<AccountingFirmDto>
-        //    {
-        //        Items = _mapper.Map<List<AccountingFirmDto>>(pagedResult.Items),
-        //        TotalCount = pagedResult.TotalCount
-        //    };
-        //}
+      
     }
 }

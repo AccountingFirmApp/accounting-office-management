@@ -481,4 +481,15 @@
   .company-card h5 {
     font-size: 18px;
   }
+
+  /* הוסף את זה לקובץ ה-CSS הקיים */
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
 }

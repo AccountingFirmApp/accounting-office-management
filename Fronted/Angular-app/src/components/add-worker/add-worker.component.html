@@ -87,12 +87,10 @@
       (click)="togglePasswordVisibility()"
       tabindex="-1"
     >
-      <!-- עין פתוחה -->
       <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
         <circle cx="12" cy="12" r="3"></circle>
       </svg>
-      <!-- עין סגורה -->
       <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
         <line x1="1" y1="1" x2="23" y2="23"></line>
@@ -103,11 +101,9 @@
     נדרשת סיסמה באורך 6 תווים לפחות
   </span>
 </div>
-    <!-- תפקיד - אופציונלי בעריכה -->
     <div class="form-group">
       <label>תפקיד {{ !isEditMode ? '*' : '(אופציונלי)' }}</label>
       <select formControlName="roleid">
-        <!-- <option *ngIf="!isEditMode" value="">בחר תפקיד</option> -->
         <option *ngFor="let role of roles" [value]="role.id">
           {{ role.name }}
         </option>
@@ -117,19 +113,16 @@
       </span>
     </div>
 
-    <!-- מספר עובד - אופציונלי -->
     <div class="form-group">
       <label>מספר עובד (אופציונלי)</label>
       <input formControlName="employeeid" type="text" placeholder="הזן מספר עובד" />
     </div>
 
-    <!-- תאריך התחלה - אופציונלי -->
     <div class="form-group">
       <label>תאריך תחילת עבודה (אופציונלי)</label>
       <input formControlName="hiredate" type="date" />
     </div>
 
-    <!-- 🔥 Checklist לחברות - עם סימון במצב עריכה -->
     <div class="form-group">
       <label>חברות (אופציונלי)</label>
       <div class="companies-checklist">
@@ -146,16 +139,6 @@
         </div>
       </div>
     </div>
-
-    <!-- עובד פעיל -->
-    <div class="form-group checkbox">
-      <label>
-        <input type="checkbox" formControlName="isactive" />
-        עובד פעיל
-      </label>
-    </div>
-
-    <!-- כפתורים -->
     <div class="form-actions">
       <button type="submit" class="primary-btn">
         {{ isEditMode ? 'שמור שינויים' : 'יצירת עובד' }}

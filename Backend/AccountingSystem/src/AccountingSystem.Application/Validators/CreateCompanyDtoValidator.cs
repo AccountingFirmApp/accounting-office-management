@@ -23,11 +23,7 @@ namespace AccountingSystem.Application.Validators.Company
                 .Matches(@"^\d{9}$").WithMessage("מספר ח.פ/ע.מ חייב להכיל 9 ספרות")
                 .When(x => !string.IsNullOrEmpty(x.TaxId));
 
-            // משרד רואי חשבון - חובה
-            RuleFor(x => x.FirmId)
-                .NotEmpty().WithMessage("חובה לבחור משרד רואי חשבון")
-                .GreaterThan(0).WithMessage("משרד רואי חשבון לא תקין");
-
+     
             // אימייל - אופציונלי, אבל אם קיים צריך להיות תקין
             RuleFor(x => x.Email)
                 .EmailAddress().WithMessage("פורמט אימייל לא תקין")

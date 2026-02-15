@@ -10,14 +10,12 @@ namespace AccountingSystem.Domain.DTOs
     {
         public long Id { get; set; }
         public int WorkerId { get; set; }
-        public string EntityType { get; set; } = string.Empty; 
+        public string EntityType { get; set; } = string.Empty;
         public int EntityId { get; set; }
         public string Action { get; set; } = string.Empty;
         public string? OldValue { get; set; }
         public string? NewValue { get; set; }
-        public DateTime CreatedAt { get; set; }
-
-        // Navigation (optional)
+        public DateTime CreatedAt { get; set; }  
         public string? WorkerName { get; set; }
     }
 }
