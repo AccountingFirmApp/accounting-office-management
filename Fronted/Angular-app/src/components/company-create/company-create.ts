@@ -66,8 +66,7 @@ export class CompanyCreateComponent implements OnInit {
           });
         },
         error: (err) => {
-          alert('שגיאה בטעינת החברה');
-          console.error(err);
+          // console.error(err);
         }
       });
     }
@@ -86,12 +85,10 @@ export class CompanyCreateComponent implements OnInit {
         
         this.companyService.updateCompany(this.companyId, updateCommand).subscribe({
           next: () => {
-            alert('החברה עודכנה בהצלחה');
             this.router.navigate(['/companies']);
           },
           error: (err) => {
-            alert('שגיאה בעדכון החברה');
-            console.error(err);
+            // console.error(err);
             this.loading = false;
           }
         });
@@ -99,18 +96,15 @@ export class CompanyCreateComponent implements OnInit {
         // יצירת חברה חדשה
         this.companyService.createCompany(this.companyForm.value).subscribe({
           next: () => {
-            alert('החברה נוצרה בהצלחה');
             this.router.navigate(['/companies']);
           },
           error: (err) => {
-            alert('שגיאה ביצירת החברה');
-            console.error(err);
+            // console.error(err);
             this.loading = false;
           }
         });
       }
     } else {
-      alert('נא למלא את כל השדות החובה');
     }
   }
 
@@ -123,8 +117,7 @@ export class CompanyCreateComponent implements OnInit {
         this.accountingFirms = data;
       },
       error: (err) => {
-        console.error(err);
-        alert('שגיאה בטעינת רשימת המשרדים');
+        // console.error(err);
       }
     });
   }

@@ -3,6 +3,7 @@ using AccountingSystem.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,10 +15,12 @@ namespace AccountingSystem.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IMediator mediator)
+    public AuthController(IMediator mediator, ILogger<AuthController> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     /// <summary>
@@ -63,18 +66,18 @@ public class AuthController : ControllerBase
 
             var result = await _mediator.Send(command);
 
-            Console.WriteLine($"✅ Google login successful for: {result.Worker.Email}");
+            _logger.LogInformation($"✅ Google login successful for: {result.Worker.Email}");
 
             return Ok(result);
         }
         catch (UnauthorizedAccessException ex)
         {
-            Console.WriteLine($"❌ Google login failed: {ex.Message}");
+            _logger.LogInformation($"❌ Google login failed: {ex.Message}");
             return Unauthorized(new { message = ex.Message });
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"💥 Google login error: {ex.Message}");
+            _logger.LogInformation($"💥 Google login error: {ex.Message}");
             return StatusCode(500, new { message = "שגיאה פנימית בשרת", detail = ex.Message });
         }
     }
@@ -96,17 +99,5 @@ public class AuthController : ControllerBase
             email,
             role
         });
-    }
-
-    /// <summary>
-    /// ⚠️ FOR DEVELOPMENT ONLY - יצירת Hash לסיסמה
-    /// מחק בפרודקשן!
-    /// </summary>
-    [HttpPost("create-hash")]
-    [AllowAnonymous]
-    public IActionResult CreateHash([FromBody] string password)
-    {
-        var hash = BCrypt.Net.BCrypt.HashPassword(password);
-        return Ok(new { password, hash });
     }
 }

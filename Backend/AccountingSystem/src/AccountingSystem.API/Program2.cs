@@ -29,13 +29,13 @@
 //    NpgsqlConnection.GlobalTypeMapper.MapEnum<ReportStatus>("report_status");
 //    NpgsqlConnection.GlobalTypeMapper.MapEnum<PaymentMethod>("payment_method");
 //    NpgsqlConnection.GlobalTypeMapper.MapEnum<TaskCategory>("task_category");
-//    Console.WriteLine("✅ Enum mapping completed successfully!");
+//    _logger.LogInformation("✅ Enum mapping completed successfully!");
 //    foreach (var value in Enum.GetValues<AccountingSystem.Domain.Enums.TaskStatus>())
-//        Console.WriteLine($"  - TaskStatus: {value}");
+//        _logger.LogInformation($"  - TaskStatus: {value}");
 //}
 //catch (Exception ex)
 //{
-//    Console.WriteLine($"❌ Enum mapping failed: {ex.Message}");
+//    _logger.LogInformation($"❌ Enum mapping failed: {ex.Message}");
 //}
 
 //builder.Services.AddDbContext<AccountingDbContext>(options =>

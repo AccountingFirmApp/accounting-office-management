@@ -63,3 +63,12 @@ bld/
 .vs/
 bin/
 obj/
+
+# Environment variables with secrets
+.env
+*.env
+!.env.example
+
+# appsettings with secrets (use environment variables instead)
+appsettings.Production.json
+appsettings.Staging.json

@@ -1,129 +1,167 @@
+/* Company Tasks - Corporate Fintech Design */
+
 .container {
-  padding: 2.5rem;
+  padding: var(--space-8);
   direction: rtl;
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--bg-primary);
+  font-family: var(--font-text);
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 .header h2 {
   margin: 0;
-  color: #1e293b;
-  font-size: 1.5rem;
-  font-weight: 600;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
 }
 
 .btn-back {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: white;
-  color: #374151;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.9375rem;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-text);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--transition-fast);
 }
 
 .btn-back:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
 }
 
 .company-info {
-  background: white;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+  background: var(--bg-surface);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-5);
   display: flex;
-  gap: 2rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  gap: var(--space-6);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-xs);
 }
 
 .company-info p {
   margin: 0;
-  color: #64748b;
-  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
 }
 
 .company-info p strong {
-  color: #1e293b;
+  color: var(--text-primary);
+  font-weight: var(--font-semibold);
 }
 
 .loading {
   text-align: center;
-  padding: 3rem;
-  color: #64748b;
-  font-size: 1rem;
+  padding: var(--space-12);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
 }
 
 .error {
-  color: #dc2626;
-  padding: 1rem;
-  background: #fef2f2;
-  border-radius: 6px;
-  margin: 0.75rem 0;
-  border-right: 4px solid #dc2626;
+  color: var(--status-error);
+  padding: var(--space-4);
+  background: var(--status-error-bg);
+  border-radius: var(--radius-md);
+  margin: var(--space-3) 0;
+  border-right: 3px solid var(--status-error);
 }
 
-.no-data {
+/* Empty State */
+.empty-state {
   text-align: center;
-  padding: 3rem;
-  color: #94a3b8;
-  font-size: 1rem;
+  padding: var(--space-16) var(--space-8);
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  max-width: 600px;
+  margin: var(--space-10) auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.empty-icon {
+  color: var(--text-tertiary);
+  opacity: 0.5;
+  margin-bottom: var(--space-2);
+}
+
+.empty-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.empty-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.6;
 }
 
 .tasks-count {
-  margin: 0.75rem 0;
-  color: #64748b;
-  font-size: 0.9375rem;
-  font-weight: 500;
+  margin: var(--space-3) 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-medium);
 }
 
 .table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
+  border: 1px solid var(--border-default);
 }
 
 .table th,
 .table td {
-  padding: 0.875rem 1rem;
+  padding: var(--space-3);
   text-align: right;
 }
 
 .table th {
-  background: #3b82f6;
-  color: white;
-  font-weight: 600;
-  font-size: 0.9375rem;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: var(--font-semibold);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-default);
 }
 
 .table th:first-child {
-  border-radius: 8px 0 0 0;
+  border-radius: var(--radius-lg) 0 0 0;
 }
 
 .table th:last-child {
-  border-radius: 0 8px 0 0;
+  border-radius: 0 var(--radius-lg) 0 0;
 }
 
 .table td {
-  border-bottom: 1px solid #f1f5f9;
-  color: #374151;
-  font-size: 0.9375rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+  font-size: 11px;
 }
 
 .table tr:last-child td {
@@ -131,35 +169,37 @@
 }
 
 .table tr:hover td {
-  background: #f8fafc;
+  background: var(--bg-hover);
 }
 
 .status-select {
-  padding: 0.375rem 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  padding: 4px var(--space-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: var(--font-medium);
+  font-size: 11px;
+  font-family: var(--font-text);
   width: 100%;
-  transition: all 0.15s ease;
-  background: white;
-  color: #374151;
+  transition: all var(--transition-fast);
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 .status-select:hover {
-  border-color: #3b82f6;
+  border-color: var(--border-focus);
 }
 
 .status-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .status-select:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  background: var(--bg-hover);
 }
 
 .status-select.updating {
@@ -167,6 +207,6 @@
 }
 
 .loading-spinner {
-  margin-right: 5px;
-  font-size: 1rem;
+  margin-right: var(--space-1);
+  font-size: var(--font-size-sm);
 }

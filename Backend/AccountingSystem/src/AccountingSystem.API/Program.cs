@@ -21,17 +21,37 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load environment variables from .env file (for development)
+// In production, use Azure App Service Configuration or Key Vault
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".env");
+if (File.Exists(envPath))
+{
+    foreach (var line in File.ReadAllLines(envPath))
+    {
+        if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
+        var parts = line.Split('=', 2);
+        if (parts.Length == 2)
+        {
+            Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim());
+        }
+    }
+}
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // ========================================
 // Database + ENUM mapping
 // ========================================
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Database connection string not configured. Set DB_CONNECTION_STRING environment variable.");
+
 var nullNameTranslator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
 
 builder.Services.AddDbContext<AccountingDbContext>(options =>
 {
     options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
+        connectionString,
         npgsqlOptions =>
         {
             npgsqlOptions.MapEnum<TaskStatus1>("TaskStatus1", nameTranslator: nullNameTranslator);
@@ -42,8 +62,7 @@ builder.Services.AddDbContext<AccountingDbContext>(options =>
 });
 
 
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(
-    builder.Configuration.GetConnectionString("DefaultConnection"));
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
 // מיפוי כל ה-ENUMs
 dataSourceBuilder.MapEnum<AccountingSystem.Domain.Enums.TaskStatus1>("task_status");
@@ -59,9 +78,7 @@ builder.Services.AddDbContext<AccountingDbContext>(options =>
 // Hangfire
 // ========================================
 builder.Services.AddHangfire(config =>
-    config.UsePostgreSqlStorage(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    )
+    config.UsePostgreSqlStorage(connectionString)
 );
 
 builder.Services.AddHangfireServer();
@@ -110,9 +127,17 @@ builder.Services.AddValidatorsFromAssemblyContaining<MappingProfile>();
 // ========================================
 // JWT Authentication
 // ========================================
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSettings["SecretKey"]
-    ?? throw new InvalidOperationException("JWT SecretKey לא מוגדר");
+var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
+    ?? builder.Configuration.GetSection("Jwt")["SecretKey"]
+    ?? throw new InvalidOperationException("JWT SecretKey not configured. Set JWT_SECRET_KEY environment variable.");
+
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
+    ?? builder.Configuration.GetSection("Jwt")["Issuer"]
+    ?? "AccountingSystem.API";
+
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+    ?? builder.Configuration.GetSection("Jwt")["Audience"]
+    ?? "AccountingSystem.Client";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
@@ -123,10 +148,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(secretKey)
+            Encoding.UTF8.GetBytes(jwtSecretKey)
         ),
         ClockSkew = TimeSpan.Zero
     };
