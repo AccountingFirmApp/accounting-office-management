@@ -1,19 +1,20 @@
 ﻿using AccountingSystem.Application.Intrefaces;
 using AccountingSystem.Application.Mappings;
+using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using AccountingSystem.Infrastructure.Jobs;
+using AccountingSystem.Infrastructure.Repositories;
 using AccountingSystem.Infrastructure.Services;
 using AutoMapper;
-using AccountingSystem.Infrastructure.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using AccountingSystem.Domain.Enums;
 using Npgsql;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -35,6 +36,7 @@ builder.Services.AddDbContext<AccountingDbContext>(options =>
             npgsqlOptions.MapEnum<TaskCategory>("task_category", nameTranslator: nullNameTranslator);
             npgsqlOptions.MapEnum<ReportStatus>("report_status", nameTranslator: nullNameTranslator);
             npgsqlOptions.MapEnum<PaymentMethod>("payment_method", nameTranslator: nullNameTranslator);
+            npgsqlOptions.MapEnum<RecurrenceType>("recurrence_type", nameTranslator: nullNameTranslator);
         });
 });
 
@@ -55,7 +57,7 @@ builder.Services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
 builder.Services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
 builder.Services.AddScoped<IWorkerRoleTypeRepository, WorkerRoleTypeRepository>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
-
+builder.Services.AddScoped<IChecklistItemRepository, ChecklistItemRepository>();
 // ========================================
 // 3. AutoMapper
 // ========================================
@@ -122,6 +124,7 @@ builder.Services.AddAuthorization(options =>
 // ========================================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHostedService<AutomaticTaskGenerationJob>();
 
 builder.Services.AddSwaggerGen(options =>
 {

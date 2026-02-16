@@ -1,11 +1,15 @@
 ﻿using AccountingSystem.Application.Commands.Companies;
 using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
+using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Application.Queries.Companies;
 using AccountingSystem.Application.Queries.Tasks;
+using AccountingSystem.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 
@@ -161,33 +165,53 @@ namespace AccountingSystem.API.Controllers
             }
         }
 
+        //[HttpPatch("{companyId}/tasks/{taskId}/status")]
+        //public async System.Threading.Tasks.Task<ActionResult> UpdateTaskStatus(
+        //int companyId,
+        //int taskId,
+        //[FromBody] UpdateTaskStatusRequest request)
+        //{
+        //    try
+        //    {
+        //        var command = new UpdateTaskStatusCommand
+        //        {
+        //            TaskId = taskId,
+        //            Status = request.Status
+        //        };
+
+        //        await _mediator.Send(command);
+        //        return Ok(new { message = "הסטטוס עודכן בהצלחה" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
         [HttpPatch("{companyId}/tasks/{taskId}/status")]
-        public async System.Threading.Tasks.Task<ActionResult> UpdateTaskStatus(
-        int companyId,
-        int taskId,
-        [FromBody] UpdateTaskStatusRequest request)
+        public async Task<ActionResult> UpdateTaskStatus(int companyId, int taskId, [FromBody] UpdateTaskStatusRequest request)
         {
-            try
+            // המרה מטקסט ל-Enum
+            if (!Enum.TryParse<TaskStatus1>(request.Status, out var taskStatus))
             {
-                var command = new UpdateTaskStatusCommand
-                {
-                    TaskId = taskId,
-                    Status = request.Status
-                };
+                return BadRequest("סטטוס לא תקין");
+            }
 
-                await _mediator.Send(command);
-                return Ok(new { message = "הסטטוס עודכן בהצלחה" });
-            }
-            catch (Exception ex)
+            var command = new UpdateTaskStatusCommand
             {
-                return BadRequest(new { message = ex.Message });
-            }
+                TaskId = taskId,
+                Status = taskStatus // עכשיו זה יעבוד כי זה מאותו סוג
+            };
+
+            await _mediator.Send(command);
+            return Ok();
         }
-
         // DTO לבקשה
         public class UpdateTaskStatusRequest
         {
+            //[JsonConverter(typeof(JsonStringEnumConverter))] // זה הקסם שפותר את השגיאה
             public string Status { get; set; }
         }
+
+        
     }
 }

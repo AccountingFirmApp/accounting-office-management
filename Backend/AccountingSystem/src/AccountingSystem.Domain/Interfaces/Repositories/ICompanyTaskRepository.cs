@@ -53,7 +53,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         Task<int> CountAsync();
 
         // ==========================================
-        // שאילתות ספציפיות למשימות - מהממשק הישן
+        // שאילתות ספציפיות למשימות
         // ==========================================
 
         Task<IEnumerable<CompanyTask>> GetTasksByCompanyIdAsync(int companyId);
@@ -67,46 +67,15 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         Task<IEnumerable<CompanyTask>> GetPendingTasksAsync();
 
         // ==========================================
-        // פעולות ליצירה אוטומטית - מהממשק החדש
+        // פעולות ליצירה אוטומטית
         // ==========================================
 
-        /// <summary>
-        /// קבלת כל התצורות לפי תדירות
-        /// </summary>
         Task<List<TaskTypeConfiguration>> GetActiveConfigurationsByRecurrenceAsync(RecurrenceType recurrenceType);
-
-        /// <summary>
-        /// קבלת תצורה לפי סוג משימה
-        /// </summary>
         Task<TaskTypeConfiguration?> GetConfigurationByTaskTypeAsync(int taskTypeId);
-
-        /// <summary>
-        /// קבלת כל החברות הפעילות
-        /// </summary>
         Task<List<Company>> GetActiveCompaniesAsync();
-
-        /// <summary>
-        /// קבלת הגדרות חברה לסוג משימה
-        /// </summary>
         Task<CompanyTaskTypeSettings?> GetCompanySettingsAsync(int companyId, int taskTypeId);
-
-        /// <summary>
-        /// בדיקה האם משימה קיימת
-        /// </summary>
         Task<bool> TaskExistsAsync(int companyId, int taskTypeId, DateOnly period);
-
-        /// <summary>
-        /// קבלת משימות של חברה עם פילטרים
-        /// </summary>
-        Task<List<CompanyTask>> GetCompanyTasksAsync(
-            int companyId,
-            int? year = null,
-            int? month = null,
-            TaskStatus1? status = null);
-
-        /// <summary>
-        /// יצירת מספר משימות בבת אחת
-        /// </summary>
+        Task<List<CompanyTask>> GetCompanyTasksAsync(int companyId, int? year = null, int? month = null, TaskStatus1? status = null);
         Task<int> CreateTasksAsync(List<CompanyTask> tasks);
 
         // ==========================================
