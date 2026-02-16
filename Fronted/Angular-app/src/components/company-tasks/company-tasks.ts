@@ -110,6 +110,7 @@ import { CompanyService } from '../../services/company';
 import { TaskcompanyDto } from '../../models/taskcompany';
 import { CompanyDto } from '../../models/Company';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { CompantTaskService } from '../../services/compant-task.service';
 
 @Component({
   selector: 'app-company-tasks',
@@ -135,11 +136,15 @@ export class CompanyTasksComponent implements OnInit {
   };
 
   availableStatuses = ['Pending', 'InProgress', 'Done', 'Paid', 'NotRequired'];
+// הוסיפי למשתני המחלקה:
+selectedTaskDetails: any = null; // יחזיק את המשימה המורחבת כולל הצ'קליסט
+showChecklistModal = false;      // לשליטה בתצוגת המודאל/פאנל
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private companyService: CompanyService,
+    private taskService: CompantTaskService, // ← הוסף את זה
     private cdr: ChangeDetectorRef,
     private location:Location
 
@@ -249,8 +254,48 @@ export class CompanyTasksComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/companies']);
   }
-  // goHome(): void {
-  //   this.location.back();
-  // }
+  
+// הוסיפי את הפונקציות הבאות:
 
+openTaskDetails(taskId: number): void {
+  this.loading = true;
+  this.taskService.getTaskDetails(taskId).subscribe({
+    next: (data) => {
+      this.selectedTaskDetails = data;
+      this.showChecklistModal = true;
+      this.loading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('❌ שגיאה בטעינת פרטי צ\'קליסט:', err);
+      this.loading = false;
+    }
+  });
+}
+
+toggleChecklistItem(item: any): void {
+  const workerId = 1; // כאן כדאי להביא את ה-ID מה-AuthService שלך
+  
+  this.taskService.toggleChecklistItem(item.id, item.isCompleted, workerId).subscribe({
+    next: () => {
+      item.isCompleted = !item.isCompleted;
+      // עדכון התקדמות מקומי (אופציונלי)
+      this.updateProgressLocally();
+      this.cdr.detectChanges();
+    }
+  });
+}
+
+private updateProgressLocally(): void {
+  if (this.selectedTaskDetails) {
+    const completed = this.selectedTaskDetails.checklistItems.filter((i: any) => i.isCompleted).length;
+    this.selectedTaskDetails.checklistProgress.completed = completed;
+  }
+}
+
+closeModal(): void {
+  this.showChecklistModal = false;
+  this.selectedTaskDetails = null;
+  this.loadTasks(); // רענון הרשימה הראשית כדי לעדכן אחוזים/סטטוס אם השתנו
+}
 }

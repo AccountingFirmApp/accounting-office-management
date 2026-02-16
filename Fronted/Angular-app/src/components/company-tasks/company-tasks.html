@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="header">
     <app-back-button [route]="'/companies'" [text]="'חזרה לחברות'"></app-back-button>
     <h2>משימות - {{ company?.name || 'טוען...' }}</h2>
@@ -54,5 +54,114 @@
         </tr>
       </tbody>
     </table>
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="header">
+    <app-back-button [route]="'/companies'" [text]="'חזרה לחברות'"></app-back-button>
+    <h2>משימות - {{ company?.name || 'טוען...' }}</h2>
+  </div>
+
+  <div *ngIf="loading && !showChecklistModal" class="loading">טוען משימות...</div>
+  
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && tasks.length === 0" class="no-data">
+    אין משימות לחברה זו
+  </div>
+
+  <div *ngIf="!loading && tasks.length > 0">
+    <p class="tasks-count">נמצאו {{ tasks.length }} משימות</p>
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>סוג משימה</th>
+          <th>תקופה</th>
+          <th>תאריך יעד</th>
+          <th>תאריך השלמה</th>
+          <th>עובד מוקצה</th>
+          <th>סטטוס</th>
+          <th>צ'קליסט</th> <th>הערות</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks; let i = index">
+          <td>{{ task.taskTypeName || '-' }}</td>
+          <td>{{ task.period | date: 'MM/yyyy' }}</td>
+          <td>{{ task.dueDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ task.completedDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ task.assignedWorkerName || 'לא הוקצה' }}</td>
+          
+          <td>
+            <select 
+              [ngModel]="task.status"
+              (ngModelChange)="onStatusChange(task, $event)"
+              [style.background-color]="getStatusColor(task.status)"
+              [disabled]="isUpdating(task.id)"
+              class="status-select"
+              [class.updating]="isUpdating(task.id)">
+              <option *ngFor="let status of availableStatuses" [ngValue]="status">
+                {{ getStatusText(status) }}
+              </option>
+            </select>
+            <span *ngIf="isUpdating(task.id)" class="loading-spinner">⏳</span>
+          </td>
+
+          <td>
+            <button class="btn-checklist" (click)="openTaskDetails(task.id)">
+              📋 צפייה
+            </button>
+          </td>
+          
+          <td>{{ task.notes || '-' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showChecklistModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>צ'קליסט: {{ selectedTaskDetails?.taskTypeName }}</h3>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedTaskDetails">
+        <div class="progress-section">
+          <div class="progress-info">
+            <span>התקדמות ביצוע:</span>
+            <strong>{{ selectedTaskDetails.checklistProgress.completed }} מתוך {{ selectedTaskDetails.checklistProgress.total }}</strong>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" 
+                 [style.width.%]="(selectedTaskDetails.checklistProgress.completed / selectedTaskDetails.checklistProgress.total) * 100">
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <ul class="checklist-list">
+          <li *ngFor="let item of selectedTaskDetails.checklistItems" class="checklist-item">
+            <div class="item-main">
+              <input type="checkbox" 
+                     [id]="'item-' + item.id"
+                     [checked]="item.isCompleted" 
+                     (change)="toggleChecklistItem(item)">
+              <label [for]="'item-' + item.id" [class.completed]="item.isCompleted">
+                {{ item.title }}
+              </label>
+            </div>
+            <p class="item-description" *ngIf="item.description">{{ item.description }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">סגור</button>
+      </div>
+    </div>
   </div>
 </div>

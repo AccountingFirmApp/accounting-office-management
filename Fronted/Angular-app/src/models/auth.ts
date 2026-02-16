@@ -42,3 +42,24 @@ export interface WorkerTask {
   createdat: string;
   updatedat: string;
 }
+export interface ChecklistItem {
+  id: number;
+  title: string;
+  description?: string;
+  isCompleted: boolean;
+  orderIndex: number;
+}
+
+export interface ChecklistProgress {
+  total: number;
+  completed: number;
+}
+
+export interface TaskDetail {
+  id: number;
+  companyName: string;
+  taskTypeName: string;
+  status: string;
+  checklistItems: ChecklistItem[];
+  checklistProgress: ChecklistProgress;
+}

@@ -113,6 +113,7 @@ import { Observable } from 'rxjs';
 import { CompanyDto, CreateCompanyCommand, UpdateCompanyCommand } from '../models/Company';
 import { TaskcompanyDto } from '../models/taskcompany';
 import { AuthService } from './auth.service';
+import { TaskDetail } from '../models/auth';
 @Injectable({
   providedIn: 'root'
 })
@@ -169,4 +170,32 @@ export class CompanyService {
     });
   }
   
+getTaskById(id: number): Observable<TaskDetail> {
+  return this.http.get<TaskDetail>(`${this.apiUrl}/${id}`);
+}
+
+// סימון פריט כהושלם
+// completeItem(itemId: number, workerId: number, notes?: string): Observable<any> {
+//   return this.http.patch(`${this.apiUrl}/checklist-item/${itemId}/complete`, {
+//     workerId,
+//     notes
+//   });
+// }
+
+// // ביטול סימון
+// uncompleteItem(itemId: number): Observable<any> {
+//   return this.http.patch(`${this.apiUrl}/checklist-item/${itemId}/uncomplete`, {});
+// }
+// בתוך CompanyService
+// getTaskDetails(taskId: number): Observable<any> {
+//   const tasksUrl = 'https://localhost:7118/api/Tasks';
+//   return this.http.get(`${tasksUrl}/tasks/${taskId}`);
+// }
+
+// toggleChecklistItem(itemId: number, isCompleted: boolean, workerId: number): Observable<any> {
+//   const action = isCompleted ? 'uncomplete' : 'complete';
+//   const url = `${this.apiUrl}/tasks/checklist-item/${itemId}/${action}`;
+//   return isCompleted ? this.http.patch(url, {}) : this.http.patch(url, { workerId });
+// }
+// }
 }
