@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
-
 namespace AccountingSystem.Domain.Entities
 {
     public partial class CompanyTask

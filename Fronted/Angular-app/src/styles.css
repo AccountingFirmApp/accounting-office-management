@@ -1,12 +1,12 @@
-/* Global Styles - Dokka-Inspired Professional Design 2026 */
+/* Global Styles - Professional Design 2025 */
 
 /* ==================== CSS Variables - Design System ==================== */
 :root {
-  /* Primary Colors - Professional Blue/Gray Palette */
-  --color-primary: #4a90e2;
-  --color-primary-hover: #357abd;
-  --color-primary-light: rgba(74, 144, 226, 0.08);
-  --color-primary-dark: #2d5f8d;
+  /* Primary Colors - Modern Blue Palette */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-light: rgba(59, 130, 246, 0.08);
+  --color-primary-dark: #1d4ed8;
 
   /* Neutral Colors - Softer Palette */
   --color-white: #ffffff;

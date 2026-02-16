@@ -388,8 +388,26 @@ namespace AccountingSystem.Application.Handlers
                 return _mapper.Map<List<ReportTypeDto>>(reportTypes);
             }
         }
+    public class GetReportTypesToEditQueryHandler : IRequestHandler<GetAllReportTypesToEditQuery, List<ReportTypeDto>>
+    {
+        private readonly IReportTypeRepository _repository;
+        private readonly IMapper _mapper;
 
-        public class GetReportTypeByIdQueryHandler : IRequestHandler<GetReportTypeByIdQuery, ReportTypeDto?>
+    
+
+        public GetReportTypesToEditQueryHandler(IReportTypeRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
+
+        public async Task<List<ReportTypeDto>> Handle(GetAllReportTypesToEditQuery request, CancellationToken cancellationToken)
+        {
+            var reportTypes = await _repository.GetToEdit();
+            return _mapper.Map<List<ReportTypeDto>>(reportTypes);
+        }
+    }
+    public class GetReportTypeByIdQueryHandler : IRequestHandler<GetReportTypeByIdQuery, ReportTypeDto?>
         {
             private readonly IReportTypeRepository _repository;
             private readonly IMapper _mapper;

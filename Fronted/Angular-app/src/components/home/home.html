@@ -19,7 +19,7 @@
           <span class="user-role">{{ currentWorker.roleName }}</span>
         </div>
         <div class="user-avatar">
-          {{ currentWorker.firstName.charAt(0) }}{{ currentWorker.lastName.charAt(0) }}
+          {{ currentWorker.firstName?currentWorker.firstName.charAt(0) :""}}{{ currentWorker.lastName.charAt(0) }}
         </div>
       </div>
     </div>

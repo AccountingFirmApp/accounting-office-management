@@ -1,9 +1,12 @@
+
+<!--  <app-back-button [route]="'/home'"></app-back-button>
+
 <div class="workers-page">
-  
+
   <!-- כותרת -->
   <div class="page-header">
     <h1>
-      <span class="icon">👥</span>
+      <span class="material-icons page-icon">group</span>
       רשימת עובדים
     </h1>
     <p class="subtitle">ניהול ומעקב אחר כל העובדים במערכת</p>
@@ -40,13 +43,11 @@
       <!-- Content -->
       <div class="card-content">
         <div class="info-row">
-          <span class="icon">📧</span>
           <span class="label">דוא"ל</span>
           <span class="value">{{ worker.email }}</span>
         </div>
 
         <div class="info-row">
-          <span class="icon">🆔</span>
           <span class="label">מספר עובד</span>
           <span class="value employee-id">{{ worker.employeeid }}</span>
         </div>
@@ -55,11 +56,11 @@
       <!-- Footer -->
       <div class="card-footer">
         <button class="btn-action view" (click)="viewWorker(worker)">
-          <span class="icon">👁️</span>
+          <span class="material-icons btn-icon">visibility</span>
           צפייה
         </button>
         <button class="btn-action edit" (click)="openEdit(worker)">
-          <span class="icon">✏️</span>
+          <span class="material-icons btn-icon">edit</span>
           עריכה
         </button>
       </div>
@@ -68,16 +69,16 @@
   </div>
 </div>
 
-<!-- 🎯 Modal מעוצב עם Blur ברקע -->
+<!-- Modal פרטי עובד -->
 <div class="modal-overlay" *ngIf="selectedWorker" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    
+
     <!-- כפתור סגירה -->
     <button class="close-btn" (click)="closeModal()">
-      <span>✕</span>
+      <span class="material-icons" style="font-size:18px">close</span>
     </button>
-    
-    <!-- כותרת עם אווטר -->
+
+    <!-- כותרת -->
     <div class="modal-header">
       <div class="header-avatar">
         {{ selectedWorker.firstName.charAt(0) || '?' }}{{ selectedWorker.lastName.charAt(0) || '?' }}
@@ -85,59 +86,39 @@
       <h2>{{ selectedWorker.firstName }} {{ selectedWorker.lastName }}</h2>
       <p class="subtitle">פרטי עובד מלאים</p>
     </div>
-    
+
     <!-- תוכן -->
     <div class="modal-body">
-      
+
       <!-- מידע אישי -->
       <div class="detail-section">
         <div class="section-title">
-          <span class="title-icon">📋</span>
+          <span class="material-icons section-icon">person</span>
           <h3>מידע אישי</h3>
         </div>
-        
-        <div class="detail-grid">
-          <div class="detail-item">
-            <span class="item-icon">👤</span>
-            <div class="item-content">
-              <span class="detail-label">שם פרטי</span>
-              <span class="detail-value">{{ selectedWorker.firstName }}</span>
-            </div>
-          </div>
-          
-          <div class="detail-item">
-            <span class="item-icon">👤</span>
-            <div class="item-content">
-              <span class="detail-label">שם משפחה</span>
-              <span class="detail-value">{{ selectedWorker.lastName }}</span>
-            </div>
-          </div>
-          
-          <div class="detail-item">
-            <span class="item-icon">🆔</span>
-            <div class="item-content">
-              <span class="detail-label">מספר עובד</span>
-              <span class="detail-value employee-id">{{ selectedWorker.employeeid }}</span>
-            </div>
-          </div>
+        <div class="detail-item">
+          <span class="detail-label">שם פרטי</span>
+          <span class="detail-value">{{ selectedWorker.firstname }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">שם משפחה</span>
+          <span class="detail-value">{{ selectedWorker.lastname }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">מספר עובד</span>
+          <span class="detail-value employee-id">{{ selectedWorker.employeeId }}</span>
         </div>
       </div>
 
       <!-- פרטי התקשרות -->
       <div class="detail-section">
         <div class="section-title">
-          <span class="title-icon">📞</span>
+          <span class="material-icons section-icon">contact_mail</span>
           <h3>פרטי התקשרות</h3>
         </div>
-        
-        <div class="detail-grid">
-          <div class="detail-item">
-            <span class="item-icon">📧</span>
-            <div class="item-content">
-              <span class="detail-label">דוא"ל</span>
-              <span class="detail-value email">{{ selectedWorker.email }}</span>
-            </div>
-          </div>
+        <div class="detail-item">
+          <span class="detail-label">דוא"ל</span>
+          <span class="detail-value email">{{ selectedWorker.email }}</span>
         </div>
       </div>
 
@@ -173,23 +154,11 @@
       </div>
 
     </div>
-    
+
     <!-- כפתורים בתחתית -->
     <div class="modal-footer">
-      <button class="btn-secondary" (click)="closeModal()">
-        <span class="icon">✖️</span>
-        סגור
-      </button>
-      <button class="btn-primary" (click)="openEdit(selectedWorker)">
-        <span class="icon">✏️</span>
-        עריכה
-      </button>
+      <button class="btn-secondary" (click)="closeModal()">סגור</button>
+      <button class="btn-primary" (click)="openEdit(selectedWorker)">עריכה</button>
     </div>
   </div>
 </div>
-
-<!-- כפתור הוספה צף -->
-<button class="floating-add" (click)="openCreate()">
-  <span class="plus-icon">＋</span>
-  <span class="btn-text">עובד חדש</span>
-</button>

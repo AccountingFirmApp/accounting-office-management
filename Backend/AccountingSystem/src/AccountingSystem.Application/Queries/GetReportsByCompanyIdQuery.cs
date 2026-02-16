@@ -120,6 +120,9 @@ namespace AccountingSystem.Application.Queries
     public class GetAllReportTypesQuery : IRequest<List<ReportTypeDto>>
     {
     }
+    public class GetAllReportTypesToEditQuery : IRequest<List<ReportTypeDto>>
+    {
+    }
 
     /// <summary>
     /// שאילתה לקבלת סוג דיווח לפי ID
