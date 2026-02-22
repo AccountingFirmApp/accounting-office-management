@@ -16,7 +16,8 @@ namespace AccountingSystem.Infrastructure.Data
         .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<AccountingDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new Exception("Connection string is null!");
             optionsBuilder.UseNpgsql(connectionString);
 
             return new AccountingDbContext(optionsBuilder.Options);

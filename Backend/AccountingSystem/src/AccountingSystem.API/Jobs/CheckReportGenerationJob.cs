@@ -1,16 +1,15 @@
 ﻿using AccountingSystem.Application.Queries;
 using Hangfire;
 using MediatR;
-
 namespace AccountingSystem.API.Jobs
 {
     public class CheckReportGenerationJob
     {
         private readonly IMediator _mediator;
-        private readonly ILogger _logger;
+        private readonly ILogger<CheckReportGenerationJob> _logger;
 
 
-        public CheckReportGenerationJob(IMediator mediator, ILogger logger)
+        public CheckReportGenerationJob(IMediator mediator, ILogger<CheckReportGenerationJob> logger)
         {
             _mediator = mediator;
             _logger = logger;

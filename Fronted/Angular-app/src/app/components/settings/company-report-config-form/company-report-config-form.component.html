@@ -1,5 +1,5 @@
 <div class="container">
-  <app-back-button [route]="'/settings/report-config'"></app-back-button>
+  <app-back-button [route]="isAdmin ? '/settings/report-config' : '/dashboard/report-config'"></app-back-button>
 
   <h2>{{ isEditMode ? 'עריכת הגדרת דיווח' : 'הגדרת דיווח חדשה' }}</h2>
 

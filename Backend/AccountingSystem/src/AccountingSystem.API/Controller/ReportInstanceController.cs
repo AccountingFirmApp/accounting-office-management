@@ -4,10 +4,12 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AccountingSystem.Application.Commands;
+using Microsoft.AspNetCore.Authorization;
 namespace AccountingSystem.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReportInstanceController : ControllerBase
     {
         private readonly IMediator _mediator;

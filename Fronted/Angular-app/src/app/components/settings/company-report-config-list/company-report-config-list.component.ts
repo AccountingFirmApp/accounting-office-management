@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyReportConfigService } from '../../../../services/company-report-config.service';
 import { CompanyReportConfigDto } from '../../../../models/company-report-config';
 import { BackButtonComponent } from '../../shared/back-button/back-button.component';
@@ -11,6 +11,9 @@ import { CompanyDto } from '../../../../models/company.dto';
 import { ReportTypeDto } from '../../../../models/report-type.dto';
 import { ReportService } from '../../../../services/report';
 import { Observable } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
+import { WorkerService } from '../../../../services/worker';
+import { log } from 'console';
 
 @Component({
   selector: 'app-company-report-config-list',
@@ -20,6 +23,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./company-report-config-list.component.css']
 })
 export class CompanyReportConfigListComponent implements OnInit {
+  @Input() mode: 'admin' | 'employee' = 'employee';
   configs: CompanyReportConfigDto[] = []; // ⭐ רק פעילות
   deletedConfigs: CompanyReportConfigDto[] = []; // ⭐ רק מחוקות
   companies: CompanyDto[] = [];
@@ -42,18 +46,23 @@ export class CompanyReportConfigListComponent implements OnInit {
   // Modal להצגת פרטי דיווח
   isModalOpen: boolean = false;
   selectedConfig: CompanyReportConfigDto | null = null;
-
+ isAdmin: boolean=false;
   constructor(
     private configService: CompanyReportConfigService,
     private router: Router,
     private companySer: CompanyService,
-    private reportService: ReportService
+    private reportService: ReportService,
+     public auth: AuthService,
+     public workerService: WorkerService,
+     private route: ActivatedRoute
   ) {
     this.currentYear = new Date().getFullYear();
     this.selectedYear = this.currentYear + 1;
-  }
+    this.isAdmin = this.auth.isAdmin();
 
+  }
   ngOnInit(): void {
+    this.mode = this.route.snapshot.data['mode'] ?? 'employee';
     this.loadAll();
   }
 
@@ -123,19 +132,33 @@ export class CompanyReportConfigListComponent implements OnInit {
   }
 
   loadCompanies(): Promise<void> {
+    if(this.mode === 'admin') {
     return new Promise((resolve, reject) => {
       this.companySer.getAllCompanies().subscribe({
         next: (data) => {
           this.companies = data;
-          // console.log('חברות:', data);
           resolve();
         },
         error: (err) => {
-          // console.error(err);
           reject(err);
         }
       });
     });
+    } else {
+          return new Promise((resolve, reject) => {
+      this.companySer.getCompanyByWorkerId(this.workerService.currentWorker.id).subscribe({
+        next: (data) => {
+          console.log('חברות לעובד:', data);
+          console.log('חברות:', this.workerService.currentWorker);
+          this.companies = data;
+          resolve();
+        },
+        error: (err) => {
+          reject(err);
+        }
+      });
+    });
+    }
   }
 
   loadReportTypes(): Promise<void> {
@@ -143,11 +166,9 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.reportService.getReportTypes().subscribe({
         next: (data) => {
           this.reportTypes = data;
-          // console.log('סוגי דיווחים:', data);
           resolve();
         },
         error: (err) => {
-          // console.error(err);
           reject(err);
         }
       });
@@ -158,16 +179,11 @@ export class CompanyReportConfigListComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.configService.getAll().subscribe({
         next: (data) => {
-          // ⭐ הפרד בין פעילות למחוקות
           this.configs = data.filter(c => c.isActive === true);
           this.deletedConfigs = data.filter(c => c.isActive === false);
-          
-          // console.log('הגדרות פעילות:', this.configs);
-          // console.log('הגדרות מחוקות:', this.deletedConfigs);
           resolve();
         },
         error: (err) => {
-          // console.error(err);
           reject(err);
         }
       });
@@ -175,17 +191,15 @@ export class CompanyReportConfigListComponent implements OnInit {
   }
 
   navigateToCreate(): void {
-    this.router.navigate(['/settings/report-config/create']);
+    
+this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmin: this.mode === 'admin' } });
   }
-
-  /**
-   * ⭐ מחיקת הגדרה (שינוי סטטוס ל-false)
-   */
+  
   deleteConfig(configId: number): void {
     this.configService.delete(configId).subscribe({
       next: () => {
         this.successMessage = 'ההגדרה נמחקה בהצלחה';
-        this.loadAll(); // רענן
+        this.loadAll(); 
         setTimeout(() => {
           this.successMessage = null;
         }, 3000);
@@ -196,11 +210,8 @@ export class CompanyReportConfigListComponent implements OnInit {
     });
   }
 
-  /**
-   * ⭐ שחזור הגדרה מחוקה (שינוי סטטוס ל-true)
-   */
+
   restoreConfig(configId: number, companyName: string, reportTypeName: string): void {
-    // עדכן רק את הסטטוס ל-true
     const updateDto = {
       isActive: true
     };
@@ -208,7 +219,7 @@ export class CompanyReportConfigListComponent implements OnInit {
     this.configService.update(configId, updateDto).subscribe({
       next: () => {
         this.successMessage = 'ההגדרה שוחזרה בהצלחה';
-        this.loadAll(); // רענן
+        this.loadAll(); 
         setTimeout(() => {
           this.successMessage = null;
         }, 3000);
@@ -219,16 +230,12 @@ export class CompanyReportConfigListComponent implements OnInit {
     });
   }
 
-  /**
-   * ⭐ בדיקה אם יש הגדרה מחוקה
-   */
+ 
   hasDeletedConfig(companyId: number, reportTypeId: number): boolean {
     return !!(this.deletedMatrix[companyId] && this.deletedMatrix[companyId][reportTypeId]);
   }
 
-  /**
-   * ⭐ קבלת הגדרה מחוקה
-   */
+
   getDeletedConfig(companyId: number, reportTypeId: number): CompanyReportConfigDto | null {
     if (this.deletedMatrix[companyId] && this.deletedMatrix[companyId][reportTypeId]) {
       return this.deletedMatrix[companyId][reportTypeId];
@@ -236,9 +243,6 @@ export class CompanyReportConfigListComponent implements OnInit {
     return null;
   }
 
-  /**
-   * מעתיק את כל ההגדרות של חברה מהשנה הקודמת לשנה הנבחרת
-   */
   copyFromLastYear(companyId: number, companyName: string): void {
     const previousYear = this.selectedYear - 1;
 
@@ -254,7 +258,8 @@ export class CompanyReportConfigListComponent implements OnInit {
             queryParams: {
               companyId: companyId,
               year: this.selectedYear,
-              fixedYear: true
+              fixedYear: true,
+              isAdmin: this.mode === 'admin'
             }
           });
           return;
@@ -314,13 +319,18 @@ export class CompanyReportConfigListComponent implements OnInit {
         companyId: companyId,
         reportTypeId: reportTypeId,
         year: this.selectedYear,
-        fixedYear: true
+        fixedYear: true,
+        isAdmin: this.mode === 'admin'
       }
     });
   }
 
   editConfig(configId: number): void {
-    this.router.navigate([`/settings/report-config/${configId}/edit`]);
+    this.router.navigate([`/settings/report-config/${configId}/edit`], {
+      queryParams: {
+        isAdmin: this.mode === 'admin'
+      }
+    });
   }
 
   viewConfig(config: CompanyReportConfigDto): void {

@@ -49,17 +49,17 @@ export class CompanyReportConfigFormComponent implements OnInit {
     this.configForm = this.fb.group({
       companyId: ['', Validators.required],
       reportTypeId: ['', Validators.required],
-      frequencyId: ['', Validators.required],
-      dayOfMonth: ['', [Validators.min(1), Validators.max(31)]],
+      frequencyId: [1, Validators.required],
+      dayOfMonth: [1, [Validators.min(1), Validators.max(31)]],
       year: [new Date().getFullYear(), Validators.required]
     });
   }
-
+isAdmin: boolean =false;
   ngOnInit(): void {
     this.initializeYears();
     this.loadData();
 
-    // בדיקה אם זה מצב עריכה
+  this.isAdmin = this.route.snapshot.queryParamMap.get('isAdmin') === 'true'? true : false;
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
@@ -193,7 +193,7 @@ export class CompanyReportConfigFormComponent implements OnInit {
         next: () => {
           this.successMessage = this.isEditMode ? 'ההגדרה עודכנה בהצלחה' : 'ההגדרה נוצרה בהצלחה';
           setTimeout(() => {
-            this.router.navigate(['/settings/report-config']);
+            this.router.navigate([this.isAdmin ? '/settings/report-config' : '/dashboard/report-config']);
           }, 1500);
         },
         error: (err: any) => {
@@ -205,7 +205,7 @@ export class CompanyReportConfigFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/settings/report-config']);
+    this.router.navigate([this.isAdmin ? '/settings/report-config' : '/dashboard/report-config']);
   }
 
   /**
@@ -235,7 +235,7 @@ export class CompanyReportConfigFormComponent implements OnInit {
       next: () => {
         this.successMessage = 'ההגדרה נמחקה בהצלחה';
         setTimeout(() => {
-          this.router.navigate(['/settings/report-config']);
+         this.router.navigate([this.isAdmin ? '/settings/report-config' : '/dashboard/report-config']);
         }, 1500);
       },
       error: (err) => {

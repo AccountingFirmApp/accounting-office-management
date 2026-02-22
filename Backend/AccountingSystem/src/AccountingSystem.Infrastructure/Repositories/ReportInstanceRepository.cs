@@ -19,9 +19,9 @@ namespace AccountingSystem.Infrastructure.Repositories
     public class ReportInstanceRepository : IReportInstanceRepository
     {
         private readonly AccountingDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<ReportInstanceRepository> _logger;
 
-        public ReportInstanceRepository(AccountingDbContext context,ILogger logger)
+        public ReportInstanceRepository(AccountingDbContext context, ILogger<ReportInstanceRepository> logger)
         {
             _context = context;
             _logger = logger;

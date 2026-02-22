@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AccountingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20260202111700_myInitialCreate")]
-    partial class myInitialCreate
+    [Migration("20260215125849_AddDefaultDayOfMonthProper")]
+    partial class AddDefaultDayOfMonthProper
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,11 +23,11 @@ namespace AccountingSystem.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_status", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Accountingfirm", b =>
@@ -244,8 +244,11 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("period");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasColumnName("status")
+                        .HasDefaultValueSql("'Pending'::\"TaskStatus1\"");
 
                     b.Property<int>("Tasktypeid")
                         .HasColumnType("integer")
@@ -512,7 +515,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnName("paiddate");
 
                     b.Property<int?>("PaymentMethod")
-                        .HasColumnType("integer");
+                        .HasColumnType("payment_method")
+                        .HasColumnName("paymentmethod");
 
                     b.Property<DateOnly>("Period")
                         .HasColumnType("date")
@@ -527,7 +531,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnName("reporteddate");
 
                     b.Property<int?>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("report_status")
+                        .HasColumnName("status");
 
                     b.Property<DateTime?>("Updatedat")
                         .ValueGeneratedOnAdd()
@@ -559,6 +564,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("createdat")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<short?>("DefaultDayOfMonth")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -629,6 +637,10 @@ namespace AccountingSystem.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Category")
+                        .HasColumnType("integer")
+                        .HasColumnName("category");
+
                     b.Property<DateTime?>("Createdat")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -659,6 +671,10 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("assignedworkername");
 
+                    b.Property<int?>("Category")
+                        .HasColumnType("integer")
+                        .HasColumnName("category");
+
                     b.Property<string>("Companyname")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
@@ -679,6 +695,10 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.Property<DateOnly?>("Period")
                         .HasColumnType("date")
                         .HasColumnName("period");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
                     b.Property<string>("Tasktypename")
                         .HasMaxLength(255)
@@ -784,6 +804,10 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("shortcode");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
                     b.ToTable((string)null);
 

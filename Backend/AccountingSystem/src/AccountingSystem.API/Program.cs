@@ -22,7 +22,6 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load environment variables from .env file (for development)
-// In production, use Azure App Service Configuration or Key Vault
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".env");
 if (File.Exists(envPath))
 {
@@ -31,9 +30,7 @@ if (File.Exists(envPath))
         if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
         var parts = line.Split('=', 2);
         if (parts.Length == 2)
-        {
             Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim());
-        }
     }
 }
 
@@ -44,50 +41,32 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // ========================================
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Database connection string not configured. Set DB_CONNECTION_STRING environment variable.");
+    ?? throw new InvalidOperationException("Database connection string not configured.");
 
 var nullNameTranslator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
 
 builder.Services.AddDbContext<AccountingDbContext>(options =>
 {
-    options.UseNpgsql(
-        connectionString,
-        npgsqlOptions =>
-        {
-            npgsqlOptions.MapEnum<TaskStatus1>("TaskStatus1", nameTranslator: nullNameTranslator);
-            npgsqlOptions.MapEnum<TaskCategory>("task_category", nameTranslator: nullNameTranslator);
-            npgsqlOptions.MapEnum<ReportStatus>("report_status", nameTranslator: nullNameTranslator);
-            npgsqlOptions.MapEnum<PaymentMethod>("payment_method", nameTranslator: nullNameTranslator);
-        });
+    options.UseNpgsql(connectionString, npgsqlOptions =>
+    {
+        // Map enums
+        npgsqlOptions.MapEnum<TaskStatus1>("TaskStatus1", nameTranslator: nullNameTranslator);
+        npgsqlOptions.MapEnum<TaskCategory>("task_category", nameTranslator: nullNameTranslator);
+        npgsqlOptions.MapEnum<ReportStatus>("report_status", nameTranslator: nullNameTranslator);
+        npgsqlOptions.MapEnum<PaymentMethod>("payment_method", nameTranslator: nullNameTranslator);
+    });
 });
 
-
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-
-// מיפוי כל ה-ENUMs
-dataSourceBuilder.MapEnum<AccountingSystem.Domain.Enums.TaskStatus1>("task_status");
-dataSourceBuilder.MapEnum<ReportStatus>("report_status");
-dataSourceBuilder.MapEnum<PaymentMethod>("payment_method");
-dataSourceBuilder.MapEnum<TaskCategory>("task_category");
-
-var dataSource = dataSourceBuilder.Build();
-
-builder.Services.AddDbContext<AccountingDbContext>(options =>
-    options.UseNpgsql(dataSource));
 // ========================================
 // Hangfire
 // ========================================
-builder.Services.AddHangfire(config =>
-    config.UsePostgreSqlStorage(connectionString)
-);
-
+builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(connectionString));
 builder.Services.AddHangfireServer();
 
 // ========================================
 // Dependency Injection
 // ========================================
 builder.Services.AddScoped<ReportGenerationJob>();
-
 builder.Services.AddScoped<IReportInstanceRepository, ReportInstanceRepository>();
 builder.Services.AddScoped<IAccountingFirmRepository, AccountingFirmRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -102,7 +81,6 @@ builder.Services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
 builder.Services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
 builder.Services.AddScoped<IWorkerRoleTypeRepository, WorkerRoleTypeRepository>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
-
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
@@ -110,18 +88,13 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 // ========================================
 // AutoMapper
 // ========================================
-var mapperConfig = new MapperConfiguration(mc =>
-{
-    mc.AddProfile(new MappingProfile());
-});
+var mapperConfig = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile()));
 builder.Services.AddSingleton(mapperConfig.CreateMapper());
 
 // ========================================
 // MediatR + Validation
 // ========================================
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(MappingProfile).Assembly));
-
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MappingProfile).Assembly));
 builder.Services.AddValidatorsFromAssemblyContaining<MappingProfile>();
 
 // ========================================
@@ -129,33 +102,26 @@ builder.Services.AddValidatorsFromAssemblyContaining<MappingProfile>();
 // ========================================
 var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
     ?? builder.Configuration.GetSection("Jwt")["SecretKey"]
-    ?? throw new InvalidOperationException("JWT SecretKey not configured. Set JWT_SECRET_KEY environment variable.");
+    ?? throw new InvalidOperationException("JWT SecretKey not configured.");
 
-var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
-    ?? builder.Configuration.GetSection("Jwt")["Issuer"]
-    ?? "AccountingSystem.API";
-
-var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
-    ?? builder.Configuration.GetSection("Jwt")["Audience"]
-    ?? "AccountingSystem.Client";
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? builder.Configuration.GetSection("Jwt")["Issuer"] ?? "AccountingSystem.API";
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? builder.Configuration.GetSection("Jwt")["Audience"] ?? "AccountingSystem.Client";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtIssuer,
-        ValidAudience = jwtAudience,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtSecretKey)
-        ),
-        ClockSkew = TimeSpan.Zero
-    };
-});
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 builder.Services.AddAuthorization();
 
@@ -164,15 +130,9 @@ builder.Services.AddAuthorization();
 // ========================================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Accounting API",
-        Version = "v1"
-    });
-
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Accounting API", Version = "v1" });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -181,17 +141,12 @@ builder.Services.AddSwaggerGen(options =>
         BearerFormat = "JWT",
         In = ParameterLocation.Header
     });
-
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
             },
             Array.Empty<string>()
         }
@@ -216,19 +171,13 @@ var app = builder.Build();
 app.UseHangfireDashboard();
 
 // ========================================
+// Recurring Jobs
 // ========================================
-RecurringJob.AddOrUpdate<ReportGenerationJob>(
-    "monthly-report-25",
-    job => job.RunMonthlyReport(),
-   "0 1 25 * *"
-
-);
-RecurringJob.AddOrUpdate<CheckReportGenerationJob>(
-    "check-report-generation",
+RecurringJob.AddOrUpdate<ReportGenerationJob>("monthly-report-25", job => job.RunMonthlyReport(), "0 1 25 * *");
+BackgroundJob.Schedule<CheckReportGenerationJob>(
     job => job.RunDailyCheckReport(),
-   Cron.Daily());
-    
-
+    TimeSpan.FromMinutes(1)
+);
 // ========================================
 // HTTP Pipeline
 // ========================================
@@ -243,7 +192,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

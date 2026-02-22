@@ -241,9 +241,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("period");
 
-                    b.Property<int?>("Status")
+                    b.Property<string>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("text")
                         .HasColumnName("status")
                         .HasDefaultValueSql("'Pending'::\"TaskStatus1\"");
 
@@ -561,6 +561,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("createdat")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<short?>("DefaultDayOfMonth")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")

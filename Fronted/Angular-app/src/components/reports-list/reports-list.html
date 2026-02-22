@@ -201,21 +201,14 @@
       </tbody>
     </table>
 
-    <!-- אין תוצאות -->
-    <div *ngIf="filteredReports.length === 0" class="empty-state">
-      <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M9 11l3 3L22 4"/>
-        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-      </svg>
-      <h3 class="empty-title">לא נמצאו דיווחים</h3>
-      <p class="empty-description">נסה לשנות את הסינון או לנקות את חיפוש המילים</p>
-      <button (click)="clearFilters()" class="btn btn-secondary empty-action" aria-label="נקה סינון">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-        נקה סינון
-      </button>
-    </div>
-  </div>
+   <!-- אין תוצאות -->
+<div *ngIf="filteredReports.length === 0" class="empty-state empty-state--success">
+  <svg class="empty-icon empty-icon--success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+  <h3 class="empty-title empty-title--success">🎉 כל הכבוד!</h3>
+  <p class="empty-description empty-description--success">אין דיווחים שעליך לטפל בהם כרגע</p>
 </div>
+
+  </div>

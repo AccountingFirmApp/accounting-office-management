@@ -16,8 +16,19 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'התחברות' },  // ⬅️ דף התחברות
   { path: 'home', component: HomeComponent, title: 'דף הבית' },  // ⬅️ דף הבית
   { path: 'management', component: ManagementComponent, title: 'פאנל ניהול' },  // ⬅️ דף ניהול
-  { path: 'settings/report-config', component: CompanyReportConfigListComponent, title: 'הגדרות דיווחים' },  // ⬅️ הגדרות דיווחים
-  { path: 'settings/report-config/create', component: CompanyReportConfigFormComponent, title: 'הגדרת דיווח חדשה' },  // ⬅️ יצירת הגדרה
+{ 
+  path: 'settings/report-config', 
+  component: CompanyReportConfigListComponent, 
+  data: { adminOnly: true, mode: 'admin' }, 
+  title: 'הגדרות דיווחים' 
+},
+
+{ 
+  path: 'dashboard/report-config', 
+  component: CompanyReportConfigListComponent, 
+  data: { mode: 'employee' }, 
+  title: 'הדיווחים שלי' 
+},  { path: 'settings/report-config/create', component: CompanyReportConfigFormComponent, title: 'הגדרת דיווח חדשה' },  // ⬅️ יצירת הגדרה
   { path: 'settings/report-config/:id/edit', component: CompanyReportConfigFormComponent, title: 'עריכת הגדרת דיווח' },  // ⬅️ עריכת הגדרה
    {path:'workers',component:WorkersListComponent,title:'רשימת עובדים'}, // ⬅️ דף רשימת עובדים
    { path: 'workers', component: WorkersListComponent, title:'רשימת עובדים' },

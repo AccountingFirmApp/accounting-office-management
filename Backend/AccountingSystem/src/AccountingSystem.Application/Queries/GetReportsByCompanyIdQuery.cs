@@ -6,9 +6,9 @@ namespace AccountingSystem.Application.Queries
     public class GetReportsByCompanyIdQuery : IRequest<List<ReportInstanceDetailDto>>
     {
         public int CompanyId { get; set; }
-        public string? Status { get; set; } // אופציונלי - סינון לפי סטטוס
-        public DateTime? FromPeriod { get; set; } // מתקופה
-        public DateTime? ToPeriod { get; set; } // עד תקופה
+        public string? Status { get; set; } 
+        public DateTime? FromPeriod { get; set; }
+        public DateTime? ToPeriod { get; set; }
     }
 
     public class GetReportByIdQuery : IRequest<ReportInstanceDetailDto?>
@@ -18,8 +18,8 @@ namespace AccountingSystem.Application.Queries
 
     public class GetUpcomingReportsQuery : IRequest<List<UpcomingReportDto>>
     {
-        public int? CompanyId { get; set; } // אופציונלי
-        public int DaysAhead { get; set; } = 30; // ברירת מחדל - 30 יום קדימה
+        public int? CompanyId { get; set; } 
+        public int DaysAhead { get; set; } = 30;
     }
 
 
@@ -139,6 +139,11 @@ namespace AccountingSystem.Application.Queries
     /// </summary>
     public class GetAllConfigsQuery : IRequest<List<CompanyReportConfigDto>>
     {
+    }
+    public class GetConfigsByWorkerId : IRequest<List<CompanyReportConfigDto>>
+    {
+        public int WorkerId { get; set; }
+
     }
 
     /// <summary>
