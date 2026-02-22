@@ -115,7 +115,7 @@ CancellationToken cancellationToken = default)
         {
             Token = token,
             TokenType = "Bearer",
-            ExpiresIn = 3600,
+            ExpiresIn = 86400,
             Worker = new WorkerInfoDto
             {
                 Id = worker.Id,
@@ -258,7 +258,7 @@ CancellationToken cancellationToken = default)
             {
                 Token = token,
                 TokenType = "Bearer",
-                ExpiresIn = 3600,
+                ExpiresIn = 86400,
                 Worker = new WorkerInfoDto
                 {
                     Id = worker.Id,

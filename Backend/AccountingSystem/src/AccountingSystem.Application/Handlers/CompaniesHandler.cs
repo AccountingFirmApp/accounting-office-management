@@ -76,7 +76,7 @@ public class GetCompanyByWorkerIdQueryHandler : IRequestHandler<GetCompanyByWork
         var company = await _unitOfWork.Companies.GetByIdWorkerAsync(request.Id);
 
         if (company == null)
-        {
+        {   
             throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
         }
 
