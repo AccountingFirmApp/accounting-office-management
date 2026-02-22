@@ -1,6 +1,6 @@
 <div class="container">
   <!-- כפתור חזרה לדף הבית -->
-  <app-back-button [route]="'/home'"></app-back-button>
+  <app-back-button [route]="auth.isAdmin() ? '/management' : '/home'"></app-back-button>
   
   <!-- כותרת ראשית -->
   <div class="page-header">

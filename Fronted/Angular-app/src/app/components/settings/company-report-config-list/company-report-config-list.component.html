@@ -1,5 +1,5 @@
 <div class="container">
-  <app-back-button [route]="'/management'"></app-back-button>
+  <app-back-button [route]="mode === 'admin' ? '/management' : '/home'"></app-back-button>
 
   <!-- Success Message -->
   <app-error-message
