@@ -136,7 +136,11 @@ export class CompanyService {
   getCompanyById(id: number): Observable<CompanyDto> {
     return this.http.get<CompanyDto>(`${this.apiUrl}/${id}`);
   }
+  getCompanyByWorkerId(id: number): Observable<CompanyDto[]> {
+    return this.http.get<CompanyDto[]>(`${this.apiUrl}/worker/${id}`);
+}
 
+  
   createCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
     return this.http.post<CompanyDto>(this.apiUrl, command);
   }

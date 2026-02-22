@@ -7,9 +7,7 @@ export interface ReportInstance {
   configId: number;
   period: Date;
   amount?: number;
-  status: string;  // "Pending", "Reported", "Paid", "Approved", "NotRequired"
-  paymentMethod?: string;  // "Credit", "Transfer", "Check", "Online", "Cash"
-  receiptDate?: Date;
+  status: string; 
   reportedDate?: Date;
   paidDate?: Date;
   comments?: string;
@@ -18,31 +16,19 @@ export interface ReportInstance {
 
 }
 
-/**
- * דיווח מפורט - תואם ל-ReportInstanceDetailDto בשרת
- * ⚠️ זה מה שהשרת מחזיר מ-GetReportsByCompanyIdQueryHandler
- */
+
 export interface ReportInstanceDetail {
-  // ID fields
   id: number;
   configId: number;
-  
-  // Company info - ישירות בשורש (לא בתוך config.company!)
   companyId: number;
   companyName: string;
   companyTaxId: string;
-  
-  // Report Type info - ישירות בשורש
   reportTypeId: number;
   reportTypeName: string;
   reportTypeShortCode: string;
-  
-  // Frequency info - ישירות בשורש
-  frequencyName: string;
+    frequencyName: string;
   dayOfMonth?: number;
-  
-  // Instance data
-  period: Date;
+    period: Date;
   amount?: number;
   status: string;
   paymentMethod?: string;
@@ -50,16 +36,11 @@ export interface ReportInstanceDetail {
   reportedDate?: Date;
   paidDate?: Date;
   comments?: string;
-  
-  // Timestamps
-  createdAt?: Date;
+    createdAt?: Date;
   updatedAt?: Date;
-  
-  // Calculated fields (אם השרת מחזיר אותם)
-  periodFormatted?: string;
+    periodFormatted?: string;
   daysOverdue?: number;
   workerNames: string[];
-  // workerNamesDisplay: string;
 }
 
 /**

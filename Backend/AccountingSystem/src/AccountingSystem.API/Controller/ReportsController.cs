@@ -191,10 +191,12 @@ namespace AccountingSystem.API.Controllers
     public class ReportsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<ReportsController> _logger;
 
-        public ReportsController(IMediator mediator)
+        public ReportsController(IMediator mediator, ILogger<ReportsController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         // ========== פונקציות קיימות ==========

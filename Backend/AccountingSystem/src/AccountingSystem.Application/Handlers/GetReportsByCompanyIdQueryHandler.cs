@@ -29,17 +29,14 @@ namespace AccountingSystem.Application.Handlers
         {
             var reports = await _reportInstanceRepository.GetAllAsync();
 
-            // ����� ��� ����
             var filteredReports = reports
                 .Where(r => r.Config != null && r.Config.Companyid == request.CompanyId);
 
-            // ����� ��� �����
             if (!string.IsNullOrEmpty(request.Status))
             {
                 filteredReports = filteredReports.Where(r => r.Status.ToString() == request.Status);
             }
 
-            // ����� ��� �����
             if (request.FromPeriod.HasValue)
             {
                 var fromDateOnly = DateOnly.FromDateTime(request.FromPeriod.Value);
@@ -52,30 +49,25 @@ namespace AccountingSystem.Application.Handlers
                 filteredReports = filteredReports.Where(r => r.Period <= toDateOnly);
             }
 
-            // ���� �-DTO - ? ��� null propagation operator
             var result = filteredReports
                 .OrderByDescending(r => r.Period)
-                .ToList() // ? ���� ������ �� ������� ��-DB
+                .ToList()
                 .Select(r => new ReportInstanceDetailDto
                 {
                     Id = r.Id,
                     ConfigId = r.Configid,
 
-                    // Company info
                     CompanyId = r.Config.Companyid,
                     CompanyName = r.Config.Company != null ? r.Config.Company.Name : string.Empty,
                     CompanyTaxId = r.Config.Company != null ? r.Config.Company.Taxid : string.Empty,
 
-                    // Report Type info
                     ReportTypeId = r.Config.Reporttypeid,
                     ReportTypeName = r.Config.Reporttype != null ? r.Config.Reporttype.Name : string.Empty,
                     ReportTypeShortCode = r.Config.Reporttype != null ? r.Config.Reporttype.Shortcode : string.Empty,
 
-                    // Frequency info
                     FrequencyName = r.Config.Frequency != null ? r.Config.Frequency.Name : string.Empty,
                     DayOfMonth = r.Config.Dayofmonth,
 
-                    // Instance data
                     Period = r.Period.ToDateTime(TimeOnly.MinValue),
                     Amount = r.Amount,
                     Status = r.Status.ToString(),
