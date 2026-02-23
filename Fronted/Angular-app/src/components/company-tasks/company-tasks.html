@@ -1,6 +1,6 @@
 <div class="container">
     <div class="header">
-      <app-back-button [route]="'/companies'" [text]="'חזרה לחברות'"></app-back-button>
+      <app-back-button [route]="'/companies'"></app-back-button>
       <h2>משימות - {{ company?.name || 'טוען...' }}</h2>
     </div>
   
@@ -10,12 +10,20 @@
       <p><strong>אימייל:</strong> {{ company.email || '-' }}</p>
     </div> -->
   
-    <div *ngIf="loading" class="loading">טוען משימות...</div>
-    
-    <div *ngIf="error" class="error">{{ error }}</div>
-  
-    <div *ngIf="!loading && !error && tasks.length === 0" class="no-data">
-      אין משימות לחברה זו
+    <!-- Loading -->
+    <app-loading *ngIf="loading" message="טוען משימות..."></app-loading>
+
+    <!-- Error -->
+    <app-error-message *ngIf="error" [message]="error" type="error"></app-error-message>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && tasks.length === 0" class="empty-state">
+      <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+      <h3 class="empty-title">אין משימות</h3>
+      <p class="empty-description">לא נמצאו משימות עבור חברה זו</p>
     </div>
   
     <div *ngIf="!loading && tasks.length > 0">

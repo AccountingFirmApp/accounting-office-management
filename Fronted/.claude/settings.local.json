@@ -4,7 +4,15 @@
       "Bash(npm install:*)",
       "Bash(npx ng build:*)",
       "Bash(npx ng serve --open)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(python -m pip install:*)",
+      "Bash(python create_presentation.py:*)",
+      "Bash(dir:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(cd:*)",
+      "Bash(npm run build:*)",
+      "Bash(tasklist:*)",
+      "Bash(find:*)"
     ]
   }
 }

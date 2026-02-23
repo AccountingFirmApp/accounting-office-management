@@ -1,10 +1,27 @@
 <div class="container">
   <app-back-button [route]="'/management'"></app-back-button>
-<h1 class="h1">הגדרות דיווחים</h1>
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>טוען נתונים...</p>
-  </div>
+
+  <!-- Success Message -->
+  <app-error-message
+    *ngIf="successMessage"
+    [message]="successMessage"
+    type="success"
+    [dismissible]="true"
+    (dismiss)="successMessage = null">
+  </app-error-message>
+
+  <!-- Error Message -->
+  <app-error-message
+    *ngIf="errorMessage"
+    [message]="errorMessage"
+    type="error"
+    [dismissible]="true"
+    (dismiss)="errorMessage = null">
+  </app-error-message>
+
+  <h1 class="h1">הגדרות דיווחים</h1>
+  <!-- Loading -->
+  <app-loading *ngIf="loading" message="טוען נתונים..."></app-loading>
 
   <!-- בורר שנה -->
   <div *ngIf="!loading" class="year-selector">
@@ -49,8 +66,12 @@
                 title="עריכה">
                 ערוך
               </button>
-              <button class="btn-view" (click)="viewConfig(config)" title="הצגה">
-                👁️ הצג
+              <button class="btn-view" (click)="viewConfig(config)" aria-label="הצג הגדרות" title="הצגה">
+                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                הצג
               </button>
               <!-- ⭐ כפתור מחיקה -->
               <button

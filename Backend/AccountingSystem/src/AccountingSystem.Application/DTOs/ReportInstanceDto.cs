@@ -18,6 +18,13 @@ public class ReportInstanceDto
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }
+public class AutoReportInstanceDto
+{
+    public int ConfigId { get; set; }
+    public string CompanyName { get; set; }
+    public string ReportTypeName { get; set; }
+    public DateTime Period { get; set; }
+}
 
 /// <summary>
 /// DTO ליצירת מופע דיווח חדש

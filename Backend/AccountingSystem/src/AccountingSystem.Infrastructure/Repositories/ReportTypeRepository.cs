@@ -61,6 +61,13 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<List<Reporttype>> GetToEdit()
+        {
+            List<Reporttype> req = await context.Reporttypes.ToListAsync();
+            List<Reporttype> res =req.Where(x => x.Shortcode == "VAT" || x.Shortcode == "WHT" || x.Shortcode == "ITA_ADV" || x.Shortcode == "VAT_DET").ToList();
+            return res; 
+        }
+
         public Task UpdateAsync(Reporttype entity)
         {
             throw new NotImplementedException();

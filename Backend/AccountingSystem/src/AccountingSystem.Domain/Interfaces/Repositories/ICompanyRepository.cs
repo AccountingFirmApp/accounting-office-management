@@ -17,6 +17,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// תביא לי חברה + כל אנשי הקשר שלה
         /// </summary>
         System.Threading.Tasks.Task AddAsync(Company company);
+        public Task<List<Company?>> GetByIdWorkerAsync(int workerId);
 
         System.Threading.Tasks.Task<Company?> GetCompanyWithContactsAsync(int companyId);
 

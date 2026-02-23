@@ -191,10 +191,12 @@ namespace AccountingSystem.API.Controllers
     public class ReportsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<ReportsController> _logger;
 
-        public ReportsController(IMediator mediator)
+        public ReportsController(IMediator mediator, ILogger<ReportsController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         // ========== פונקציות קיימות ==========
@@ -309,8 +311,8 @@ namespace AccountingSystem.API.Controllers
                 Id = dto.Id,
                 Status = dto.Status
             };
-            Console.WriteLine($"Status before save: '{dto.Status}'");
-            Console.WriteLine($"Status length: {dto.Status.ToString().Length}");
+            _logger.LogInformation($"Status before save: '{dto.Status}'");
+            _logger.LogInformation($"Status length: {dto.Status.ToString().Length}");
             var success = await _mediator.Send(command);
 
             if (!success)
@@ -463,12 +465,12 @@ namespace AccountingSystem.API.Controllers
         {
             try
             {
-                Console.WriteLine($"🔍 GetAllReports נקרא עם isAdminMode={isAdminMode}");
+                _logger.LogInformation($"🔍 GetAllReports נקרא עם isAdminMode={isAdminMode}");
 
                 var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
 
-                Console.WriteLine($"🔍 WorkerId={workerIdClaim}, Role={roleClaim}");
+                _logger.LogInformation($"🔍 WorkerId={workerIdClaim}, Role={roleClaim}");
 
                 if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
                 {
@@ -479,12 +481,12 @@ namespace AccountingSystem.API.Controllers
 
                 if (isAdminMode && roleClaim == "Admin")
                 {
-                    Console.WriteLine("✅ מנהל במצב ניהול - מחזיר הכל");
+                    _logger.LogInformation("✅ מנהל במצב ניהול - מחזיר הכל");
                     filterByWorkerId = null;
                 }
                 else
                 {
-                    Console.WriteLine($"✅ מצב רגיל - מסנן לעובד {workerId}");
+                    _logger.LogInformation($"✅ מצב רגיל - מסנן לעובד {workerId}");
                     filterByWorkerId = workerId;
                 }
 
@@ -496,13 +498,13 @@ namespace AccountingSystem.API.Controllers
 
                 var reports = await _mediator.Send(query);
 
-                Console.WriteLine($"✅ מחזיר {reports.Count} דוחות");
+                _logger.LogInformation($"✅ מחזיר {reports.Count} דוחות");
 
                 return Ok(reports);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ שגיאה: {ex.Message}");
+                _logger.LogInformation($"❌ שגיאה: {ex.Message}");
                 return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
             }
         }

@@ -3,8 +3,10 @@ using AccountingSystem.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Google.Apis.Auth;
 
 
 namespace AccountingSystem.API.Controllers;
@@ -14,10 +16,16 @@ namespace AccountingSystem.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<AuthController> _logger;
+    private readonly string _googleClientId;
 
-    public AuthController(IMediator mediator)
+
+    public AuthController(IMediator mediator, ILogger<AuthController> logger, IConfiguration configuration)
     {
         _mediator = mediator;
+        _logger = logger;
+        _googleClientId = configuration["Authentication:Google:ClientId"];
+
     }
 
     /// <summary>
@@ -52,61 +60,56 @@ public class AuthController : ControllerBase
     /// </summary>
     [HttpPost("login-google")]
     [AllowAnonymous]
-    public async System.Threading.Tasks.Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
+public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleLoginRequestDto request)
+{
+    try
     {
+        // 1️⃣ אימות הטוקן מול Google
+        var settings = new GoogleJsonWebSignature.ValidationSettings()
+        {
+            Audience = new[] { _googleClientId } 
+        };
+
+        GoogleJsonWebSignature.Payload payload;
         try
         {
-            var command = new GoogleLoginCommand
-            {
-                GoogleToken = request.GoogleToken
-            };
-
-            var result = await _mediator.Send(command);
-
-            Console.WriteLine($"✅ Google login successful for: {result.Worker.Email}");
-
-            return Ok(result);
+            payload = await GoogleJsonWebSignature.ValidateAsync(request.GoogleToken, settings);
         }
-        catch (UnauthorizedAccessException ex)
+        catch (InvalidJwtException)
         {
-            Console.WriteLine($"❌ Google login failed: {ex.Message}");
-            return Unauthorized(new { message = ex.Message });
+            _logger.LogInformation("❌ Google login failed: invalid token");
+            return Unauthorized(new { message = "Google token לא תקין" });
         }
-        catch (Exception ex)
+
+        // אופציונלי: בדיקה אם המייל מאומת
+        if (!payload.EmailVerified)
         {
-            Console.WriteLine($"💥 Google login error: {ex.Message}");
-            return StatusCode(500, new { message = "שגיאה פנימית בשרת", detail = ex.Message });
+            _logger.LogInformation($"❌ Google login failed: email not verified ({payload.Email})");
+            return Unauthorized(new { message = "Email לא מאומת ב-Google" });
         }
+
+        // 2️⃣ אם הכל תקין, יוצרים את ה-Command ל-MediatR
+        var command = new GoogleLoginCommand
+        {
+            GoogleToken = request.GoogleToken,
+        };
+
+        var result = await _mediator.Send(command);
+
+        _logger.LogInformation($"✅ Google login successful for: {result.Worker.Email}");
+
+        return Ok(result);
     }
-    /// <summary>
-    /// בדיקת תקינות Token
-    /// </summary>
-    [HttpGet("validate")]
-    [Authorize]
-    public IActionResult ValidateToken()
+    catch (UnauthorizedAccessException ex)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var email = User.FindFirst(ClaimTypes.Email)?.Value;
-        var role = User.FindFirst(ClaimTypes.Role)?.Value;
-
-        return Ok(new
-        {
-            isValid = true,
-            userId,
-            email,
-            role
-        });
+        _logger.LogInformation($"❌ Google login failed: {ex.Message}");
+        return Unauthorized(new { message = ex.Message });
     }
-
-    /// <summary>
-    /// ⚠️ FOR DEVELOPMENT ONLY - יצירת Hash לסיסמה
-    /// מחק בפרודקשן!
-    /// </summary>
-    [HttpPost("create-hash")]
-    [AllowAnonymous]
-    public IActionResult CreateHash([FromBody] string password)
+    catch (Exception ex)
     {
-        var hash = BCrypt.Net.BCrypt.HashPassword(password);
-        return Ok(new { password, hash });
+        _logger.LogError(ex, "💥 Google login error");
+        return StatusCode(500, new { message = "שגיאה פנימית בשרת" });
     }
+}
+
 }

@@ -25,7 +25,7 @@ export class ManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentWorker = this.workerService.currentWorker;
-    console.log(this.workerService)
+    // console.log(this.workerService)
     // אם לא מנהל, חזור לדף הבית
     if (!this.auth.isAdmin()) {
       this.router.navigate(['/home']);

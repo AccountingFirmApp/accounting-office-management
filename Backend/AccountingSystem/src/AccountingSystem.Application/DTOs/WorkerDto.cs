@@ -82,7 +82,7 @@ public class LoginResponseDto
 {
     public string Token { get; set; } = null!;
     public string TokenType { get; set; } = "Bearer";
-    public int ExpiresIn { get; set; } // בשניות
+    public int ExpiresIn { get; set; } 
     public WorkerInfoDto Worker { get; set; } = null!;
 }
 
