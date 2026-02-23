@@ -199,6 +199,7 @@ using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -522,5 +523,52 @@ namespace AccountingSystem.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<TaskChecklistTemplate> GetChecklistTemplateByTaskTypeAsync(int taskTypeId)
+        {
+            return await _context.TaskChecklistTemplates
+                .Include(t => t.Items) // חשוב מאוד כדי לקבל את רשימת השלבים
+                .FirstOrDefaultAsync(t => t.TaskTypeId == taskTypeId && t.IsActive);
+        }
+
+        public async Task UpdateChecklistTemplateAsync(TaskChecklistTemplate template, List<TaskChecklistTemplateItem> newItems)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // עדכון או הוספת התבנית
+                if (template.Id == 0) _context.TaskChecklistTemplates.Add(template);
+                else _context.TaskChecklistTemplates.Update(template);
+
+                await _context.SaveChangesAsync();
+
+                // החלפת הפריטים
+                var oldItems = _context.TaskChecklistTemplateItems.Where(i => i.TemplateId == template.Id);
+                _context.TaskChecklistTemplateItems.RemoveRange(oldItems);
+
+                foreach (var item in newItems)
+                {
+                    item.TemplateId = template.Id;
+                    _context.TaskChecklistTemplateItems.Add(item);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<List<Tasktype>> GetTaskTypesAsync()
+        {
+            // שליפת כל סוגי המשימות הפעילים מהדאטה-בייס
+            return await _context.Tasktypes
+                .OrderBy(t => t.Name)
+                .ToListAsync();
+        }
     }
-}
+    }
+    

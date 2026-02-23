@@ -88,5 +88,12 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         Task UpdateChecklistItemAsync(CompanyTaskChecklistItem item);
         Task<CompanyTaskChecklistItem> AddChecklistItemAsync(CompanyTaskChecklistItem item);
         Task DeleteChecklistItemAsync(int itemId);
+        Task<List<Tasktype>> GetTaskTypesAsync();
+
+        // ודאי שגם אלו מופיעות שם מהשלבים הקודמים:
+        Task<TaskChecklistTemplate> GetChecklistTemplateByTaskTypeAsync(int taskTypeId);
+        Task UpdateChecklistTemplateAsync(TaskChecklistTemplate template, List<TaskChecklistTemplateItem> newItems);
+
+           
+        }
     }
-}

@@ -37,10 +37,8 @@ export class CompanyCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      // טען את רשימת המשרדים
       this.loadAccountingFirms();
     
-      // בדוק אם זה מצב עריכה
       
     // בדוק אם זה מצב עריכה
     this.route.params.subscribe(params => {

@@ -205,6 +205,23 @@ namespace AccountingSystem.API.Controllers
             await _mediator.Send(command);
             return Ok();
         }
+
+        [HttpGet("task-types")]
+        
+        public async Task<ActionResult<List<TaskTypeDto>>> GetTaskTypes()
+        {
+            try
+            {
+                // יצירת Query חדש
+                var query = new GetTaskTypesQuery();
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
         // DTO לבקשה
         public class UpdateTaskStatusRequest
         {

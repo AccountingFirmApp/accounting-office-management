@@ -38,6 +38,9 @@ public partial class AccountingDbContext : DbContext
     public virtual DbSet<CompanyTaskTypeSettings> CompanyTaskTypeSettings { get; set; }
     public virtual DbSet<TaskChecklistTemplate> TaskChecklistTemplate { get; set; }
     public virtual DbSet<CompanyTaskChecklistItem> CompanyTaskChecklistItems { get; set; }
+    public DbSet<TaskChecklistTemplate> TaskChecklistTemplates { get; set; }
+    public DbSet<TaskChecklistTemplateItem> TaskChecklistTemplateItems { get; set; }
+    public DbSet<CompanyTaskConfiguration> CompanyTaskConfigurations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -780,6 +783,36 @@ public partial class AccountingDbContext : DbContext
             entity.HasOne(d => d.Template)
                   .WithMany(p => p.Items)
                   .HasForeignKey(d => d.TemplateId);
+        });
+
+        modelBuilder.Entity<CompanyTaskConfiguration>(entity =>
+        {
+            // מיפוי שם הטבלה לאותיות קטנות
+            entity.ToTable("companytaskconfigurations");
+
+            entity.HasKey(e => e.Id);
+
+            // מיפוי כל עמודה לשם המדויק ב-Postgres (אותיות קטנות)
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Companyid).HasColumnName("companyid");
+            entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
+            entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid"); // פותר את השגיאה שלך!
+            entity.Property(e => e.Frequency).HasColumnName("frequency");
+            entity.Property(e => e.Dueday).HasColumnName("dueday");
+            entity.Property(e => e.Isactive).HasColumnName("isactive");
+            entity.Property(e => e.Createdat).HasColumnName("createdat");
+            entity.Property(e => e.Updatedat).HasColumnName("updatedat");
+
+            // הגדרת קשרים (Foreign Keys) כדי שה-Include יעבוד
+            entity.HasOne(d => d.Assignedworker)
+                  .WithMany()
+                  .HasForeignKey(d => d.Assignedworkerid)
+                  .HasConstraintName("fk_config_worker");
+
+            entity.HasOne(d => d.Company)
+                  .WithMany()
+                  .HasForeignKey(d => d.Companyid)
+                  .HasConstraintName("fk_config_company");
         });
         OnModelCreatingPartial(modelBuilder);
     }

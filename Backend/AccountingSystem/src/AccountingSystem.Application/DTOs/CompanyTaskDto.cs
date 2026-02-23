@@ -286,4 +286,34 @@ namespace AccountingSystem.Application.DTOs.Tasks
         public bool IsCompleted { get; set; }
         public int OrderIndex { get; set; }
     }
+    public class ChecklistTemplateDto
+    {
+        public int Id { get; set; }
+        public int TaskTypeId { get; set; }
+        public List<ChecklistTemplateItemDto> Items { get; set; } = new();
+    }
+
+    public class ChecklistTemplateItemDto
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public int OrderIndex { get; set; }
+        public bool IsOptional { get; set; }
+    }
+    public class CompanyTaskConfigDto
+    {
+        public int CompanyId { get; set; }
+        public string CompanyName { get; set; }
+        public int TaskTypeId { get; set; }
+        public string TaskTypeName { get; set; }
+
+        // נתונים מהקונפיגורציה (יכולים להיות null אם עדיין לא הוגדרו)
+        public int? ConfigurationId { get; set; }
+        public int? assignedWorkerId { get; set; }
+        public string? WorkerName { get; set; }
+        public int Frequency { get; set; } = 1; // ברירת מחדל חודשי
+        public int DueDay { get; set; } = 15;   // ברירת מחדל 15 לחודש
+        public bool IsActive { get; set; } = false; // כברירת מחדל לא משובץ
+    }
+
 }

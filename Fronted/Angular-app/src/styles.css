@@ -1,5 +1,6 @@
 /* Global Styles - Dokka-Inspired Professional Design 2026 */
-
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+html, body { height: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 /* ==================== CSS Variables - Design System ==================== */
 :root {
   /* Primary Colors - Professional Blue/Gray Palette */

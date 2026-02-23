@@ -41,11 +41,10 @@ export class ReportFormComponent implements OnInit {
   reportedDateString = '';
   paidDateString = '';
 
-  // רשימות מהשרת
   companies: any[] = [];
   reportTypes: any[] = [];
   availableReportTypes: any[] = [];
-  configs: any[] = []; // לשמירת כל ה-configs לצורך מציאת configId
+  configs: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -66,7 +65,7 @@ export class ReportFormComponent implements OnInit {
       this.loadReportTypes(),
       this.loadConfigs()
     ]).then(() => {
-      // אחרי שכל הנתונים נטענו, בדוק אם זה מצב עריכה
+     
       this.route.params.subscribe(params => {
         if (params['id']) {
           this.isEditMode = true;
@@ -104,7 +103,7 @@ export class ReportFormComponent implements OnInit {
       this.reportService.getReportTypes().subscribe({
         next: (data) => {
           this.reportTypes = data;
-          this.availableReportTypes = data; // הצג את כל סוגי הדיווחים
+          this.availableReportTypes = data; 
           resolve();
         },
         error: (err) => {
@@ -131,7 +130,6 @@ export class ReportFormComponent implements OnInit {
   }
 
   onCompanyChange() {
-    // איפוס בחירות
     this.formData.reportTypeId = '';
     this.formData.configId = '';
     this.updateConfigId();
@@ -152,7 +150,6 @@ export class ReportFormComponent implements OnInit {
       if (config) {
         this.formData.configId = config.id;
       } else {
-        // אם לא נמצא config - אולי צריך ליצור אחד או להציג הודעה
         console.warn('No matching config found for company and report type');
         this.formData.configId = '';
       }
@@ -162,7 +159,6 @@ export class ReportFormComponent implements OnInit {
   }
 
   initNewReport() {
-    // Set default period to current month
     const now = new Date();
     this.periodString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     this.formData.period = now;
@@ -173,7 +169,6 @@ export class ReportFormComponent implements OnInit {
     
     this.reportService.getById(this.reportId).subscribe({
       next: (report) => {
-        // מצא את ה-config כדי לקבל את companyId ו-reportTypeId
         const config = this.configs.find(c => c.id === report.configId);
         
         this.formData = {
@@ -191,7 +186,6 @@ export class ReportFormComponent implements OnInit {
           comments: report.comments || ''
         };
 
-        // Convert to string format for inputs
         this.periodString = this.dateToMonthString(this.formData.period);
         this.receiptDateString = this.dateToDateString(this.formData.receiptDate);
         this.reportedDateString = this.dateToDateString(this.formData.reportedDate);
@@ -239,10 +233,7 @@ export class ReportFormComponent implements OnInit {
   }
 
   onSubmit() {
-    // if (!this.formData.configId) {
-    //   alert('יש לבחור חברה וסוג דיווח');
-    //   return;
-    // }
+   
 
     this.submitting = true;
 
@@ -254,9 +245,9 @@ export class ReportFormComponent implements OnInit {
   }
 createReport() {
   const data: CreateReportInstance = {
-    companyId: this.formData.companyId,        // מהטופס
-    reportTypeId: this.formData.reportTypeId,  // מהטופס
-    frequencyId: this.formData.frequencyId,    // אופציונלי
+    companyId: this.formData.companyId,        
+    reportTypeId: this.formData.reportTypeId, 
+    frequencyId: this.formData.frequencyId,   
     period: this.formData.period,
     amount: this.formData.amount || undefined,
     paymentMethod: this.formData.paymentMethod || undefined,
@@ -311,6 +302,5 @@ createReport() {
     this.router.navigate(['/reports'], { 
     queryParams: { adminMode: 'true' } 
   });}
-    // this.router.navigate(['/reports']);
   
 }

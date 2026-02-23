@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // ← הוספתי ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -33,7 +33,6 @@ export class WorkerTasksComponent implements OnInit {
   searchTerm = '';
   selectedStatus = 'all';
   
-  // משתני המודאל
   selectedTaskDetails: any = null;
   showChecklistModal = false;
 
@@ -51,7 +50,7 @@ export class WorkerTasksComponent implements OnInit {
     private workerService: WorkerService,
     private companyService: CompanyService,
     private companyTaskService: CompantTaskService,
-    private cdr: ChangeDetectorRef // ← וודאי שהזרקת את זה כאן!
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
@@ -74,7 +73,7 @@ export class WorkerTasksComponent implements OnInit {
         this.applyFilters();
         this.calculateStats();
         this.loading = false;
-        this.cdr.detectChanges(); // ← ריענון מסך
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
         console.error('❌ שגיאה בטעינת משימות', err);
@@ -83,19 +82,18 @@ export class WorkerTasksComponent implements OnInit {
     });
   }
 
-  // --- לוגיקת צ'קליסט ---
+
 
   openTaskDetails(taskId: number): void {
-    console.log('🚀 מנסה לפתוח צ\'קליסט למשימה:', taskId);
+
     this.loading = true;
     
     this.companyTaskService.getTaskDetails(taskId).subscribe({
       next: (data) => {
-        console.log('✅ נתוני צ\'קליסט הגיעו:', data);
+
         this.selectedTaskDetails = data;
         this.showChecklistModal = true;
         this.loading = false;
-        // ללא השורה הזו, המודאל לא יופיע למרות שהנתונים הגיעו!
         this.cdr.detectChanges(); 
       },
       error: (err) => {
@@ -122,12 +120,35 @@ export class WorkerTasksComponent implements OnInit {
   }
 
   private updateProgressLocally(): void {
-    if (this.selectedTaskDetails) {
-      const completed = this.selectedTaskDetails.checklistItems.filter((i: any) => i.isCompleted).length;
-      this.selectedTaskDetails.checklistProgress.completed = completed;
+    if (!this.selectedTaskDetails) return;
+  
+    const items = this.selectedTaskDetails.checklistItems;
+    const total = items.length;
+    const completed = items.filter((i: any) => i.isCompleted).length;
+  
+    this.selectedTaskDetails.checklistProgress.completed = completed;
+  
+    const taskInList = this.tasks.find(t => t.id === this.selectedTaskDetails.id);
+    if (!taskInList) return;
+  
+    let newStatus: number;
+  
+    if (completed === total && total > 0) {
+      newStatus = this.STATUS.DONE;
+    } else if (completed > 0 && completed < total) {
+      newStatus = this.STATUS.IN_PROGRESS;
+    } else {
+      newStatus = this.STATUS.PENDING;
+    }
+  
+    if (taskInList.status !== newStatus) {
+      this.updateTaskStatus(taskInList, newStatus);
+    
     }
   }
 
+
+  
   closeModal(): void {
     this.showChecklistModal = false;
     this.selectedTaskDetails = null;
@@ -135,7 +156,6 @@ export class WorkerTasksComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  // --- שאר הפונקציות ---
 
   applyFilters(): void {
     this.filteredTasks = this.tasks.filter(task => {
@@ -156,17 +176,16 @@ export class WorkerTasksComponent implements OnInit {
     this.searchTerm = term;
     this.applyFilters();
   }
-
   updateTaskStatus(task: WorkerTask, newStatus: number): void {
     this.companyService.updateTaskStatus(task.companyid, task.id, newStatus.toString()).subscribe({
       next: () => {
-        task.status = newStatus;
-        this.calculateStats();
-        this.cdr.detectChanges();
-      }
+        task.status = newStatus; 
+        this.calculateStats();  
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => console.error('❌ שגיאה בעדכון סטטוס:', err)
     });
   }
-
   calculateStats(): void {
     const today = new Date();
     this.taskStats = {

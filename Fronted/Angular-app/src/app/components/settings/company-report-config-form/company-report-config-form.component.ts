@@ -100,8 +100,7 @@ export class CompanyReportConfigFormComponent implements OnInit {
         this.loadConfig();
       }
     }).catch(err => {
-      console.error(err);
-      alert('שגיאה בטעינת הנתונים');
+    
       this.loading = false;
     });
   }
@@ -170,9 +169,8 @@ export class CompanyReportConfigFormComponent implements OnInit {
     if (this.configForm.valid || this.isFixedYear || this.isEditMode) {
       this.submitting = true;
 
-      // אם יש שדות מושבתים, צריך להשתמש ב-getRawValue() במקום value
       const formData = (this.isFixedYear || this.isEditMode)
-        ? this.configForm.getRawValue() // כולל גם שדות disabled
+        ? this.configForm.getRawValue() 
         : this.configForm.value;
 
       let request$: Observable<any>;
@@ -202,9 +200,7 @@ export class CompanyReportConfigFormComponent implements OnInit {
     this.router.navigate(['/settings/report-config']);
   }
 
-  /**
-   * מוחק את ההגדרה הנוכחית
-   */
+ 
   deleteConfig(): void {
     if (!this.configId) return;
 

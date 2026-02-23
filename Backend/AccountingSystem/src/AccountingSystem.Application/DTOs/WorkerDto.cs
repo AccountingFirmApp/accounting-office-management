@@ -96,3 +96,8 @@ public class WorkerInfoDto
     public string RoleName { get; set; } = null!;
     public int FirmId { get; set; }
 }
+public class WorkerLookupDto
+{
+    public int Id { get; set; }
+    public string FullName { get; set; } = string.Empty;
+}

@@ -196,5 +196,13 @@ namespace AccountingSystem.API.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        [HttpGet("by-company/{companyId}")]
+        public async Task<IActionResult> GetWorkersByCompany(int companyId)
+        {
+            // יצירת השאילתה ושליחתה דרך המתווך (Mediator)
+            var result = await _mediator.Send(new GetWorkersByCompanyQuery(companyId));
+            return Ok(result);
+        }
     }
 }

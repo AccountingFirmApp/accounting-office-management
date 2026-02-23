@@ -12,6 +12,8 @@ import { ManagementComponent } from './components/management/management.componen
 import { CompanyReportConfigListComponent } from './components/settings/company-report-config-list/company-report-config-list.component';
 import { CompanyReportConfigFormComponent } from './components/settings/company-report-config-form/company-report-config-form.component';
 import { WorkerTasksComponent } from '../components/worker-tasks/worker-tasks';
+import { ChecklistTemplateManagerComponent } from '../components/checklist-template-manager/checklist-template-manager.component';
+import { TaskMatrixComponent } from '../components/task-matrix/task-matrix';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'התחברות' },  // ⬅️ דף התחברות
@@ -30,12 +32,17 @@ export const routes: Routes = [
     loadChildren: () => import('../components/reports-module').then(m => m.ReportsModule)
   }, 
     { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
-    { path: 'companies/create', component: CompanyCreateComponent },  // ← חייב להיות לפני :id
+    { path: 'companies/create', component: CompanyCreateComponent },  // ← חייב להיות לפני 
     { path: 'companies/:id/edit', component: CompanyCreateComponent }, // ← עריכה
     { path: 'companies/:id/tasks', component: CompanyTasksComponent }, // ← משימות
-      // { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
       { path: 'workers/:workerId/tasks', component: WorkerTasksComponent },
+      { 
+        path: 'admin/checklist-templates', 
+        component: ChecklistTemplateManagerComponent 
+      },
+      { path: 'admin/task-matrix', component:TaskMatrixComponent  }, // ← משימות
+
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // ⬅️ דף ראשי -> התחברות
-  // { path: '**', redirectTo: '/log/in' }  // ⬅️ כל דף לא קיים -> חזרה להתחברות
+  { path: '**', redirectTo: '/log/in' }  // ⬅️ כל דף לא קיים -> חזרה להתחברות
 ];

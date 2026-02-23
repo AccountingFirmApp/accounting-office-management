@@ -8,6 +8,7 @@
 //    public string Status { get; set; }
 //}
 
+using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Domain.Enums;
 using MediatR;
 using System;
@@ -182,5 +183,20 @@ namespace AccountingSystem.Application.Commands.Tasks
             ItemId = itemId;
             WorkerId = workerId;
         }
+    }
+    public class SaveChecklistTemplateCommand : IRequest<bool>
+    {
+        public int TaskTypeId { get; set; }
+        public List<ChecklistTemplateItemDto> Items { get; set; }
+    }
+
+    public class SaveTaskConfigurationCommand : IRequest<bool>
+    {
+        public int CompanyId { get; set; }
+        public int TaskTypeId { get; set; }
+        public int? AssignedWorkerId { get; set; }
+        public int Frequency { get; set; }
+        public int DueDay { get; set; }
+        public bool IsActive { get; set; }
     }
 }

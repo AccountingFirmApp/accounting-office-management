@@ -82,9 +82,13 @@ namespace AccountingSystem.Infrastructure.Repositories
                    .FirstOrDefaultAsync(w => w.Id == id);
         }
 
-        public Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId)
         {
-            throw new NotImplementedException();
+            return await context.Companyworkers
+                .Where(cw => cw.Companyid == companyId)
+                .Include(cw => cw.Worker) // טעינת נתוני העובד מטבלת Worker
+                .Select(cw => cw.Worker)   // החזרת הישות של העובד בלבד
+                .ToListAsync();
         }
 
         public Task<IEnumerable<Worker>> GetWorkersByFirmIdAsync(int firmId)
@@ -123,6 +127,5 @@ namespace AccountingSystem.Infrastructure.Repositories
             await context.SaveChangesAsync(); // ✅ בסוף המתודה יש Task שמסתיים
         }
 
- 
     }
 }

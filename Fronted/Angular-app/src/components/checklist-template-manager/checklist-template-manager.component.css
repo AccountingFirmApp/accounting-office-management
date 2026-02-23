@@ -1,0 +1,265 @@
+
+
+.manager-container {
+  padding: 40px 20px;
+  direction: rtl;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+h2 {
+  color: #1e293b;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 2px;
+}
+
+/* כרטיס הבחירה */
+.selection-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.3s ease;
+}
+
+.selection-card:hover {
+  transform: translateY(-2px);
+}
+
+.selection-card label {
+  font-weight: 600;
+  color: #475569;
+  font-size: 16px;
+}
+
+/* עיצוב הסלקט */
+select {
+  padding: 12px 20px;
+  width: 320px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  appearance: none; /* מסיר את החץ המובנה לעיצוב נקי */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 15px center;
+  background-size: 18px;
+}
+
+select:focus {
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* אנימציית טעינה (Spinner) */
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  color: #3b82f6;
+  gap: 15px;
+}
+
+.spinner {
+  width: 45px;
+  height: 45px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader span {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+
+
+ 
+
+h2 {
+    color: #2d3748;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    border-right: 4px solid #4a90e2;
+    padding-right: 15px;
+}
+
+/* כרטיס בחירת סוג משימה */
+
+
+select:focus {
+    border-color: #4a90e2;
+}
+
+/* טבלה ועיורך */
+.template-editor {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: #f8fafc;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.table-header h3 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 18px;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.items-table th {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.items-table td {
+    padding: 15px;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+}
+
+/* עיצוב האינפוטים בתוך הטבלה */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+input[type="text"]:focus {
+    border-color: #4a90e2;
+    background-color: #f0f7ff;
+    outline: none;
+}
+
+/* כפתורים */
+.btn-add {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-add:hover { background: #357abd; }
+
+.footer-actions {
+    padding: 25px;
+    text-align: left; /* שמאל כי זה RTL, אז זה הצד הנגדי */
+    background: #f8fafc;
+}
+
+.btn-save {
+    background: #2d3748;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: transform 0.1s;
+}
+
+.btn-save:hover { background: #1a202c; transform: translateY(-1px); }
+
+.btn-remove {
+    color: #e53e3e;
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-remove:hover { background: #feb2b2; color: #c53030; }
+
+/* עיצוב ה-Toggle */
+.status-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { 
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; 
+    background-color: #cbd5e0; transition: .3s; border-radius: 34px; 
+}
+.slider:before { 
+    position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; 
+    background-color: white; transition: .3s; border-radius: 50%; 
+}
+input:checked + .slider { background-color: #48bb78; }
+input:checked + .slider:before { transform: translateX(22px); }
+
+.loader { text-align: center; padding: 50px; color: #4a90e2; font-weight: bold; }

@@ -121,7 +121,7 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.companySer.getAllCompanies().subscribe({
         next: (data) => {
           this.companies = data;
-          console.log('חברות:', data);
+      
           resolve();
         },
         error: (err) => {
@@ -137,7 +137,7 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.reportService.getReportTypes().subscribe({
         next: (data) => {
           this.reportTypes = data;
-          console.log('סוגי דיווחים:', data);
+     
           resolve();
         },
         error: (err) => {
@@ -156,8 +156,7 @@ export class CompanyReportConfigListComponent implements OnInit {
           this.configs = data.filter(c => c.isActive === true);
           this.deletedConfigs = data.filter(c => c.isActive === false);
           
-          console.log('הגדרות פעילות:', this.configs);
-          console.log('הגדרות מחוקות:', this.deletedConfigs);
+       
           resolve();
         },
         error: (err) => {

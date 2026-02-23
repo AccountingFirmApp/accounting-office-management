@@ -1,13 +1,13 @@
 ﻿
-using AccountingSystem.Application.DTOs.Tasks;
-using AccountingSystem.Domain.Enums;
-using AccountingSystem.Domain.Entities;
-
-using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Application.Commands.Tasks;
+using AccountingSystem.Application.DTOs;
+using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Application.Queries.Tasks;
-
+using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Enums;
+using AccountingSystem.Domain.Interfaces.Repositories;
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1253,3 +1253,199 @@ namespace AccountingSystem.Application.Handlers.Tasks
             }).ToList();
         }
     }
+public class GetChecklistTemplateByTaskTypeHandler : IRequestHandler<GetChecklistTemplateByTaskTypeQuery, ChecklistTemplateDto>
+{
+    private readonly ICompanyTaskRepository _repository;
+
+    public GetChecklistTemplateByTaskTypeHandler(ICompanyTaskRepository repository) => _repository = repository;
+
+    public async Task<ChecklistTemplateDto> Handle(GetChecklistTemplateByTaskTypeQuery request, CancellationToken ct)
+    {
+        var template = await _repository.GetChecklistTemplateByTaskTypeAsync(request.TaskTypeId);
+        if (template == null) return new ChecklistTemplateDto { TaskTypeId = request.TaskTypeId };
+
+        return new ChecklistTemplateDto
+        {
+            Id = template.Id,
+            TaskTypeId = template.TaskTypeId,
+            Items = template.Items.Select(i => new ChecklistTemplateItemDto
+            {
+                Title = i.Title,
+                Description = i.Description,
+                OrderIndex = i.OrderIndex,
+                IsOptional = i.IsOptional
+            }).ToList()
+        };
+    }
+    public class SaveChecklistTemplateCommandHandler : IRequestHandler<SaveChecklistTemplateCommand, bool>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public SaveChecklistTemplateCommandHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<bool> Handle(SaveChecklistTemplateCommand request, CancellationToken cancellationToken)
+        {
+            // 1. ננסה להביא את התבנית הקיימת עבור סוג המשימה הזה
+            var template = await _taskRepository.GetChecklistTemplateByTaskTypeAsync(request.TaskTypeId);
+
+            // 2. אם לא קיימת תבנית, ניצור אחת חדשה
+            if (template == null)
+            {
+                template = new TaskChecklistTemplate
+                {
+                    TaskTypeId = request.TaskTypeId,
+                    Name = $"Template for Task Type {request.TaskTypeId}", // אפשר לשפר את השם בהמשך
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+            }
+            else
+            {
+                // אם קיימת, נעדכן רק את תאריך העדכון
+                template.UpdatedAt = DateTime.UtcNow;
+            }
+
+            // 3. נמפה את רשימת הפריטים מה-DTO לישויות של הדומיין (Entities)
+            // אנחנו יוצרים רשימה חדשה כי ה-Repository ימחק את הישנים ויכניס את אלו
+            var newItems = request.Items.Select(itemDto => new TaskChecklistTemplateItem
+            {
+                Title = itemDto.Title,
+                Description = itemDto.Description,
+                OrderIndex = itemDto.OrderIndex,
+                IsOptional = itemDto.IsOptional,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            // 4. נשלח ל-Repository לביצוע השמירה (כולל המחיקה של הישנים בתוך טרנזקציה)
+            try
+            {
+                await _taskRepository.UpdateChecklistTemplateAsync(template, newItems);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // כאן אפשר להוסיף לוג של שגיאה במידה והשמירה נכשלה
+                Console.WriteLine($"[ERROR] Failed to save checklist template: {ex.Message}");
+                return false;
+            }
+        }
+    } }
+
+
+    public class GetTaskTypesHandler : IRequestHandler<GetTaskTypesQuery, List<TaskTypeDto>>
+    {
+        private readonly ICompanyTaskRepository _repository;
+
+        public GetTaskTypesHandler(ICompanyTaskRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<List<TaskTypeDto>> Handle(GetTaskTypesQuery request, CancellationToken cancellationToken)
+        {
+            var types = await _repository.GetTaskTypesAsync();
+
+            // מיפוי מה-Entity של ה-Domain ל-DTO של ה-Application
+            return types.Select(t => new TaskTypeDto
+            {
+                Id = t.Id,
+                Name = t.Name
+            }).ToList();
+        }
+
+    }
+
+public class GetTaskMatrixHandler : IRequestHandler<GetTaskMatrixQuery, List<CompanyTaskConfigDto>>
+{
+    private readonly ICompanyRepository _companyRepo;
+    private readonly ITaskTypeRepository _taskTypeRepo; // ודאי שקיים ממשק כזה
+    private readonly ITaskConfigurationRepository _configRepo;
+
+    public GetTaskMatrixHandler(
+        ICompanyRepository companyRepo,
+        ITaskTypeRepository taskTypeRepo,
+        ITaskConfigurationRepository configRepo)
+    {
+        _companyRepo = companyRepo;
+        _taskTypeRepo = taskTypeRepo;
+        _configRepo = configRepo;
+    }
+
+    public async Task<List<CompanyTaskConfigDto>> Handle(GetTaskMatrixQuery request, CancellationToken cancellationToken)
+    {
+        // 1. שליפת כל הנתונים מהרפוזיטוריז
+        var companies = await _companyRepo.GetAllAsync();
+        var taskTypes = await _taskTypeRepo.GetAllAsync();
+        var existingConfigs = await _configRepo.GetAllWithWorkersAsync();
+
+        // 2. בניית המטריצה (Cross Join)
+        var matrix = from c in companies
+                     from tt in taskTypes
+                     join conf in existingConfigs
+                        on new { CId = c.Id, TtId = tt.Id }
+                        equals new { CId = conf.Companyid, TtId = conf.Tasktypeid } into joined
+                     from conf in joined.DefaultIfEmpty()
+                     select new CompanyTaskConfigDto
+                     {
+                         CompanyId = c.Id,
+                         CompanyName = c.Name,
+                         TaskTypeId = tt.Id,
+                         TaskTypeName = tt.Name,
+                         ConfigurationId = conf?.Id,
+                         assignedWorkerId = conf?.Assignedworkerid,
+                         WorkerName = conf?.Assignedworker?.Firstname ?? "לא שובץ",
+                         Frequency = conf?.Frequency ?? 1,
+                         DueDay = conf?.Dueday ?? 15,
+                         IsActive = conf?.Isactive ?? false
+                     };
+
+        return matrix.OrderBy(m => m.CompanyName).ThenBy(m => m.TaskTypeName).ToList();
+    }
+    public class SaveTaskConfigurationHandler : IRequestHandler<SaveTaskConfigurationCommand, bool>
+    {
+        private readonly ITaskConfigurationRepository _repository;
+
+        public SaveTaskConfigurationHandler(ITaskConfigurationRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<bool> Handle(SaveTaskConfigurationCommand request, CancellationToken cancellationToken)
+        {
+            // שימוש במתודה הייעודית שהוספנו
+            var existingConfig = await _repository.GetByCompanyAndTypeAsync(request.CompanyId, request.TaskTypeId);
+
+            if (existingConfig == null)
+            {
+                var newConfig = new CompanyTaskConfiguration
+                {
+                    Companyid = request.CompanyId,
+                    Tasktypeid = request.TaskTypeId,
+                    Assignedworkerid = request.AssignedWorkerId,
+                    Frequency = request.Frequency,
+                    Dueday = request.DueDay,
+                    Isactive = request.IsActive,
+                    Createdat = DateTime.UtcNow
+                };
+                await _repository.AddAsync(newConfig);
+            }
+            else
+            {
+                existingConfig.Assignedworkerid = request.AssignedWorkerId;
+                existingConfig.Frequency = request.Frequency;
+                existingConfig.Dueday = request.DueDay;
+                existingConfig.Isactive = request.IsActive;
+                existingConfig.Updatedat = DateTime.UtcNow;
+
+                _repository.UpdateAsync(existingConfig);
+            }
+
+            // בדרך כלל ה-Unit of Work או ה-Repository הגנרי מחזיק את ה-Save
+            await _repository.SaveChangesAsync();
+            return true;
+        }
+    }
+}

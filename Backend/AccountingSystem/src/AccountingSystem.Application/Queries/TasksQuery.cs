@@ -1,4 +1,5 @@
 ﻿
+using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Domain.Enums;
 using MediatR;
@@ -85,4 +86,8 @@ namespace AccountingSystem.Application.Queries.Tasks
     {
         public int TaskId { get; set; }
     }
+    public record GetChecklistTemplateByTaskTypeQuery(int TaskTypeId) : IRequest<ChecklistTemplateDto>;
 }
+public record GetTaskTypesQuery() : IRequest<List<TaskTypeDto>>;
+
+public class GetTaskMatrixQuery : IRequest<List<CompanyTaskConfigDto>>;

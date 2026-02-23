@@ -1,107 +1,5 @@
 
-// import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { ActivatedRoute, Router } from '@angular/router';
-// import { FormsModule } from '@angular/forms';
-// import { CompanyService } from '../../services/company';
-// import { TaskDto } from '../../models/task';
-// import { CompanyDto } from '../../models/Company';
 
-// @Component({
-//   selector: 'app-company-tasks',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './company-tasks.html',
-//   styleUrls: ['./company-tasks.css']
-// })
-// export class CompanyTasksComponent implements OnInit {
-//   companyId!: number;
-//   company: CompanyDto | null = null;
-//   tasks: TaskDto[] = [];
-//   loading = false;
-//   error: string | null = null;
-
-//   availableStatuses = ['Pending', 'InProgress', 'Completed', 'Cancelled', 'OnHold'];
-
-//   constructor(
-//     private route: ActivatedRoute,
-//     private router: Router,
-//     private companyService: CompanyService,
-//     private cdr: ChangeDetectorRef  // ← הוסף את זה
-//   ) { 
-//   }
-
-//   ngOnInit(): void {
-//     this.route.params.subscribe(params => {
-//       this.companyId = +params['id'];
-//       this.loadCompanyInfo();
-//       this.loadTasks();
-//     });
-//   }
-
-//   loadCompanyInfo(): void {
-//     this.companyService.getCompanyById(this.companyId).subscribe({
-//       next: (data) => {
-//         this.company = data;
-//         this.cdr.detectChanges(); // ← הוסף את זה
-//       },
-//       error: (err) => {
-//         console.error('❌ שגיאה בטעינת פרטי החברה:', err);
-//       }
-//     });
-//   }
-
-//   loadTasks(): void {
-//     this.loading = true;
-//     this.error = null;
-//     this.cdr.detectChanges(); // ← הוסף את זה
-    
-//     this.companyService.getTasksByCompanyId(this.companyId).subscribe({
-//       next: (data) => {
-//         this.tasks = data;
-//         this.loading = false;
-//         this.cdr.detectChanges(); // ← הוסף את זה
-//       },
-//       error: (err) => {
-//         console.error('❌ שגיאה בטעינת המשימות:', err);
-//         console.error('❌ פרטי השגיאה:', err.error);
-//         this.error = `שגיאה בטעינת המשימות: ${err.message}`;
-//         this.loading = false;
-//         this.cdr.detectChanges(); // ← הוסף את זה
-//       }
-//     });
-//   }
-
-//   onStatusChange(task: TaskDto, newStatus: string): void {
-//     task.status = newStatus;
-//   }
-
-//   goBack(): void {
-//     this.router.navigate(['/companies']);
-//   }
-
-//   getStatusColor(status: string): string {
-//     switch(status) {
-//       case 'Completed': return '#4CAF50';
-//       case 'InProgress': return '#2196F3';
-//       case 'Pending': return '#FF9800';
-//       case 'Cancelled': return '#f44336';
-//       case 'OnHold': return '#9E9E9E';
-//       default: return '#757575';
-//     }
-//   }
-
-//   getStatusText(status: string): string {
-//     switch(status) {
-//       case 'Completed': return 'הושלמה';
-//       case 'InProgress': return 'בתהליך';
-//       case 'Pending': return 'ממתינה';
-//       case 'Cancelled': return 'בוטלה';
-//       case 'OnHold': return 'מושהית';
-//       default: return status;
-//     }
-//   }
-// }
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule ,Location} from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -126,7 +24,7 @@ export class CompanyTasksComponent implements OnInit {
   tasks: TaskcompanyDto[] = [];
   loading = false;
   error: string | null = null;
-  updatingTaskId: number | null = null;  // ← הוסף - למעקב על המשימה שמתעדכנת
+  updatingTaskId: number | null = null;  
   statusToNumber: { [key: string]: number } = {
     'Pending': 0,
     'InProgress': 1,
@@ -136,15 +34,14 @@ export class CompanyTasksComponent implements OnInit {
   };
 
   availableStatuses = ['Pending', 'InProgress', 'Done', 'Paid', 'NotRequired'];
-// הוסיפי למשתני המחלקה:
 selectedTaskDetails: any = null; // יחזיק את המשימה המורחבת כולל הצ'קליסט
-showChecklistModal = false;      // לשליטה בתצוגת המודאל/פאנל
+showChecklistModal = false;     
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private companyService: CompanyService,
-    private taskService: CompantTaskService, // ← הוסף את זה
+    private taskService: CompantTaskService,
     private cdr: ChangeDetectorRef,
     private location:Location
 
@@ -191,29 +88,25 @@ showChecklistModal = false;      // לשליטה בתצוגת המודאל/פא�
     });
   }
 
-  // ← הפונקציה המעודכנת!
   onStatusChange(task: TaskcompanyDto, newStatus: string): void {
     
-    const oldStatus = task.status;  // שמור את הסטטוס הישן למקרה של שגיאה
-    this.updatingTaskId = task.id;  // סמן שהמשימה הזו מתעדכנת
+    const oldStatus = task.status;  
+    this.updatingTaskId = task.id;  
     
-    // עדכן מיידית בממשק (Optimistic Update)
+    // עדכון מיידית בממשק 
     task.status = newStatus;
     this.cdr.detectChanges();
     
-    // שלח לשרת
     this.companyService.updateTaskStatus(this.companyId, task.id, newStatus).subscribe({
       next: (response) => {
         this.updatingTaskId = null;
         this.cdr.detectChanges();
         
-        // הצג הודעת הצלחה (אופציונלי)
-        // alert('הסטטוס עודכן בהצלחה');
+      
       },
       error: (err) => {
         console.error('❌ שגיאה בעדכון סטטוס:', err);
         
-        // החזר את הסטטוס הישן
         task.status = oldStatus;
         this.updatingTaskId = null;
         this.cdr.detectChanges();
@@ -227,27 +120,26 @@ showChecklistModal = false;      // לשליטה בתצוגת המודאל/פא�
 
   getStatusColor(status: string): string {
     switch(status) {
-      case 'Done': return '#4CAF50';          // ← שינוי
+      case 'Done': return '#4CAF50';        
       case 'InProgress': return '#2196F3';
       case 'Pending': return '#FF9800';
-      case 'Paid': return '#9C27B0';          // ← חדש
-      case 'NotRequired': return '#9E9E9E';   // ← חדש
+      case 'Paid': return '#9C27B0';          
+      case 'NotRequired': return '#9E9E9E';  
       default: return '#757575';
     }
   }
   
   getStatusText(status: string): string {
     switch(status) {
-      case 'Done': return 'הושלמה';          // ← שינוי
+      case 'Done': return 'הושלמה';         
       case 'InProgress': return 'בתהליך';
       case 'Pending': return 'ממתינה';
-      case 'Paid': return 'שולם';            // ← חדש
-      case 'NotRequired': return 'לא נדרש';  // ← חדש
+      case 'Paid': return 'שולם';            
+      case 'NotRequired': return 'לא נדרש';  
       default: return status;
     }
   }
 
-  // פונקציה חדשה - בדוק אם המשימה הזו מתעדכנת
   isUpdating(taskId: number): boolean {
     return this.updatingTaskId === taskId;
   }
@@ -255,7 +147,6 @@ showChecklistModal = false;      // לשליטה בתצוגת המודאל/פא�
     this.router.navigate(['/companies']);
   }
   
-// הוסיפי את הפונקציות הבאות:
 
 openTaskDetails(taskId: number): void {
   this.loading = true;
@@ -274,12 +165,11 @@ openTaskDetails(taskId: number): void {
 }
 
 toggleChecklistItem(item: any): void {
-  const workerId = 1; // כאן כדאי להביא את ה-ID מה-AuthService שלך
+  const workerId = 1; 
   
   this.taskService.toggleChecklistItem(item.id, item.isCompleted, workerId).subscribe({
     next: () => {
       item.isCompleted = !item.isCompleted;
-      // עדכון התקדמות מקומי (אופציונלי)
       this.updateProgressLocally();
       this.cdr.detectChanges();
     }
@@ -296,6 +186,6 @@ private updateProgressLocally(): void {
 closeModal(): void {
   this.showChecklistModal = false;
   this.selectedTaskDetails = null;
-  this.loadTasks(); // רענון הרשימה הראשית כדי לעדכן אחוזים/סטטוס אם השתנו
+  this.loadTasks(); 
 }
 }

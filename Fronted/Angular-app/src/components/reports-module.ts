@@ -7,11 +7,9 @@ import { ReportsRoutingModule } from './reports-routing-module';
 import { ReportsDashboardComponent } from './reports-dashboard/reports-dashboard';
 import { ReportsListComponent } from './reports-list/reports-list';
 import { ReportFormComponent } from './report-form/report-form';
-// import { ReportCardComponent } from './report-card/report-card';
 
 @NgModule({
   declarations: [
-    // אין קומפוננטות standalone ב-declarations
   ],
   imports: [
     CommonModule,
@@ -20,7 +18,7 @@ import { ReportFormComponent } from './report-form/report-form';
     ReportsDashboardComponent,
     ReportsListComponent,
     ReportFormComponent,
-    // ReportCardComponent
+    
   ]
 })
 export class ReportsModule { }

@@ -13,7 +13,6 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
-    // אם יש טוקן, מוסיפים אותו לכותרות
     let authReq = req;
     if (token) {
       authReq = req.clone({
@@ -25,7 +24,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        // אם חזרה 401 Unauthorized, שולחים את המשתמש לעמוד login
         if (error.status === 401) {
           this.authService.logout();
           this.router.navigate(['/login']);

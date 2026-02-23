@@ -1,4 +1,4 @@
-// components/login/login.component.ts
+
 import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -110,8 +110,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     this.authService.googleLogin(request).subscribe({
       next: (result) => {
-        // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
-        // ✅ שמירת פרטי העובד ב-WorkerService
+       
         try{
         this.workerService.currentWorker = result.worker;
         alert(this.workerService.currentWorker );
@@ -120,7 +119,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   
         }
         catch(error){
-          console.log("error")
+          this.errorMessage = 'שגיאה בשמירת פרטי המשתמש. אנא נסה להתחבר שוב';
         }
 finally{
         this.isLoading = false;
@@ -166,10 +165,9 @@ finally{
 
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
-        // ✅ הטוקן כבר נשמר אוטומטית ב-AuthService דרך tap()
-        // ✅ שמירת פרטי העובד ב-WorkerService
+      
         this.workerService.currentWorker = response.worker;
-        console.log('Worker details:', this.workerService.currentWorker);
+ 
         this.isLoading = false;
         this.router.navigate(['/home']);
       },

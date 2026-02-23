@@ -58,3 +58,12 @@ public class GetWorkerTasksQuery : IRequest<IEnumerable<CompanyTask>>
     //    WorkerId = workerId;
     //}
 }
+public class GetWorkersByCompanyQuery : IRequest<IEnumerable<WorkerLookupDto>>
+{
+    public int CompanyId { get; set; }
+
+    public GetWorkersByCompanyQuery(int companyId)
+    {
+        CompanyId = companyId;
+    }
+}

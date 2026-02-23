@@ -9,7 +9,6 @@ export interface CompanyReportConfigDto {
   updatedAt: Date;
   year: number;
 
-  // Navigation properties
   companyName?: string;
   reportTypeName?: string;
   reportTypeShortCode?: string;

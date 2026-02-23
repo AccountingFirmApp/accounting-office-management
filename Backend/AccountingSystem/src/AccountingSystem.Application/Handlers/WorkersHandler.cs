@@ -282,18 +282,19 @@
 
 
 // Application/Handlers/Workers/WorkersHandler.cs
+using AccountingSystem.Application.Commands.Workers;
 using AccountingSystem.Application.DTOs;
 //using AccountingSystem.Application;
 using AccountingSystem.Application.Queries.Workers;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces;
+using AccountingSystem.Domain.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
-using AccountingSystem.Application.Commands.Workers;
 using Microsoft.AspNetCore.Authentication;
 using CreateWorkerCommand = AccountingSystem.Application.Commands.Workers.CreateWorkerCommand;
-using UpdateWorkerCommand = AccountingSystem.Application.Commands.Workers.UpdateWorkerCommand;
 using DeleteWorkerCommand = AccountingSystem.Application.Commands.Workers.DeleteWorkerCommand;
+using UpdateWorkerCommand = AccountingSystem.Application.Commands.Workers.UpdateWorkerCommand;
 
 namespace AccountingSystem.Application.Handlers.Workers;
 
@@ -586,6 +587,26 @@ public class GoogleLoginCommandHandler : IRequestHandler<GoogleLoginCommand, Log
     public async Task<LoginResponseDto> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
     {
         return await _authService.GoogleLoginAsync(request.GoogleToken, cancellationToken);
+    }
+    public class GetWorkersByCompanyHandler : IRequestHandler<GetWorkersByCompanyQuery, IEnumerable<WorkerLookupDto>>
+    {
+        private readonly IWorkerRepository _workerRepository;
+
+        public GetWorkersByCompanyHandler(IWorkerRepository workerRepository)
+        {
+            _workerRepository = workerRepository;
+        }
+
+        public async Task<IEnumerable<WorkerLookupDto>> Handle(GetWorkersByCompanyQuery request, CancellationToken cancellationToken)
+        {
+            var workers = await _workerRepository.GetWorkersByCompanyIdAsync(request.CompanyId);
+
+            return workers.Select(w => new WorkerLookupDto
+            {
+                Id = w.Id,
+                FullName = $"{w.Firstname} {w.Lastname}"
+            });
+        }
     }
 }
 
