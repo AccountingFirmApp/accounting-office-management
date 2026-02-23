@@ -104,11 +104,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
-// ========================================
-// AutoMapper
-// ========================================
-var mapperConfig = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile()));
-builder.Services.AddSingleton(mapperConfig.CreateMapper());
+
 
 // ========================================
 // MediatR + Validation

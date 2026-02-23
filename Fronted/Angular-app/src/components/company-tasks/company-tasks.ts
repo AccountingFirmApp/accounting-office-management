@@ -166,24 +166,66 @@ openTaskDetails(taskId: number): void {
 }
 
 toggleChecklistItem(item: any): void {
-  const workerId = 1; 
-  
+  const workerId = 1;
+  const originalStatus = item.isCompleted;
+
   this.taskService.toggleChecklistItem(item.id, item.isCompleted, workerId).subscribe({
     next: () => {
-      item.isCompleted = !item.isCompleted;
-      this.updateProgressLocally();
+      item.isCompleted = !originalStatus; // הפיכת המצב
+      this.checkAndUpdatingTaskStatus();
+      this.checkAndUpdatingTaskStatus(); // <--- הקריאה לבדיקה האוטומטית
       this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('שגיאה בעדכון:', err);
     }
   });
 }
 
-private updateProgressLocally(): void {
-  if (this.selectedTaskDetails) {
-    const completed = this.selectedTaskDetails.checklistItems.filter((i: any) => i.isCompleted).length;
-    this.selectedTaskDetails.checklistProgress.completed = completed;
+// private updateProgressLocally(): void {
+//   if (this.selectedTaskDetails) {
+//     const completed = this.selectedTaskDetails.checklistItems.filter((i: any) => i.isCompleted).length;
+//     this.selectedTaskDetails.checklistProgress.completed = completed;
+//   }
+// }
+
+private checkAndUpdatingTaskStatus(): void {
+  if (!this.selectedTaskDetails) return;
+
+  const totalItems = this.selectedTaskDetails.checklistItems.length;
+  const completedItems = this.selectedTaskDetails.checklistItems.filter((i: any) => i.isCompleted).length;
+  
+  // מוצאים את המשימה ברשימה כדי לעדכן אותה
+  const currentTaskInList = this.tasks.find(t => t.id === this.selectedTaskDetails.id);
+  if (!currentTaskInList) return;
+
+  let targetStatus = '';
+
+  // מצב 1: הכל מסומן ב-V
+  if (completedItems === totalItems && totalItems > 0) {
+    if (currentTaskInList.status !== 'Done') {
+      targetStatus = 'Done';
+    }
+  } 
+  // מצב 2: יש לפחות וי אחד, אבל לא הכל
+  else if (completedItems > 0) {
+    if (currentTaskInList.status !== 'InProgress') {
+      targetStatus = 'InProgress';
+    }
+  } 
+  // מצב 3: אין אף וי מסומן (הכל ריק)
+  else if (completedItems === 0 && totalItems > 0) {
+    if (currentTaskInList.status !== 'Pending') {
+      targetStatus = 'Pending';
+    }
+  }
+
+  // רק אם הסטטוס באמת השתנה, נשלח עדכון לשרת
+  if (targetStatus) {
+    console.log(`עדכון אוטומטי לסטטוס: ${targetStatus}`);
+    this.onStatusChange(currentTaskInList, targetStatus);
   }
 }
-
 closeModal(): void {
   this.showChecklistModal = false;
   this.selectedTaskDetails = null;
