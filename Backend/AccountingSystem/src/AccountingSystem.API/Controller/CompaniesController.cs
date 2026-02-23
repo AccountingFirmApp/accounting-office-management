@@ -18,6 +18,7 @@ namespace AccountingSystem.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CompaniesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -48,7 +49,24 @@ namespace AccountingSystem.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
+        /// <summary>
+        /// קבלת חברה לפי ID
+        /// GET: api/companies/5
+        /// </summary>
+        [HttpGet("worker/{id}")]
+        public async System.Threading.Tasks.Task<ActionResult<CompanyDto>> GetByWorkerId(int id)
+        {
+            try
+            {
+                var query = new GetCompanyByWorkerIdQuery(id);
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
         /// <summary>
         /// קבלת חברה לפי ID
         /// GET: api/companies/5

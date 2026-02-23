@@ -1,200 +1,71 @@
-/* .container {
-    padding: 20px;
-    direction: rtl;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .header h2 {
-    margin: 0;
-    color: #333;
-  }
-  
-  .btn-primary {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-  }
-  
-  .btn-primary:hover {
-    background-color: #45a049;
-  }
-  
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    font-size: 18px;
-  }
-  
-  .error {
-    color: #d32f2f;
-    padding: 15px;
-    background-color: #ffebee;
-    border-radius: 4px;
-    margin: 10px 0;
-    border-right: 4px solid #d32f2f;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .table th,
-  .table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: right;
-  }
-  
-  .table th {
-    background-color: #1976d2;
-    color: white;
-    font-weight: bold;
-  }
-  
-  .table tr:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .actions {
-    white-space: nowrap;
-  }
-  
-  .actions button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 5px;
-    font-size: 13px;
-  }
-  
-  .btn-edit {
-    background-color: #2196F3;
-    color: white;
-  }
-  
-  .btn-edit:hover {
-    background-color: #1976D2;
-  }
-  
-  .btn-view {
-    background-color: #FF9800;
-    color: white;
-  }
-  
-  .btn-view:hover {
-    background-color: #F57C00;
-  }
-  
-  .btn-delete {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .btn-delete:hover {
-    background-color: #d32f2f;
-  }
-  
-  .no-data {
-    text-align: center;
-    padding: 40px;
-    color: #999;
-    font-size: 16px;
-  } */
+/* Company List - Corporate Fintech Design */
 
-
-  /* Main Container */
 .container {
   min-height: 100vh;
   direction: rtl;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 32px;
-  position: relative;
-  z-index: 1;
+  font-family: var(--font-text);
+  padding: var(--space-8);
+  background: var(--bg-primary);
 }
 
 /* Page Header */
 .page-header {
-  text-align: center;
-  margin-bottom: 40px;
-  padding-bottom: 30px;
-  border-bottom: 2px solid #e2e8f0;
+  text-align: right;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-default);
   max-width: 1400px;
-  margin: 0 auto 40px auto;
+  margin: 0 auto var(--space-6) auto;
 }
 
 .page-title {
-  font-size: 36px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 12px 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-1) 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  letter-spacing: -0.5px;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  letter-spacing: -0.02em;
 }
 
 .icon-header {
-  font-size: 40px;
-  animation: bounce 2s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
+  display: none;
 }
 
 .page-subtitle {
-  font-size: 16px;
-  color: #64748b;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
   margin: 0;
-  font-weight: 400;
+  font-weight: var(--font-regular);
 }
 
 /* Alerts */
 .alert {
   max-width: 1400px;
-  margin: 0 auto 24px;
-  padding: 16px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  background: white;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin: 0 auto var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-medium);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-xs);
 }
 
 .alert-warning {
-  border-right: 4px solid #f59e0b;
-  color: #92400e;
-  background: #fffbeb;
+  border-right: 3px solid var(--status-warning);
+  color: var(--status-warning);
+  background: var(--status-warning-bg);
+  border-color: var(--status-warning);
 }
 
 .alert-error {
-  border-right: 4px solid #ef4444;
-  color: #991b1b;
-  background: #fef2f2;
+  border-right: 3px solid var(--status-error);
+  color: var(--status-error);
+  background: var(--status-error-bg);
+  border-color: var(--status-error);
 }
 
 /* Companies List Grid */
@@ -203,172 +74,161 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 20px;
+  gap: var(--space-6);
   max-width: 1400px;
-  margin: 0 auto 30px auto;
+  margin: 0 auto var(--space-8) auto;
 }
 
-/* Company Card - Elegant Style */
+/* Company Card */
 .company-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  padding: 28px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.company-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(180deg, #2563EB, #3b82f6);
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
-}
-
-.company-card:hover::before {
-  transform: scaleY(1);
+  background: var(--bg-surface);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .company-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
-  transform: translateY(-3px);
-  background: white;
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .company-card h5 {
-  margin: 0 0 20px 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #1a1a1a;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f1f5f9;
-  letter-spacing: -0.3px;
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-light);
+  letter-spacing: -0.01em;
 }
 
 .company-card p {
-  margin: 10px 0;
-  font-size: 14px;
-  color: #64748b;
+  margin: var(--space-2) 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .company-card p strong {
-  color: #1a1a1a;
-  font-weight: 600;
-  margin-left: 8px;
+  color: var(--text-primary);
+  font-weight: var(--font-semibold);
+  margin-left: var(--space-1);
   display: inline-block;
-  min-width: 70px;
+  min-width: 60px;
 }
 
-/* Status Badges - Soft & Elegant */
+/* Status Badges */
 .active {
-  color: #065f46;
-  font-weight: 600;
-  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-  padding: 6px 14px;
-  border-radius: 20px;
+  color: var(--status-success);
+  font-weight: var(--font-semibold);
+  background: var(--status-success-bg);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
   display: inline-block;
-  font-size: 13px;
-  border: 1px solid #86efac;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+  font-size: 11px;
+  border: 1px solid transparent;
 }
 
 .inactive {
-  color: #991b1b;
-  font-weight: 600;
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  padding: 6px 14px;
-  border-radius: 20px;
+  color: var(--status-error);
+  font-weight: var(--font-semibold);
+  background: var(--status-error-bg);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
   display: inline-block;
-  font-size: 13px;
-  border: 1px solid #fca5a5;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
+  font-size: 11px;
+  border: 1px solid transparent;
 }
 
 /* Notes Section */
 .notes {
-  font-size: 13px;
-  color: #64748b;
-  background: #f8fafc;
-  padding: 12px;
-  border-radius: 6px;
-  margin-top: 12px;
-  border-right: 3px solid #cbd5e1;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  margin-top: var(--space-2);
+  border-right: 2px solid var(--border-strong);
 }
 
 /* Action Buttons Container */
 .action-buttons {
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e2e8f0;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-light);
   flex-wrap: wrap;
 }
 
 /* Action Buttons */
 .btn-action {
   flex: 1;
-  min-width: 140px;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  min-width: 100px;
+  padding: 6px var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-family: var(--font-text);
+  font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  gap: var(--space-1);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.btn-action:hover {
+  background: var(--bg-hover);
 }
 
 .btn-action .icon {
-  font-size: 18px;
+  display: none;
 }
 
 /* Tasks Button */
 .btn-tasks {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563EB 100%);
-  color: white;
+  background: rgb(59, 130, 246);
+  color: var(--text-inverse);
+  border-color: rgb(59, 130, 246);
 }
 
 .btn-tasks:hover {
-  background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  background: rgb(37, 99, 235);
+  border-color: rgb(37, 99, 235);
+  box-shadow: var(--shadow-md);
 }
 
 /* Reports Button */
 .btn-reports {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
+  background: rgb(96, 165, 250);
+  color: var(--text-inverse);
+  border-color: rgb(96, 165, 250);
 }
 
 .btn-reports:hover {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  background: rgb(59, 130, 246);
+  border-color: rgb(59, 130, 246);
+  box-shadow: var(--shadow-md);
 }
 
 /* Edit Button */
 .btn-edit {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: white;
+  background: rgb(40, 40, 206);
+  color: var(--text-inverse);
+  border-color: rgb(40, 40, 206);
 }
 
 .btn-edit:hover {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  background: rgb(30, 30, 180);
+  border-color: rgb(30, 30, 180);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-action:active {
@@ -380,25 +240,26 @@
   max-width: 1400px;
   margin: 0 auto;
   text-align: center;
-  padding: 20px 0;
+  padding: var(--space-5) 0;
 }
 
 /* Add Company Button */
 .btn-add-company {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
-  border: none;
-  padding: 14px 32px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
+  background: var(--status-success);
+  color: var(--text-inverse);
+  border: 1px solid var(--status-success);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-family: var(--font-text);
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  gap: var(--space-2);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-add-company .icon {
@@ -407,9 +268,9 @@
 }
 
 .btn-add-company:hover {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-add-company:active {
@@ -419,48 +280,87 @@
 /* Empty State */
 .no-companies {
   text-align: center;
-  padding: 80px 20px;
-  color: #64748b;
-  font-size: 16px;
-  background: white;
-  border: 1px dashed #cbd5e1;
-  border-radius: 8px;
+  padding: var(--space-16) var(--space-6);
+  color: var(--text-secondary);
+  font-size: var(--font-size-md);
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
   max-width: 600px;
-  margin: 40px auto;
+  margin: var(--space-10) auto;
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-16) var(--space-8);
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  max-width: 600px;
+  margin: var(--space-10) auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.empty-icon {
+  color: var(--text-tertiary);
+  opacity: 0.5;
+  margin-bottom: var(--space-2);
+}
+
+.empty-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.empty-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.empty-action {
+  margin-top: var(--space-4);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .container {
-    padding: 16px;
+    padding: var(--space-4);
   }
 
   .page-header {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-5);
   }
 
   .page-title {
-    font-size: 28px;
+    font-size: var(--font-size-3xl);
   }
 
   .icon-header {
-    font-size: 32px;
+    font-size: var(--font-size-3xl);
   }
 
   .page-subtitle {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .company-list {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: var(--space-4);
   }
 
   .action-buttons {
     flex-direction: column;
   }
-  
+
   .btn-action {
     width: 100%;
     min-width: unset;
@@ -469,16 +369,16 @@
 
 @media (max-width: 480px) {
   .page-title {
-    font-size: 24px;
+    font-size: var(--font-size-2xl);
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .company-card {
-    padding: 20px;
+    padding: var(--space-5);
   }
 
   .company-card h5 {
-    font-size: 18px;
+    font-size: var(--font-size-md);
   }
 }

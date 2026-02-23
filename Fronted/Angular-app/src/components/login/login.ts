@@ -113,7 +113,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
        
         try{
         this.workerService.currentWorker = result.worker;
-        alert(this.workerService.currentWorker );
         
   this.router.navigate(['/home']);
   
@@ -128,7 +127,7 @@ finally{
       
       },
       error: (error) => {
-        console.error('🔴 שגיאה בהתחברות Google:', error);
+        // console.error('🔴 שגיאה בהתחברות Google:', error);
         this.isLoading = false;
 
         if (error.status === 0) {

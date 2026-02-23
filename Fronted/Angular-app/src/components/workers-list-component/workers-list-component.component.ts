@@ -41,7 +41,7 @@ export class WorkersListComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('❌ שגיאה בטעינת עובדים', err);
+        // console.error('❌ שגיאה בטעינת עובדים', err);
         this.errorMessage = 'אירעה שגיאה בטעינת העובדים';
         this.isLoading = false;
       }
@@ -61,7 +61,6 @@ export class WorkersListComponent implements OnInit {
   
   viewWorker(worker: WorkerInfoDto): void {
     this.selectedWorker= worker;
-
    
   }
 

@@ -1,50 +1,49 @@
-/* Management Page - Dokka Style */
+/* Management Page - Corporate Fintech Design */
 
 .management-container {
   min-height: 100vh;
-  background: var(--color-gray-50);
+  background: var(--bg-primary);
   direction: rtl;
-  padding: var(--spacing-lg);
+  padding: var(--space-8);
 }
 
 /* Header */
 .header {
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: var(--space-6);
+  max-width: 1200px;
 }
 
 .header-content {
-  background: var(--color-white);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-xl);
-  margin-top: var(--spacing-md);
-  box-shadow: var(--shadow-natural);
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-xs);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--border-default);
 }
 
 .title-section {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--space-3);
 }
 
 .title-icon {
-  color: var(--color-primary);
-  flex-shrink: 0;
+  display: none;
 }
 
 .title-section h1 {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  color: var(--color-gray-900);
-  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-1) 0;
 }
 
 .subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-500);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -52,73 +51,74 @@
 .admin-badge {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  color: var(--color-white);
-  padding: var(--spacing-sm) var(--spacing-lg);
+  gap: var(--space-2);
+  background: var(--accent);
+  color: var(--text-inverse);
+  padding: 4px var(--space-3);
   border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  box-shadow: var(--shadow-sharp);
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  border: 1px solid var(--accent);
 }
 
 .admin-icon {
-  font-size: var(--font-size-lg);
+  display: none;
 }
 
 /* Management Grid */
 .management-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-5);
   max-width: 1200px;
 }
 
 /* Management Card */
 .management-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-xl);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
   cursor: pointer;
   transition: all var(--transition-base);
-  box-shadow: var(--shadow-natural);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--space-3);
 }
 
 .management-card:not(.disabled):hover {
-  box-shadow: var(--shadow-deep);
-  transform: translateY(-4px);
-  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
 }
 
 .management-card.disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background: var(--color-gray-50);
+  background: var(--bg-hover);
 }
 
 /* Card Icon */
 .card-icon {
-  width: 64px;
-  height: 64px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--space-2);
   transition: transform var(--transition-base);
+  font-size: var(--font-size-lg);
 }
 
 .management-card:not(.disabled):hover .card-icon {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .card-icon.companies {
-  background: rgba(37, 99, 235, 0.1);
-  color: #2563eb;
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
 }
 
 .card-icon.workers {
@@ -143,15 +143,15 @@
 
 /* Card Content */
 .management-card h3 {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-  color: var(--color-gray-900);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .management-card p {
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-600);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
   flex-grow: 1;
@@ -162,43 +162,49 @@
   align-self: flex-start;
   background: transparent;
   border: none;
-  color: var(--color-primary);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  padding: var(--spacing-sm) 0;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  padding: var(--space-1) 0;
   cursor: pointer;
   transition: all var(--transition-fast);
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--space-1);
 }
 
 .management-card:not(.disabled):hover .card-button {
-  gap: var(--spacing-sm);
+  gap: var(--space-2);
 }
 
 .card-button:disabled {
-  color: var(--color-gray-400);
+  color: var(--text-tertiary);
   cursor: not-allowed;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .management-container {
-    padding: var(--spacing-md);
+    padding: var(--space-4);
   }
 
   .header-content {
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--space-3);
     align-items: flex-start;
+    padding: var(--space-3) var(--space-4);
   }
 
   .management-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
 
   .title-section h1 {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-md);
+  }
+
+  .management-card {
+    padding: var(--space-4);
   }
 }

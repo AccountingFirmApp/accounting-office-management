@@ -24,6 +24,18 @@ public class GetCompanyByIdQuery : IRequest<CompanyDto>
 }
 
 // ========================================
+// GET COMPANY BY Worker ID
+// ========================================
+public class GetCompanyByWorkerIdQuery : IRequest<List<CompanyDto>>
+{
+    public int Id { get; set; }
+
+    public GetCompanyByWorkerIdQuery(int id)
+    {
+        Id = id;
+    }
+}
+// ========================================
 // GET COMPANIES BY FIRM ID
 // ========================================
 public class GetCompaniesByFirmIdQuery : IRequest<List<CompanyDto>>

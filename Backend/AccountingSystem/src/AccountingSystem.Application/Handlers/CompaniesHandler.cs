@@ -62,6 +62,31 @@ public class GetCompanyByIdQueryHandler : IRequestHandler<GetCompanyByIdQuery, C
     }
 }
 
+public class GetCompanyByWorkerIdQueryHandler : IRequestHandler<GetCompanyByWorkerIdQuery, List<CompanyDto>>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public GetCompanyByWorkerIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
+
+    public async Task<List<CompanyDto>> Handle(GetCompanyByWorkerIdQuery request, CancellationToken cancellationToken)
+    {
+        var company = await _unitOfWork.Companies.GetByIdWorkerAsync(request.Id);
+
+        if (company == null)
+        {
+            throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
+        }
+
+        return _mapper.Map<List<CompanyDto>> (company);
+    }
+}
+
+
 // ========================================
 // GET COMPANIES BY FIRM ID HANDLER
 // ========================================

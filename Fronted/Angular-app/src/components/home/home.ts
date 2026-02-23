@@ -44,4 +44,7 @@ export class HomeComponent implements OnInit{
   navigateToManagement() {
     this.router.navigate(['/management']);
   }
+    navigateToSettings(): void {
+    this.router.navigate(['/dashboard/report-config']);
+  }
 }

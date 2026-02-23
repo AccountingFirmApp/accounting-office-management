@@ -180,6 +180,7 @@ export class ReportService {
   getReportTypes(): Observable<any[]> {
     return this.api.get<any[]>('/report-types');
   }
+ 
 
  
   getConfigs(): Observable<any[]> {

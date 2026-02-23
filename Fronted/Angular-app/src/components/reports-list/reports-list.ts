@@ -8,11 +8,13 @@ import { ReportService } from '../../services/report';
 import { ReportInstanceDetail } from '../../models/report-instance';
 import { WorkerService } from '../../services/worker';
 import { ReportViewModalComponent } from '../report-view/report-view';
+import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-reports-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReportViewModalComponent],
+  imports: [CommonModule, FormsModule, ReportViewModalComponent, LoadingComponent, ErrorMessageComponent],
   templateUrl: './reports-list.html',
   styleUrls: ['./reports-list.css']
 })
@@ -103,19 +105,18 @@ export class ReportsListComponent implements OnInit, OnDestroy {
       
         
         this.reports = data;
-        
+
         if (this.filterByCompanyId) {
       
           this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
     
         }
-        
+
         this.filteredReports = this.reports;
         this.populateFilterOptions();
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('❌ שגיאה:', error);
         this.isLoading = false;
         this.errorMessage = 'שגיאה בטעינת הדוחות';
       }

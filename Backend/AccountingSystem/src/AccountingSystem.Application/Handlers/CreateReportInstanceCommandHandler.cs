@@ -9,14 +9,13 @@ using AccountingSystem.Domain.Interfaces.Repositories;
 namespace AccountingSystem.Application.Handlers
 {
 
-        public class CreateReportInstanceCommandHandler
-    : IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
+        public class GenerateReportInstanceCommand: IRequestHandler<CreateReportInstanceCommand, ReportInstanceDto>
         {
             private readonly IReportInstanceRepository _reportInstanceRepository;
             private readonly ICompanyreportconfigRepository _configRepository;
             private readonly IUnitOfWork _unitOfWork;
 
-            public CreateReportInstanceCommandHandler(
+            public GenerateReportInstanceCommand(
                 IReportInstanceRepository reportInstanceRepository,
                 ICompanyreportconfigRepository configRepository,
                 IUnitOfWork unitOfWork)
@@ -62,7 +61,6 @@ namespace AccountingSystem.Application.Handlers
                     configId = newConfig.Id;
                 }
 
-                // ?? שלב 2: צור את ה-ReportInstance עם ה-ConfigId
                 PaymentMethod? paymentMethod = null;
                 if (!string.IsNullOrEmpty(request.PaymentMethod) &&
                     Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var parsedMethod))
@@ -72,7 +70,7 @@ namespace AccountingSystem.Application.Handlers
 
                 var reportInstance = new Reportinstance
                 {
-                    Configid = configId, // ? משתמש ב-Config שנמצא או נוצר
+                    Configid = configId, 
                     Period = DateOnly.FromDateTime(request.Period),
                     Amount = request.Amount,
                     Status = ReportStatus.Pending,

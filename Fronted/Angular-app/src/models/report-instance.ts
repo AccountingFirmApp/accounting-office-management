@@ -5,9 +5,7 @@ export interface ReportInstance {
   configId: number;
   period: Date;
   amount?: number;
-  status: string;  // "Pending", "Reported", "Paid", "Approved", "NotRequired"
-  paymentMethod?: string;  // "Credit", "Transfer", "Check", "Online", "Cash"
-  receiptDate?: Date;
+  status: string; 
   reportedDate?: Date;
   paidDate?: Date;
   comments?: string;
