@@ -7,7 +7,6 @@ import { AuthService } from '../../services/auth.service';
 import { LoginRequestDto, GoogleLoginRequestDto } from '../../models/auth';
 import { environment } from '../../environments/environment';
 import { WorkerService } from '../../services/worker';
-import { log } from 'node:console';
 
 declare const google: any;
 
