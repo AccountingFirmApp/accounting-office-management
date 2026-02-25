@@ -18,6 +18,8 @@ export class CompanyCreateComponent implements OnInit {
   isEditMode = false;
   companyId: number | null = null;
   loading = false;
+ showRestoreDialog = false; // ✅ חדש
+  pendingTaxId = ''; // ✅ חדש
 
   constructor(
     private fb: FormBuilder,
@@ -69,11 +71,47 @@ export class CompanyCreateComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  // onSubmit(): void {
+  //   if (this.companyForm.valid) {
+  //     this.loading = true;
+      
+  //     if (this.isEditMode && this.companyId) {
+  //       const updateCommand: any = {
+  //         id: this.companyId,
+  //         name: this.companyForm.value.name,
+  //         phone: this.companyForm.value.phone,
+  //         email: this.companyForm.value.email,
+  //         address: this.companyForm.value.address,
+  //         notes: this.companyForm.value.notes
+  //       };
+        
+  //       this.companyService.updateCompany(this.companyId, updateCommand).subscribe({
+  //         next: () => {
+  //           this.router.navigate(['/companies']);
+  //         },
+  //         error: (err) => {
+  //           this.loading = false;
+  //         }
+  //       });
+  //     } else {
+  //       this.companyService.createCompany(this.companyForm.value).subscribe({
+  //         next: () => {
+  //           this.router.navigate(['/companies']);
+  //         },
+  //         error: (err) => {
+  //           this.loading = false;
+  //         }
+  //       });
+  //     }
+  //   } else {
+  //   }
+  // }
+onSubmit(): void {
     if (this.companyForm.valid) {
       this.loading = true;
-      
+
       if (this.isEditMode && this.companyId) {
+        // עריכה - נשאר אותו דבר
         const updateCommand: any = {
           id: this.companyId,
           name: this.companyForm.value.name,
@@ -82,27 +120,46 @@ export class CompanyCreateComponent implements OnInit {
           address: this.companyForm.value.address,
           notes: this.companyForm.value.notes
         };
-        
         this.companyService.updateCompany(this.companyId, updateCommand).subscribe({
-          next: () => {
-            this.router.navigate(['/companies']);
-          },
-          error: (err) => {
-            this.loading = false;
-          }
+          next: () => this.router.navigate(['/companies']),
+          error: () => { this.loading = false; }
         });
       } else {
-        this.companyService.createCompany(this.companyForm.value).subscribe({
-          next: () => {
-            this.router.navigate(['/companies']);
+        // ✅ הוספה - קודם בודקים אם קיימת ולא פעילה
+        const taxId = this.companyForm.value.taxId;
+        this.companyService.getInactiveCompanyByTaxId(taxId).subscribe({
+          next: (existing) => {
+            if (existing) {
+              // חברה קיימת ולא פעילה - מציגים דיאלוג
+              this.loading = false;
+              this.showRestoreDialog = true;
+              this.pendingTaxId = taxId;
+            } else {
+              // חברה לא קיימת - הוספה רגילה
+              this.submitCreate(false);
+            }
           },
-          error: (err) => {
-            this.loading = false;
-          }
+          error: () => { this.loading = false; }
         });
       }
-    } else {
     }
+  }
+
+  confirmRestore(restore: boolean): void {
+    this.showRestoreDialog = false;
+    this.loading = true;
+    this.submitCreate(restore);
+  }
+
+  private submitCreate(restoreExistingData: boolean): void {
+    const command = {
+      ...this.companyForm.value,
+      restoreExistingData
+    };
+    this.companyService.createCompany(command).subscribe({
+      next: () => this.router.navigate(['/companies']),
+      error: () => { this.loading = false; }
+    });
   }
 
   cancel(): void {

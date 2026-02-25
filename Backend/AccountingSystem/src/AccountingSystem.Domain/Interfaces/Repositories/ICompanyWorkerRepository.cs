@@ -13,6 +13,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         Task<Companyworker> AddAsync(Companyworker entity);
         Task DeleteByWorkerIdAsync(int workerId); 
         Task DeleteByCompanyIdAsync(int companyId);
+        Task<Companyworker> GetByWorkerAndCompany(int workerId, int companyId);
+        Task SoftDeleteByCompanyIdAsync(int companyId);
 
     }
 }

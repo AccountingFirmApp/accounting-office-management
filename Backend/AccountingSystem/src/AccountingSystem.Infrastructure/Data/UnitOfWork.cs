@@ -3,6 +3,7 @@ using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace AccountingSystem.Infrastructure.Data;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly AccountingDbContext _context;
+
+    public readonly ILogger<ReportInstanceRepository> _logger;
 
     private IAccountingFirmRepository? _accountingFirms;
     private ICompanyRepository? _companies;
@@ -63,7 +66,8 @@ public class UnitOfWork : IUnitOfWork
         _companyReportConfigs ??= new CompanyReportConfigRepository(_context);
 
     public IReportInstanceRepository ReportInstances =>
-        _reportInstances ??= new ReportInstanceRepository(_context);
+    //    _reportInstances ??= new ReportInstanceRepository(_context);
+    _reportInstances ??= new ReportInstanceRepository(_context, _logger);
 
     public ITaskTypeRepository TaskTypes =>
         _taskTypes ??= new TaskTypeRepository(_context);

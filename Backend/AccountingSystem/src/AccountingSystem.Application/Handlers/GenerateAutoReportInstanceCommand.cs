@@ -57,8 +57,18 @@ namespace AccountingSystem.Application.Handlers
             _mapper = mapper;
             _logger = logger;
         }
-        public Task<bool> Handle(CheckReportInstanceQuery request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CheckReportInstanceQuery request, CancellationToken cancellationToken)
         {
+            try
+            {
+                return await _unitOfWork.ReportInstances.CheckReportsAsync();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to check generate monthly reports for date: {Date}", DateTime.Now.Date);
+                throw;
+            }
         }
     }
 }

@@ -36,8 +36,9 @@ public class GetAllWorkersQueryHandler : IRequestHandler<GetAllWorkersQuery, Lis
     public async Task<List<WorkerDto>> Handle(GetAllWorkersQuery request, CancellationToken cancellationToken)
     {
         int firmId = _currentUserService.GetFirmId();
+        var workers = await _unitOfWork.Workers.GetAllByFirmIdAsync(firmId, request.IsActive);
 
-        var workers = await _unitOfWork.Workers.GetAllByFirmIdAsync(firmId);
+        //var workers = await _unitOfWork.Workers.GetAllByFirmIdAsync(firmId);
 
         var workerDtos = workers.Select(w => new WorkerDto
         {
@@ -127,15 +128,16 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
 
     }
 
-   
-    public async Task<WorkerDto> Handle(CreateWorkerCommand request, CancellationToken cancellationToken)
+    public async Task<WorkerDto> Handle(CreateWorkerCommand request, CancellationToken ct)
     {
-        // ✅ בדיקה אם Email קיים במערכת
         var existingWorker = await _unitOfWork.Workers.GetByEmailAsync(request.Email, request.Firmid);
+        Worker worker;
 
         if (existingWorker != null)
         {
-            // ✅ אם קיים - החזר אותו לפעיל ועדכן את הפרטים
+            if (existingWorker.Isactive == true)
+                throw new Exception("Worker already exists");
+
             existingWorker.Isactive = true;
             existingWorker.Firstname = request.Firstname;
             existingWorker.Lastname = request.Lastname;
@@ -144,73 +146,367 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
             existingWorker.Employeeid = request.Employeeid;
             existingWorker.Hiredate = request.Hiredate;
             existingWorker.Updatedat = DateTime.UtcNow;
+            worker = existingWorker;
 
-            await _unitOfWork.Workers.UpdateAsync(existingWorker);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            if (request.CompanyIds != null && request.CompanyIds.Any())
+            //if (request.RestoreExistingData)
+            //{
+            //    var existingLinks = await _unitOfWork.CompanyWorkers
+            //        .FindAsync(cw => cw.Workerid == worker.Id);
+            //    foreach (var cw in existingLinks)
+            //    {
+            //        var company = await _unitOfWork.Companies.GetByIdAsync(cw.Companyid);
+            //        if (company != null && company.Isactive == true)
+            //            cw.Isactive = true;
+            //    }
+            //
+            //}
+            if (request.RestoreExistingData)
             {
-                await _unitOfWork.CompanyWorkers.DeleteByWorkerIdAsync(existingWorker.Id);
-
-                foreach (var companyId in request.CompanyIds)
+                // שחזור קשרים קיימים - רק לחברות פעילות
+                var existingLinks = await _unitOfWork.CompanyWorkers
+                    .FindAsync(cw => cw.Workerid == worker.Id);
+                foreach (var cw in existingLinks)
                 {
-                    var companyWorker = new Companyworker
+                    var company = await _unitOfWork.Companies.GetByIdAsync(cw.Companyid);
+                    if (company != null && company.Isactive == true)
+                        cw.Isactive = true;
+                }
+
+                // הוספת חברות חדשות שנבחרו ואין להן קשר קיים
+                if (request.CompanyIds != null && request.CompanyIds.Any())
+                {
+                    foreach (var companyId in request.CompanyIds)
                     {
-                        Companyid = companyId,
-                        Workerid = existingWorker.Id,
-                        Isactive = true,
-                        Assignedat = DateTime.UtcNow
-                    };
-                    await _unitOfWork.CompanyWorkers.AddAsync(companyWorker);
+                        var existingLink = await _unitOfWork.CompanyWorkers
+                            .GetByWorkerAndCompany(worker.Id, companyId);
+                        if (existingLink == null)
+                        {
+                            var link = new Companyworker
+                            {
+                                Workerid = worker.Id,
+                                Companyid = companyId,
+                                Isactive = true,
+                                Assignedat = DateTime.UtcNow
+                            };
+                            await _unitOfWork.CompanyWorkers.AddAsync(link);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (request.CompanyIds != null && request.CompanyIds.Any())
+                {
+                    foreach (var companyId in request.CompanyIds)
+                    {
+                        var existingLink = await _unitOfWork.CompanyWorkers
+                            .GetByWorkerAndCompany(worker.Id, companyId);
+                        if (existingLink != null)
+                        {
+                            existingLink.Isactive = true;
+                            existingLink.Assignedat = DateTime.UtcNow;
+                        }
+                        else
+                        {
+                            var link = new Companyworker
+                            {
+                                Workerid = worker.Id,
+                                Companyid = companyId,
+                                Isactive = true,
+                                Assignedat = DateTime.UtcNow
+                            };
+                            await _unitOfWork.CompanyWorkers.AddAsync(link);
+                        }
+                    }
                 }
             }
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<WorkerDto>(existingWorker);
+            await _unitOfWork.SaveChangesAsync(ct);
+            return _mapper.Map<WorkerDto>(worker);
         }
-
-        // ✅ אם לא קיים - הוספה רגילה
-        var passwordHash = await _authService.HashPasswordAsync(request.Password);
-
-        var worker = new Worker
+        else
         {
-            Firmid = request.Firmid,
-            Roleid = request.Roleid,
-            Firstname = request.Firstname,
-            Lastname = request.Lastname,
-            Email = request.Email,
-            Phone = request.Phone,
-            Employeeid = request.Employeeid,
-            Isactive = request.Isactive,
-            Hiredate = request.Hiredate,
-            PasswordHash = passwordHash,
-            Createdat = DateTime.UtcNow
-        };
-
-        await _unitOfWork.Workers.AddAsync(worker);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        if (request.CompanyIds != null && request.CompanyIds.Any())
-        {
-            foreach (var companyId in request.CompanyIds)
+            // 🆕 עובד חדש
+            var passwordHash = await _authService.HashPasswordAsync(request.Password);
+            worker = new Worker
             {
-                var companyWorker = new Companyworker
-                {
-                    Companyid = companyId,
-                    Workerid = worker.Id,
-                    Isactive = true,
-                    Assignedat = DateTime.UtcNow
-                };
-                await _unitOfWork.CompanyWorkers.AddAsync(companyWorker);
-            }
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-        }
+                Firmid = request.Firmid,
+                Roleid = request.Roleid,
+                Firstname = request.Firstname,
+                Lastname = request.Lastname,
+                Email = request.Email,
+                Phone = request.Phone,
+                Employeeid = request.Employeeid,
+                Hiredate = request.Hiredate,
+                PasswordHash = passwordHash,
+                Isactive = true,
+                Createdat = DateTime.UtcNow
+            };
+            await _unitOfWork.Workers.AddAsync(worker);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-        return _mapper.Map<WorkerDto>(worker);
+            if (request.CompanyIds != null && request.CompanyIds.Any())
+            {
+                foreach (var companyId in request.CompanyIds)
+                {
+                    var link = new Companyworker
+                    {
+                        Workerid = worker.Id,
+                        Companyid = companyId,
+                        Isactive = true,
+                        Assignedat = DateTime.UtcNow
+                    };
+                    await _unitOfWork.CompanyWorkers.AddAsync(link);
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync(ct);
+            return _mapper.Map<WorkerDto>(worker);
+        }
     }
 
-    // ========================================
-    // UPDATE WORKER COMMAND HANDLER
-    // ========================================
+    //// ========================================
+    //// UPDATE WORKER COMMAND HANDLER
+    //// ========================================
+    //public class UpdateWorkerCommandHandler : IRequestHandler<UpdateWorkerCommand, WorkerDto>
+    //{
+    //    private readonly IUnitOfWork _unitOfWork;
+    //    private readonly IMapper _mapper;
+
+    //    public UpdateWorkerCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    //    {
+    //        _unitOfWork = unitOfWork;
+    //        _mapper = mapper;
+    //    }
+
+    //    public async Task<WorkerDto> Handle(UpdateWorkerCommand request, CancellationToken cancellationToken)
+    //    {
+    //        var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
+    //        if (worker == null)
+    //        {
+    //            throw new Exception($"עובד עם ID {request.Id} לא נמצא");
+    //        }
+
+    //        if (!string.IsNullOrEmpty(request.Firstname))
+    //            worker.Firstname = request.Firstname;
+
+    //        if (!string.IsNullOrEmpty(request.Lastname))
+    //            worker.Lastname = request.Lastname;
+
+    //        if (!string.IsNullOrEmpty(request.Email))
+    //            worker.Email = request.Email;
+
+    //        if (!string.IsNullOrEmpty(request.Phone))
+    //            worker.Phone = request.Phone;
+
+    //        if (request.Roleid.HasValue)
+    //            worker.Roleid = request.Roleid.Value;
+
+    //        if (!string.IsNullOrEmpty(request.Employeeid))
+    //            worker.Employeeid = request.Employeeid;
+
+    //        if (request.Hiredate.HasValue)
+    //            worker.Hiredate = request.Hiredate.Value;
+
+    //        worker.Updatedat = DateTime.UtcNow;
+
+    //        if (request.CompanyIds != null)
+    //        {
+    //            await UpdateWorkerCompanies(worker.Id, request.CompanyIds, cancellationToken);
+    //        }
+
+    //        await _unitOfWork.Workers.UpdateAsync(worker);
+    //        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+    //        return _mapper.Map<WorkerDto>(worker);
+    //    }
+    //    private async Task UpdateWorkerCompanies(int workerId, List<int> companyIds, CancellationToken cancellationToken)
+    //    {
+    //        await _unitOfWork.CompanyWorkers.DeleteByWorkerIdAsync(workerId);
+
+    //        foreach (var companyId in companyIds)
+    //        {
+    //            await _unitOfWork.CompanyWorkers.AddAsync(new Companyworker
+    //            {
+    //                Workerid = workerId,
+    //                Companyid = companyId
+    //            });
+    //        }
+    //    }
+    //}
+    //public class UpdateWorkerCommandHandler : IRequestHandler<UpdateWorkerCommand, WorkerDto>
+    //{
+    //    private readonly IUnitOfWork _unitOfWork;
+    //    private readonly IMapper _mapper;
+
+    //    public UpdateWorkerCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    //    {
+    //        _unitOfWork = unitOfWork;
+    //        _mapper = mapper;
+    //    }
+
+    //    public async Task<WorkerDto> Handle(UpdateWorkerCommand request, CancellationToken cancellationToken)
+    //    {
+    //        var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
+    //        if (worker == null)
+    //        {
+    //            throw new Exception($"עובד עם ID {request.Id} לא נמצא");
+    //        }
+
+    //        // ========================
+    //        // עדכון שדות
+    //        // ========================
+    //        if (!string.IsNullOrEmpty(request.Firstname))
+    //            worker.Firstname = request.Firstname;
+
+    //        if (!string.IsNullOrEmpty(request.Lastname))
+    //            worker.Lastname = request.Lastname;
+
+    //        if (!string.IsNullOrEmpty(request.Email))
+    //            worker.Email = request.Email;
+
+    //        if (!string.IsNullOrEmpty(request.Phone))
+    //            worker.Phone = request.Phone;
+
+    //        if (request.Roleid.HasValue)
+    //            worker.Roleid = request.Roleid.Value;
+
+    //        if (!string.IsNullOrEmpty(request.Employeeid))
+    //            worker.Employeeid = request.Employeeid;
+
+    //        if (request.Hiredate.HasValue)
+    //            worker.Hiredate = request.Hiredate.Value;
+
+    //        worker.Updatedat = DateTime.UtcNow;
+
+    //        // ========================
+    //        // עדכון קשרי חברות (Soft Delete / Reactivation)
+    //        // ========================
+    //        if (request.CompanyIds != null && request.CompanyIds.Any())
+    //        {
+    //            foreach (var companyId in request.CompanyIds)
+    //            {
+    //                var existingLink = await _unitOfWork.CompanyWorkers
+    //                    .GetByWorkerAndCompany(worker.Id, companyId);
+
+    //                if (existingLink != null)
+    //                {
+    //                    // הפעלה מחדש
+    //                    existingLink.Isactive = true;
+    //                    existingLink.Assignedat = DateTime.UtcNow;
+    //                }
+    //                else
+    //                {
+    //                    // יצירת קשר חדש
+    //                    var link = new Companyworker
+    //                    {
+    //                        Workerid = worker.Id,
+    //                        Companyid = companyId,
+    //                        Isactive = true,
+    //                        Assignedat = DateTime.UtcNow
+    //                    };
+    //                    await _unitOfWork.CompanyWorkers.AddAsync(link);
+    //                }
+    //            }
+    //        }
+
+    //        // ========================
+    //        // שמירה אחת בסוף
+    //        // ========================
+    //        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+    //        return _mapper.Map<WorkerDto>(worker);
+    //    }
+    //}
+
+    //public class UpdateWorkerCommandHandler : IRequestHandler<UpdateWorkerCommand, WorkerDto>
+    //{
+    //    private readonly IUnitOfWork _unitOfWork;
+    //    private readonly IMapper _mapper;
+
+    //    public UpdateWorkerCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    //    {
+    //        _unitOfWork = unitOfWork;
+    //        _mapper = mapper;
+    //    }
+
+    //    public async Task<WorkerDto> Handle(UpdateWorkerCommand request, CancellationToken cancellationToken)
+    //    {
+    //        // קבלת העובד
+    //        var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
+    //        if (worker == null)
+    //            throw new Exception($"עובד עם ID {request.Id} לא נמצא");
+
+    //        // ========================
+    //        // עדכון שדות העובד
+    //        // ========================
+    //        if (!string.IsNullOrEmpty(request.Firstname))
+    //            worker.Firstname = request.Firstname;
+
+    //        if (!string.IsNullOrEmpty(request.Lastname))
+    //            worker.Lastname = request.Lastname;
+
+    //        if (!string.IsNullOrEmpty(request.Email))
+    //            worker.Email = request.Email;
+
+    //        if (!string.IsNullOrEmpty(request.Phone))
+    //            worker.Phone = request.Phone;
+
+    //        if (request.Roleid.HasValue)
+    //            worker.Roleid = request.Roleid.Value;
+
+    //        if (!string.IsNullOrEmpty(request.Employeeid))
+    //            worker.Employeeid = request.Employeeid;
+
+    //        if (request.Hiredate.HasValue)
+    //            worker.Hiredate = request.Hiredate.Value;
+
+    //        worker.Updatedat = DateTime.UtcNow;
+
+    //        // ========================
+    //        // עדכון קשרי חברות (Soft Reactivation)
+    //        // ========================
+    //        if (request.CompanyIds != null && request.CompanyIds.Any())
+    //        {
+    //            // מביא את כל הקשרים הקיימים של העובד
+    //            var existingLinks = await _unitOfWork.CompanyWorkers
+    //                .FindAsync(cw => cw.Workerid == worker.Id);
+
+    //            foreach (var companyId in request.CompanyIds)
+    //            {
+    //                var link = existingLinks.FirstOrDefault(cw => cw.Companyid == companyId);
+
+    //                if (link != null)
+    //                {
+    //                    // אם הקשר קיים אך לא פעיל → הפעלה מחדש
+    //                    link.Isactive = true;
+    //                    link.Assignedat = DateTime.UtcNow;
+    //                }
+    //                else
+    //                {
+    //                    // אם הקשר לא קיים → צור חדש
+    //                    await _unitOfWork.CompanyWorkers.AddAsync(new Companyworker
+    //                    {
+    //                        Workerid = worker.Id,
+    //                        Companyid = companyId,
+    //                        Isactive = true,
+    //                        Assignedat = DateTime.UtcNow
+    //                    });
+    //                }
+    //            }
+    //        }
+
+    //        // ========================
+    //        // שמירה אחת בסוף
+    //        // ========================
+    //        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+    //        return _mapper.Map<WorkerDto>(worker);
+    //    }
+    //}
+
     public class UpdateWorkerCommandHandler : IRequestHandler<UpdateWorkerCommand, WorkerDto>
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -226,10 +522,11 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
         {
             var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
             if (worker == null)
-            {
                 throw new Exception($"עובד עם ID {request.Id} לא נמצא");
-            }
 
+            // ========================
+            // עדכון שדות
+            // ========================
             if (!string.IsNullOrEmpty(request.Firstname))
                 worker.Firstname = request.Firstname;
 
@@ -253,28 +550,45 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
 
             worker.Updatedat = DateTime.UtcNow;
 
-            if (request.CompanyIds != null)
+            // ========================
+            // עדכון קשרי חברות
+            // ========================
+            if (request.CompanyIds != null && request.CompanyIds.Any())
             {
-                await UpdateWorkerCompanies(worker.Id, request.CompanyIds, cancellationToken);
+                // מביא את כל הקשרים של העובד, כולל לא פעילים
+                var existingLinks = await _unitOfWork.CompanyWorkers
+                    .FindAsync(cw => cw.Workerid == worker.Id);
+                Console.WriteLine(existingLinks.Count() + "ccccccccccccccccccccccccccccccccccc");
+                foreach (var companyId in request.CompanyIds)
+                {
+                    var link = existingLinks.FirstOrDefault(cw => cw.Companyid == companyId);
+
+                    if (link != null)
+                    {
+                        // הקשר כבר קיים → הפעלה מחדש אם צריך
+                        link.Isactive = true;
+                        link.Assignedat = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        // הקשר לא קיים → צור חדש
+                        await _unitOfWork.CompanyWorkers.AddAsync(new Companyworker
+                        {
+                            Workerid = worker.Id,
+                            Companyid = companyId,
+                            Isactive = true,
+                            Assignedat = DateTime.UtcNow
+                        });
+                    }
+                }
             }
 
-            await _unitOfWork.Workers.UpdateAsync(worker);
+            // ========================
+            // שמירה אחת בסוף
+            // ========================
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<WorkerDto>(worker);
-        }
-        private async Task UpdateWorkerCompanies(int workerId, List<int> companyIds, CancellationToken cancellationToken)
-        {
-            await _unitOfWork.CompanyWorkers.DeleteByWorkerIdAsync(workerId);
-
-            foreach (var companyId in companyIds)
-            {
-                await _unitOfWork.CompanyWorkers.AddAsync(new Companyworker
-                {
-                    Workerid = workerId,
-                    Companyid = companyId
-                });
-            }
         }
     }
 
@@ -291,27 +605,59 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
             _unitOfWork = unitOfWork;
         }
 
+        //    public async Task<Unit> Handle(DeleteWorkerCommand request, CancellationToken cancellationToken)
+        //    {
+        //        var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
+        //        if (worker == null)
+        //        {
+        //            throw new Exception($"עובד עם ID {request.Id} לא נמצא");
+        //        }
+
+        //        worker.Isactive = false;
+        //        worker.Updatedat = DateTime.UtcNow;
+        //        await _unitOfWork.Workers.UpdateAsync(worker);
+        //        var companyWorkers = await _unitOfWork.CompanyWorkers
+        //.FindAsync(cw => cw.Workerid == worker.Id);
+
+        //        foreach (var cw in companyWorkers)
+        //        {
+        //            cw.Isactive = false;
+        //        }
+
+        //        //await _unitOfWork.CompanyWorkers.DeleteByWorkerIdAsync(request.Id);
+
+        //        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        //        return Unit.Value;
+        //    }
+        //}
         public async Task<Unit> Handle(DeleteWorkerCommand request, CancellationToken cancellationToken)
-        {
-            var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
-            if (worker == null)
-            {
-                throw new Exception($"עובד עם ID {request.Id} לא נמצא");
-            }
+    {
+        var worker = await _unitOfWork.Workers.GetByIdAsync(request.Id);
+        if (worker == null)
+            throw new Exception($"עובד עם ID {request.Id} לא נמצא");
 
-            worker.Isactive = false;
-            worker.Updatedat = DateTime.UtcNow;
-            await _unitOfWork.Workers.UpdateAsync(worker);
+        // Soft Delete לעובד
+        worker.Isactive = false;
+        worker.Updatedat = DateTime.UtcNow;
+        await _unitOfWork.Workers.UpdateAsync(worker);
 
-            await _unitOfWork.CompanyWorkers.DeleteByWorkerIdAsync(request.Id);
+        // כיבוי כל ה-CompanyWorkers שלו
+        var companyWorkers = await _unitOfWork.CompanyWorkers
+            .FindAsync(cw => cw.Workerid == worker.Id);
+        foreach (var cw in companyWorkers)
+            cw.Isactive = false;
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        // ניקוי המשימות - נשארות אבל בלי עובד מוקצה
+        //var tasks = await _unitOfWork.CompanyTasks
+        //    .FindAsync(t => t.Assignedworkerid == worker.Id);
+        //foreach (var t in tasks)
+        //    t.Assignedworkerid = null;
 
-            return Unit.Value;
-        }
-    }
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return Unit.Value;
+    } }
 
-    
     /// <summary>
     /// Handler לקבלת כל החברות של עובדת
     /// </summary>
@@ -324,39 +670,34 @@ public class CreateWorkerCommandHandler : IRequestHandler<CreateWorkerCommand, W
                 _unitOfWork = unitOfWork;
             }
 
-            public async Task<List<CompanyDto>> Handle(
-                GetWorkerCompaniesQuery request,
-                CancellationToken cancellationToken)
+        public async Task<List<CompanyDto>> Handle(
+            GetWorkerCompaniesQuery request,
+            CancellationToken cancellationToken)
+        {
+            var workerExists = await _unitOfWork.Workers.ExistsAsync(request.WorkerId);
+            if (!workerExists)
             {
-                var workerExists = await _unitOfWork.Workers.ExistsAsync(request.WorkerId);
-                if (!workerExists)
-                {
-                    throw new Exception($"עובדת עם ID {request.WorkerId} לא נמצאה");
-                }
-                var companyWorkers = await _unitOfWork.CompanyWorkers.GetByWorkerIdAsync(request.WorkerId);
-                var result = new List<CompanyDto>();
-
-                foreach (var cw in companyWorkers)
-                {
-                    result.Add(new CompanyDto
-                    {
-                        Id = cw.Companyid,
-                        Name = cw.Company.Name,
-                        TaxId = cw.Company.Taxid ?? string.Empty,
-                        Address = cw.Company.Address ?? string.Empty,
-                        Phone = cw.Company.Phone ?? string.Empty,
-                        Notes = cw.Company.Notes ?? string.Empty,
-                        FirmId = cw.Company.Firmid,
-                        Email = cw.Worker.Email,
-                        Isactive = cw.Isactive ?? true,
-                    });
-                }
-
-                return result
-                    .OrderByDescending(x => x.Isactive)
-                    .ThenBy(x => x.Name)
-                    .ToList();
+                throw new Exception($"עובדת עם ID {request.WorkerId} לא נמצאה");
             }
+            var companyWorkers = await _unitOfWork.CompanyWorkers.GetByWorkerIdAsync(request.WorkerId);
+            var result = new List<CompanyDto>();
+            foreach (var cw in companyWorkers.Where(cw => cw.Company.Isactive == true))
+            {
+                result.Add(new CompanyDto
+                {
+                    Id = cw.Companyid,
+                    Name = cw.Company.Name,
+                    TaxId = cw.Company.Taxid ?? string.Empty,
+                    Address = cw.Company.Address ?? string.Empty,
+                    Phone = cw.Company.Phone ?? string.Empty,
+                    Notes = cw.Company.Notes ?? string.Empty,
+                    FirmId = cw.Company.Firmid,
+                    Email = cw.Worker.Email,
+                    Isactive = cw.Isactive ?? true,
+                });
+            }
+            return result.OrderBy(x => x.Name).ToList();
+        }
         }
         //=================Login========
         public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDto>

@@ -147,4 +147,15 @@
     </div>
 
   </form>
+  <div *ngIf="showRestoreDialog" class="dialog-overlay">
+  <div class="dialog">
+    <div class="dialog-icon">⚠️</div>
+    <h3 class="dialog-title">עובד קיים במערכת</h3>
+    <p class="dialog-message">עובד עם אימייל זה כבר קיים במערכת אך אינו פעיל.<br>האם ברצונך לשחזר את הנתונים הקיימים?</p>
+    <div class="dialog-actions">
+      <button class="btn-primary" (click)="confirmRestore(true)">כן, שחזר נתונים</button>
+      <button class="btn-secondary" (click)="confirmRestore(false)">לא, התחל מחדש</button>
+    </div>
+  </div>
+</div>
 </div>

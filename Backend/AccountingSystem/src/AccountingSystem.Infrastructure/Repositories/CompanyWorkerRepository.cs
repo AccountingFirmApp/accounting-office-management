@@ -28,7 +28,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 var result = await _context.Companyworkers
                     .Include(cw => cw.Company)
                     .Include(cw => cw.Worker)
-                    .Where(cw => cw.Workerid == workerId)
+        .Where(cw => cw.Workerid == workerId && cw.Isactive == true)
                     .ToListAsync();
                 return result;
             }
@@ -43,7 +43,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             return await _context.Companyworkers
                 .Include(cw => cw.Worker)
                 .Include(cw => cw.Company)
-                .Where(cw => cw.Companyid == companyId)
+        .Where(cw => cw.Companyid == companyId && cw.Isactive == true)
                 .ToListAsync();
         }
 
@@ -125,6 +125,24 @@ namespace AccountingSystem.Infrastructure.Repositories
             _context.Companyworkers.RemoveRange(companyWorkers);
         }
 
+        public async Task<Companyworker?> GetByWorkerAndCompany(int workerId, int companyId)
+        {
+            return await _context.Companyworkers
+                .Include(cw => cw.Company)   // כולל את החברה
+                .Include(cw => cw.Worker)    // כולל את העובד
+                .FirstOrDefaultAsync(cw => cw.Workerid == workerId
+                                        && cw.Companyid == companyId);
+        }
 
+
+        public async Task SoftDeleteByCompanyIdAsync(int companyId)
+        {
+            var workers = await _context.Companyworkers
+                .Where(w => w.Companyid == companyId)
+                .ToListAsync();
+
+            foreach (var worker in workers)
+                worker.Isactive = false;
+        }
     }
 }

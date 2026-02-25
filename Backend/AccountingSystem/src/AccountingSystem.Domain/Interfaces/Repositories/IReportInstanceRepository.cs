@@ -35,7 +35,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         Task DeleteByConfigIdAsync(int configId);
 
         Task DeleteByConfigIdsAsync(List<int> configIds);
-          public  Task<List<Reportinstance>> GenerateReportsAsync(DateTime date);
+        public  Task<List<Reportinstance>> GenerateReportsAsync(DateTime date);
         public Task<bool> CheckReportsAsync();
 
     }

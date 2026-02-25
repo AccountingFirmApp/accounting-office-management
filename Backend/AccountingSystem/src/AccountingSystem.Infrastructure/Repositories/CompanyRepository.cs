@@ -125,7 +125,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId)
         {
             return await _dbSet
-                .Where(c => c.Firmid == firmId)
+        .Where(c => c.Firmid == firmId && c.Isactive == true)
                 .Include(c => c.Firm)
                 .ToListAsync();
         }

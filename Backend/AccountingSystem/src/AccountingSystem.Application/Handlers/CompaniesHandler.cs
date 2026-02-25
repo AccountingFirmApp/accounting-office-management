@@ -143,13 +143,13 @@ public class CreateCompanyCommandHandler
         _logger = logger;
     }
 
+
     public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken ct)
     {
         if (!await _unitOfWork.AccountingFirms.ExistsAsync(request.Firmid))
             throw new Exception($"Firm {request.Firmid} not found");
 
         var existing = await _unitOfWork.Companies.GetByTaxIdAsync(request.Taxid);
-
         if (existing != null)
         {
             if (existing.Isactive == true)
@@ -162,10 +162,32 @@ public class CreateCompanyCommandHandler
             existing.Email = request.Email;
             existing.Notes = request.Notes;
             existing.Updatedat = DateTime.UtcNow;
-
             await _unitOfWork.Companies.UpdateAsync(existing);
-            await _unitOfWork.SaveChangesAsync(ct);
 
+            if (request.RestoreExistingData)
+            {
+                var workers = await _unitOfWork.CompanyWorkers
+                    .FindAsync(cw => cw.Companyid == existing.Id);
+                foreach (var cw in workers)
+                {
+                    var worker = await _unitOfWork.Workers.GetByIdAsync(cw.Workerid);
+                    if (worker != null && worker.Isactive == true)
+                        cw.Isactive = true;
+                }
+
+                var configs = await _unitOfWork.CompanyReportConfigs
+                    .FindAsync(c => c.Companyid == existing.Id);
+                foreach (var c in configs)
+                    c.Isactive = true;
+
+                var tasks = await _unitOfWork.CompanyTasks
+                    .FindAsync(t => t.Companyid == existing.Id);
+                foreach (var t in tasks)
+                    t.Isactive = true;
+            }
+            // אם false - לא נוגעים בקישורים בכלל!
+
+            await _unitOfWork.SaveChangesAsync(ct);
             return _mapper.Map<CompanyDto>(existing);
         }
 
@@ -185,91 +207,122 @@ public class CreateCompanyCommandHandler
 
         await _unitOfWork.Companies.AddAsync(company);
         await _unitOfWork.SaveChangesAsync(ct);
-
         return _mapper.Map<CompanyDto>(company);
     }
-}
-
-// ========================================
-// UPDATE
-// ========================================
-public class UpdateCompanyCommandHandler
+    // ========================================
+    // UPDATE
+    // ========================================
+    public class UpdateCompanyCommandHandler
     : IRequestHandler<UpdateCompanyCommand, CompanyDto>
-{
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-
-    public UpdateCompanyCommandHandler(IUnitOfWork uow, IMapper mapper)
     {
-        _unitOfWork = uow;
-        _mapper = mapper;
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-    public async Task<CompanyDto> Handle(UpdateCompanyCommand r, CancellationToken ct)
-    {
-        var company = await _unitOfWork.Companies.GetByIdAsync(r.Id)
-            ?? throw new Exception("Company not found");
+        public UpdateCompanyCommandHandler(IUnitOfWork uow, IMapper mapper)
+        {
+            _unitOfWork = uow;
+            _mapper = mapper;
+        }
 
-        company.Name = r.Name;
-        company.Address = r.Address;
-        company.Phone = r.Phone;
-        company.Email = r.Email;
-        company.Notes = r.Notes;
-        company.Updatedat = DateTime.UtcNow;
+        public async Task<CompanyDto> Handle(UpdateCompanyCommand r, CancellationToken ct)
+        {
+            var company = await _unitOfWork.Companies.GetByIdAsync(r.Id)
+                ?? throw new Exception("Company not found");
 
-        await _unitOfWork.Companies.UpdateAsync(company);
-        await _unitOfWork.SaveChangesAsync(ct);
+            company.Name = r.Name;
+            company.Address = r.Address;
+            company.Phone = r.Phone;
+            company.Email = r.Email;
+            company.Notes = r.Notes;
+            company.Updatedat = DateTime.UtcNow;
 
-        return _mapper.Map<CompanyDto>(company);
-    }
-}
+            await _unitOfWork.Companies.UpdateAsync(company);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-// ========================================
-// SOFT DELETE
-// ========================================
-public class DeleteCompanyCommandHandler
-    : IRequestHandler<DeleteCompanyCommand, Unit>
-{
-    private readonly IUnitOfWork _unitOfWork;
+            return _mapper.Map<CompanyDto>(company);
+        }
 
-    public DeleteCompanyCommandHandler(IUnitOfWork uow)
-    {
-        _unitOfWork = uow;
-    }
 
-    public async Task<Unit> Handle(DeleteCompanyCommand r, CancellationToken ct)
-    {
-        var company = await _unitOfWork.Companies.GetByIdAsync(r.Id)
-            ?? throw new Exception("Company not found");
+        //// ========================================
+        //// SOFT DELETE
+        //// ========================================
+        public class DeleteCompanyCommandHandler
+            : IRequestHandler<DeleteCompanyCommand, Unit>
+        {
+            private readonly IUnitOfWork _unitOfWork;
 
-        company.Isactive = false;
-        company.Updatedat = DateTime.UtcNow;
+            public DeleteCompanyCommandHandler(IUnitOfWork uow)
+            {
+                _unitOfWork = uow;
+            }
 
-        await _unitOfWork.Companies.UpdateAsync(company);
-        await _unitOfWork.SaveChangesAsync(ct);
+            public async Task<Unit> Handle(DeleteCompanyCommand r, CancellationToken ct)
+            {
+                var company = await _unitOfWork.Companies.GetByIdAsync(r.Id)
+                    ?? throw new Exception("Company not found");
 
-        return Unit.Value;
-    }
-}
+                company.Isactive = false;
+                company.Updatedat = DateTime.UtcNow;
+                await _unitOfWork.Companies.UpdateAsync(company);
 
-// ========================================
-// HARD DELETE
-// ========================================
-public class DeleteCompanyPermanentlyCommandHandler
-    : IRequestHandler<DeleteCompanyPermanentlyCommand, Unit>
-{
-    private readonly IUnitOfWork _unitOfWork;
+                var companyWorkers = await _unitOfWork.CompanyWorkers
+                    .FindAsync(cw => cw.Companyid == r.Id);
+                foreach (var cw in companyWorkers)
+                    cw.Isactive = false;
 
-    public DeleteCompanyPermanentlyCommandHandler(IUnitOfWork uow)
-    {
-        _unitOfWork = uow;
-    }
+                var configs = await _unitOfWork.CompanyReportConfigs
+                    .FindAsync(c => c.Companyid == r.Id);
+                foreach (var c in configs)
+                    c.Isactive = false;
 
-    public async Task<Unit> Handle(DeleteCompanyPermanentlyCommand r, CancellationToken ct)
-    {
-        await _unitOfWork.Companies.DeleteAsync(r.Id);
-        await _unitOfWork.SaveChangesAsync(ct);
+                // הוספנו את זה - זה היה בהערה לפני
+                var tasks = await _unitOfWork.CompanyTasks
+                    .FindAsync(t => t.Companyid == r.Id);
+                foreach (var t in tasks)
+                    t.Isactive = false;
 
-        return Unit.Value;
+                await _unitOfWork.SaveChangesAsync(ct);
+                return Unit.Value;
+            }
+        }
+        //// ========================================
+        //// HARD DELETE
+        //// ========================================
+        public class DeleteCompanyPermanentlyCommandHandler
+            : IRequestHandler<DeleteCompanyPermanentlyCommand, Unit>
+        {
+            private readonly IUnitOfWork _unitOfWork;
+
+            public DeleteCompanyPermanentlyCommandHandler(IUnitOfWork uow)
+            {
+                _unitOfWork = uow;
+            }
+
+   
+
+
+            public async Task<Unit> Handle(DeleteCompanyPermanentlyCommand r, CancellationToken ct)
+            {
+                var company = await _unitOfWork.Companies.GetByIdAsync(r.Id)
+                    ?? throw new Exception("Company not found");
+
+                // קודם ReportInstances (תלויים ב-Configs)
+                var configIds = await _unitOfWork.CompanyReportConfigs
+                    .GetConfigIdsByCompanyIdAsync(r.Id);
+                if (configIds.Any())
+                    await _unitOfWork.ReportInstances.DeleteByConfigIdsAsync(configIds);
+
+                // מחיקת הטבלאות הקשורות
+                await _unitOfWork.CompanyReportConfigs.DeleteByCompanyIdAsync(r.Id);
+                await _unitOfWork.CompanyWorkers.DeleteByCompanyIdAsync(r.Id);
+                await _unitOfWork.CompanyTasks.DeleteByCompanyIdAsync(r.Id);
+
+                // מחיקת החברה עצמה
+                await _unitOfWork.Companies.DeleteAsync(r.Id);
+
+                await _unitOfWork.SaveChangesAsync(ct);
+                return Unit.Value;
+            }
+        }
     }
 }

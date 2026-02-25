@@ -25,12 +25,13 @@ namespace AccountingSystem.API.Controllers
         /// קבלת כל העובדים
         /// GET: api/workers
         /// </summary>
+
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult<List<WorkerDto>>> GetAll()
+        public async Task<ActionResult<List<WorkerDto>>> GetAll([FromQuery] bool? isActive = true)
         {
             try
             {
-                var query = new GetAllWorkersQuery();
+                var query = new GetAllWorkersQuery { IsActive = isActive };
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
@@ -39,7 +40,6 @@ namespace AccountingSystem.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
         /// <summary>
         /// קבלת עובד לפי ID
         /// GET: api/workers/5

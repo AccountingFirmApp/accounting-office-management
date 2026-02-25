@@ -27,5 +27,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         System.Threading.Tasks.Task<IEnumerable<CompanyTask>> GetPendingTasksAsync();
 
         Task DeleteByCompanyIdAsync(int companyId);
+        Task SoftDeleteByCompanyIdAsync(int companyId);
     }
 }

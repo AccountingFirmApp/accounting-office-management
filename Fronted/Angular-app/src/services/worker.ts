@@ -43,5 +43,11 @@ getWorkerById(id: number): Observable<WorkerInfoDto> {
       Authorization: `Bearer ${token}`
     }
   });
+}
+getInactiveWorkers(): Observable<WorkerInfoDto[]> {
+  const token = this.authService.getToken();
+  return this.http.get<WorkerInfoDto[]>(`${this.apiUrl}?isActive=false`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
 }}
 

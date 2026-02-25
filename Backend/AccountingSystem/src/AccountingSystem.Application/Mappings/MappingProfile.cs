@@ -277,20 +277,48 @@ CreateMap<Reportinstance, ReportInstanceDto>()
             // ========================================
             // AccountingSystem.Domain.Entities.Task Mappings
             // ========================================
-            CreateMap<CompanyTask,CompanyTaskDto>()
-     .ForMember(d => d.CompanyName,
-         opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : string.Empty))
-     .ForMember(d => d.TaskTypeName,
-         opt => opt.MapFrom(s => s.Tasktype != null ? s.Tasktype.Name : string.Empty))
-     .ForMember(d => d.TaskTypeId,
-         opt => opt.MapFrom(s => s.Tasktype != null ? s.Tasktype.Id : 0)) 
-     .ForMember(d => d.AssignedWorkerName,
-         opt => opt.MapFrom(s => s.Assignedworker != null
-             ? $"{s.Assignedworker.Firstname} {s.Assignedworker.Lastname}"
-             : string.Empty));
+            //       CreateMap<CompanyTask,CompanyTaskDto>()
+            //.ForMember(d => d.CompanyName,
+            //    opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : string.Empty))
+            //.ForMember(d => d.TaskTypeName,
+            //    opt => opt.MapFrom(s => s.Tasktype != null ? s.Tasktype.Name : string.Empty))
+            //.ForMember(d => d.TaskTypeId,
+            //    opt => opt.MapFrom(s => s.Tasktype != null ? s.Tasktype.Id : 0)) 
+            //.ForMember(d => d.AssignedWorkerName,
+            //    opt => opt.MapFrom(s => s.Assignedworker != null
+            //        ? $"{s.Assignedworker.Firstname} {s.Assignedworker.Lastname}"
+            //        : string.Empty));
+
+            //       CreateMap<CreateCompanyTaskDto, CompanyTask>()
+            //           .ForMember(d => d.Id, opt => opt.Ignore())
+            //           .ForMember(d => d.Createdat, opt => opt.Ignore())
+            //           .ForMember(d => d.Updatedat, opt => opt.Ignore())
+            //           .ForMember(d => d.Company, opt => opt.Ignore())
+            //           .ForMember(d => d.Tasktype, opt => opt.Ignore())
+            //           .ForMember(d => d.Assignedworker, opt => opt.Ignore());
+
+            //       CreateMap<UpdateCompanyTaskDto, CompanyTask>()
+            //           .ForMember(d => d.Id, opt => opt.Ignore())
+            //           .ForMember(d => d.Createdat, opt => opt.Ignore())
+            //           .ForMember(d => d.Updatedat, opt => opt.Ignore())
+            //           .ForMember(d => d.Company, opt => opt.Ignore())
+            //           .ForMember(d => d.Tasktype, opt => opt.Ignore())
+            //           .ForMember(d => d.Assignedworker, opt => opt.Ignore());
+            CreateMap<CompanyTask, CompanyTaskDto>()
+           .ForMember(d => d.CompanyName,
+               opt => opt.MapFrom(s => s.Company != null ? s.Company.Name : string.Empty))
+           .ForMember(d => d.TaskTypeName,
+               opt => opt.MapFrom(s => s.Tasktype != null ? s.Tasktype.Name : string.Empty))
+           .ForMember(d => d.TaskTypeId,
+               opt => opt.MapFrom(s => s.Tasktype != null ? s.Tasktype.Id : 0))
+           .ForMember(d => d.AssignedWorkerName,
+               opt => opt.MapFrom(s => s.Assignedworker != null
+                   ? $"{s.Assignedworker.Firstname} {s.Assignedworker.Lastname}"
+                   : string.Empty));
 
             CreateMap<CreateCompanyTaskDto, CompanyTask>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.Isactive, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
                 .ForMember(d => d.Company, opt => opt.Ignore())
@@ -299,12 +327,12 @@ CreateMap<Reportinstance, ReportInstanceDto>()
 
             CreateMap<UpdateCompanyTaskDto, CompanyTask>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.Isactive, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
                 .ForMember(d => d.Company, opt => opt.Ignore())
                 .ForMember(d => d.Tasktype, opt => opt.Ignore())
                 .ForMember(d => d.Assignedworker, opt => opt.Ignore());
-
             // ========================================
             // AuditLog Mappings
             // ========================================

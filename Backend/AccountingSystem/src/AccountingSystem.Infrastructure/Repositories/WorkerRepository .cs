@@ -23,19 +23,23 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Workers;
 
         }
-        
-        public async Task<IEnumerable<Worker>> GetAllByFirmIdAsync(int firmId)
+
+      
+        public async Task<IEnumerable<Worker>> GetAllByFirmIdAsync(int firmId, bool? isActive = true)
         {
-            return await _dbSet
-                .Include(w => w.Role)      
-                .Include(w => w.Firm)      
-                .Where(w => w.Firmid == firmId && w.Isactive == true)
+            var query = _dbSet
+                .Include(w => w.Role)
+                .Include(w => w.Firm)
+                .Where(w => w.Firmid == firmId);
+
+            if (isActive.HasValue)
+                query = query.Where(w => w.Isactive == isActive.Value);
+
+            return await query
                 .OrderBy(w => w.Lastname)
                 .ThenBy(w => w.Firstname)
                 .ToListAsync();
         }
-
-    
         public async Task<Worker?> GetByIdAndFirmIdAsync(int id, int firmId)
         {
             return await _dbSet

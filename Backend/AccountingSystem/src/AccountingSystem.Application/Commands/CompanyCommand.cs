@@ -21,6 +21,7 @@ public class CreateCompanyCommand : IRequest<CompanyDto>
     public string? Phone { get; set; }
     public string? Email { get; set; }
     public string? Notes { get; set; }
+    public bool RestoreExistingData { get; set; } = false;
 }
 
 // ========================================

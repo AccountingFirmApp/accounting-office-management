@@ -10,8 +10,9 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
     {
         System.Threading.Tasks.Task AddAsync(Worker worker);
 
-       
-        Task<IEnumerable<Worker>> GetAllByFirmIdAsync(int firmId);
+
+        Task<IEnumerable<Worker>> GetAllByFirmIdAsync(int firmId, bool? isActive = true);
+        //Task<IEnumerable<Worker>> GetAllByFirmIdAsync(int firmId);
 
         Task<Worker?> GetByIdAndFirmIdAsync(int id, int firmId);
 

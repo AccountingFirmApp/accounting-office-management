@@ -88,7 +88,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<CompanyTask>> GetTasksByCompanyIdAsync(int companyId)
         {
             return await _dbSet
-                .Where(t => t.Companyid == companyId)
+        .Where(t => t.Companyid == companyId && t.Isactive == true)
                 .Include(t => t.Company)
                 .Include(t => t.Tasktype)
                 .Include(t => t.Assignedworker)
@@ -179,6 +179,17 @@ namespace AccountingSystem.Infrastructure.Repositories
         public Task<int> CountAsync(Func<object, bool> value)
         {
             throw new NotImplementedException();
+        }
+
+
+        public async Task SoftDeleteByCompanyIdAsync(int companyId)
+        {
+            var tasks = await _context.CompanyTasks
+                .Where(t => t.Companyid == companyId)
+                .ToListAsync();
+
+            foreach (var task in tasks)
+                task.Isactive = false;
         }
     }
 }

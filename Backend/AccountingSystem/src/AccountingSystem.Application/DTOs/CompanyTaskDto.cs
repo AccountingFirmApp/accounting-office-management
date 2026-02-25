@@ -16,7 +16,8 @@ public class CompanyTaskDto
     public string Notes { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    
+    public bool? Isactive { get; set; } = true;
+        
     public string? CompanyName { get; set; }
     public string? TaskTypeName { get; set; }
     public string? AssignedWorkerName { get; set; }
@@ -33,6 +34,8 @@ public class CreateCompanyTaskDto
     public DateTime? DueDate { get; set; }
     public int? AssignedWorkerId { get; set; }
     public string Notes { get; set; } = string.Empty;
+    public bool? Isactive { get; set; } = true;
+
 }
 
 /// <summary>
@@ -46,6 +49,8 @@ public class UpdateCompanyTaskDto
     public DateTime? CompletedDate { get; set; }
     public int? AssignedWorkerId { get; set; }
     public string Notes { get; set; } = string.Empty;
+    public bool? Isactive { get; set; } = true;
+
 }
 
 /// <summary>

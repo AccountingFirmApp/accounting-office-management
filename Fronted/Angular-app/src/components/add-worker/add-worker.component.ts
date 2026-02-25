@@ -141,12 +141,63 @@ togglePasswordVisibility() {
 
 
 
-  onSubmit() {
-  if (this.workerForm.invalid) {
-    Object.keys(this.workerForm.controls).forEach(key => {
-      const control = this.workerForm.get(key);   });
-    return;
-  }
+//   onSubmit() {
+//   if (this.workerForm.invalid) {
+//     Object.keys(this.workerForm.controls).forEach(key => {
+//       const control = this.workerForm.get(key);   });
+//     return;
+//   }
+
+//   const formValue = this.isEditMode
+//     ? this.workerForm.getRawValue()
+//     : this.workerForm.value;
+
+//   const payload: any = {};
+
+//   if (this.isEditMode) {
+//     payload.id = formValue.id;
+//     if (formValue.roleid !== null && formValue.roleid !== undefined) {
+//       payload.roleid = formValue.roleid;
+//     }
+//     if (formValue.employeeid) payload.employeeid = formValue.employeeid;
+//     if (formValue.hiredate) payload.hiredate = formValue.hiredate;
+//   } else {
+//     payload.roleid = formValue.roleid;
+//     payload.firstname = formValue.firstname;
+//     payload.lastname = formValue.lastname;
+//     payload.email = formValue.email;
+
+//     if (formValue.password) {
+//       payload.password = formValue.password;
+//     }
+//     if (formValue.employeeid) payload.employeeid = formValue.employeeid;
+//     if (formValue.phone) payload.phone = formValue.phone;
+//     if (formValue.hiredate) payload.hiredate = formValue.hiredate;
+
+//   }
+
+//   if (this.selectedCompanyIds.length > 0) {
+//     payload.companyIds = this.selectedCompanyIds;
+//   }
+
+//   const request$ = this.isEditMode
+//     ? this.workerService.updateWorker(formValue.id!, payload)
+//     : this.workerService.addWorker(payload);
+
+//   request$.subscribe({
+//     next: () => {
+//       this.saved.emit();
+//       this.router.navigate(['/workers']);
+//     },
+//     error: (err) => {
+//     }
+//   });
+// }
+showRestoreDialog = false;
+pendingPayload: any = null;
+
+onSubmit() {
+  if (this.workerForm.invalid) return;
 
   const formValue = this.isEditMode
     ? this.workerForm.getRawValue()
@@ -156,9 +207,7 @@ togglePasswordVisibility() {
 
   if (this.isEditMode) {
     payload.id = formValue.id;
-    if (formValue.roleid !== null && formValue.roleid !== undefined) {
-      payload.roleid = formValue.roleid;
-    }
+    if (formValue.roleid) payload.roleid = formValue.roleid;
     if (formValue.employeeid) payload.employeeid = formValue.employeeid;
     if (formValue.hiredate) payload.hiredate = formValue.hiredate;
   } else {
@@ -166,31 +215,46 @@ togglePasswordVisibility() {
     payload.firstname = formValue.firstname;
     payload.lastname = formValue.lastname;
     payload.email = formValue.email;
-
-    if (formValue.password) {
-      payload.password = formValue.password;
-    }
+    if (formValue.password) payload.password = formValue.password;
     if (formValue.employeeid) payload.employeeid = formValue.employeeid;
     if (formValue.phone) payload.phone = formValue.phone;
     if (formValue.hiredate) payload.hiredate = formValue.hiredate;
-
   }
 
-  if (this.selectedCompanyIds.length > 0) {
+  if (this.selectedCompanyIds.length > 0)
     payload.companyIds = this.selectedCompanyIds;
+
+  if (!this.isEditMode) {
+    // בדיקה אם עובד קיים ולא פעיל
+    this.workerService.getInactiveWorkers().subscribe({
+      next: (inactiveWorkers) => {
+        const existing = inactiveWorkers.find(w => w.email === formValue.email);
+        if (existing) {
+          this.showRestoreDialog = true;
+          this.pendingPayload = payload;
+        } else {
+          this.submitCreate({ ...payload, restoreExistingData: false });
+        }
+      },
+      error: () => this.submitCreate({ ...payload, restoreExistingData: false })
+    });
+  } else {
+    this.workerService.updateWorker(formValue.id!, payload).subscribe({
+      next: () => this.router.navigate(['/workers']),
+      error: () => {}
+    });
   }
+}
 
-  const request$ = this.isEditMode
-    ? this.workerService.updateWorker(formValue.id!, payload)
-    : this.workerService.addWorker(payload);
+confirmRestore(restore: boolean): void {
+  this.showRestoreDialog = false;
+  this.submitCreate({ ...this.pendingPayload, restoreExistingData: restore });
+}
 
-  request$.subscribe({
-    next: () => {
-      this.saved.emit();
-      this.router.navigate(['/workers']);
-    },
-    error: (err) => {
-    }
+private submitCreate(payload: any): void {
+  this.workerService.addWorker(payload).subscribe({
+    next: () => this.router.navigate(['/workers']),
+    error: () => {}
   });
 }
   goBack(): void {

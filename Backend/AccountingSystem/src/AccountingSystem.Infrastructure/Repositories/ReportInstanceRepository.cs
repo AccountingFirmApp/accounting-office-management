@@ -17,12 +17,13 @@ namespace AccountingSystem.Infrastructure.Repositories
     public class ReportInstanceRepository : IReportInstanceRepository
     {
         private readonly AccountingDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<ReportInstanceRepository> _logger;
 
-        public ReportInstanceRepository(AccountingDbContext context,ILogger logger)
+        public ReportInstanceRepository(AccountingDbContext context,ILogger<ReportInstanceRepository> logger)
         {
             _context = context;
             _logger = logger;
+
         }
 
         // ========== פונקציות בסיסיות מ-IGenericRepository ==========
@@ -103,21 +104,29 @@ namespace AccountingSystem.Infrastructure.Repositories
                 await connection.CloseAsync();
             }
         }
+       
+
         public async Task<IEnumerable<Reportinstance>> GetAllAsync()
-            {
-                return await _context.Reportinstances
-                    .Include(r => r.Config)
-                        .ThenInclude(c => c.Company)
-                            .ThenInclude(co => co.Companyworkers.Where(cw => cw.Isactive == true)) // 🔥 רק עובדות פעילות
+        {
+            return await _context.Reportinstances
+
+                .Include(r => r.Config)
+                    .ThenInclude(c => c.Company)
+                        .ThenInclude(co => co.Companyworkers
+                            .Where(cw => cw.Isactive == true))
                                 .ThenInclude(cw => cw.Worker)
-                    .Include(r => r.Config)
-                        .ThenInclude(c => c.Reporttype)
-                    .Include(r => r.Config)
-                        .ThenInclude(c => c.Frequency)
-                    .AsNoTracking() 
-                    .ToListAsync();
-            }
-        
+
+                .Include(r => r.Config)
+                    .ThenInclude(c => c.Reporttype)
+
+                .Include(r => r.Config)
+                    .ThenInclude(c => c.Frequency)
+
+                .Where(r => r.Config.Isactive == true) 
+
+                .AsNoTracking()
+                .ToListAsync();
+        }
 
 
 

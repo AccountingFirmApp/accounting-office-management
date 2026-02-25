@@ -4,6 +4,7 @@ using AccountingSystem.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using AccountingSystem.Domain.Entities;
 using TaskStatus = AccountingSystem.Domain.Enums.TaskStatus1;
+using AccountingSystem.Domain.Enums;
 
 
 namespace AccountingSystem.Infrastructure.Data;
@@ -36,6 +37,21 @@ public partial class AccountingDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+  
+        // המרה עבור TaskCategory
+        modelBuilder.Entity<Tasktype>()
+            .Property(e => e.Category)
+            .HasConversion<string>();
+
+        // המרה עבור PaymentMethod ב-ReportInstance
+        modelBuilder.Entity<Reportinstance>()
+            .Property(e => e.PaymentMethod)
+            .HasConversion<string>();
+
+        // המרה עבור Status ב-ReportInstance
+        modelBuilder.Entity<Reportinstance>()
+            .Property(e => e.Status)
+            .HasConversion<string>();
         modelBuilder
             .HasPostgresEnum("audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" })
             .HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
@@ -146,6 +162,7 @@ public partial class AccountingDbContext : DbContext
             entity.HasOne(d => d.Firm).WithMany(p => p.Companies)
                 .HasForeignKey(d => d.Firmid)
                 .HasConstraintName("fk_company_firm");
+
         });
 
         modelBuilder.Entity<Companycontact>(entity =>
@@ -284,6 +301,9 @@ public partial class AccountingDbContext : DbContext
                 .HasForeignKey(d => d.Tasktypeid)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_task_tasktype");
+            entity.Property(e => e.Isactive)
+    .HasDefaultValue(true)
+    .HasColumnName("isactive");
         });
 
       
@@ -422,7 +442,17 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnName("name");
         });
 
+    
+        // הגדרת ה-Enum עבור PostgreSQL
+        modelBuilder.HasPostgresEnum<TaskCategory>();
+
         modelBuilder.Entity<Tasktype>(entity =>
+        {
+            entity.Property(e => e.Category)
+                  .HasColumnType("task_category"); // וודאי שזה השם המדויק ב-DB
+        });
+    
+    modelBuilder.Entity<Tasktype>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("tasktype_pkey");
 

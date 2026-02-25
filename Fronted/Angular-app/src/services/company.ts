@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { CompanyDto, CreateCompanyCommand, UpdateCompanyCommand } from '../models/Company';
 import { TaskcompanyDto } from '../models/taskcompany';
 import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -69,5 +70,10 @@ createCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
       }
     });
   }
-  
+  getInactiveCompanyByTaxId(taxId: string): Observable<CompanyDto | null> {
+  const token = this.authService.getToken();
+  return this.getAllCompanies(false).pipe(
+    map(companies => companies.find(c => c.taxId === taxId) || null)
+  );
+}
 }

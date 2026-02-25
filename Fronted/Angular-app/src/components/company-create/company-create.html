@@ -184,4 +184,26 @@
       </button>
     </div>
   </form>
+  <!-- הוספי את זה לפני סגירת ה-div הראשי -->
+<!-- <div *ngIf="showRestoreDialog" class="dialog-overlay">
+  <div class="dialog">
+    <h3>חברה קיימת במערכת</h3>
+    <p>חברה עם ח.פ זה כבר קיימת במערכת אך אינה פעילה. האם ברצונך לשחזר את הנתונים הקיימים?</p>
+    <div class="dialog-actions">
+      <button class="btn-primary" (click)="confirmRestore(true)">כן, שחזר נתונים</button>
+      <button class="btn-secondary" (click)="confirmRestore(false)">לא, התחל מחדש</button>
+    </div>
+  </div>
+</div> -->
+<div *ngIf="showRestoreDialog" class="dialog-overlay">
+  <div class="dialog">
+    <div class="dialog-icon">⚠️</div>
+    <h3 class="dialog-title">חברה קיימת במערכת</h3>
+    <p class="dialog-message">חברה עם ח.פ זה כבר קיימת במערכת אך אינה פעילה.<br>האם ברצונך לשחזר את הנתונים הקיימים?</p>
+    <div class="dialog-actions">
+      <button class="btn-primary" (click)="confirmRestore(true)">כן, שחזר נתונים</button>
+      <button class="btn-secondary" (click)="confirmRestore(false)">לא, התחל מחדש</button>
+    </div>
+  </div>
+</div>
 </div>
