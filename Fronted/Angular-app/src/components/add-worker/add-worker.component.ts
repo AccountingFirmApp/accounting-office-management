@@ -140,59 +140,6 @@ togglePasswordVisibility() {
   }
 
 
-
-//   onSubmit() {
-//   if (this.workerForm.invalid) {
-//     Object.keys(this.workerForm.controls).forEach(key => {
-//       const control = this.workerForm.get(key);   });
-//     return;
-//   }
-
-//   const formValue = this.isEditMode
-//     ? this.workerForm.getRawValue()
-//     : this.workerForm.value;
-
-//   const payload: any = {};
-
-//   if (this.isEditMode) {
-//     payload.id = formValue.id;
-//     if (formValue.roleid !== null && formValue.roleid !== undefined) {
-//       payload.roleid = formValue.roleid;
-//     }
-//     if (formValue.employeeid) payload.employeeid = formValue.employeeid;
-//     if (formValue.hiredate) payload.hiredate = formValue.hiredate;
-//   } else {
-//     payload.roleid = formValue.roleid;
-//     payload.firstname = formValue.firstname;
-//     payload.lastname = formValue.lastname;
-//     payload.email = formValue.email;
-
-//     if (formValue.password) {
-//       payload.password = formValue.password;
-//     }
-//     if (formValue.employeeid) payload.employeeid = formValue.employeeid;
-//     if (formValue.phone) payload.phone = formValue.phone;
-//     if (formValue.hiredate) payload.hiredate = formValue.hiredate;
-
-//   }
-
-//   if (this.selectedCompanyIds.length > 0) {
-//     payload.companyIds = this.selectedCompanyIds;
-//   }
-
-//   const request$ = this.isEditMode
-//     ? this.workerService.updateWorker(formValue.id!, payload)
-//     : this.workerService.addWorker(payload);
-
-//   request$.subscribe({
-//     next: () => {
-//       this.saved.emit();
-//       this.router.navigate(['/workers']);
-//     },
-//     error: (err) => {
-//     }
-//   });
-// }
 showRestoreDialog = false;
 pendingPayload: any = null;
 

@@ -71,41 +71,7 @@ export class CompanyCreateComponent implements OnInit {
     }
   }
 
-  // onSubmit(): void {
-  //   if (this.companyForm.valid) {
-  //     this.loading = true;
-      
-  //     if (this.isEditMode && this.companyId) {
-  //       const updateCommand: any = {
-  //         id: this.companyId,
-  //         name: this.companyForm.value.name,
-  //         phone: this.companyForm.value.phone,
-  //         email: this.companyForm.value.email,
-  //         address: this.companyForm.value.address,
-  //         notes: this.companyForm.value.notes
-  //       };
-        
-  //       this.companyService.updateCompany(this.companyId, updateCommand).subscribe({
-  //         next: () => {
-  //           this.router.navigate(['/companies']);
-  //         },
-  //         error: (err) => {
-  //           this.loading = false;
-  //         }
-  //       });
-  //     } else {
-  //       this.companyService.createCompany(this.companyForm.value).subscribe({
-  //         next: () => {
-  //           this.router.navigate(['/companies']);
-  //         },
-  //         error: (err) => {
-  //           this.loading = false;
-  //         }
-  //       });
-  //     }
-  //   } else {
-  //   }
-  // }
+ 
 onSubmit(): void {
     if (this.companyForm.valid) {
       this.loading = true;
