@@ -33,6 +33,8 @@ delete(id: number): Observable<void> {
   return this.api.delete<void>(`${this.endpoint}/${id}`);
 }
   getFrequencies(): Observable<any[]> {
+   
+
     return new Observable(observer => {
       observer.next([
         { id: 1, name: 'חודשי' },

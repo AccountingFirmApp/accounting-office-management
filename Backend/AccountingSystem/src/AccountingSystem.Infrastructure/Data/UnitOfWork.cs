@@ -13,6 +13,7 @@ namespace AccountingSystem.Infrastructure.Data;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly AccountingDbContext _context;
+    public readonly ILogger<ReportInstanceRepository> _logger;
 
     public readonly ILogger<ReportInstanceRepository> _logger;
 
@@ -33,9 +34,10 @@ public class UnitOfWork : IUnitOfWork
     private IAuditLogRepository? _auditLogs;
     
 
-    public UnitOfWork(AccountingDbContext context)
+    public UnitOfWork(AccountingDbContext context, ILogger<ReportInstanceRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public IAccountingFirmRepository AccountingFirms =>
@@ -66,8 +68,7 @@ public class UnitOfWork : IUnitOfWork
         _companyReportConfigs ??= new CompanyReportConfigRepository(_context);
 
     public IReportInstanceRepository ReportInstances =>
-    //    _reportInstances ??= new ReportInstanceRepository(_context);
-    _reportInstances ??= new ReportInstanceRepository(_context, _logger);
+        _reportInstances ??= new ReportInstanceRepository(_context,_logger);
 
     public ITaskTypeRepository TaskTypes =>
         _taskTypes ??= new TaskTypeRepository(_context);

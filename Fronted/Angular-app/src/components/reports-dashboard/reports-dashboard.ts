@@ -1,19 +1,22 @@
+
+
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReportService } from '../../services/report';
 import { CommonModule } from '@angular/common';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
 import { AuthService } from '../../services/auth.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-reports-dashboard',
   templateUrl: './reports-dashboard.html',
   styleUrls: ['./reports-dashboard.css'],
-  imports: [RouterOutlet, CommonModule, BackButtonComponent]
+  imports: [RouterModule, CommonModule, BackButtonComponent]
 })
 export class ReportsDashboardComponent implements OnInit {
-  
+
   stats = {
     pending: 0,
     overdue: 0,
@@ -23,7 +26,7 @@ export class ReportsDashboardComponent implements OnInit {
 
   filterByCompanyId: number | null = null;
   companyName: string = '';
-  isAdminMode: boolean = false; 
+  isAdminMode: boolean = false;  
 
   constructor(
     private router: Router,
@@ -33,6 +36,7 @@ export class ReportsDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // קריאה לפרמטרים מה-URL
     this.route.queryParams.subscribe(params => {
       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
       this.isAdminMode = params['adminMode'] === 'true';
@@ -42,13 +46,19 @@ export class ReportsDashboardComponent implements OnInit {
 
   loadStatistics() {
     this.reportService.getAll(this.isAdminMode).subscribe({
-      next: (reports) => {        let filteredReports = reports;
+      next: (reports) => {
+      
         
-        if (this.filterByCompanyId) {
+        let filteredReports = reports;
+
+        // פילטר לפי companyId אם קיים
+        if (this.filterByCompanyId !== null) {
           filteredReports = reports.filter(r => r.companyId === this.filterByCompanyId);
           
           if (filteredReports.length > 0) {
             this.companyName = filteredReports[0].companyName;
+          } else {
+            this.companyName = '';
           }
         }
 
@@ -61,6 +71,7 @@ export class ReportsDashboardComponent implements OnInit {
           return (r.status === 'Pending' || r.status === 'Reported') &&
                  new Date(r.period) < today;
         }).length;
+        
         
       },
       error: (err) => {

@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using AccountingSystem.Domain.Entities;
+﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace AccountingSystem.Domain.Entities
 {
     public partial class CompanyTask
@@ -23,7 +24,7 @@ namespace AccountingSystem.Domain.Entities
         public string? Notes { get; set; }
 
         public DateTime? Createdat { get; set; }
-
+        [Column("updated_at")]
         public DateTime? Updatedat { get; set; }
         public TaskStatus1? Status { get; set; }
         public bool? Isactive { get; set; } = true;
@@ -33,5 +34,11 @@ namespace AccountingSystem.Domain.Entities
         public virtual Company Company { get; set; } = null!;
 
         public virtual Tasktype Tasktype { get; set; } = null!;
+        /// <summary>
+        /// עדיפות המשימה
+        /// </summary>
+        public TaskPriority Priority { get; set; } = TaskPriority.Normal;
+        public virtual ICollection<CompanyTaskChecklistItem> ChecklistItems { get; set; }
+    = new List<CompanyTaskChecklistItem>();
     }
 }

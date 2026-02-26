@@ -1,11 +1,11 @@
+
+
 export interface ReportInstance {
   id: number;
   configId: number;
   period: Date;
   amount?: number;
-  status: string;  // "Pending", "Reported", "Paid", "Approved", "NotRequired"
-  paymentMethod?: string;  // "Credit", "Transfer", "Check", "Online", "Cash"
-  receiptDate?: Date;
+  status: string; 
   reportedDate?: Date;
   paidDate?: Date;
   comments?: string;
@@ -34,12 +34,16 @@ export interface ReportInstanceDetail {
   reportedDate?: Date;
   paidDate?: Date;
   comments?: string;
+  
   createdAt?: Date;
   updatedAt?: Date;
+  
   periodFormatted?: string;
   daysOverdue?: number;
   workerNames: string[];
 }
+
+
 export interface UpcomingReport {
   id: number;
   companyName: string;
@@ -51,10 +55,12 @@ export interface UpcomingReport {
   dayOfMonth?: number;
   daysOverdue: number;
 }
+
+
 export interface CreateReportInstance {
   companyId: number;    
   reportTypeId: number;   
-  frequencyId?: number;  
+  frequencyId?: number;   
   period: Date;
   amount?: number;
   paymentMethod?: string;

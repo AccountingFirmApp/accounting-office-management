@@ -6,12 +6,17 @@ import { CompanyReportConfigService } from '../../../../services/company-report-
 import { CompanyService } from '../../../../services/company';
 import { ReportService } from '../../../../services/report';
 import { BackButtonComponent } from '../../shared/back-button/back-button.component';
+import { LoadingComponent } from '../../shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
+import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { Observable } from 'rxjs';
+import { CompanyDto } from '../../../../models/company.dto';
+import { ReportTypeDto, FrequencyDto } from '../../../../models/report-type.dto';
 
 @Component({
   selector: 'app-company-report-config-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BackButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent, ConfirmationModalComponent],
   templateUrl: './company-report-config-form.component.html',
   styleUrls: ['./company-report-config-form.component.css']
 })
@@ -21,11 +26,16 @@ export class CompanyReportConfigFormComponent implements OnInit {
   configId: number | null = null;
   loading = false;
   submitting = false;
-  isFixedYear = false; 
+  isFixedYear = false; // האם השנה קבועה (לא ניתנת לשינוי)
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
 
-  companies: any[] = [];
-  reportTypes: any[] = [];
-  frequencies: any[] = [];
+  // Confirmation modal state
+  showDeleteConfirmation = false;
+
+  companies: CompanyDto[] = [];
+  reportTypes: ReportTypeDto[] = [];
+  frequencies: FrequencyDto[] = [];
   years: number[] = [];
 
   constructor(
@@ -39,17 +49,17 @@ export class CompanyReportConfigFormComponent implements OnInit {
     this.configForm = this.fb.group({
       companyId: ['', Validators.required],
       reportTypeId: ['', Validators.required],
-      frequencyId: ['', Validators.required],
-      dayOfMonth: ['', [Validators.min(1), Validators.max(31)]],
+      frequencyId: [1, Validators.required],
+      dayOfMonth: [1, [Validators.min(1), Validators.max(31)]],
       year: [new Date().getFullYear(), Validators.required]
     });
   }
-
+isAdmin: boolean =false;
   ngOnInit(): void {
     this.initializeYears();
     this.loadData();
 
-    // בדיקה אם זה מצב עריכה
+  this.isAdmin = this.route.snapshot.queryParamMap.get('isAdmin') === 'true'? true : false;
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
@@ -95,6 +105,7 @@ export class CompanyReportConfigFormComponent implements OnInit {
         this.loadConfig();
       }
     }).catch(err => {
+    
       this.loading = false;
     });
   }
@@ -172,42 +183,55 @@ export class CompanyReportConfigFormComponent implements OnInit {
 
       request$.subscribe({
         next: () => {
-          this.router.navigate(['/settings/report-config']);
+          this.successMessage = this.isEditMode ? 'ההגדרה עודכנה בהצלחה' : 'ההגדרה נוצרה בהצלחה';
+          setTimeout(() => {
+            this.router.navigate([this.isAdmin ? '/settings/report-config' : '/dashboard/report-config']);
+          }, 1500);
         },
         error: (err: any) => {
+          this.errorMessage = 'שגיאה בשמירת ההגדרה';
           this.submitting = false;
         }
       });
-    } else {
     }
   }
 
   cancel(): void {
-    this.router.navigate(['/settings/report-config']);
+    this.router.navigate([this.isAdmin ? '/settings/report-config' : '/dashboard/report-config']);
   }
-  deleteConfig(): void {
+
+  /**
+   * פותח modal אישור למחיקת תצורה
+   */
+  openDeleteConfirmation(): void {
+    this.showDeleteConfirmation = true;
+  }
+
+  /**
+   * מבטל מחיקה וסגר modal
+   */
+  cancelDelete(): void {
+    this.showDeleteConfirmation = false;
+  }
+
+  /**
+   * מאשר ומבצע מחיקת תצורה
+   */
+  confirmDelete(): void {
     if (!this.configId) return;
 
-    const formData = this.configForm.getRawValue();
-    const companyName = this.companies.find(c => c.id === formData.companyId)?.name || 'החברה';
-    const reportTypeName = this.reportTypes.find(rt => rt.id === formData.reportTypeId)?.name || 'הדיווח';
-
-    const confirmed = confirm(
-      `⚠️ האם אתה בטוח שברצונך למחוק את ההגדרה?\n\n` +
-      `חברה: ${companyName}\n` +
-      `סוג דיווח: ${reportTypeName}\n` +
-      `שנה: ${formData.year}\n\n` +
-      `פעולה זו לא ניתנת לביטול!`
-    );
-
-    if (!confirmed) return;
-
+    this.showDeleteConfirmation = false;
     this.submitting = true;
+
     this.configService.delete(this.configId).subscribe({
       next: () => {
-        this.router.navigate(['/settings/report-config']);
+        this.successMessage = 'ההגדרה נמחקה בהצלחה';
+        setTimeout(() => {
+         this.router.navigate([this.isAdmin ? '/settings/report-config' : '/dashboard/report-config']);
+        }, 1500);
       },
       error: (err) => {
+        this.errorMessage = 'שגיאה במחיקת ההגדרה';
         this.submitting = false;
       }
     });

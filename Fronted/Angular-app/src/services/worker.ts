@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkerCompanies } from '../models/worker-companies';
-import { WorkerInfoDto } from '../models/auth';
+import { WorkerInfoDto, WorkerTask } from '../models/auth';
 import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
@@ -51,3 +51,16 @@ getInactiveWorkers(): Observable<WorkerInfoDto[]> {
   });
 }}
 
+// ⭐ קבל את ה-workerId הנוכחי
+getCurrentWorkerId(): number | null {
+  const worker = this.getCurrentWorker();
+  return worker ? worker.id : null;
+}
+
+getWorkerTasks(workerId: number): Observable<WorkerTask[]> {
+  return this.http.get<WorkerTask[]>(`${this.apiUrl}/${workerId}/tasks`);
+}
+getWorkersbyCompany(companyId:number): Observable<WorkerInfoDto[]> {
+  return this.http.get<WorkerInfoDto[]>(`${this.apiUrl}/by-company/${companyId}`);
+}
+}

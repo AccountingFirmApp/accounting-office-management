@@ -5,22 +5,47 @@ import { CreateReportInstance, UpdateReportInstance } from '../../models/report-
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
+import { CompanyDto } from '../../models/company.dto';
+import { ReportTypeDto } from '../../models/report-type.dto';
+
+interface ReportFormData {
+  id?: number;
+  companyId: string | number;
+  reportTypeId: string | number;
+  configId: string | number;
+  frequencyId?: string | number;
+  period: Date;
+  amount: number | null | undefined;
+  status: string;
+  paymentMethod: string;
+  receiptDate: Date | null;
+  reportedDate: Date | null;
+  paidDate: Date | null;
+  comments: string;
+}
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, BackButtonComponent],
+  imports: [CommonModule, FormsModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent],
   selector: 'app-report-form',
   templateUrl: './report-form.html',
   styleUrls: ['./report-form.css']
 })
 export class ReportFormComponent implements OnInit {
-  
+
   isEditMode = false;
   reportId: number | null = null;
   loading = false;
   submitting = false;
 
-  formData: any = {
+  // Success/Error messages
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+
+  // Form data
+  formData: ReportFormData = {
     companyId: '',
     reportTypeId: '',
     configId: '',
@@ -42,7 +67,7 @@ export class ReportFormComponent implements OnInit {
   companies: any[] = [];
   reportTypes: any[] = [];
   availableReportTypes: any[] = [];
-  configs: any[] = []; 
+  configs: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -62,6 +87,7 @@ export class ReportFormComponent implements OnInit {
       this.loadReportTypes(),
       this.loadConfigs()
     ]).then(() => {
+     
       this.route.params.subscribe(params => {
         if (params['id']) {
           this.isEditMode = true;
@@ -73,6 +99,7 @@ export class ReportFormComponent implements OnInit {
         }
       });
     }).catch(err => {
+      // console.error('Error loading data:', err);
       this.loading = false;
     });
   }
@@ -85,6 +112,7 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
+          // console.error('Error loading companies:', err);
           reject(err);
         }
       });
@@ -100,6 +128,7 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
+          // console.error('Error loading report types:', err);
           reject(err);
         }
       });
@@ -114,6 +143,7 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
+          // console.error('Error loading configs:', err);
           reject(err);
         }
       });
@@ -140,6 +170,7 @@ export class ReportFormComponent implements OnInit {
       if (config) {
         this.formData.configId = config.id;
       } else {
+        console.warn('No matching config found for company and report type');
         this.formData.configId = '';
       }
     } else {
@@ -158,7 +189,6 @@ export class ReportFormComponent implements OnInit {
     
     this.reportService.getById(this.reportId).subscribe({
       next: (report) => {
-        // מצא את ה-config כדי לקבל את companyId ו-reportTypeId
         const config = this.configs.find(c => c.id === report.configId);
         
         this.formData = {
@@ -167,7 +197,7 @@ export class ReportFormComponent implements OnInit {
           companyId: config?.companyId || '',
           reportTypeId: config?.reportTypeId || '',
           period: new Date(report.period),
-          amount: report.amount,
+          amount: report.amount ?? null,
           status: report.status,
           paymentMethod: report.paymentMethod || '',
           receiptDate: report.receiptDate ? new Date(report.receiptDate) : null,
@@ -184,6 +214,7 @@ export class ReportFormComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
+        // console.error('Error loading report:', err);
         this.goBack();
       }
     });
@@ -221,6 +252,8 @@ export class ReportFormComponent implements OnInit {
   }
 
   onSubmit() {
+   
+
     this.submitting = true;
 
     if (this.isEditMode) {
@@ -231,11 +264,11 @@ export class ReportFormComponent implements OnInit {
   }
 createReport() {
   const data: CreateReportInstance = {
-    companyId: this.formData.companyId,        
-    reportTypeId: this.formData.reportTypeId,  
-    frequencyId: this.formData.frequencyId,
+    companyId: +this.formData.companyId,        
+    reportTypeId: +this.formData.reportTypeId,  
+    frequencyId: this.formData.frequencyId ? +this.formData.frequencyId : undefined,
     period: this.formData.period,
-    amount: this.formData.amount || undefined,
+    amount: this.formData.amount ?? undefined,
     paymentMethod: this.formData.paymentMethod || undefined,
     receiptDate: this.formData.receiptDate || undefined,
     comments: this.formData.comments || ''
@@ -243,9 +276,13 @@ createReport() {
 
   this.reportService.create(data).subscribe({
     next: () => {
-      this.goBack();
+      this.successMessage = 'הדיווח נוצר בהצלחה';
+      setTimeout(() => {
+        this.goBack();
+      }, 1500);
     },
     error: (err) => {
+      this.errorMessage = 'שגיאה ביצירת הדיווח';
       this.submitting = false;
     }
   });
@@ -264,9 +301,13 @@ createReport() {
 
     this.reportService.update(this.reportId!, data).subscribe({
       next: () => {
-        this.goBack();
+        this.successMessage = 'הדיווח עודכן בהצלחה';
+        setTimeout(() => {
+          this.goBack();
+        }, 1500);
       },
       error: (err) => {
+        this.errorMessage = 'שגיאה בעדכון הדיווח';
         this.submitting = false;
       }
     });

@@ -1,4 +1,5 @@
 ﻿using AccountingSystem.Application.DTOs;
+using AccountingSystem.Domain.Entities;
 using MediatR;
 
 namespace AccountingSystem.Application.Queries.Workers;
@@ -48,5 +49,23 @@ public class GetWorkerCompaniesQuery : IRequest<List<CompanyDto>>
     public GetWorkerCompaniesQuery(int workerId)
     {
         WorkerId = workerId;
+    }
+}
+public class GetWorkerTasksQuery : IRequest<IEnumerable<CompanyTask>>
+{
+    public int WorkerId { get; set; }
+
+    //public GetWorkerTasksQuery(int workerId)
+    //{
+    //    WorkerId = workerId;
+    //}
+}
+public class GetWorkersByCompanyQuery : IRequest<IEnumerable<WorkerLookupDto>>
+{
+    public int CompanyId { get; set; }
+
+    public GetWorkersByCompanyQuery(int companyId)
+    {
+        CompanyId = companyId;
     }
 }

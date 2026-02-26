@@ -6,6 +6,7 @@ import { CompanyDto, CreateCompanyCommand, UpdateCompanyCommand } from '../model
 import { TaskcompanyDto } from '../models/taskcompany';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
+import { TaskDetail } from '../models/auth';
 @Injectable({
   providedIn: 'root'
 })

@@ -58,7 +58,6 @@ namespace AccountingSystem.Application.Handlers
                     configId = newConfig.Id;
                 }
 
-                // ?? שלב 2: צור את ה-ReportInstance עם ה-ConfigId
                 PaymentMethod? paymentMethod = null;
                 if (!string.IsNullOrEmpty(request.PaymentMethod) &&
                     Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var parsedMethod))

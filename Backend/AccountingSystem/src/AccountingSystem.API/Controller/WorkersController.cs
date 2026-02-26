@@ -79,12 +79,55 @@ namespace AccountingSystem.API.Controllers
         }
 
         /// <summary>
-        /// יצירת עובד חדש
-        /// POST: api/workers
+        /// קבל את כל המשימות של עובד מסוים
         /// </summary>
-        [HttpPost]
+      
+        [HttpGet("{workerId}/tasks")]
+        public async Task<ActionResult> GetWorkerTasks(int workerId)
+        {
+            try
+            {
+                var query = new GetWorkerTasksQuery { WorkerId = workerId };
+                var tasks = await _mediator.Send(query);
+
+                var response = tasks.Select(t => new
+                {
+                    t.Id,
+                    t.Companyid,
+                    CompanyName = t.Company.Name,
+                    t.Tasktypeid,
+                    TaskTypeName = t.Tasktype.Name,
+                    t.Period,
+                    t.Duedate,
+                    t.Completeddate,
+                    t.Status,
+                    t.Notes,
+                    t.Assignedworkerid,
+                    AssignedWorkerName = t.Assignedworker != null
+                        ? $"{t.Assignedworker.Firstname} {t.Assignedworker.Lastname}"
+                        : null,
+                    t.Createdat,
+                    t.Updatedat
+                });
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "שגיאה בטעינת משימות", detail = ex.Message });
+            }
+        }
+    
+
+/// <summary>
+/// יצירת עובד חדש
+/// POST: api/workers
+/// </summary>
+[HttpPost]
+  [HttpPost]
         [Authorize] // ✅ חובה!
         public async Task<ActionResult<WorkerDto>> Create([FromBody] CreateWorkerCommand command)
+        // public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
         {
             try
             {
@@ -177,6 +220,14 @@ namespace AccountingSystem.API.Controllers
             {
                 return NotFound(new { message = ex.Message });
             }
+        }
+
+        [HttpGet("by-company/{companyId}")]
+        public async Task<IActionResult> GetWorkersByCompany(int companyId)
+        {
+            // יצירת השאילתה ושליחתה דרך המתווך (Mediator)
+            var result = await _mediator.Send(new GetWorkersByCompanyQuery(companyId));
+            return Ok(result);
         }
     }
 }

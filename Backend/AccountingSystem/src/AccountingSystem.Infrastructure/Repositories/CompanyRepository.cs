@@ -40,6 +40,16 @@ namespace AccountingSystem.Infrastructure.Repositories
 
             return await query.ToListAsync();
         }
+        public async Task<List<Company?>> GetByIdWorkerAsync(int workerId)
+        {
+            var companyIds = _context.Companyworkers
+                                     .Where(cw => cw.Workerid == workerId)
+                                     .Select(cw => cw.Companyid);
+
+            return await _dbSet
+                         .Where(c => companyIds.Contains(c.Id)).ToListAsync();
+        }
+
 
         public async Task<IEnumerable<Company>> GetAllAsync()
         {

@@ -562,6 +562,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnName("createdat")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<short?>("DefaultDayOfMonth")
+                        .HasColumnType("smallint");
+
                     b.Property<string>("Description")
                         .HasColumnType("text")
                         .HasColumnName("description");

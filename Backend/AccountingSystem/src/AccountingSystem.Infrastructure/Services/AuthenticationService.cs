@@ -101,9 +101,13 @@ CancellationToken cancellationToken = default)
         try
         {
             // 1️⃣ אימות Google Token
+            var googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID")
+                ?? _configuration["Authentication:Google:ClientId"]
+                ?? throw new InvalidOperationException("Google ClientId not configured. Set GOOGLE_CLIENT_ID environment variable.");
+
             var payload = await GoogleJsonWebSignature.ValidateAsync(googleToken, new GoogleJsonWebSignature.ValidationSettings
             {
-                Audience = new[] { _configuration["Authentication:Google:ClientId"] }
+                Audience = new[] { googleClientId }
             });
 
             if (payload == null)

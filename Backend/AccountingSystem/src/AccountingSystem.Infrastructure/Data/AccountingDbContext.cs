@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Enums;
 using AccountingSystem.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using AccountingSystem.Domain.Entities;
+using System;
+using System.Collections.Generic;
 using TaskStatus = AccountingSystem.Domain.Enums.TaskStatus1;
 using AccountingSystem.Domain.Enums;
 
@@ -34,6 +35,13 @@ public partial class AccountingDbContext : DbContext
     public virtual DbSet<VwWorkercompanies> VwWorkercompanies { get; set; }
     public virtual DbSet<Worker> Workers { get; set; }
     public virtual DbSet<Workerroletype> Workerroletypes { get; set; }
+    public virtual DbSet<TaskTypeConfiguration> TaskTypeConfiguration { get; set; }
+    public virtual DbSet<CompanyTaskTypeSettings> CompanyTaskTypeSettings { get; set; }
+    public virtual DbSet<TaskChecklistTemplate> TaskChecklistTemplate { get; set; }
+    public virtual DbSet<CompanyTaskChecklistItem> CompanyTaskChecklistItems { get; set; }
+    public DbSet<TaskChecklistTemplate> TaskChecklistTemplates { get; set; }
+    public DbSet<TaskChecklistTemplateItem> TaskChecklistTemplateItems { get; set; }
+    public DbSet<CompanyTaskConfiguration> CompanyTaskConfigurations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -57,8 +65,10 @@ public partial class AccountingDbContext : DbContext
             .HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
             .HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
             .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
-            .HasPostgresEnum("TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });  // ⭐ שונה ל-TaskStatus1
-
+            .HasPostgresEnum("TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" })  // ⭐ שונה ל-TaskStatus1
+            .HasPostgresEnum("task_priority", new[] { "Low", "Normal", "High", "Urgent" })
+            .HasPostgresEnum("recurrence_type", new[] { "Daily", "Weekly", "Monthly", "Quarterly", "Yearly" })
+            .HasPostgresEnum<RecurrenceType>("recurrence_type");
         modelBuilder.Entity<Accountingfirm>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("accountingfirm_pkey");
@@ -253,6 +263,7 @@ public partial class AccountingDbContext : DbContext
 
         modelBuilder.Entity<CompanyTask>(entity =>
         {
+
             entity.HasKey(e => e.Id).HasName("task_pkey");
 
             entity.ToTable("companytask");
@@ -272,21 +283,26 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
-
             entity.Property(e => e.Status)
-                .HasConversion<string>()
-                .HasColumnName("status");
+      //.HasColumnType("\"TaskStatus1\"")  // ← הוסף את זה!
+      .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
+      //.HasConversion<string>()
+      .HasColumnName("status")
+      ;
+            //entity.Property(e => e.Status)
+            //    .HasConversion<string>()
+            //    .HasColumnName("status");
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Period).HasColumnName("period");
-            entity.Property(e => e.Status)
-                .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
-                .HasColumnName("status");
+            //entity.Property(e => e.Status)
+            //    .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
+            //    .HasColumnName("status");
             entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
             entity.Property(e => e.Updatedat)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("updatedat");
+                .HasColumnName("updated_at");
 
             entity.HasOne(d => d.Assignedworker).WithMany(p => p.CompanyTasks)
                 .HasForeignKey(d => d.Assignedworkerid)
@@ -306,7 +322,7 @@ public partial class AccountingDbContext : DbContext
     .HasColumnName("isactive");
         });
 
-      
+
         modelBuilder.Entity<Companyworker>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("companyworker_pkey");
@@ -660,9 +676,177 @@ public partial class AccountingDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("name");
         });
+        
+        modelBuilder.Entity<TaskTypeConfiguration>(entity =>
+        {
+            entity.ToTable("task_type_configuration");
+            entity.HasKey(e => e.Id);
 
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.TaskTypeId).HasColumnName("task_type_id");
+
+            entity.Property(e => e.RecurrenceType)
+                  .HasColumnName("recurrence_type")
+                  .HasColumnType("recurrence_type");
+
+            entity.Property(e => e.DueDayOfMonth).HasColumnName("due_day_of_month");
+            entity.Property(e => e.DueDaysAfterPeriodEnd).HasColumnName("due_days_after_period_end");
+            entity.Property(e => e.IsMandatory).HasColumnName("is_mandatory");
+            entity.Property(e => e.AutoCreateNext).HasColumnName("auto_create_next");
+            entity.Property(e => e.EstimatedHours).HasColumnName("estimated_hours");
+            entity.Property(e => e.DependsOnTaskTypeId).HasColumnName("depends_on_task_type_id");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+
+            entity.HasOne(d => d.TaskType).WithMany().HasForeignKey(d => d.TaskTypeId);
+        });
+
+        modelBuilder.Entity<TaskChecklistTemplate>(entity =>
+        {
+            entity.ToTable("task_checklist_template");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.TaskTypeId).HasColumnName("task_type_id");
+            entity.Property(e => e.AutoCreateItems).HasColumnName("auto_create_items");
+            entity.Property(e => e.Name).HasColumnName("name").HasMaxLength(255);
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(d => d.TaskType).WithMany().HasForeignKey(d => d.TaskTypeId);
+
+            
+        entity.HasMany(d => d.Items)           // לתבנית יש הרבה פריטים
+          .WithOne(p => p.Template)        // לכל פריט יש תבנית אחת (המאפיין ששלחת לי במודל)
+          .HasForeignKey(d => d.TemplateId)// המפתח הזר הוא TemplateId
+          .HasPrincipalKey(d => d.Id);     // המפתח הראשי הוא Id
+    });
+        // ⭐ חשוב מאוד: הוספתי את המיפוי הזה כדי למנוע את שגיאת template_id1
+        modelBuilder.Entity<TaskChecklistTemplateItem>(entity =>
+        {
+            entity.ToTable("task_checklist_template_item");
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Id).HasColumnName("id");
+
+            // כאן אנחנו מוודאים ש-EF יודע ש-TemplateId (מהמודל) הוא העמודה template_id (ב-DB)
+            entity.Property(e => e.TemplateId).HasColumnName("template_id");
+
+            entity.Property(e => e.Title).HasColumnName("title");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.OrderIndex).HasColumnName("order_index");
+            entity.Property(e => e.IsOptional).HasColumnName("is_optional");
+            entity.Property(e => e.EstimatedMinutes).HasColumnName("estimated_minutes");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+        });
+
+        modelBuilder.Entity<CompanyTaskTypeSettings>(entity =>
+        {
+            entity.ToTable("company_task_type_settings");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CompanyId).HasColumnName("company_id");
+            entity.Property(e => e.TaskTypeId).HasColumnName("task_type_id");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.CustomDueDayOfMonth).HasColumnName("custom_due_day_of_month");
+            entity.Property(e => e.DefaultAssignedWorkerId).HasColumnName("default_assigned_worker_id");
+            entity.Property(e => e.DefaultNotes).HasColumnName("default_notes");
+
+            entity.Property(e => e.CustomPriority)
+                  .HasColumnName("custom_priority")
+                  .HasColumnType("task_priority");
+
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+
+            entity.HasOne(d => d.Company).WithMany().HasForeignKey(d => d.CompanyId);
+            entity.HasOne(d => d.TaskType).WithMany().HasForeignKey(d => d.TaskTypeId); // השלמת השורה שנקטעה
+        });
+        modelBuilder.Entity<CompanyTaskChecklistItem>(entity =>
+        {
+            entity.ToTable("company_task_checklist_item"); // השם המדויק ב-DB
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CompanyTaskId).HasColumnName("company_task_id");
+            entity.Property(e => e.TemplateItemId).HasColumnName("template_item_id");
+            entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(255);
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.OrderIndex).HasColumnName("order_index");
+            entity.Property(e => e.IsCompleted).HasColumnName("is_completed").HasDefaultValue(false);
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.CompletedAt).HasColumnName("completed_at");
+            entity.Property(e => e.CompletedByWorkerId).HasColumnName("completed_by_worker_id");
+            entity.Property(e => e.Notes).HasColumnName("notes");
+
+            // הגדרת הקשר למשימה (One-to-Many)
+            entity.HasOne(d => d.CompanyTask)
+                  .WithMany(p => p.ChecklistItems)
+                  .HasForeignKey(d => d.CompanyTaskId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // 2. וודאי שגם התבנית (Template) ממופה נכון כדי שה-Include יעבוד
+        modelBuilder.Entity<TaskChecklistTemplate>(entity =>
+        {
+            entity.ToTable("task_checklist_template");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.TaskTypeId).HasColumnName("task_type_id");
+            entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.AutoCreateItems).HasColumnName("auto_create_items");
+        });
+
+        // 3. וודאי שגם פריטי התבנית ממופים (אחרת ה-Include של ה-Items יחזור ריק)
+        modelBuilder.Entity<TaskChecklistTemplateItem>(entity =>
+        {
+            entity.ToTable("task_checklist_template_item");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.TemplateId).HasColumnName("template_id");
+            entity.Property(e => e.Title).HasColumnName("title");
+            entity.Property(e => e.OrderIndex).HasColumnName("order_index");
+
+            entity.HasOne(d => d.Template)
+                  .WithMany(p => p.Items)
+                  .HasForeignKey(d => d.TemplateId);
+        });
+
+        modelBuilder.Entity<CompanyTaskConfiguration>(entity =>
+        {
+            // מיפוי שם הטבלה לאותיות קטנות
+            entity.ToTable("companytaskconfigurations");
+
+            entity.HasKey(e => e.Id);
+
+            // מיפוי כל עמודה לשם המדויק ב-Postgres (אותיות קטנות)
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Companyid).HasColumnName("companyid");
+            entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
+            entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid"); // פותר את השגיאה שלך!
+            entity.Property(e => e.Frequency).HasColumnName("frequency");
+            entity.Property(e => e.Dueday).HasColumnName("dueday");
+            entity.Property(e => e.Isactive).HasColumnName("isactive");
+            entity.Property(e => e.Createdat).HasColumnName("createdat");
+            entity.Property(e => e.Updatedat).HasColumnName("updatedat");
+
+            // הגדרת קשרים (Foreign Keys) כדי שה-Include יעבוד
+            entity.HasOne(d => d.Assignedworker)
+                  .WithMany()
+                  .HasForeignKey(d => d.Assignedworkerid)
+                  .HasConstraintName("fk_config_worker");
+
+            entity.HasOne(d => d.Company)
+                  .WithMany()
+                  .HasForeignKey(d => d.Companyid)
+                  .HasConstraintName("fk_config_company");
+        });
         OnModelCreatingPartial(modelBuilder);
     }
-   
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+    

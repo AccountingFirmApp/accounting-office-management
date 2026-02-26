@@ -14,6 +14,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         System.Threading.Tasks.Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId);
         System.Threading.Tasks.Task AddAsync(Companyreportconfig company);
         System.Threading.Tasks.Task<Companyreportconfig?> GetByIdWithDetailsAsync(int id);
+        System.Threading.Tasks.Task<List<Companyreportconfig>?> GetByWorkerId(int workerId);
 
 
         // חיפושים ספציפיים

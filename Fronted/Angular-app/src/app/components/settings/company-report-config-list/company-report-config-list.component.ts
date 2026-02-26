@@ -1,48 +1,68 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyReportConfigService } from '../../../../services/company-report-config.service';
 import { CompanyReportConfigDto } from '../../../../models/company-report-config';
 import { BackButtonComponent } from '../../shared/back-button/back-button.component';
+import { LoadingComponent } from '../../shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../shared/error-message/error-message.component';
 import { CompanyService } from '../../../../services/company';
-import { CompanyDto } from '../../../../models/Company';
+import { CompanyDto } from '../../../../models/company.dto';
+import { ReportTypeDto } from '../../../../models/report-type.dto';
 import { ReportService } from '../../../../services/report';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
+import { WorkerService } from '../../../../services/worker';
+import { log } from 'console';
+
 @Component({
   selector: 'app-company-report-config-list',
   standalone: true,
-  imports: [CommonModule, BackButtonComponent],
+  imports: [CommonModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent],
   templateUrl: './company-report-config-list.component.html',
   styleUrls: ['./company-report-config-list.component.css']
 })
 export class CompanyReportConfigListComponent implements OnInit {
+  @Input() mode: 'admin' | 'employee' = 'employee';
   configs: CompanyReportConfigDto[] = []; // ⭐ רק פעילות
   deletedConfigs: CompanyReportConfigDto[] = []; // ⭐ רק מחוקות
   companies: CompanyDto[] = [];
-  reportTypes: any[] = [];
-  
+  reportTypes: ReportTypeDto[] = [];
+
   // מטריצה: companyId -> reportTypeId -> config פעיל
   configMatrix: { [companyId: number]: { [reportTypeId: number]: CompanyReportConfigDto | null } } = {};
-  
+
   // ⭐ מטריצה למחוקות: companyId -> reportTypeId -> config מחוק
   deletedMatrix: { [companyId: number]: { [reportTypeId: number]: CompanyReportConfigDto | null } } = {};
-  
+
   loading = false;
   selectedYear: number;
   currentYear: number;
+
+  // Success/Error messages
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+
+  // Modal להצגת פרטי דיווח
   isModalOpen: boolean = false;
   selectedConfig: CompanyReportConfigDto | null = null;
-
+ isAdmin: boolean=false;
   constructor(
     private configService: CompanyReportConfigService,
     private router: Router,
     private companySer: CompanyService,
-    private reportService: ReportService
+    private reportService: ReportService,
+     public auth: AuthService,
+     public workerService: WorkerService,
+     private route: ActivatedRoute
   ) {
     this.currentYear = new Date().getFullYear();
     this.selectedYear = this.currentYear + 1;
-  }
+    this.isAdmin = this.auth.isAdmin();
 
+  }
   ngOnInit(): void {
+    this.mode = this.route.snapshot.data['mode'] ?? 'employee';
     this.loadAll();
   }
   loadAll(): void {
@@ -56,6 +76,7 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.buildDeletedMatrix(); // ⭐
       this.loading = false;
     }).catch(err => {
+      // console.error(err);
       this.loading = false;
     });
   }
@@ -105,6 +126,7 @@ export class CompanyReportConfigListComponent implements OnInit {
   }
 
   loadCompanies(): Promise<void> {
+    if(this.mode === 'admin') {
     return new Promise((resolve, reject) => {
       this.companySer.getAllCompanies().subscribe({
         next: (data) => {
@@ -116,6 +138,21 @@ export class CompanyReportConfigListComponent implements OnInit {
         }
       });
     });
+    } else {
+          return new Promise((resolve, reject) => {
+      this.companySer.getCompanyByWorkerId(this.workerService.currentWorker.id).subscribe({
+        next: (data) => {
+          console.log('חברות לעובד:', data);
+          console.log('חברות:', this.workerService.currentWorker);
+          this.companies = data;
+          resolve();
+        },
+        error: (err) => {
+          reject(err);
+        }
+      });
+    });
+    }
   }
 
   loadReportTypes(): Promise<void> {
@@ -136,9 +173,8 @@ export class CompanyReportConfigListComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.configService.getAll().subscribe({
         next: (data) => {
-          this.configs = data.filter(c => c.isactive === true);
-          this.deletedConfigs = data.filter(c => c.isactive === false);
-          
+          this.configs = data.filter(c => c.isActive === true);
+          this.deletedConfigs = data.filter(c => c.isActive === false);
           resolve();
         },
         error: (err) => {
@@ -149,57 +185,51 @@ export class CompanyReportConfigListComponent implements OnInit {
   }
 
   navigateToCreate(): void {
-    this.router.navigate(['/settings/report-config/create']);
+    
+this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmin: this.mode === 'admin' } });
   }
+  
   deleteConfig(configId: number): void {
-    const confirmed = confirm(
-      `האם למחוק את הגדרת ?\n\n(ניתן לשחזר את ההגדרה בכל עת)`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     this.configService.delete(configId).subscribe({
       next: () => {
+        this.successMessage = 'ההגדרה נמחקה בהצלחה';
         this.loadAll(); 
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
       },
       error: (err) => {
+        this.errorMessage = 'שגיאה במחיקת ההגדרה';
       }
     });
   }
 
-  restoreConfig(configId: number, companyName: string, reportTypeName: string): void {
-    const confirmed = confirm(
-      `האם לשחזר את הגדרת "${reportTypeName}" עבור "${companyName}"?`
-    );
 
-    if (!confirmed) {
-      return;
-    }
+  restoreConfig(configId: number, companyName: string, reportTypeName: string): void {
     const updateDto = {
       isactive: true
     };
 
     this.configService.update(configId, updateDto).subscribe({
       next: () => {
+        this.successMessage = 'ההגדרה שוחזרה בהצלחה';
         this.loadAll(); 
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
       },
       error: (err) => {
+        this.errorMessage = 'שגיאה בשחזור ההגדרה';
       }
     });
   }
 
-  /**
-   * ⭐ בדיקה אם יש הגדרה מחוקה
-   */
+ 
   hasDeletedConfig(companyId: number, reportTypeId: number): boolean {
     return !!(this.deletedMatrix[companyId] && this.deletedMatrix[companyId][reportTypeId]);
   }
 
-  /**
-   * ⭐ קבלת הגדרה מחוקה
-   */
+
   getDeletedConfig(companyId: number, reportTypeId: number): CompanyReportConfigDto | null {
     if (this.deletedMatrix[companyId] && this.deletedMatrix[companyId][reportTypeId]) {
       return this.deletedMatrix[companyId][reportTypeId];
@@ -207,9 +237,6 @@ export class CompanyReportConfigListComponent implements OnInit {
     return null;
   }
 
-  /**
-   * מעתיק את כל ההגדרות של חברה מהשנה הקודמת לשנה הנבחרת
-   */
   copyFromLastYear(companyId: number, companyName: string): void {
     const previousYear = this.selectedYear - 1;
 
@@ -224,7 +251,8 @@ export class CompanyReportConfigListComponent implements OnInit {
             queryParams: {
               companyId: companyId,
               year: this.selectedYear,
-              fixedYear: true
+              fixedYear: true,
+              isAdmin: this.mode === 'admin'
             }
           });
           return;
@@ -234,13 +262,6 @@ export class CompanyReportConfigListComponent implements OnInit {
           .map(c => `${c.reportTypeName} (${c.frequencyName})`)
           .join('\n- ');
 
-        const confirmed = confirm(
-          `נמצאו ${previousYearConfigs.length} הגדרות לחברה "${companyName}" משנת ${previousYear}:\n\n- ${configNames}\n\nלהעתיק את כל ההגדרות לשנת ${this.selectedYear}?`
-        );
-
-        if (!confirmed) {
-          return;
-        }
 
         let successCount = 0;
         let errorCount = 0;
@@ -264,6 +285,7 @@ export class CompanyReportConfigListComponent implements OnInit {
             },
             error: (err) => {
               errorCount++;
+              // console.error('שגיאה ביצירת הגדרה:', err);
               if (successCount + errorCount === totalConfigs) {
                 this.handleCopyComplete(successCount, errorCount, companyName, this.selectedYear);
               }
@@ -272,6 +294,7 @@ export class CompanyReportConfigListComponent implements OnInit {
         });
       },
       error: (err) => {
+        // console.error(err);
       }
     });
   }
@@ -289,13 +312,18 @@ export class CompanyReportConfigListComponent implements OnInit {
         companyId: companyId,
         reportTypeId: reportTypeId,
         year: this.selectedYear,
-        fixedYear: true
+        fixedYear: true,
+        isAdmin: this.mode === 'admin'
       }
     });
   }
 
   editConfig(configId: number): void {
-    this.router.navigate([`/settings/report-config/${configId}/edit`]);
+    this.router.navigate([`/settings/report-config/${configId}/edit`], {
+      queryParams: {
+        isAdmin: this.mode === 'admin'
+      }
+    });
   }
 
   viewConfig(config: CompanyReportConfigDto): void {

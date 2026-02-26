@@ -1,5 +1,9 @@
 ﻿using AccountingSystem.Application.DTOs;
+﻿// Application/Handlers/Companies/CompaniesHandler.cs
 using AccountingSystem.Application;
+using AccountingSystem.Application.Commands.Tasks;
+using AccountingSystem.Application.DTOs;
+using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Application.Queries.Companies;
 using AccountingSystem.Application.Queries.Tasks;
 using AccountingSystem.Application.Intrefaces;
@@ -7,6 +11,7 @@ using AccountingSystem.Application.Intrefaces;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
+using AccountingSystem.Domain.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 using AccountingSystem.Application.Commands.Companies;
@@ -70,6 +75,31 @@ public class GetCompanyByIdQueryHandler : IRequestHandler<GetCompanyByIdQuery, C
     }
 }
 
+public class GetCompanyByWorkerIdQueryHandler : IRequestHandler<GetCompanyByWorkerIdQuery, List<CompanyDto>>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public GetCompanyByWorkerIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
+
+    public async Task<List<CompanyDto>> Handle(GetCompanyByWorkerIdQuery request, CancellationToken cancellationToken)
+    {
+        var company = await _unitOfWork.Companies.GetByIdWorkerAsync(request.Id);
+
+        if (company == null)
+        {
+            throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
+        }
+
+        return _mapper.Map<List<CompanyDto>> (company);
+    }
+}
+
+
 // ========================================
 // GET COMPANIES BY FIRM ID HANDLER
 // ========================================
@@ -128,6 +158,7 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
 // ========================================
 public class CreateCompanyCommandHandler
     : IRequestHandler<CreateCompanyCommand, CompanyDto>
+public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;

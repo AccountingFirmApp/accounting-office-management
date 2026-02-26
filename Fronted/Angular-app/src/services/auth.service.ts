@@ -22,7 +22,8 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, request)
       .pipe(
         tap(response => {
-          this.saveToken(response.token); 
+          this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          this.saveWorkerInfo(response.worker);
         })
       );
   }
@@ -35,6 +36,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          this.saveWorkerInfo(response.worker); 
         })
       );
   }
@@ -63,10 +65,17 @@ export class AuthService {
     return workerInfo ? JSON.parse(workerInfo) : null;
   }
 
+  // =========================
+  // Logout
+  // =========================
+  
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem('workerInfo'); // ⭐ הוסף את זה!
   }
-
+  // =========================
+  // Authentication Helpers
+  // =========================
   isAuthenticated(): boolean {
     return !!this.getToken();
   }

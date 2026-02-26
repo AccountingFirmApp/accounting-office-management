@@ -4,6 +4,7 @@ using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -51,11 +52,52 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddAsync(Companyreportconfig entity)
+        public async Task AddAsync(Companyreportconfig config)
         {
+            try
+            {
+                Console.WriteLine("=== CompanyReportConfig Details ===");
+                Console.WriteLine($"Id: {config.Id}");
+                Console.WriteLine($"CompanyId: {config.Companyid}");
+                Console.WriteLine($"ReportTypeId: {config.Reporttypeid}");
+                Console.WriteLine($"FrequencyId: {config.Frequencyid}");
+                Console.WriteLine($"DayOfMonth: {config.Dayofmonth}");
+                Console.WriteLine($"IsActive: {config.Isactive}");
+                Console.WriteLine($"CreatedAt: {config.Createdat}");
+                Console.WriteLine($"UpdatedAt: {config.Updatedat}");
+                Console.WriteLine($"Year: {config.Year}");
 
-            await _dbSet.AddAsync(entity);
+                // אם רוצים גם מידע מהניווטים
+                if (config.Company != null)
+                    Console.WriteLine($"Company Name: {config.Company.Name}");
+
+                if (config.Frequency != null)
+                    Console.WriteLine($"Frequency Name: {config.Frequency.Name}");
+
+                if (config.Reporttype != null)
+                    Console.WriteLine($"ReportType Name: {config.Reporttype.Name}");
+
+                Console.WriteLine($"Number of ReportInstances: {config.Reportinstances.Count}");
+
+                _dbSet.Add(config);
+                var result = await _context.SaveChangesAsync();
+
+                Console.WriteLine($"Saved rows: {result}");
+            }
+            catch (DbUpdateException dbEx)
+            {
+                Console.WriteLine("=== DbUpdateException ===");
+                Console.WriteLine(dbEx.InnerException?.Message ?? dbEx.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("=== Exception ===");
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
+
 
         public async Task UpdateAsync(Companyreportconfig entity)
         {
@@ -212,6 +254,24 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .Select(c => c.Id)
                 .ToListAsync();
         }
+        public async Task<List<Companyreportconfig>> GetByWorkerId(int workerId)
+        {
+            var companyIds = await _context.Companyworkers
+                .Where(x => x.Workerid == workerId && x.Isactive == true)
+                .Select(x => x.Companyid)
+                .ToListAsync();
+
+            return await _dbSet
+                .Include(c => c.Company)
+                .Include(c => c.Reporttype)
+                .Include(c => c.Frequency)
+                .Include(c => c.Reportinstances)
+                .Where(c => companyIds.Contains(c.Companyid) && c.Isactive == true)
+                .ToListAsync();
+        }
+
+
+
     }
 
 }

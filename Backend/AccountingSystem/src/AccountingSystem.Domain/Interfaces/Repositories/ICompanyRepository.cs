@@ -8,6 +8,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
     public interface ICompanyRepository : IGenericRepository<Company>
     {
         System.Threading.Tasks.Task AddAsync(Company company);
+        public Task<List<Company?>> GetByIdWorkerAsync(int workerId);
 
         System.Threading.Tasks.Task<Company?> GetCompanyWithContactsAsync(int companyId);
 

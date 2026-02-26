@@ -38,6 +38,10 @@ export class CompanyCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+      this.loadAccountingFirms();
+    
+      
+    // בדוק אם זה מצב עריכה
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
@@ -66,6 +70,7 @@ export class CompanyCreateComponent implements OnInit {
           }
         },
         error: (err) => {
+          // console.error(err);
         }
       });
     }
@@ -130,5 +135,15 @@ onSubmit(): void {
 
   cancel(): void {
     this.router.navigate(['/companies']);
+  }
+  loadAccountingFirms(): void {
+    this.accountingFirmService.getAll().subscribe({
+      next: (data) => {
+        this.accountingFirms = data;
+      },
+      error: (err) => {
+        // console.error(err);
+      }
+    });
   }
 }

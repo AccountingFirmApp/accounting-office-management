@@ -4,11 +4,13 @@ using AccountingSystem.Application.Queries;
 using AccountingSystem.Application.DTOs;
 using System.Threading.Tasks;
 using static GetReportsDueInNextDaysQueryHandler;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AccountingSystem.API.Controllers
 {
     [ApiController]
     [Route("api/report-types")]
+    [Authorize]
     public class ReportTypesController : ControllerBase
     {
         private readonly IMediator _mediator;

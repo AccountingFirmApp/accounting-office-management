@@ -21,6 +21,8 @@ export class ReportService {
 
   constructor(private api: ApiService) {}
 
+ 
+
   getAll(isAdminMode: boolean = false): Observable<ReportInstanceDetail[]> {
   const params = new HttpParams().set('isAdminMode', isAdminMode.toString());
 

@@ -50,7 +50,7 @@ namespace AccountingSystem.Application.Handlers
 
             var result = filteredReports
                 .OrderByDescending(r => r.Period)
-                .ToList() 
+                .ToList()
                 .Select(r => new ReportInstanceDetailDto
                 {
                     Id = r.Id,
@@ -63,8 +63,10 @@ namespace AccountingSystem.Application.Handlers
                     ReportTypeId = r.Config.Reporttypeid,
                     ReportTypeName = r.Config.Reporttype != null ? r.Config.Reporttype.Name : string.Empty,
                     ReportTypeShortCode = r.Config.Reporttype != null ? r.Config.Reporttype.Shortcode : string.Empty,
+
                     FrequencyName = r.Config.Frequency != null ? r.Config.Frequency.Name : string.Empty,
                     DayOfMonth = r.Config.Dayofmonth,
+
                     Period = r.Period.ToDateTime(TimeOnly.MinValue),
                     Amount = r.Amount,
                     Status = r.Status.ToString(),

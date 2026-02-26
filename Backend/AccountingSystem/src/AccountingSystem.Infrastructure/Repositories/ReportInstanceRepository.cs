@@ -19,7 +19,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         private readonly AccountingDbContext _context;
         private readonly ILogger<ReportInstanceRepository> _logger;
 
-        public ReportInstanceRepository(AccountingDbContext context,ILogger<ReportInstanceRepository> logger)
+        public ReportInstanceRepository(AccountingDbContext context, ILogger<ReportInstanceRepository> logger)
         {
             _context = context;
             _logger = logger;

@@ -25,13 +25,16 @@ export class HomeComponent implements OnInit{
   }
 
   navigateToWorkerCompanies(): void {
+
+
     if(this.currentWorker!=null)
     this.router.navigate([`/workers/${this.currentWorker.id}/companies`]);
 
   }
     navigateToTaskCompanies(): void {
-    if(this.currentWorker!=null)
-    this.router.navigate([`companies/3/tasks`]);
+  
+    
+    this.router.navigate([`workers/${this.currentWorker.id}/tasks`]);
 
   }
   navigateToReports() {
@@ -40,5 +43,8 @@ export class HomeComponent implements OnInit{
 
   navigateToManagement() {
     this.router.navigate(['/management']);
+  }
+    navigateToSettings(): void {
+    this.router.navigate(['/dashboard/report-config']);
   }
 }

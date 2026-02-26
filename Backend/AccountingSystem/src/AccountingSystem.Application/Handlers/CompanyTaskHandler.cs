@@ -1,100 +1,1451 @@
-﻿using AccountingSystem.Application.Commands.Tasks;
-using AccountingSystem.Domain.Enums;
-using AccountingSystem.Domain.Interfaces;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System.ComponentModel;
+﻿
+using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
-
+using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Application.Queries.Tasks;
-using Microsoft.EntityFrameworkCore;
+using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces.Repositories;
+using MediatR;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace AccountingSystem.Application.Handlers.Tasks;
-
-public class GetTasksByCompanyIdQueryHandler
-    : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
+namespace AccountingSystem.Application.Handlers.Tasks
 {
-    private readonly ICompanyTaskRepository _companyTaskRepository;
-    public GetTasksByCompanyIdQueryHandler(ICompanyTaskRepository companyTaskRepository)
-    {
-        _companyTaskRepository = companyTaskRepository;
-    }
-    public async Task<List<CompanyTaskDto>> Handle(
-    GetTasksByCompanyIdQuery request,
-    CancellationToken cancellationToken)
-    {
-        var tasks = await _companyTaskRepository
-            .GetTasksByCompanyIdAsync(request.CompanyId);
 
-        return tasks.Select(t => new CompanyTaskDto
+    // ==========================================
+    // HANDLER: יצירת משימה בודדת
+    // ==========================================
+
+    public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, CreateTaskResult>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public CreateTaskCommandHandler(ICompanyTaskRepository taskRepository)
         {
-            Id = t.Id,
-            CompanyId = t.Companyid,
-            TaskTypeId = t.Tasktypeid,
-            Period = t.Period,
-            DueDate = t.Duedate,
-            CompletedDate = t.Completeddate,
-            AssignedWorkerId = t.Assignedworkerid,
-            Notes = t.Notes ?? string.Empty,
-            Status = t.Status.ToString() ?? string.Empty,
-            TaskTypeName = t.Tasktype.Name,
-            AssignedWorkerName = t.Assignedworker != null
-                ? t.Assignedworker.Firstname + " " + t.Assignedworker.Lastname
-                : null
-        }).ToList();
-    }
-}
+            _taskRepository = taskRepository;
+        }
 
-public class UpdateTaskStatusCommandHandler : IRequestHandler<UpdateTaskStatusCommand, Unit>
-{
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<UpdateTaskStatusCommandHandler> _logger;
-
-    public UpdateTaskStatusCommandHandler(IUnitOfWork unitOfWork
-       , ILogger<UpdateTaskStatusCommandHandler> logger)
-    {
-        _unitOfWork = unitOfWork;
-        _logger = logger;
-    }
-    public async Task<Unit> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
-    {
-        try
+    
+        public async Task<CreateTaskResult> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"🎯 Handler נקרא! TaskId={request.TaskId}, Status={request.Status}");
-
-            var taskExists = await _unitOfWork.CompanyTasks.ExistsAsync(request.TaskId);
-            if (!taskExists)
+            if (await _taskRepository.TaskExistsAsync(request.CompanyId, request.TaskTypeId, request.Period))
             {
-                throw new Exception($"משימה עם ID {request.TaskId} לא נמצאה");
+                return new CreateTaskResult { Success = false, Message = "משימה זו כבר קיימת עבור התקופה הזו" };
             }
 
-            var validStatuses = new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" };
-            if (!validStatuses.Contains(request.Status, StringComparer.OrdinalIgnoreCase))
+            var task = new CompanyTask
             {
-                throw new Exception($"סטטוס לא חוקי: {request.Status}");
+                Companyid = request.CompanyId,
+                Tasktypeid = request.TaskTypeId,
+                Period = request.Period,
+                Duedate = request.CustomDueDate,
+                Status = TaskStatus1.Pending,
+                Priority = TaskPriority.Normal,
+                Assignedworkerid = request.AssignedWorkerId,
+                Notes = request.Notes,
+                Createdat = DateTime.UtcNow,
+                Updatedat = DateTime.UtcNow
+            };
+
+            // שלב א': שמירה ראשונית ליצירת מזהה (ID)
+            await _taskRepository.AddAsync(task);
+            // כאן ה-ID של task מתעדכן אוטומטית מה-DB
+
+            // שלב ב': הוספת הצ'קליסט כשיש כבר ID
+            await AttachChecklistAsync(task, request.TaskTypeId);
+
+            // שלב ג': שמירת הפריטים
+            await _taskRepository.UpdateAsync(task);
+
+            return new CreateTaskResult
+            {
+                Success = true,
+                TaskId = task.Id,
+                Message = "המשימה נוצרה בהצלחה"
+            };
+        }
+        private async Task AttachChecklistAsync(CompanyTask task, int taskTypeId)
+        {
+            var template = await _taskRepository.GetActiveChecklistTemplateAsync(taskTypeId);
+
+            if (template == null || template.Items == null || !template.Items.Any())
+                return;
+
+            // וודאי שהרשימה מאותחלת כדי למנוע Null Reference
+            task.ChecklistItems ??= new List<CompanyTaskChecklistItem>();
+
+            foreach (var item in template.Items.OrderBy(i => i.OrderIndex))
+            {
+                var newItem = new CompanyTaskChecklistItem
+                {
+                    // התיקון: אנחנו לא מסתמכים רק על ה-Add, אלא מוודאים ש-EF יודע למי הוא שייך
+                    CompanyTaskId = task.Id,
+                    Title = item.Title,
+                    Description = item.Description,
+                    OrderIndex = item.OrderIndex,
+                    IsCompleted = false,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                task.ChecklistItems.Add(newItem);
             }
 
-            _logger.LogInformation($"✅ סטטוס תקין: {request.Status}");
+            // בגלל שזה קורה ב-Job, לפעמים צריך להגיד ל-EF לעקוב אחרי הפריטים החדשים במפורש
+            // אם יש לך גישה ל-_context כאן, אפשר להוסיף אותם ישירות
+        }
+    }
+        // ==========================================
+        // HANDLER: יצירת משימות חודשיות
+        // ==========================================
 
-            var rowsAffected = await _unitOfWork.UpdateTaskStatusAsync(
-                request.TaskId,
-                request.Status,
-                cancellationToken
+        public class GenerateMonthlyTasksCommandHandler
+            : IRequestHandler<GenerateMonthlyTasksCommand, GenerateTasksResult>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public GenerateMonthlyTasksCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+        public async Task<GenerateTasksResult> Handle(
+ GenerateMonthlyTasksCommand request,
+ CancellationToken cancellationToken)
+        {
+            // 1. טעינת הגדרות חודשיות פעילות
+            var monthlyConfigs = await _taskRepository
+                .GetActiveConfigurationsByRecurrenceAsync(RecurrenceType.Monthly);
+
+            if (!monthlyConfigs.Any())
+            {
+                return new GenerateTasksResult
+                {
+                    Success = true,
+                    TasksCreated = 0,
+                    Message = "לא נמצאו תצורות חודשיות פעילות"
+                };
+            }
+
+            // 2. טעינת חברות פעילות והגדרת תקופה
+            var activeCompanies = await _taskRepository.GetActiveCompaniesAsync();
+            var periodDate = new DateOnly(request.Year, request.Month, 1);
+            int createdCount = 0;
+
+            // 3. מעבר על כל חברה וכל הגדרה
+            foreach (var company in activeCompanies)
+            {
+                //foreach (var config in monthlyConfigs)
+                //{
+                //    // בדיקה האם צריך ליצור את המשימה הספציפית הזו
+                //    if (!await ShouldCreateTaskAsync(company.Id, config))
+                //        continue;
+
+                //    // מניעת כפילויות
+                //    if (await _taskRepository.TaskExistsAsync(company.Id, config.TaskTypeId, periodDate))
+                //        continue;
+
+                //    // --- תהליך היצירה והשמירה בשלבים ---
+
+                //    // א. יצירת אובייקט המשימה (וודאי שאין קריאה לצ'קליסט בתוך הפונקציה הזו)
+                //    var task = await CreateTaskFromConfigAsync(company.Id, config, periodDate);
+
+                //    // ב. שמירה ראשונית בבסיס הנתונים כדי לקבל ID
+                //    await _taskRepository.AddAsync(task);
+
+                //    // ג. הוספת הצ'קליסט למשימה (עכשיו כשיש לה ID)
+                //    await AttachChecklistAsync(task, config.TaskTypeId);
+
+                //    // ד. עדכון סופי של המשימה עם הצ'קליסט ב-DB
+                //    await _taskRepository.UpdateAsync(task);
+
+                //    createdCount++;
+                //}
+                foreach (var config in monthlyConfigs)
+                {
+                    if (!await ShouldCreateTaskAsync(company.Id, config)) continue;
+                    if (await _taskRepository.TaskExistsAsync(company.Id, config.TaskTypeId, periodDate)) continue;
+
+                    // 1. יצירת האובייקט
+                    var task = await CreateTaskFromConfigAsync(company.Id, config, periodDate);
+
+                    // 2. הוספת הצ'קליסט לאובייקט בזיכרון (הוא עדיין לא ב-DB)
+                    // הערה: חשוב ש-AttachChecklistAsync רק יוסיף לרשימה task.ChecklistItems
+                    await AttachChecklistAsync(task, config.TaskTypeId);
+
+                    // 3. שמירה אחת ויחידה להכל! 
+                    // EF יזהה שיש כאן משימה חדשה עם פריטים חדשים ויעשה את הקישור אוטומטית.
+                    await _taskRepository.AddAsync(task);
+
+                    createdCount++;
+                }
+            }
+
+            return new GenerateTasksResult
+            {
+                Success = true,
+                TasksCreated = createdCount,
+                Message = $"נוצרו {createdCount} משימות חודשיות ל-{request.Month:D2}/{request.Year}"
+            };
+        }
+
+        private async Task<bool> ShouldCreateTaskAsync(
+                int companyId,
+                TaskTypeConfiguration config)
+            {
+                var settings = await _taskRepository.GetCompanySettingsAsync(
+                    companyId,
+                    config.TaskTypeId);
+
+                if (settings == null)
+                    return config.IsMandatory;
+
+                return settings.IsActive;
+            }
+
+            private async Task<CompanyTask> CreateTaskFromConfigAsync(
+                int companyId,
+                TaskTypeConfiguration config,
+                DateOnly period)
+            {
+                var companySettings = await _taskRepository.GetCompanySettingsAsync(
+                    companyId,
+                    config.TaskTypeId);
+
+                var task = new CompanyTask
+                {
+                    Companyid = companyId,
+                    Tasktypeid = config.TaskTypeId,
+                    Period = period,
+                    Duedate = CalculateDueDate(period, config, companySettings),
+                    Status = TaskStatus1.Pending,
+                    Assignedworkerid = companySettings?.DefaultAssignedWorkerId,
+                    Notes = companySettings?.DefaultNotes,
+                    Priority = companySettings?.CustomPriority ?? TaskPriority.Normal,
+                    Createdat = DateTime.UtcNow,
+                    Updatedat = DateTime.UtcNow
+                };
+
+                await AttachChecklistAsync(task, config.TaskTypeId);
+
+                return task;
+            }
+
+            private DateOnly? CalculateDueDate(
+                DateOnly period,
+                TaskTypeConfiguration? config,
+                CompanyTaskTypeSettings? companySettings = null)
+            {
+                if (config == null)
+                    return null;
+
+                if (companySettings?.CustomDueDayOfMonth != null)
+                {
+                    int day = Math.Min(companySettings.CustomDueDayOfMonth.Value,
+                        DateTime.DaysInMonth(period.Year, period.Month));
+                    return new DateOnly(period.Year, period.Month, day);
+                }
+
+                if (config.DueDayOfMonth.HasValue)
+                {
+                    int day = Math.Min(config.DueDayOfMonth.Value,
+                        DateTime.DaysInMonth(period.Year, period.Month));
+                    return new DateOnly(period.Year, period.Month, day);
+                }
+
+                if (config.DueDaysAfterPeriodEnd.HasValue)
+                {
+                    var lastDay = new DateOnly(period.Year, period.Month,
+                        DateTime.DaysInMonth(period.Year, period.Month));
+                    return lastDay.AddDays(config.DueDaysAfterPeriodEnd.Value);
+                }
+
+                return null;
+            }
+
+        private async Task AttachChecklistAsync(CompanyTask task, int taskTypeId)
+        {
+            Console.WriteLine($"[DEBUG] Looking for template for TaskTypeId: {taskTypeId}");
+
+            var template = await _taskRepository.GetActiveChecklistTemplateAsync(taskTypeId);
+
+            if (template == null)
+            {
+                Console.WriteLine($"[DEBUG] !!! No active template found for TaskTypeId: {taskTypeId}");
+                return;
+            }
+
+            if (template.Items == null || !template.Items.Any())
+            {
+                Console.WriteLine($"[DEBUG] !!! Found template '{template.Name}', but it has 0 items!");
+                return;
+            }
+
+            Console.WriteLine($"[DEBUG] Successfully found {template.Items.Count} items. Attaching to task...");
+
+            task.ChecklistItems ??= new List<CompanyTaskChecklistItem>();
+
+            foreach (var item in template.Items)
+            {
+                task.ChecklistItems.Add(new CompanyTaskChecklistItem
+                {
+                    Title = item.Title,
+                    Description = item.Description,
+                    OrderIndex = item.OrderIndex,
+                    IsCompleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CompanyTask = task
+                });
+            }
+        }
+    }
+
+        // ==========================================
+        // HANDLER: יצירת משימות רבעוניות
+        // ==========================================
+
+        public class GenerateQuarterlyTasksCommandHandler
+            : IRequestHandler<GenerateQuarterlyTasksCommand, GenerateTasksResult>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public GenerateQuarterlyTasksCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<GenerateTasksResult> Handle(
+                GenerateQuarterlyTasksCommand request,
+                CancellationToken cancellationToken)
+            {
+                var quarterlyConfigs = await _taskRepository
+                    .GetActiveConfigurationsByRecurrenceAsync(RecurrenceType.Quarterly);
+
+                if (!quarterlyConfigs.Any())
+                {
+                    return new GenerateTasksResult
+                    {
+                        Success = true,
+                        TasksCreated = 0,
+                        Message = "לא נמצאו תצורות רבעוניות פעילות"
+                    };
+                }
+
+                var activeCompanies = await _taskRepository.GetActiveCompaniesAsync();
+
+                // חישוב החודש הראשון של הרבעון
+                int firstMonthOfQuarter = (request.Quarter - 1) * 3 + 1;
+                var periodDate = new DateOnly(request.Year, firstMonthOfQuarter, 1);
+
+                var tasksToCreate = new List<CompanyTask>();
+
+                foreach (var company in activeCompanies)
+                {
+                    foreach (var config in quarterlyConfigs)
+                    {
+                        var settings = await _taskRepository.GetCompanySettingsAsync(
+                            company.Id,
+                            config.TaskTypeId);
+
+                        if (settings == null && !config.IsMandatory)
+                            continue;
+
+                        if (settings != null && !settings.IsActive)
+                            continue;
+
+                        if (await _taskRepository.TaskExistsAsync(
+                            company.Id,
+                            config.TaskTypeId,
+                            periodDate))
+                            continue;
+
+                        var task = new CompanyTask
+                        {
+                            Companyid = company.Id,
+                            Tasktypeid = config.TaskTypeId,
+                            Period = periodDate,
+                            Duedate = CalculateQuarterlyDueDate(request.Year, request.Quarter, config, settings),
+                            Status = TaskStatus1.Pending,
+                            Priority = settings?.CustomPriority ?? TaskPriority.Normal,
+                            Assignedworkerid = settings?.DefaultAssignedWorkerId,
+                            Notes = settings?.DefaultNotes,
+                            Createdat = DateTime.UtcNow,
+                            Updatedat = DateTime.UtcNow
+                        };
+
+                        await AttachChecklistAsync(task, config.TaskTypeId);
+                        tasksToCreate.Add(task);
+                    }
+                }
+
+                int created = 0;
+                if (tasksToCreate.Any())
+                {
+                    created = await _taskRepository.CreateTasksAsync(tasksToCreate);
+                }
+
+                return new GenerateTasksResult
+                {
+                    Success = true,
+                    TasksCreated = created,
+                    Message = $"נוצרו {created} משימות רבעוניות לרבעון {request.Quarter}/{request.Year}"
+                };
+            }
+
+            private DateOnly? CalculateQuarterlyDueDate(
+                int year,
+                int quarter,
+                TaskTypeConfiguration config,
+                CompanyTaskTypeSettings? settings)
+            {
+                // חודש אחרון של הרבעון
+                int lastMonthOfQuarter = quarter * 3;
+
+                if (settings?.CustomDueDayOfMonth != null)
+                {
+                    int day = Math.Min(settings.CustomDueDayOfMonth.Value,
+                        DateTime.DaysInMonth(year, lastMonthOfQuarter));
+                    return new DateOnly(year, lastMonthOfQuarter, day);
+                }
+
+                if (config.DueDayOfMonth.HasValue)
+                {
+                    int day = Math.Min(config.DueDayOfMonth.Value,
+                        DateTime.DaysInMonth(year, lastMonthOfQuarter));
+                    return new DateOnly(year, lastMonthOfQuarter, day);
+                }
+
+                if (config.DueDaysAfterPeriodEnd.HasValue)
+                {
+                    var lastDay = new DateOnly(year, lastMonthOfQuarter,
+                        DateTime.DaysInMonth(year, lastMonthOfQuarter));
+                    return lastDay.AddDays(config.DueDaysAfterPeriodEnd.Value);
+                }
+
+                return null;
+            }
+
+            private async Task AttachChecklistAsync(CompanyTask task, int taskTypeId)
+            {
+                var template = await _taskRepository.GetActiveChecklistTemplateAsync(taskTypeId);
+
+                if (template == null || !template.Items.Any())
+                    return;
+
+                foreach (var item in template.Items.OrderBy(i => i.OrderIndex))
+                {
+                    task.ChecklistItems.Add(new CompanyTaskChecklistItem
+                    {
+                        CompanyTask = task,
+                        TemplateItemId = item.Id,
+                        Title = item.Title,
+                        Description = item.Description,
+                        OrderIndex = item.OrderIndex,
+                        IsCompleted = false,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
+            }
+        }
+
+    // ==========================================
+    // HANDLER: יצירת משימות שנתיות
+    // ==========================================
+
+    public class GenerateYearlyTasksCommandHandler
+        : IRequestHandler<GenerateYearlyTasksCommand, GenerateTasksResult>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public GenerateYearlyTasksCommandHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<GenerateTasksResult> Handle(
+            GenerateYearlyTasksCommand request,
+            CancellationToken cancellationToken)
+        {
+            var yearlyConfigs = await _taskRepository
+                .GetActiveConfigurationsByRecurrenceAsync(RecurrenceType.Yearly);
+
+            if (!yearlyConfigs.Any())
+            {
+                return new GenerateTasksResult
+                {
+                    Success = true,
+                    TasksCreated = 0,
+                    Message = "לא נמצאו תצורות שנתיות פעילות"
+                };
+            }
+
+            var activeCompanies = await _taskRepository.GetActiveCompaniesAsync();
+            var periodDate = new DateOnly(request.Year, 1, 1);
+            var tasksToCreate = new List<CompanyTask>();
+
+            foreach (var company in activeCompanies)
+            {
+                foreach (var config in yearlyConfigs)
+                {
+                    var settings = await _taskRepository.GetCompanySettingsAsync(
+                        company.Id,
+                        config.TaskTypeId);
+
+                    if (settings == null && !config.IsMandatory)
+                        continue;
+
+                    if (settings != null && !settings.IsActive)
+                        continue;
+
+                    if (await _taskRepository.TaskExistsAsync(
+                        company.Id,
+                        config.TaskTypeId,
+                        periodDate))
+                        continue;
+
+                    var task = new CompanyTask
+                    {
+                        Companyid = company.Id,
+                        Tasktypeid = config.TaskTypeId,
+                        Period = periodDate,
+                        Duedate = CalculateYearlyDueDate(request.Year, config, settings),
+                        Status = TaskStatus1.Pending,
+                        Priority = settings?.CustomPriority ?? TaskPriority.Normal,
+                        Assignedworkerid = settings?.DefaultAssignedWorkerId,
+                        Notes = settings?.DefaultNotes,
+                        Createdat = DateTime.UtcNow,
+                        Updatedat = DateTime.UtcNow
+                    };
+
+                    await AttachChecklistAsync(task, config.TaskTypeId);
+                    tasksToCreate.Add(task);
+                }
+            }
+
+            int created = 0;
+            if (tasksToCreate.Any())
+            {
+                created = await _taskRepository.CreateTasksAsync(tasksToCreate);
+            }
+
+            return new GenerateTasksResult
+            {
+                Success = true,
+                TasksCreated = created,
+                Message = $"נוצרו {created} משימות שנתיות ל-{request.Year}"
+            };
+        }
+
+        private DateOnly? CalculateYearlyDueDate(
+            int year,
+            TaskTypeConfiguration config,
+            CompanyTaskTypeSettings? settings)
+        {
+            if (settings?.CustomDueDayOfMonth != null)
+            {
+                int day = Math.Min(settings.CustomDueDayOfMonth.Value, 31);
+                return new DateOnly(year, 12, day);
+            }
+
+            if (config.DueDayOfMonth.HasValue)
+            {
+                int day = Math.Min(config.DueDayOfMonth.Value, 31);
+                return new DateOnly(year, 12, day);
+            }
+
+            if (config.DueDaysAfterPeriodEnd.HasValue)
+            {
+                var lastDay = new DateOnly(year, 12, 31);
+                return lastDay.AddDays(config.DueDaysAfterPeriodEnd.Value);
+            }
+
+            return null;
+        }
+
+        //    private async Task AttachChecklistAsync(CompanyTask task, int taskTypeId)
+        //    {
+        //        var template = await _taskRepository.GetActiveChecklistTemplateAsync(taskTypeId);
+
+        //        if (template == null || !template.Items.Any())
+        //            return;
+
+        //        foreach (var item in template.Items.OrderBy(i => i.OrderIndex))
+        //        {
+        //            task.ChecklistItems.Add(new CompanyTaskChecklistItem
+        //            {
+        //                CompanyTask = task,
+        //                TemplateItemId = item.Id,
+        //                Title = item.Title,
+        //                Description = item.Description,
+        //                OrderIndex = item.OrderIndex,
+        //                IsCompleted = false,
+        //                CreatedAt = DateTime.UtcNow
+        //            });
+        //        }
+        //    }
+        //}
+        private async Task AttachChecklistAsync(CompanyTask task, int taskTypeId)
+        {
+            var template = await _taskRepository.GetActiveChecklistTemplateAsync(taskTypeId);
+            if (template == null || !template.Items.Any()) return;
+
+            task.ChecklistItems ??= new List<CompanyTaskChecklistItem>();
+
+            foreach (var item in template.Items.OrderBy(i => i.OrderIndex))
+            {
+                task.ChecklistItems.Add(new CompanyTaskChecklistItem
+                {
+                    CompanyTaskId = task.Id, // קישור ה-ID שנוצר בשלב א'
+                    Title = item.Title,
+                    Description = item.Description,
+                    OrderIndex = item.OrderIndex,
+                    IsCompleted = false,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+        }
+    }
+        // ==========================================
+        // HANDLER: עדכון סטטוס
+        // ==========================================
+
+        public class UpdateTaskStatusCommandHandler : IRequestHandler<UpdateTaskStatusCommand, bool>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public UpdateTaskStatusCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<bool> Handle(
+                UpdateTaskStatusCommand request,
+                CancellationToken cancellationToken)
+            {
+                var task = await _taskRepository.GetByIdAsync(request.TaskId);
+
+                if (task == null)
+                    return false;
+
+                task.Status = request.Status;
+                task.Updatedat = DateTime.UtcNow;
+
+                if (request.Status == TaskStatus1.Done || request.Status == TaskStatus1.Paid)
+                {
+                    task.Completeddate = request.CompletedDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
+                }
+
+                await _taskRepository.UpdateAsync(task);
+                return true;
+            }
+        }
+
+        // ==========================================
+        // HANDLER: עדכון משימה
+        // ==========================================
+
+        public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public UpdateTaskCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<bool> Handle(
+                UpdateTaskCommand request,
+                CancellationToken cancellationToken)
+            {
+                var task = await _taskRepository.GetByIdAsync(request.TaskId);
+
+                if (task == null)
+                    return false;
+
+                if (request.Status.HasValue)
+                    task.Status = request.Status.Value;
+
+                if (request.Priority.HasValue)
+                    task.Priority = request.Priority.Value;
+
+                if (request.DueDate.HasValue)
+                    task.Duedate = request.DueDate.Value;
+
+                if (request.CompletedDate.HasValue)
+                    task.Completeddate = request.CompletedDate.Value;
+
+                if (request.AssignedWorkerId.HasValue)
+                    task.Assignedworkerid = request.AssignedWorkerId.Value;
+
+                if (request.Notes != null)
+                    task.Notes = request.Notes;
+
+                task.Updatedat = DateTime.UtcNow;
+
+                await _taskRepository.UpdateAsync(task);
+                return true;
+            }
+        }
+
+        // ==========================================
+        // HANDLER: הקצאת עובד
+        // ==========================================
+
+        public class AssignWorkerToTaskCommandHandler : IRequestHandler<AssignWorkerToTaskCommand, bool>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public AssignWorkerToTaskCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<bool> Handle(
+                AssignWorkerToTaskCommand request,
+                CancellationToken cancellationToken)
+            {
+                var task = await _taskRepository.GetByIdAsync(request.TaskId);
+
+                if (task == null)
+                    return false;
+
+                task.Assignedworkerid = request.WorkerId;
+                task.Updatedat = DateTime.UtcNow;
+
+                await _taskRepository.UpdateAsync(task);
+                return true;
+            }
+        }
+
+        // ==========================================
+        // HANDLER: מחיקת משימה
+        // ==========================================
+
+        public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, bool>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public DeleteTaskCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<bool> Handle(
+                DeleteTaskCommand request,
+                CancellationToken cancellationToken)
+            {
+                await _taskRepository.DeleteAsync(request.TaskId);
+                return true;
+            }
+        }
+
+        // ==========================================
+        // HANDLER: השלמת פריט Checklist
+        // ==========================================
+
+        public class CompleteChecklistItemCommandHandler
+            : IRequestHandler<CompleteChecklistItemCommand, CompleteChecklistItemResult>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public CompleteChecklistItemCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<CompleteChecklistItemResult> Handle(
+                CompleteChecklistItemCommand request,
+                CancellationToken cancellationToken)
+            {
+                var item = await _taskRepository.GetChecklistItemByIdAsync(request.ItemId);
+
+                if (item == null)
+                {
+                    return new CompleteChecklistItemResult
+                    {
+                        Success = false,
+                        Message = "הפריט לא נמצא"
+                    };
+                }
+
+                item.IsCompleted = true;
+                item.CompletedAt = DateTime.UtcNow;
+                item.CompletedByWorkerId = request.CompletedByWorkerId;
+
+                if (!string.IsNullOrEmpty(request.Notes))
+                    item.Notes = request.Notes;
+
+                await _taskRepository.UpdateChecklistItemAsync(item);
+                await UpdateTaskStatusIfNeededAsync(item.CompanyTaskId);
+
+                return new CompleteChecklistItemResult
+                {
+                    Success = true,
+                    Message = "הפריט סומן כבוצע בהצלחה"
+                };
+            }
+
+            private async Task UpdateTaskStatusIfNeededAsync(int taskId)
+            {
+                var task = await _taskRepository.GetByIdAsync(taskId);
+
+                if (task == null || !task.ChecklistItems.Any())
+                    return;
+
+                var allCompleted = task.ChecklistItems.All(i => i.IsCompleted);
+
+                if (allCompleted &&
+                    (task.Status == TaskStatus1.Pending || task.Status == TaskStatus1.InProgress))
+                {
+                    task.Status = TaskStatus1.Done;
+                    task.Completeddate = DateOnly.FromDateTime(DateTime.UtcNow);
+                    task.Updatedat = DateTime.UtcNow;
+                    await _taskRepository.UpdateAsync(task);
+                }
+                else if (task.ChecklistItems.Any(i => i.IsCompleted) &&
+                         task.Status == TaskStatus1.Pending)
+                {
+                    task.Status = TaskStatus1.InProgress;
+                    task.Updatedat = DateTime.UtcNow;
+                    await _taskRepository.UpdateAsync(task);
+                }
+            }
+        }
+
+        // ==========================================
+        // HANDLER: ביטול השלמת פריט Checklist
+        // ==========================================
+
+        public class UncompleteChecklistItemCommandHandler
+            : IRequestHandler<UncompleteChecklistItemCommand, bool>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public UncompleteChecklistItemCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<bool> Handle(
+                UncompleteChecklistItemCommand request,
+                CancellationToken cancellationToken)
+            {
+                var item = await _taskRepository.GetChecklistItemByIdAsync(request.ItemId);
+
+                if (item == null)
+                    return false;
+
+                item.IsCompleted = false;
+                item.CompletedAt = null;
+                item.CompletedByWorkerId = null;
+
+                await _taskRepository.UpdateChecklistItemAsync(item);
+                return true;
+            }
+        }
+
+        // ==========================================
+        // HANDLER: הוספת פריט Checklist
+        // ==========================================
+
+        public class AddChecklistItemCommandHandler
+            : IRequestHandler<AddChecklistItemCommand, AddChecklistItemResult>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public AddChecklistItemCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<AddChecklistItemResult> Handle(
+                AddChecklistItemCommand request,
+                CancellationToken cancellationToken)
+            {
+                var task = await _taskRepository.GetByIdAsync(request.TaskId);
+
+                if (task == null)
+                {
+                    return new AddChecklistItemResult
+                    {
+                        Success = false,
+                        Message = "המשימה לא נמצאה"
+                    };
+                }
+
+                var orderIndex = request.OrderIndex ??
+                    (task.ChecklistItems.Any() ? task.ChecklistItems.Max(i => i.OrderIndex) + 1 : 0);
+
+                var item = new CompanyTaskChecklistItem
+                {
+                    CompanyTaskId = request.TaskId,
+                    Title = request.Title,
+                    Description = request.Description,
+                    OrderIndex = orderIndex,
+                    IsCompleted = false,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var addedItem = await _taskRepository.AddChecklistItemAsync(item);
+
+                return new AddChecklistItemResult
+                {
+                    Success = true,
+                    ItemId = addedItem.Id,
+                    Message = "הפריט נוסף בהצלחה"
+                };
+            }
+        }
+
+        // ==========================================
+        // HANDLER: מחיקת פריט Checklist
+        // ==========================================
+
+        public class DeleteChecklistItemCommandHandler : IRequestHandler<DeleteChecklistItemCommand, bool>
+        {
+            private readonly ICompanyTaskRepository _taskRepository;
+
+            public DeleteChecklistItemCommandHandler(ICompanyTaskRepository taskRepository)
+            {
+                _taskRepository = taskRepository;
+            }
+
+            public async Task<bool> Handle(
+                DeleteChecklistItemCommand request,
+                CancellationToken cancellationToken)
+            {
+                await _taskRepository.DeleteChecklistItemAsync(request.ItemId);
+                return true;
+            }
+        }
+    }
+
+
+    // ==========================================
+    // HANDLER: קבלת משימה לפי ID
+    // ==========================================
+
+    public class GetTaskByIdQueryHandler : IRequestHandler<GetTaskByIdQuery, CompanyTaskDetailDto?>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public GetTaskByIdQueryHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<CompanyTaskDetailDto?> Handle(
+            GetTaskByIdQuery request,
+            CancellationToken cancellationToken)
+        {
+            var task = await _taskRepository.GetByIdAsync(request.TaskId);
+
+            if (task == null)
+                return null;
+
+            return new CompanyTaskDetailDto
+            {
+                Id = task.Id,
+                CompanyId = task.Companyid,
+                CompanyName = task.Company?.Name ?? string.Empty,
+                CompanyTaxId = task.Company?.Taxid,
+                TaskTypeId = task.Tasktypeid,
+                TaskTypeName = task.Tasktype?.Name ?? string.Empty,
+                TaskTypeCategory = task.Tasktype?.Category.ToString(),
+                //TaskTypeDescription = task.Tasktype?.Description.T,
+                Period = task.Period,
+                Status = task.Status.ToString(),
+                Priority = task.Priority,
+                DueDate = task.Duedate,
+                CompletedDate = task.Completeddate,
+                AssignedWorkerId = task.Assignedworkerid,
+                AssignedWorkerFirstName = task.Assignedworker?.Firstname,
+                AssignedWorkerLastName = task.Assignedworker?.Lastname,
+                Notes = task.Notes,
+                CreatedAt = task.Createdat,
+                UpdatedAt = task.Updatedat,
+                ChecklistProgress = CalculateProgress(task.ChecklistItems),
+                ChecklistItems = task.ChecklistItems.Select(i => new ChecklistItemDto
+                {
+                    Id = i.Id,
+                    Title = i.Title,
+                    Description = i.Description,
+                    OrderIndex = i.OrderIndex,
+                    IsCompleted = i.IsCompleted,
+                    CompletedAt = i.CompletedAt,
+                    CompletedByWorkerId = i.CompletedByWorkerId,
+                    CompletedByWorkerName = i.CompletedByWorker?.Firstname,
+                    Notes = i.Notes
+                }).ToList()
+            };
+        }
+
+        private ChecklistProgressDto CalculateProgress(
+            ICollection<CompanyTaskChecklistItem> items)
+        {
+            if (items == null || !items.Any())
+            {
+                return new ChecklistProgressDto
+                {
+                    Total = 0,
+                    Completed = 0
+                };
+            }
+
+            var completed = items.Count(i => i.IsCompleted);
+
+            return new ChecklistProgressDto
+            {
+                Total = items.Count,
+                Completed = completed
+            };
+        }
+    }
+
+    // ==========================================
+    // HANDLER: קבלת משימות של חברה
+    // ==========================================
+
+    public class GetCompanyTasksQueryHandler
+        : IRequestHandler<GetCompanyTasksQuery, List<CompanyTaskDto>>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public GetCompanyTasksQueryHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<List<CompanyTaskDto>> Handle(
+            GetCompanyTasksQuery request,
+            CancellationToken cancellationToken)
+        {
+            var tasks = await _taskRepository.GetCompanyTasksAsync(
+                request.CompanyId,
+                request.Year,
+                request.Month,
+                request.Status
             );
 
-            if (rowsAffected == 0)
+            return tasks.Select(t => new CompanyTaskDto
             {
-                throw new Exception($"לא הצלחנו לעדכן את המשימה {request.TaskId}");
+                Id = t.Id,
+                CompanyId = t.Companyid,
+                CompanyName = t.Company?.Name ?? string.Empty,
+                TaskTypeId = t.Tasktypeid,
+                TaskTypeName = t.Tasktype?.Name ?? string.Empty,
+                TaskTypeCategory = t.Tasktype?.Category.ToString(),
+                Period = t.Period,
+                Status = t.Status.ToString(),
+                Priority = t.Priority,
+                DueDate = t.Duedate,
+                CompletedDate = t.Completeddate,
+                AssignedWorkerId = t.Assignedworkerid,
+                AssignedWorkerName = t.Assignedworker.Firstname+ t.Assignedworker.Lastname,
+                Notes = t.Notes,
+                CreatedAt = t.Createdat,
+                UpdatedAt = t.Updatedat,
+                ChecklistProgress = CalculateProgress(t.ChecklistItems)
+            }).ToList();
+        }
+
+        private ChecklistProgressDto CalculateProgress(
+            ICollection<CompanyTaskChecklistItem> items)
+        {
+            if (items == null || !items.Any())
+            {
+                return new ChecklistProgressDto
+                {
+                    Total = 0,
+                    Completed = 0
+                };
             }
 
-            _logger.LogInformation($"✅ שינויים נשמרו בהצלחה!");
-            return Unit.Value;
+            var completed = items.Count(i => i.IsCompleted);
+
+            return new ChecklistProgressDto
+            {
+                Total = items.Count,
+                Completed = completed
+            };
         }
-        catch (Exception ex)
+    }
+
+    // ==========================================
+    // HANDLER: קבלת משימות של עובד
+    // ==========================================
+
+    public class GetWorkerTasksQueryHandler
+        : IRequestHandler<GetWorkerTasksQuery, List<CompanyTaskDto>>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public GetWorkerTasksQueryHandler(ICompanyTaskRepository taskRepository)
         {
-            _logger.LogInformation($"❌ שגיאה: {ex.Message}");
-            throw;
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<List<CompanyTaskDto>> Handle(
+            GetWorkerTasksQuery request,
+            CancellationToken cancellationToken)
+        {
+            var tasks = await _taskRepository.GetTasksByWorkerIdAsync(request.WorkerId);
+
+            var filteredTasks = request.Status.HasValue
+                ? tasks.Where(t => t.Status == request.Status.Value)
+                : tasks;
+
+            return filteredTasks.Select(t => new CompanyTaskDto
+            {
+                Id = t.Id,
+                CompanyId = t.Companyid,
+                CompanyName = t.Company?.Name ?? string.Empty,
+                TaskTypeId = t.Tasktypeid,
+                TaskTypeName = t.Tasktype?.Name ?? string.Empty,
+                TaskTypeCategory = t.Tasktype?.Category.ToString(),
+                Period = t.Period,
+                Status = t.Status.ToString(),
+                Priority = t.Priority,
+                DueDate = t.Duedate,
+                CompletedDate = t.Completeddate,
+                AssignedWorkerId = t.Assignedworkerid,
+                AssignedWorkerName = t.Assignedworker?.Firstname,
+                Notes = t.Notes,
+                CreatedAt = t.Createdat,
+                UpdatedAt = t.Updatedat,
+                ChecklistProgress = CalculateProgress(t.ChecklistItems)
+            }).ToList();
+        }
+
+        private ChecklistProgressDto CalculateProgress(
+            ICollection<CompanyTaskChecklistItem> items)
+        {
+            if (items == null || !items.Any())
+            {
+                return new ChecklistProgressDto
+                {
+                    Total = 0,
+                    Completed = 0
+                };
+            }
+
+            var completed = items.Count(i => i.IsCompleted);
+
+            return new ChecklistProgressDto
+            {
+                Total = items.Count,
+                Completed = completed
+            };
+        }
+    }
+
+    // ==========================================
+    // HANDLER: קבלת משימות באיחור
+    // ==========================================
+
+    public class GetOverdueTasksQueryHandler
+        : IRequestHandler<GetOverdueTasksQuery, List<ActiveCompanyTaskDto>>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public GetOverdueTasksQueryHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<List<ActiveCompanyTaskDto>> Handle(
+            GetOverdueTasksQuery request,
+            CancellationToken cancellationToken)
+        {
+            var tasks = await _taskRepository.GetOverdueTasksAsync();
+
+            return tasks.Select(t => new ActiveCompanyTaskDto
+            {
+                Id = t.Id,
+                CompanyName = t.Company?.Name ?? string.Empty,
+                TaskTypeName = t.Tasktype?.Name ?? string.Empty,
+                Category = t.Tasktype?.Category.ToString(),
+                Period = t.Period,
+                Status = t.Status.ToString(),
+                Priority = t.Priority,
+                DueDate = t.Duedate,
+                AssignedWorkerName = t.Assignedworker?.Firstname,
+                IsOverdue = true,
+                ChecklistCompletedCount = t.ChecklistItems?.Count(i => i.IsCompleted) ?? 0,
+                ChecklistTotalCount = t.ChecklistItems?.Count ?? 0
+            }).ToList();
+        }
+    }
+
+    // ==========================================
+    // HANDLER: קבלת משימות לפי סטטוס
+    // ==========================================
+
+    public class GetTasksByStatusQueryHandler
+        : IRequestHandler<GetTasksByStatusQuery, List<ActiveCompanyTaskDto>>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public GetTasksByStatusQueryHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<List<ActiveCompanyTaskDto>> Handle(
+            GetTasksByStatusQuery request,
+            CancellationToken cancellationToken)
+        {
+            var tasks = await _taskRepository.GetTasksByStatusAsync(request.Status.ToString());
+
+            return tasks.Select(t => new ActiveCompanyTaskDto
+            {
+                Id = t.Id,
+                CompanyName = t.Company?.Name ?? string.Empty,
+                TaskTypeName = t.Tasktype?.Name ?? string.Empty,
+                Category = t.Tasktype?.Category.ToString(),
+                Period = t.Period,
+                Status = t.Status.ToString(),
+                Priority = t.Priority,
+                DueDate = t.Duedate,
+                AssignedWorkerName = t.Assignedworker?.Firstname,
+                IsOverdue = t.Duedate.HasValue && t.Duedate.Value < DateOnly.FromDateTime(DateTime.Now),
+                ChecklistCompletedCount = t.ChecklistItems?.Count(i => i.IsCompleted) ?? 0,
+                ChecklistTotalCount = t.ChecklistItems?.Count ?? 0
+            }).ToList();
+        }
+    }
+
+    // ==========================================
+    // HANDLER: קבלת פריטי Checklist
+    // ==========================================
+
+    public class GetTaskChecklistItemsQueryHandler
+        : IRequestHandler<GetTaskChecklistItemsQuery, List<ChecklistItemDto>>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public GetTaskChecklistItemsQueryHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<List<ChecklistItemDto>> Handle(
+            GetTaskChecklistItemsQuery request,
+            CancellationToken cancellationToken)
+        {
+            var items = await _taskRepository.GetTaskChecklistItemsAsync(request.TaskId);
+
+            return items.Select(i => new ChecklistItemDto
+            {
+                Id = i.Id,
+                Title = i.Title,
+                Description = i.Description,
+                OrderIndex = i.OrderIndex,
+                IsCompleted = i.IsCompleted,
+                CompletedAt = i.CompletedAt,
+                CompletedByWorkerId = i.CompletedByWorkerId,
+                CompletedByWorkerName = i.CompletedByWorker?.Firstname,
+                Notes = i.Notes
+            }).ToList();
+        }
+    }
+public class GetChecklistTemplateByTaskTypeHandler : IRequestHandler<GetChecklistTemplateByTaskTypeQuery, ChecklistTemplateDto>
+{
+    private readonly ICompanyTaskRepository _repository;
+
+    public GetChecklistTemplateByTaskTypeHandler(ICompanyTaskRepository repository) => _repository = repository;
+
+    public async Task<ChecklistTemplateDto> Handle(GetChecklistTemplateByTaskTypeQuery request, CancellationToken ct)
+    {
+        var template = await _repository.GetChecklistTemplateByTaskTypeAsync(request.TaskTypeId);
+        if (template == null) return new ChecklistTemplateDto { TaskTypeId = request.TaskTypeId };
+
+        return new ChecklistTemplateDto
+        {
+            Id = template.Id,
+            TaskTypeId = template.TaskTypeId,
+            Items = template.Items.Select(i => new ChecklistTemplateItemDto
+            {
+                Title = i.Title,
+                Description = i.Description,
+                OrderIndex = i.OrderIndex,
+                IsOptional = i.IsOptional
+            }).ToList()
+        };
+    }
+    public class SaveChecklistTemplateCommandHandler : IRequestHandler<SaveChecklistTemplateCommand, bool>
+    {
+        private readonly ICompanyTaskRepository _taskRepository;
+
+        public SaveChecklistTemplateCommandHandler(ICompanyTaskRepository taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<bool> Handle(SaveChecklistTemplateCommand request, CancellationToken cancellationToken)
+        {
+            // 1. ננסה להביא את התבנית הקיימת עבור סוג המשימה הזה
+            var template = await _taskRepository.GetChecklistTemplateByTaskTypeAsync(request.TaskTypeId);
+
+            // 2. אם לא קיימת תבנית, ניצור אחת חדשה
+            if (template == null)
+            {
+                template = new TaskChecklistTemplate
+                {
+                    TaskTypeId = request.TaskTypeId,
+                    Name = $"Template for Task Type {request.TaskTypeId}", // אפשר לשפר את השם בהמשך
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+            }
+            else
+            {
+                // אם קיימת, נעדכן רק את תאריך העדכון
+                template.UpdatedAt = DateTime.UtcNow;
+            }
+
+            // 3. נמפה את רשימת הפריטים מה-DTO לישויות של הדומיין (Entities)
+            // אנחנו יוצרים רשימה חדשה כי ה-Repository ימחק את הישנים ויכניס את אלו
+            var newItems = request.Items.Select(itemDto => new TaskChecklistTemplateItem
+            {
+                Title = itemDto.Title,
+                Description = itemDto.Description,
+                OrderIndex = itemDto.OrderIndex,
+                IsOptional = itemDto.IsOptional,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            // 4. נשלח ל-Repository לביצוע השמירה (כולל המחיקה של הישנים בתוך טרנזקציה)
+            try
+            {
+                await _taskRepository.UpdateChecklistTemplateAsync(template, newItems);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // כאן אפשר להוסיף לוג של שגיאה במידה והשמירה נכשלה
+                Console.WriteLine($"[ERROR] Failed to save checklist template: {ex.Message}");
+                return false;
+            }
+        }
+    } }
+
+
+    public class GetTaskTypesHandler : IRequestHandler<GetTaskTypesQuery, List<TaskTypeDto>>
+    {
+        private readonly ICompanyTaskRepository _repository;
+
+        public GetTaskTypesHandler(ICompanyTaskRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<List<TaskTypeDto>> Handle(GetTaskTypesQuery request, CancellationToken cancellationToken)
+        {
+            var types = await _repository.GetTaskTypesAsync();
+
+            // מיפוי מה-Entity של ה-Domain ל-DTO של ה-Application
+            return types.Select(t => new TaskTypeDto
+            {
+                Id = t.Id,
+                Name = t.Name
+            }).ToList();
+        }
+
+    }
+
+public class GetTaskMatrixHandler : IRequestHandler<GetTaskMatrixQuery, List<CompanyTaskConfigDto>>
+{
+    private readonly ICompanyRepository _companyRepo;
+    private readonly ITaskTypeRepository _taskTypeRepo; // ודאי שקיים ממשק כזה
+    private readonly ITaskConfigurationRepository _configRepo;
+
+    public GetTaskMatrixHandler(
+        ICompanyRepository companyRepo,
+        ITaskTypeRepository taskTypeRepo,
+        ITaskConfigurationRepository configRepo)
+    {
+        _companyRepo = companyRepo;
+        _taskTypeRepo = taskTypeRepo;
+        _configRepo = configRepo;
+    }
+
+    public async Task<List<CompanyTaskConfigDto>> Handle(GetTaskMatrixQuery request, CancellationToken cancellationToken)
+    {
+        // 1. שליפת כל הנתונים מהרפוזיטוריז
+        var companies = await _companyRepo.GetAllAsync();
+        var taskTypes = await _taskTypeRepo.GetAllAsync();
+        var existingConfigs = await _configRepo.GetAllWithWorkersAsync();
+
+        // 2. בניית המטריצה (Cross Join)
+        var matrix = from c in companies
+                     from tt in taskTypes
+                     join conf in existingConfigs
+                        on new { CId = c.Id, TtId = tt.Id }
+                        equals new { CId = conf.Companyid, TtId = conf.Tasktypeid } into joined
+                     from conf in joined.DefaultIfEmpty()
+                     select new CompanyTaskConfigDto
+                     {
+                         CompanyId = c.Id,
+                         CompanyName = c.Name,
+                         TaskTypeId = tt.Id,
+                         TaskTypeName = tt.Name,
+                         ConfigurationId = conf?.Id,
+                         assignedWorkerId = conf?.Assignedworkerid,
+                         WorkerName = conf?.Assignedworker?.Firstname ?? "לא שובץ",
+                         Frequency = conf?.Frequency ?? 1,
+                         DueDay = conf?.Dueday ?? 15,
+                         IsActive = conf?.Isactive ?? false
+                     };
+
+        return matrix.OrderBy(m => m.CompanyName).ThenBy(m => m.TaskTypeName).ToList();
+    }
+    public class SaveTaskConfigurationHandler : IRequestHandler<SaveTaskConfigurationCommand, bool>
+    {
+        private readonly ITaskConfigurationRepository _repository;
+
+        public SaveTaskConfigurationHandler(ITaskConfigurationRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<bool> Handle(SaveTaskConfigurationCommand request, CancellationToken cancellationToken)
+        {
+            // שימוש במתודה הייעודית שהוספנו
+            var existingConfig = await _repository.GetByCompanyAndTypeAsync(request.CompanyId, request.TaskTypeId);
+
+            if (existingConfig == null)
+            {
+                var newConfig = new CompanyTaskConfiguration
+                {
+                    Companyid = request.CompanyId,
+                    Tasktypeid = request.TaskTypeId,
+                    Assignedworkerid = request.AssignedWorkerId,
+                    Frequency = request.Frequency,
+                    Dueday = request.DueDay,
+                    Isactive = request.IsActive,
+                    Createdat = DateTime.UtcNow
+                };
+                await _repository.AddAsync(newConfig);
+            }
+            else
+            {
+                existingConfig.Assignedworkerid = request.AssignedWorkerId;
+                existingConfig.Frequency = request.Frequency;
+                existingConfig.Dueday = request.DueDay;
+                existingConfig.Isactive = request.IsActive;
+                existingConfig.Updatedat = DateTime.UtcNow;
+
+                _repository.UpdateAsync(existingConfig);
+            }
+
+            // בדרך כלל ה-Unit of Work או ה-Repository הגנרי מחזיק את ה-Save
+            await _repository.SaveChangesAsync();
+            return true;
         }
     }
 }

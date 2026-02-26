@@ -108,12 +108,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     this.authService.googleLogin(request).subscribe({
       next: (result) => {
+       
         try{
-        this.workerService.currentWorker = result.worker;        
+        this.workerService.currentWorker = result.worker;
+        
   this.router.navigate(['/home']);
   
         }
         catch(error){
+          this.errorMessage = 'שגיאה בשמירת פרטי המשתמש. אנא נסה להתחבר שוב';
         }
 finally{
         this.isLoading = false;
@@ -122,6 +125,7 @@ finally{
       
       },
       error: (error) => {
+        // console.error('🔴 שגיאה בהתחברות Google:', error);
         this.isLoading = false;
         if (error.status === 0) {
           this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט';
@@ -157,8 +161,9 @@ finally{
 
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
-       
+      
         this.workerService.currentWorker = response.worker;
+ 
         this.isLoading = false;
         this.router.navigate(['/home']);
       },

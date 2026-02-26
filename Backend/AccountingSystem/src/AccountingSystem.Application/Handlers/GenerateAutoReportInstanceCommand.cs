@@ -64,7 +64,7 @@ namespace AccountingSystem.Application.Handlers
                 return await _unitOfWork.ReportInstances.CheckReportsAsync();
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 _logger.LogError(ex, "Failed to check generate monthly reports for date: {Date}", DateTime.Now.Date);
                 throw;
