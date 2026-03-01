@@ -8,7 +8,6 @@
   background: var(--bg-primary);
 }
 
-/* Page Header */
 .page-header {
   text-align: right;
   margin-bottom: var(--space-6);
@@ -30,9 +29,7 @@
   letter-spacing: -0.02em;
 }
 
-.icon-header {
-  display: none;
-}
+.icon-header { display: none; }
 
 .page-subtitle {
   font-size: var(--font-size-xs);
@@ -41,7 +38,6 @@
   font-weight: var(--font-regular);
 }
 
-/* Alerts */
 .alert {
   max-width: 1400px;
   margin: 0 auto var(--space-6);
@@ -58,17 +54,14 @@
   border-right: 3px solid var(--status-warning);
   color: var(--status-warning);
   background: var(--status-warning-bg);
-  border-color: var(--status-warning);
 }
 
 .alert-error {
   border-right: 3px solid var(--status-error);
   color: var(--status-error);
   background: var(--status-error-bg);
-  border-color: var(--status-error);
 }
 
-/* Companies List Grid */
 .company-list {
   list-style: none;
   padding: 0;
@@ -79,7 +72,6 @@
   margin: 0 auto var(--space-8) auto;
 }
 
-/* Company Card */
 .company-card {
   background: var(--bg-surface);
   padding: var(--space-5);
@@ -120,7 +112,6 @@
   min-width: 60px;
 }
 
-/* Status Badges */
 .active {
   color: var(--status-success);
   font-weight: var(--font-semibold);
@@ -129,7 +120,6 @@
   border-radius: var(--radius-sm);
   display: inline-block;
   font-size: 11px;
-  border: 1px solid transparent;
 }
 
 .inactive {
@@ -140,10 +130,8 @@
   border-radius: var(--radius-sm);
   display: inline-block;
   font-size: 11px;
-  border: 1px solid transparent;
 }
 
-/* Notes Section */
 .notes {
   font-size: 11px;
   color: var(--text-secondary);
@@ -154,7 +142,6 @@
   border-right: 2px solid var(--border-strong);
 }
 
-/* Action Buttons Container */
 .action-buttons {
   display: flex;
   gap: var(--space-2);
@@ -164,7 +151,6 @@
   flex-wrap: wrap;
 }
 
-/* Action Buttons */
 .btn-action {
   flex: 1;
   min-width: 100px;
@@ -184,58 +170,22 @@
   color: var(--text-primary);
 }
 
-.btn-action:hover {
-  background: var(--bg-hover);
-}
+.btn-action:hover { background: var(--bg-hover); }
+.btn-action .icon { display: none; }
 
-.btn-action .icon {
-  display: none;
-}
+.btn-tasks { background: rgb(59,130,246); color: var(--text-inverse); border-color: rgb(59,130,246); }
+.btn-tasks:hover { background: rgb(37,99,235); border-color: rgb(37,99,235); box-shadow: var(--shadow-md); }
 
-/* Tasks Button */
-.btn-tasks {
-  background: rgb(59, 130, 246);
-  color: var(--text-inverse);
-  border-color: rgb(59, 130, 246);
-}
+.btn-reports { background: rgb(96,165,250); color: var(--text-inverse); border-color: rgb(96,165,250); }
+.btn-reports:hover { background: rgb(59,130,246); border-color: rgb(59,130,246); box-shadow: var(--shadow-md); }
 
-.btn-tasks:hover {
-  background: rgb(37, 99, 235);
-  border-color: rgb(37, 99, 235);
-  box-shadow: var(--shadow-md);
-}
+.btn-edit { background: rgb(40,40,206); color: var(--text-inverse); border-color: rgb(40,40,206); }
+.btn-edit:hover { background: rgb(30,30,180); border-color: rgb(30,30,180); box-shadow: var(--shadow-md); }
 
-/* Reports Button */
-.btn-reports {
-  background: rgb(96, 165, 250);
-  color: var(--text-inverse);
-  border-color: rgb(96, 165, 250);
-}
+/* ✅ תוקן - הוצא מתוך media query */
+.btn-delete { background-color: #dc3545; color: white; border-color: #dc3545; }
+.btn-delete:hover { background-color: #c82333; border-color: #c82333; box-shadow: var(--shadow-md); }
 
-.btn-reports:hover {
-  background: rgb(59, 130, 246);
-  border-color: rgb(59, 130, 246);
-  box-shadow: var(--shadow-md);
-}
-
-/* Edit Button */
-.btn-edit {
-  background: rgb(40, 40, 206);
-  color: var(--text-inverse);
-  border-color: rgb(40, 40, 206);
-}
-
-.btn-edit:hover {
-  background: rgb(30, 30, 180);
-  border-color: rgb(30, 30, 180);
-  box-shadow: var(--shadow-md);
-}
-
-.btn-action:active {
-  transform: translateY(0);
-}
-
-/* Add Company Container */
 .add-company-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -243,7 +193,6 @@
   padding: var(--space-5) 0;
 }
 
-/* Add Company Button */
 .btn-add-company {
   background: var(--status-success);
   color: var(--text-inverse);
@@ -262,33 +211,8 @@
   box-shadow: var(--shadow-sm);
 }
 
-.btn-add-company .icon {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.btn-add-company:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.btn-add-company:active {
-  transform: translateY(0);
-}
-
-/* Empty State */
-.no-companies {
-  text-align: center;
-  padding: var(--space-16) var(--space-6);
-  color: var(--text-secondary);
-  font-size: var(--font-size-md);
-  background: var(--bg-surface);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-lg);
-  max-width: 600px;
-  margin: var(--space-10) auto;
-}
+.btn-add-company:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn-add-company:active { transform: translateY(0); }
 
 .empty-state {
   text-align: center;
@@ -304,93 +228,21 @@
   gap: var(--space-4);
 }
 
-.empty-icon {
-  color: var(--text-tertiary);
-  opacity: 0.5;
-  margin-bottom: var(--space-2);
-}
+.empty-icon { color: var(--text-tertiary); opacity: 0.5; margin-bottom: var(--space-2); }
+.empty-title { font-size: var(--font-size-lg); font-weight: var(--font-semibold); color: var(--text-primary); margin: 0; }
+.empty-description { font-size: var(--font-size-sm); color: var(--text-secondary); margin: 0; max-width: 400px; line-height: 1.6; }
+.empty-action { margin-top: var(--space-4); }
 
-.empty-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-semibold);
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.empty-description {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  margin: 0;
-  max-width: 400px;
-  line-height: 1.6;
-}
-
-.empty-action {
-  margin-top: var(--space-4);
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .container {
-    padding: var(--space-4);
-  }
-
-  .page-header {
-    margin-bottom: var(--space-8);
-    padding-bottom: var(--space-5);
-  }
-
-  .page-title {
-    font-size: var(--font-size-3xl);
-  }
-
-  .icon-header {
-    font-size: var(--font-size-3xl);
-  }
-
-  .page-subtitle {
-    font-size: var(--font-size-sm);
-  }
-
-  .company-list {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  .action-buttons {
-    flex-direction: column;
-  }
-
-  .btn-action {
-    width: 100%;
-    min-width: unset;
-  }
+  .container { padding: var(--space-4); }
+  .page-title { font-size: var(--font-size-3xl); }
+  .company-list { grid-template-columns: 1fr; gap: var(--space-4); }
+  .action-buttons { flex-direction: column; }
+  .btn-action { width: 100%; min-width: unset; }
 }
 
 @media (max-width: 480px) {
-  .page-title {
-    font-size: var(--font-size-2xl);
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .company-card {
-    padding: var(--space-5);
-  }
-
-  .company-card h5 {
-    font-size: var(--font-size-md);
-  }
-
-  /* הוסף את זה לקובץ ה-CSS הקיים */
-
-.btn-delete {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-delete:hover {
-  background-color: #c82333;
-}
-}
+  .page-title { font-size: var(--font-size-2xl); flex-direction: column; gap: var(--space-2); }
+  .company-card { padding: var(--space-5); }
+  .company-card h5 { font-size: var(--font-size-md); }
 }

@@ -115,7 +115,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<Worker?> GetByIdAsync(int id)
         {
             return await context.Workers
-                .Include(w => w.Companyworkers) 
+        .Include(w => w.Companyworkers.Where(cw => cw.Isactive == true))
                     .ThenInclude(wc => wc.Company)
                 .FirstOrDefaultAsync(w => w.Id == id);
         }
@@ -124,8 +124,8 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await context.Companyworkers
                 .Where(cw => cw.Companyid == companyId)
-                .Include(cw => cw.Worker) // טעינת נתוני העובד מטבלת Worker
-                .Select(cw => cw.Worker)   // החזרת הישות של העובד בלבד
+                .Include(cw => cw.Worker) 
+                .Select(cw => cw.Worker)   
                 .ToListAsync();
         }
 

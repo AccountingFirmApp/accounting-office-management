@@ -173,8 +173,8 @@ export class CompanyReportConfigListComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.configService.getAll().subscribe({
         next: (data) => {
-          this.configs = data.filter(c => c.isActive === true);
-          this.deletedConfigs = data.filter(c => c.isActive === false);
+          this.configs = data.filter(c => c.isactive === true);
+          this.deletedConfigs = data.filter(c => c.isactive === false);
           resolve();
         },
         error: (err) => {

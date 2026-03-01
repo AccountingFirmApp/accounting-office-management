@@ -184,19 +184,21 @@ namespace AccountingSystem.Application.Commands.Tasks
             WorkerId = workerId;
         }
     }
+    
     public class SaveChecklistTemplateCommand : IRequest<bool>
     {
         public int TaskTypeId { get; set; }
         public List<ChecklistTemplateItemDto> Items { get; set; }
     }
 
+
     public class SaveTaskConfigurationCommand : IRequest<bool>
-    {
-        public int CompanyId { get; set; }
-        public int TaskTypeId { get; set; }
-        public int? AssignedWorkerId { get; set; }
-        public int Frequency { get; set; }
-        public int DueDay { get; set; }
-        public bool IsActive { get; set; }
+        {
+            public int CompanyId { get; set; }
+            public int TaskTypeId { get; set; }
+            public int? AssignedWorkerId { get; set; }
+            public int Frequency { get; set; }
+            public int DueDay { get; set; }
+            public bool IsActive { get; set; }
+        }
     }
-}

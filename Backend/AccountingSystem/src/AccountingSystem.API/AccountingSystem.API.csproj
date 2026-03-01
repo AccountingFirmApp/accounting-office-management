@@ -15,11 +15,12 @@
 	<!-- API/Web Packages -->
 	<ItemGroup>
 		<!-- Swagger/OpenAPI -->
+		<PackageReference Include="Hangfire" Version="1.8.17" />
 		<PackageReference Include="MediatR" Version="14.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.17" />
 		<PackageReference Include="Hangfire.Core" Version="1.8.17" />
-		<PackageReference Include="Hangfire.PostgreSql" Version="1.20.10" />
+		<PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
 

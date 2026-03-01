@@ -3,6 +3,7 @@ using System;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AccountingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    partial class AccountingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228195925_AddTaskTypeConfiguration")]
+    partial class AddTaskTypeConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,7 +26,8 @@ namespace AccountingSystem.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "recurrence_type", "RecurrenceType", new[] { "OneTime", "Monthly", "BiMonthly", "Quarterly", "Yearly", "Custom" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "recurrence_type", new[] { "Daily", "Weekly", "Monthly", "Quarterly", "Yearly" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "recurrence_type", "recurrence_type", new[] { "one_time", "monthly", "quarterly", "yearly", "bi_monthly", "custom" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_priority", new[] { "Low", "Normal", "High", "Urgent" });
@@ -250,10 +254,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnName("period");
 
                     b.Property<int>("Priority")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("priority")
-                        .HasDefaultValueSql("'Normal'::task_priority");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Status")
                         .ValueGeneratedOnAdd()

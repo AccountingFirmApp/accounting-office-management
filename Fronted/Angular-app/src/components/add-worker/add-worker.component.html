@@ -34,27 +34,7 @@
         [placeholder]="isEditMode && workerForm.get('phone')?.value ? workerForm.get('phone')?.value : '050-1234567'"
         [readonly]="isEditMode" [class.readonly-field]="isEditMode" />
     </div>
-    <!-- אימייל -->
-    <!-- <div class="form-group">
-      <label>אימייל {{ !isEditMode ? '*' : '' }}</label>
-      <input formControlName="email" type="email"
-        [placeholder]="isEditMode ? workerForm.get('email')?.value : 'example@email.com'" [readonly]="isEditMode"
-        [class.readonly-field]="isEditMode" />
-      <span class="error" *ngIf="!isEditMode && workerForm.get('email')?.invalid && workerForm.get('email')?.touched">
-        נא להזין אימייל תקין
-      </span>
-    </div>
-
-    
-    ✅ סיסמה - חובה רק בהוספה, נסתר בעריכה
-    <div class="form-group" *ngIf="!isEditMode">
-      <label>סיסמה *</label>
-      <input formControlName="password" type="password" placeholder="לפחות 6 תווים" />
-      <span class="error" *ngIf="workerForm.get('password')?.invalid && workerForm.get('password')?.touched">
-        נדרשת סיסמה באורך 6 תווים לפחות
-      </span>
-    </div> -->
-<!-- אימייל -->
+   
 <div class="form-group">
   <label>אימייל {{ !isEditMode ? '*' : '' }}</label>
   <input 

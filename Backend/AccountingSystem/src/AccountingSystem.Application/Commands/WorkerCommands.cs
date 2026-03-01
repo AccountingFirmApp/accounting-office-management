@@ -20,7 +20,7 @@ public class CreateWorkerCommand : IRequest<WorkerDto>
     public bool Isactive { get; set; } = true;
     public DateOnly? Hiredate { get; set; }
     public List<int>? CompanyIds { get; set; }
-    public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty; 
     public bool RestoreExistingData { get; set; } = false;
 
 }

@@ -13,9 +13,10 @@ import { TaskDetail } from '../models/auth';
 export class CompanyService {
   private apiUrl = 'https://localhost:7118/api/companies';
   constructor(private http: HttpClient, private authService: AuthService) { }
+
   getAllCompanies(isActive: boolean = true): Observable<CompanyDto[]> {
     const token = this.authService.getToken();
-  
+
     return this.http.get<CompanyDto[]>(`${this.apiUrl}?isActive=${isActive}`, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -26,7 +27,11 @@ export class CompanyService {
   getCompanyById(id: number): Observable<CompanyDto> {
     return this.http.get<CompanyDto>(`${this.apiUrl}/${id}`);
   }
-createCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
+   getCompanyByWorkerId(id: number): Observable<CompanyDto[]> {
+    return this.http.get<CompanyDto[]>(`${this.apiUrl}/worker/${id}`);
+  }
+
+  createCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
     const token = this.authService.getToken();
     return this.http.post<CompanyDto>(this.apiUrl, command, {
       headers: {
@@ -62,19 +67,11 @@ createCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
     const url = `${this.apiUrl}/${companyId}/tasks/${taskId}/status`;
     return this.http.patch(url, { status });
   }
-  addCompany(command: CreateCompanyCommand): Observable<CompanyDto> {
-    const token = this.authService.getToken();
   
-    return this.http.post<CompanyDto>(this.apiUrl, command, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
   getInactiveCompanyByTaxId(taxId: string): Observable<CompanyDto | null> {
-  const token = this.authService.getToken();
-  return this.getAllCompanies(false).pipe(
-    map(companies => companies.find(c => c.taxId === taxId) || null)
-  );
-}
+    const token = this.authService.getToken();
+    return this.getAllCompanies(false).pipe(
+      map(companies => companies.find(c => c.taxId === taxId) || null)
+    );
+  }
 }

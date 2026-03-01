@@ -29,20 +29,17 @@ namespace AccountingSystem.API.Controllers
             _mediator = mediator;
         }
 
-    
+
         /// <summary>
         /// קבלת כל החברות
         /// GET: api/companies
         /// </summary>
-        /// 
-        //[Authorize(Roles = "Admin")]
-
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetAll()
+        public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetAll([FromQuery] bool? isActive = true)
         {
             try
             {
-                var query = new GetAllCompaniesQuery();
+                var query = new GetAllCompaniesQuery { IsActive = isActive };
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
@@ -186,28 +183,6 @@ namespace AccountingSystem.API.Controllers
             }
         }
 
-        //[HttpPatch("{companyId}/tasks/{taskId}/status")]
-        //public async System.Threading.Tasks.Task<ActionResult> UpdateTaskStatus(
-        //int companyId,
-        //int taskId,
-        //[FromBody] UpdateTaskStatusRequest request)
-        //{
-        //    try
-        //    {
-        //        var command = new UpdateTaskStatusCommand
-        //        {
-        //            TaskId = taskId,
-        //            Status = request.Status
-        //        };
-
-        //        await _mediator.Send(command);
-        //        return Ok(new { message = "הסטטוס עודכן בהצלחה" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
         [HttpPatch("{companyId}/tasks/{taskId}/status")]
         public async Task<ActionResult> UpdateTaskStatus(int companyId, int taskId, [FromBody] UpdateTaskStatusRequest request)
         {
@@ -220,7 +195,7 @@ namespace AccountingSystem.API.Controllers
             var command = new UpdateTaskStatusCommand
             {
                 TaskId = taskId,
-                Status = taskStatus // עכשיו זה יעבוד כי זה מאותו סוג
+                Status = taskStatus 
             };
 
             await _mediator.Send(command);
@@ -246,24 +221,10 @@ namespace AccountingSystem.API.Controllers
         // DTO לבקשה
         public class UpdateTaskStatusRequest
         {
-            //[JsonConverter(typeof(JsonStringEnumConverter))] // זה הקסם שפותר את השגיאה
             public string Status { get; set; }
         }
 
-        [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetAll([FromQuery] bool? isActive = true)
-        {
-            try
-            {
-                var query = new GetAllCompaniesQuery { IsActive = isActive };
-                var result = await _mediator.Send(query);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+      
 
         [HttpDelete("{id}")]
         [Authorize]
@@ -281,7 +242,6 @@ namespace AccountingSystem.API.Controllers
             }
         }
 
-        // ✅ חדש - מחיקה קבועה (למפתחת בלבד)
         [HttpDelete("permanent/{id}")]
         [Authorize(Roles = "SuperAdmin")] // או כל תפקיד שרק למפתחת
         public async Task<ActionResult<bool>> DeletePermanently(int id)

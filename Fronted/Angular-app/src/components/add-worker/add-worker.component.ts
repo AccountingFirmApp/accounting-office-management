@@ -86,6 +86,8 @@ export class WorkerFormComponent implements OnInit {
       this.workerForm.get('phone')?.disable();
 
       this.workerService.getWorkerById(+workerId).subscribe(worker => {
+          console.log('companyIds שהגיעו מהשרת:', worker.companyIds);
+
         let hireDateValue: string | null = null;
         if (worker.hireDate) {
           try {

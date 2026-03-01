@@ -1,4 +1,3 @@
-
 using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Domain.Enums;
 using System;
@@ -85,11 +84,11 @@ namespace AccountingSystem.Application.DTOs.Tasks
 
         // Worker info
         public int? AssignedWorkerId { get; set; }
-        public string? AssignedWorkerFirstName { get; set; }
-        public string? AssignedWorkerLastName { get; set; }
+        public string? AssignedWorkerfirstname { get; set; }
+        public string? AssignedWorkerlastname { get; set; }
         public string? AssignedWorkerFullName =>
-            !string.IsNullOrEmpty(AssignedWorkerFirstName) && !string.IsNullOrEmpty(AssignedWorkerLastName)
-                ? $"{AssignedWorkerFirstName} {AssignedWorkerLastName}"
+            !string.IsNullOrEmpty(AssignedWorkerfirstname) && !string.IsNullOrEmpty(AssignedWorkerlastname)
+                ? $"{AssignedWorkerfirstname} {AssignedWorkerlastname}"
                 : null;
 
         public string? Notes { get; set; }

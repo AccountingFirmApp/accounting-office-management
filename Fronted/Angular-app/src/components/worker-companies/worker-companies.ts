@@ -7,6 +7,7 @@ import { BackButtonComponent } from '../../app/components/shared/back-button/bac
 import { CompanyDto, WorkerCompanies } from '../../models/worker-companies';
 import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
 import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
+import { log } from 'console';
 
 @Component({
   selector: 'app-worker-companies',
@@ -75,6 +76,8 @@ export class WorkerCompaniesComponent implements OnInit {
     this.router.navigate(['/companies', companyId, 'tasks']);
   }
 goToCompanyReports(companyId: number): void {
+  console.log(companyId);
+  
   this.router.navigate(['/reports'], { 
     queryParams: { companyId: companyId } 
   });

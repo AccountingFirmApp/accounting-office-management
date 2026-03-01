@@ -18,14 +18,19 @@ export class CompanyCreateComponent implements OnInit {
   isEditMode = false;
   companyId: number | null = null;
   loading = false;
+    accountingFirms: any[] = [];
+
  showRestoreDialog = false; // ✅ חדש
   pendingTaxId = ''; // ✅ חדש
 
   constructor(
     private fb: FormBuilder,
     private companyService: CompanyService,
+    private accountingFirmService: AccountingFirmService,
+
     private router: Router,
     private route: ActivatedRoute
+    
   ) {
     this.companyForm = this.fb.group({
       name: ['', Validators.required],

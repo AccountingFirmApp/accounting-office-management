@@ -73,52 +73,41 @@ namespace AccountingSystem.Application.Handlers
             return _mapper.Map<CompanyReportConfigDto>(configWithDetails);
         }
     }
-
-    public class DeleteCompanyReportConfigHandler : IRequestHandler<DeleteCompanyConfigReportCommand, bool>
+    public class DeleteCompanyReportConfigHandler
+    : IRequestHandler<DeleteCompanyConfigReportCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public DeleteCompanyReportConfigHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public DeleteCompanyReportConfigHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper)
         {
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IMapper _mapper;
-
-            public DeleteompanyReportConfigHandler(IUnitOfWork unitOfWork, IMapper mapper)
-            {
-                _unitOfWork = unitOfWork;
-                _mapper = mapper;
-            }
-            public async Task<bool> Handle(DeleteCompanyConfigReportCommand request, CancellationToken cancellationToken)
-            {
-                var config = await _unitOfWork.CompanyReportConfigs.GetByIdAsync(request.Id);
-                if (config == null)
-                {
-                    throw new Exception($"הגדרה עם ID {request.Id} לא נמצאה");
-
-                }
-                config.Isactive = false;
-                _unitOfWork.SaveChangesAsync();
-
-                return true;
-            }
-
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<bool> Handle(DeleteCompanyConfigReportCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(
+            DeleteCompanyConfigReportCommand request,
+            CancellationToken cancellationToken)
         {
-            // בדיקת קיום ההגדרה
-            var config = await _unitOfWork.CompanyReportConfigs.GetByIdAsync(request.Id);
-            if (config == null)
-                throw new Exception($"הגדרה עם ID {request.Id} לא נמצאה");
+            var config = await _unitOfWork
+                .CompanyReportConfigs
+                .GetByIdAsync(request.Id);
 
-            // סימון כלא פעיל ושמירה
+            if (config == null)
+            {
+                throw new Exception($"הגדרה עם ID {request.Id} לא נמצאה");
+            }
+
             config.Isactive = false;
+
             await _unitOfWork.SaveChangesAsync();
 
             return true;
         }
     }
+
 
     public class GetConfigsByWorkerIdHandler : IRequestHandler<GetConfigsByWorkerId, List<CompanyReportConfigDto>>
     {

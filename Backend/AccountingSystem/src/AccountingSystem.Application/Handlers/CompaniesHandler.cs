@@ -1,13 +1,10 @@
 ﻿using AccountingSystem.Application.DTOs;
-﻿// Application/Handlers/Companies/CompaniesHandler.cs
 using AccountingSystem.Application;
 using AccountingSystem.Application.Commands.Tasks;
-using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Application.Queries.Companies;
 using AccountingSystem.Application.Queries.Tasks;
 using AccountingSystem.Application.Intrefaces;
-
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
@@ -15,7 +12,6 @@ using AccountingSystem.Domain.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 using AccountingSystem.Application.Commands.Companies;
-using AccountingSystem.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace AccountingSystem.Application.Handlers.Companies;
@@ -151,99 +147,147 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
     }
 
 }
-
-
-// ========================================
-// CREATE
-// ========================================
-public class CreateCompanyCommandHandler
-    : IRequestHandler<CreateCompanyCommand, CompanyDto>
 public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly ILogger<CreateCompanyCommandHandler> _logger;
 
-    public CreateCompanyCommandHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper,
-        ILogger<CreateCompanyCommandHandler> logger)
+    public GetTasksByCompanyIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _logger = logger;
     }
 
-
-    public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken ct)
+    public async Task<List<CompanyTaskDto>> Handle(GetTasksByCompanyIdQuery request, CancellationToken cancellationToken)
     {
-        if (!await _unitOfWork.AccountingFirms.ExistsAsync(request.Firmid))
-            throw new Exception($"Firm {request.Firmid} not found");
-
-        var existing = await _unitOfWork.Companies.GetByTaxIdAsync(request.Taxid);
-        if (existing != null)
+        // 1. בדוק שהחברה קיימת
+        var companyExists = await _unitOfWork.Companies.ExistsAsync(request.CompanyId);
+        if (!companyExists)
         {
-            if (existing.Isactive == true)
-                throw new Exception("Company already exists");
-
-            existing.Isactive = true;
-            existing.Name = request.Name;
-            existing.Address = request.Address;
-            existing.Phone = request.Phone;
-            existing.Email = request.Email;
-            existing.Notes = request.Notes;
-            existing.Updatedat = DateTime.UtcNow;
-            await _unitOfWork.Companies.UpdateAsync(existing);
-
-            if (request.RestoreExistingData)
-            {
-                var workers = await _unitOfWork.CompanyWorkers
-                    .FindAsync(cw => cw.Companyid == existing.Id);
-                foreach (var cw in workers)
-                {
-                    var worker = await _unitOfWork.Workers.GetByIdAsync(cw.Workerid);
-                    if (worker != null && worker.Isactive == true)
-                        cw.Isactive = true;
-                }
-
-                var configs = await _unitOfWork.CompanyReportConfigs
-                    .FindAsync(c => c.Companyid == existing.Id);
-                foreach (var c in configs)
-                    c.Isactive = true;
-
-                var tasks = await _unitOfWork.CompanyTasks
-                    .FindAsync(t => t.Companyid == existing.Id);
-                foreach (var t in tasks)
-                    t.Isactive = true;
-            }
-            // אם false - לא נוגעים בקישורים בכלל!
-
-            await _unitOfWork.SaveChangesAsync(ct);
-            return _mapper.Map<CompanyDto>(existing);
+            throw new Exception($"חברה עם ID {request.CompanyId} לא נמצאה");
         }
 
-        var company = new Company
-        {
-            Name = request.Name,
-            Taxid = request.Taxid,
-            Firmid = request.Firmid,
-            Address = request.Address,
-            Phone = request.Phone,
-            Email = request.Email,
-            Notes = request.Notes,
-            Isactive = true,
-            Createdat = DateTime.UtcNow,
-            Updatedat = DateTime.UtcNow
-        };
+        // 2. קבל את כל המשימות של החברה
+        var tasks = await _unitOfWork.CompanyTasks.GetTasksByCompanyIdAsync(request.CompanyId);
 
-        await _unitOfWork.Companies.AddAsync(company);
-        await _unitOfWork.SaveChangesAsync(ct);
-        return _mapper.Map<CompanyDto>(company);
+        // 3. המר ל-DTOs
+        var taskDtos = tasks.Select(t => new CompanyTaskDto
+        {
+            Id = t.Id,
+            CompanyId = t.Companyid,
+            TaskTypeId = t.Tasktypeid,
+            Period = t.Period,
+            DueDate = t.Duedate.HasValue
+? t.Duedate
+: null,
+            CompletedDate = t.Completeddate.HasValue
+? t.Completeddate
+: null,
+            AssignedWorkerId = t.Assignedworkerid,
+            Notes = t.Notes,
+            Status = t.Status.ToString(),
+            CreatedAt = t.Createdat ?? DateTime.MinValue,
+            UpdatedAt = t.Updatedat ?? DateTime.MinValue,
+
+            CompanyName = t.Company?.Name ?? string.Empty,
+            TaskTypeName = t.Tasktype?.Name ?? string.Empty,
+            AssignedWorkerName = t.Assignedworker != null
+                ? $"{t.Assignedworker.Firstname} {t.Assignedworker.Lastname}"
+                : null
+        }).ToList();
+
+        return taskDtos;
     }
+
+
     // ========================================
-    // UPDATE
+    // CREATE COMPANY COMMAND HANDLER
     // ========================================
-    public class UpdateCompanyCommandHandler
+    public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly ILogger<CreateCompanyCommandHandler> _logger;
+
+        public CreateCompanyCommandHandler(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ILogger<CreateCompanyCommandHandler> logger)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _logger = logger;
+        }
+
+        public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken ct)
+        {
+            if (!await _unitOfWork.AccountingFirms.ExistsAsync(request.Firmid))
+                throw new Exception($"Firm {request.Firmid} not found");
+
+            var existing = await _unitOfWork.Companies.GetByTaxIdAsync(request.Taxid);
+            if (existing != null)
+            {
+                if (existing.Isactive == true)
+                    throw new Exception("Company already exists");
+
+                existing.Isactive = true;
+                existing.Name = request.Name;
+                existing.Address = request.Address;
+                existing.Phone = request.Phone;
+                existing.Email = request.Email;
+                existing.Notes = request.Notes;
+                existing.Updatedat = DateTime.UtcNow;
+                await _unitOfWork.Companies.UpdateAsync(existing);
+
+                if (request.RestoreExistingData)
+                {
+                    var workers = await _unitOfWork.CompanyWorkers
+                        .FindAsync(cw => cw.Companyid == existing.Id);
+                    foreach (var cw in workers)
+                    {
+                        var worker = await _unitOfWork.Workers.GetByIdAsync(cw.Workerid);
+                        if (worker != null && worker.Isactive == true)
+                            cw.Isactive = true;
+                    }
+
+                    var configs = await _unitOfWork.CompanyReportConfigs
+                        .FindAsync(c => c.Companyid == existing.Id);
+                    foreach (var c in configs)
+                        c.Isactive = true;
+
+                    var tasks = await _unitOfWork.CompanyTasks
+                        .FindAsync(t => t.Companyid == existing.Id);
+                    foreach (var t in tasks)
+                        t.Isactive = true;
+                }
+
+                await _unitOfWork.SaveChangesAsync(ct);
+                return _mapper.Map<CompanyDto>(existing);
+            }
+
+            var company = new Company
+            {
+                Name = request.Name,
+                Taxid = request.Taxid,
+                Firmid = request.Firmid,
+                Address = request.Address,
+                Phone = request.Phone,
+                Email = request.Email,
+                Notes = request.Notes,
+                Isactive = true,
+                Createdat = DateTime.UtcNow,
+                Updatedat = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Companies.AddAsync(company);
+            await _unitOfWork.SaveChangesAsync(ct);
+            return _mapper.Map<CompanyDto>(company);
+        }
+    }
+  // ========================================
+  // UPDATE
+  // ========================================
+public class UpdateCompanyCommandHandler
     : IRequestHandler<UpdateCompanyCommand, CompanyDto>
     {
         private readonly IUnitOfWork _unitOfWork;

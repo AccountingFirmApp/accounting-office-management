@@ -22,7 +22,6 @@ export class CompanyListComponent implements OnInit {
   error: string | null = null;
   successMessage: string | null = null;
 
-  // Confirmation modal state
   showDeleteConfirmation = false;
   companyToDelete: number | null = null;
 
@@ -61,34 +60,44 @@ export class CompanyListComponent implements OnInit {
     this.router.navigate(['/companies', id, 'tasks']);
   }
 
+  // ✅ תוקן - מתודה אחת נקייה בלי כפילות
   viewCompanyReports(companyId: number): void {
-    const queryParams: any = { companyId: companyId };
-  
-  if (this.auth.isAdmin()) {
-    queryParams.adminMode = 'true';
-    const queryParams: { companyId: number; adminMode?: string } = { companyId: companyId };
-
+    const queryParams: { companyId: number; adminMode?: string } = { companyId };
     if (this.auth.isAdmin()) {
       queryParams.adminMode = 'true';
     }
-
-    this.router.navigate(['/reports'], { queryParams: queryParams });
+    this.router.navigate(['/reports'], { queryParams });
   }
 
   editCompany(id: number): void {
     this.router.navigate(['/companies', id, 'edit']);
   }
 
+  // ✅ תוקן - משתמש ב-ConfirmationModal במקום confirm()
   deleteCompany(id: number): void {
-    if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
-      this.companyService.deleteCompany(id).subscribe({
+    this.companyToDelete = id;
+    this.showDeleteConfirmation = true;
+  }
+
+  confirmDelete(): void {
+    if (this.companyToDelete !== null) {
+      this.companyService.deleteCompany(this.companyToDelete).subscribe({
         next: () => {
+          this.showDeleteConfirmation = false;
+          this.companyToDelete = null;
           this.loadCompanies();
         },
-        error: (err) => {
+        error: () => {
+          this.error = 'שגיאה במחיקת החברה';
+          this.showDeleteConfirmation = false;
         }
       });
     }
+  }
+
+  cancelDelete(): void {
+    this.showDeleteConfirmation = false;
+    this.companyToDelete = null;
   }
 
   addCompany(): void {

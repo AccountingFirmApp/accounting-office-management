@@ -123,11 +123,9 @@ namespace AccountingSystem.API.Controllers
 /// יצירת עובד חדש
 /// POST: api/workers
 /// </summary>
-[HttpPost]
   [HttpPost]
-        [Authorize] // ✅ חובה!
+        [Authorize] 
         public async Task<ActionResult<WorkerDto>> Create([FromBody] CreateWorkerCommand command)
-        // public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
         {
             try
             {

@@ -139,32 +139,6 @@ namespace AccountingSystem.Application.Handlers.Tasks
             // 3. מעבר על כל חברה וכל הגדרה
             foreach (var company in activeCompanies)
             {
-                //foreach (var config in monthlyConfigs)
-                //{
-                //    // בדיקה האם צריך ליצור את המשימה הספציפית הזו
-                //    if (!await ShouldCreateTaskAsync(company.Id, config))
-                //        continue;
-
-                //    // מניעת כפילויות
-                //    if (await _taskRepository.TaskExistsAsync(company.Id, config.TaskTypeId, periodDate))
-                //        continue;
-
-                //    // --- תהליך היצירה והשמירה בשלבים ---
-
-                //    // א. יצירת אובייקט המשימה (וודאי שאין קריאה לצ'קליסט בתוך הפונקציה הזו)
-                //    var task = await CreateTaskFromConfigAsync(company.Id, config, periodDate);
-
-                //    // ב. שמירה ראשונית בבסיס הנתונים כדי לקבל ID
-                //    await _taskRepository.AddAsync(task);
-
-                //    // ג. הוספת הצ'קליסט למשימה (עכשיו כשיש לה ID)
-                //    await AttachChecklistAsync(task, config.TaskTypeId);
-
-                //    // ד. עדכון סופי של המשימה עם הצ'קליסט ב-DB
-                //    await _taskRepository.UpdateAsync(task);
-
-                //    createdCount++;
-                //}
                 foreach (var config in monthlyConfigs)
                 {
                     if (!await ShouldCreateTaskAsync(company.Id, config)) continue;
@@ -566,28 +540,7 @@ namespace AccountingSystem.Application.Handlers.Tasks
             return null;
         }
 
-        //    private async Task AttachChecklistAsync(CompanyTask task, int taskTypeId)
-        //    {
-        //        var template = await _taskRepository.GetActiveChecklistTemplateAsync(taskTypeId);
-
-        //        if (template == null || !template.Items.Any())
-        //            return;
-
-        //        foreach (var item in template.Items.OrderBy(i => i.OrderIndex))
-        //        {
-        //            task.ChecklistItems.Add(new CompanyTaskChecklistItem
-        //            {
-        //                CompanyTask = task,
-        //                TemplateItemId = item.Id,
-        //                Title = item.Title,
-        //                Description = item.Description,
-        //                OrderIndex = item.OrderIndex,
-        //                IsCompleted = false,
-        //                CreatedAt = DateTime.UtcNow
-        //            });
-        //        }
-        //    }
-        //}
+     
         private async Task AttachChecklistAsync(CompanyTask task, int taskTypeId)
         {
             var template = await _taskRepository.GetActiveChecklistTemplateAsync(taskTypeId);
@@ -963,8 +916,8 @@ namespace AccountingSystem.Application.Handlers.Tasks
                 DueDate = task.Duedate,
                 CompletedDate = task.Completeddate,
                 AssignedWorkerId = task.Assignedworkerid,
-                AssignedWorkerFirstName = task.Assignedworker?.Firstname,
-                AssignedWorkerLastName = task.Assignedworker?.Lastname,
+                AssignedWorkerfirstname = task.Assignedworker?.Firstname,
+                AssignedWorkerlastname = task.Assignedworker?.Lastname,
                 Notes = task.Notes,
                 CreatedAt = task.Createdat,
                 UpdatedAt = task.Updatedat,

@@ -60,7 +60,7 @@ export class WorkerTasksComponent implements OnInit {
       return;
     }
     this.workerId = currentWorker.id;
-    this.workerName = `${currentWorker.firstname} ${currentWorker.lastname}`;
+    this.workerName = `${currentWorker.firstName} ${currentWorker.lastName}`;
     this.loadTasks();
   }
 
