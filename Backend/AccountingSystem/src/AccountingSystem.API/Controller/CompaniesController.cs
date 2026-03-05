@@ -8,6 +8,7 @@ using AccountingSystem.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -28,19 +29,17 @@ namespace AccountingSystem.API.Controllers
             _mediator = mediator;
         }
 
+
         /// <summary>
         /// קבלת כל החברות
         /// GET: api/companies
         /// </summary>
-        /// 
-        //[Authorize(Roles = "Admin")]
-
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetAll()
+        public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetAll([FromQuery] bool? isActive = true)
         {
             try
             {
-                var query = new GetAllCompaniesQuery();
+                var query = new GetAllCompaniesQuery { IsActive = isActive };
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
@@ -109,19 +108,37 @@ namespace AccountingSystem.API.Controllers
         /// יצירת חברה חדשה
         /// POST: api/companies
         /// </summary>
+     
+
         [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult<CompanyDto>> Create([FromBody] Application.Commands.Companies.CreateCompanyCommand command)
+        [Authorize]
+        public async Task<ActionResult<CompanyDto>> Create([FromBody] CreateCompanyDto dto)
         {
-            try
+            var firmIdClaim = User.FindFirst("FirmId")?.Value;
+
+            if (string.IsNullOrEmpty(firmIdClaim) || !int.TryParse(firmIdClaim, out int firmId))
+                return Unauthorized();
+
+            if (User.FindFirst(ClaimTypes.Role)?.Value != "Admin")
+                return Forbid();
+
+            var command = new CreateCompanyCommand
             {
-                var result = await _mediator.Send(command);
-                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+                Firmid = firmId,
+                Name = dto.Name,
+                Taxid = dto.TaxId,
+                Address = dto.Address,
+                Phone = dto.Phone,
+                Email = dto.Email,
+                Notes = dto.Notes
+            };
+
+            var result = await _mediator.Send(command);
+
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
+
+
 
         /// <summary>
         /// עדכון חברה
@@ -146,24 +163,7 @@ namespace AccountingSystem.API.Controllers
             }
         }
 
-        /// <summary>
-        /// מחיקת חברה
-        /// DELETE: api/companies/5
-        /// </summary>
-        [HttpDelete("{id}")]
-        public async System.Threading.Tasks.Task<ActionResult> Delete(int id)
-        {
-            try
-            {
-                var command = new Application.Commands.Companies.DeleteCompanyCommand(id);
-                await _mediator.Send(command);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+      
         /// <summary>
         /// קבלת כל המשימות של חברה מסוימת
         /// GET: api/companies/5/tasks
@@ -195,7 +195,7 @@ namespace AccountingSystem.API.Controllers
             var command = new UpdateTaskStatusCommand
             {
                 TaskId = taskId,
-                Status = taskStatus // עכשיו זה יעבוד כי זה מאותו סוג
+                Status = taskStatus 
             };
 
             await _mediator.Send(command);
@@ -224,6 +224,38 @@ namespace AccountingSystem.API.Controllers
             public string Status { get; set; }
         }
 
-        
+      
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult<bool>> Delete(int id)
+        {
+            try
+            {
+                var command = new DeleteCompanyCommand(id);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("permanent/{id}")]
+        [Authorize(Roles = "SuperAdmin")] // או כל תפקיד שרק למפתחת
+        public async Task<ActionResult<bool>> DeletePermanently(int id)
+        {
+            try
+            {
+                var command = new DeleteCompanyPermanentlyCommand(id);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

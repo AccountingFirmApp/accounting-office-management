@@ -8,6 +8,8 @@ namespace AccountingSystem.Application.Queries.Companies;
 // ========================================
 public class GetAllCompaniesQuery : IRequest<List<CompanyDto>>
 {
+    public bool? IsActive { get; set; } = true;
+
 }
 
 // ========================================

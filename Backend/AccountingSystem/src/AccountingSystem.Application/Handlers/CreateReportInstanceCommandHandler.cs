@@ -29,7 +29,6 @@ namespace AccountingSystem.Application.Handlers
                 CreateReportInstanceCommand request,
                 CancellationToken cancellationToken)
             {
-                // ?? שלב 1: בדוק אם קיים Config עם הצירוף הזה
                 var configs = await _configRepository.GetByCompanyIdAsync(request.CompanyId);
                 var existingConfig = configs.FirstOrDefault(c =>
                     c.Reporttypeid == request.ReportTypeId);
@@ -38,18 +37,16 @@ namespace AccountingSystem.Application.Handlers
 
                 if (existingConfig != null)
                 {
-                    // ? Config קיים - השתמש בו
                     configId = existingConfig.Id;
                 }
                 else
                 {
-                    // ?? Config לא קיים - צור חדש
                     var newConfig = new Companyreportconfig
                     {
                         Companyid = request.CompanyId,
                         Reporttypeid = request.ReportTypeId,
-                        Frequencyid = request.FrequencyId ?? 1, // ברירת מחדל: חודשי
-                        Dayofmonth = null, // או ערך ברירת מחדל
+                        Frequencyid = request.FrequencyId ?? 1,
+                        Dayofmonth = null, 
                         Isactive = true,
                         Createdat = DateTime.UtcNow,
                         Updatedat = DateTime.UtcNow
@@ -92,7 +89,7 @@ namespace AccountingSystem.Application.Handlers
                     ConfigId = reportInstance.Configid,
                     Period = reportInstance.Period.ToDateTime(TimeOnly.MinValue),
                     Amount = reportInstance.Amount,
-                    Status = reportInstance.Status.ToString(),
+                    Status = reportInstance.Status.ToString() ?? string.Empty,
                     PaymentMethod = reportInstance.PaymentMethod?.ToString(),
                     ReceiptDate = reportInstance.Receiptdate?.ToDateTime(TimeOnly.MinValue),
                     Comments = reportInstance.Comments ?? string.Empty,
@@ -127,19 +124,17 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return false;
 
-            // המרת string ל-Enum
             if (Enum.TryParse<ReportStatus>(request.Status, out var status))
             {
                 report.Status = status;
             }
             else
             {
-                return false; // סטטוס לא תקין
+                return false;
             }
 
             report.Updatedat = DateTime.UtcNow;
 
-            // עדכון אוטומטי של תאריכים
             if (status == ReportStatus.Reported && !report.Reporteddate.HasValue)
             {
                 report.Reporteddate = DateOnly.FromDateTime(DateTime.Now);
@@ -185,7 +180,6 @@ namespace AccountingSystem.Application.Handlers
 
             report.Amount = request.Amount;
 
-            // המרת string ל-Enum
             if (Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var paymentMethod))
             {
                 report.PaymentMethod = paymentMethod;
@@ -225,16 +219,13 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return false;
 
-            // עדכון השדות
             report.Amount = request.Amount;
 
-            // המרת סטטוס
             if (Enum.TryParse<ReportStatus>(request.Status, out var status))
             {
                 report.Status = status;
             }
 
-            // המרת אמצעי תשלום
             if (!string.IsNullOrEmpty(request.PaymentMethod) &&
                 Enum.TryParse<PaymentMethod>(request.PaymentMethod, out var paymentMethod))
             {

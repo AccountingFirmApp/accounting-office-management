@@ -67,12 +67,9 @@ isAdmin: boolean =false;
       }
     });
 
-    // בדיקה אם יש query parameters (מגיעים מכפתור "הוסף")
     this.route.queryParams.subscribe(queryParams => {
       if (queryParams['fixedYear'] === 'true') {
         this.isFixedYear = true;
-
-        // ממלא את השדות מראש
         const companyId = queryParams['companyId'];
         const reportTypeId = queryParams['reportTypeId'];
         const year = +queryParams['year'];
@@ -82,8 +79,6 @@ isAdmin: boolean =false;
           reportTypeId: reportTypeId ? +reportTypeId : '',
           year: year || new Date().getFullYear() + 1
         });
-
-        // הופך את השדות לקבועים (לא ניתנים לעריכה)
         this.configForm.get('companyId')?.disable();
         this.configForm.get('reportTypeId')?.disable();
         this.configForm.get('year')?.disable();
@@ -162,8 +157,6 @@ isAdmin: boolean =false;
           dayOfMonth: data.dayOfMonth,
           year: data.year
         });
-
-        // במצב עריכה - השבתת שדות שלא ניתנים לשינוי
         this.configForm.get('companyId')?.disable();
         this.configForm.get('reportTypeId')?.disable();
         this.configForm.get('year')?.disable();

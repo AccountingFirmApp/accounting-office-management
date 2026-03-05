@@ -30,7 +30,6 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   openWorkerPopoverId: number | null = null;
   selectedReportWorkers: string[] = [];
 
-  // פילטרים
   searchTerm: string = '';
   selectedStatus: string = 'all';
   selectedCompany: string = 'all';
@@ -53,10 +52,7 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-      this.isAdminMode = params['adminMode'] === 'true';
-      
-    
-      
+      this.isAdminMode = params['adminMode'] === 'true';      
       this.loadReports();
     });
     
@@ -89,27 +85,17 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   hasWorkers(report: ReportInstanceDetail): boolean {
     return report.workerNames && report.workerNames.length > 0;
   }
-
-  // ========================================
-  // טעינת דוחות
-  // ========================================
-
   loadReports(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    
 
     this.reportService.getAll(this.isAdminMode).subscribe({
-      next: (data) => {
-      
-        
+      next: (data) => {        
         this.reports = data;
 
         if (this.filterByCompanyId) {
-      
           this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
-    
         }
 
         this.filteredReports = this.reports;
@@ -127,12 +113,7 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
     this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
     
-  
   }
-
-  // ========================================
-  // פילטרים
-  // ========================================
 
   applyFilters(): void {
     this.filteredReports = this.reports.filter(report => {
@@ -162,10 +143,6 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     this.filteredReports = this.reports;
   }
 
-  // ========================================
-  // פונקציות עזר
-  // ========================================
-
   isReportDelayed(report: ReportInstanceDetail): boolean {
     return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
   }
@@ -175,10 +152,6 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     const days = report.daysOverdue!;
     return days === 1 ? 'איחור של יום אחד' : `איחור של ${days} ימים`;
   }
-
-  // ========================================
-  // פעולות על דוחות
-  // ========================================
 
   viewReport(reportId: number): void {
     const report = this.reports.find(r => r.id === reportId);
@@ -200,10 +173,6 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   editReport(reportId: number): void {
     this.router.navigate(['/reports/edit', reportId]);
   }
-
-  // ========================================
-  // פורמט וטקסטים
-  // ========================================
 
   getStatusColor(status: string): string {
     switch (status) {

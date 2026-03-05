@@ -4,60 +4,138 @@
   </h2>
 
   <form [formGroup]="workerForm" (ngSubmit)="onSubmit()" class="worker-form">
-
+    <!-- שם פרטי -->
     <div class="form-group">
-      <label>שם פרטי</label>
-      <input formControlName="firstName" type="text" placeholder="הזן שם פרטי" />
+      <label>שם פרטי {{ !isEditMode ? '*' : '' }}</label>
+      <input formControlName="firstname" type="text"
+        [placeholder]="isEditMode ? workerForm.get('firstname')?.value : 'הזן שם פרטי'" [readonly]="isEditMode"
+        [class.readonly-field]="isEditMode" />
+      <span class="error"
+        *ngIf="!isEditMode && workerForm.get('firstname')?.invalid && workerForm.get('firstname')?.touched">
+        שדה חובה
+      </span>
     </div>
 
+    <!-- שם משפחה -->
     <div class="form-group">
-      <label>שם משפחה</label>
-      <input formControlName="lastName" type="text" placeholder="הזן שם משפחה" />
+      <label>שם משפחה {{ !isEditMode ? '*' : '' }}</label>
+      <input formControlName="lastname" type="text"
+        [placeholder]="isEditMode ? workerForm.get('lastname')?.value : 'הזן שם משפחה'" [readonly]="isEditMode"
+        [class.readonly-field]="isEditMode" />
+      <span class="error"
+        *ngIf="!isEditMode && workerForm.get('lastname')?.invalid && workerForm.get('lastname')?.touched">
+        שדה חובה
+      </span>
     </div>
+<!-- טלפון -->
+    <div class="form-group">
+      <label>טלפון (אופציונלי)</label>
+      <input formControlName="phone" type="text"
+        [placeholder]="isEditMode && workerForm.get('phone')?.value ? workerForm.get('phone')?.value : '050-1234567'"
+        [readonly]="isEditMode" [class.readonly-field]="isEditMode" />
+    </div>
+   
+<div class="form-group">
+  <label>אימייל {{ !isEditMode ? '*' : '' }}</label>
+  <input 
+    formControlName="email" 
+    type="email" 
+    [placeholder]="isEditMode ? workerForm.get('email')?.value : 'example@email.com'"
+    [readonly]="isEditMode"
+    [class.readonly-field]="isEditMode"
+    autocomplete="off"
+  />
+  <span class="error" *ngIf="!isEditMode && workerForm.get('email')?.invalid && workerForm.get('email')?.touched">
+    נא להזין אימייל תקין
+  </span>
+</div>
 
+<!-- ✅ סיסמה עם עינית -->
+<div class="form-group" *ngIf="!isEditMode">
+  <label>סיסמה *</label>
+  <div class="password-input-wrapper">
+    <input 
+      formControlName="password" 
+      [type]="showPassword ? 'text' : 'password'"
+      placeholder="לפחות 6 תווים"
+      autocomplete="new-password"
+      class="password-input"
+    />
+    <button 
+      type="button" 
+      class="password-toggle-btn"
+      (click)="togglePasswordVisibility()"
+      tabindex="-1"
+    >
+      <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>
+      <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+      </svg>
+    </button>
+  </div>
+  <span class="error" *ngIf="workerForm.get('password')?.invalid && workerForm.get('password')?.touched">
+    נדרשת סיסמה באורך 6 תווים לפחות
+  </span>
+</div>
     <div class="form-group">
-      <label>אימייל</label>
-      <input formControlName="email" type="email" placeholder="example@email.com" />
-    </div>
-    <div class="form-group">
-      <label>סיסמה</label>
-      <input formControlName="PasswordHash" type="text" placeholder="123456789" />
-    </div>
-
-    <div class="form-group">
-      <label>תפקיד</label>
-      <select formControlName="roleId">
-        <option value="">בחר תפקיד</option>
+      <label>תפקיד {{ !isEditMode ? '*' : '(אופציונלי)' }}</label>
+      <select formControlName="roleid">
         <option *ngFor="let role of roles" [value]="role.id">
           {{ role.name }}
         </option>
       </select>
+      <span class="error" *ngIf="!isEditMode && workerForm.get('roleid')?.invalid && workerForm.get('roleid')?.touched">
+        שדה חובה
+      </span>
     </div>
 
     <div class="form-group">
-      <label>חברה</label>
-      <select formControlName="firmId" class="form-control">
-        <option value="" disabled>בחר חברה</option>
-        <option *ngFor="let company of companies" [value]="company.id">
-          {{ company.name }}
-        </option>
-      </select>
+      <label>מספר עובד (אופציונלי)</label>
+      <input formControlName="employeeid" type="text" placeholder="הזן מספר עובד" />
     </div>
 
-    <div class="form-group checkbox">
-      <label>
-        <input type="checkbox" formControlName="isActive" />
-        עובד פעיל
-      </label>
+    <div class="form-group">
+      <label>תאריך תחילת עבודה (אופציונלי)</label>
+      <input formControlName="hiredate" type="date" />
     </div>
 
+    <div class="form-group">
+      <label>חברות (אופציונלי)</label>
+      <div class="companies-checklist">
+        <div *ngFor="let company of companies" class="checkbox-item">
+          <label>
+            <input type="checkbox" [value]="company.id" [checked]="isCompanySelected(company.id)"
+              (change)="onCompanyToggle(company.id, $event)" />
+            <span>{{ company.name }}</span>
+          </label>
+        </div>
+
+        <div *ngIf="companies.length === 0" class="no-companies">
+          אין חברות זמינות
+        </div>
+      </div>
+    </div>
     <div class="form-actions">
-      <button type="submit" [disabled]="workerForm.invalid" class="primary-btn">
+      <button type="submit" class="primary-btn">
         {{ isEditMode ? 'שמור שינויים' : 'יצירת עובד' }}
       </button>
-
-      <app-back-button [route]="'/workers'"></app-back-button>
+      <button class="primary-btn" (click)="goBack()">ביטול</button>
     </div>
 
   </form>
+  <div *ngIf="showRestoreDialog" class="dialog-overlay">
+  <div class="dialog">
+    <div class="dialog-icon">⚠️</div>
+    <h3 class="dialog-title">עובד קיים במערכת</h3>
+    <p class="dialog-message">עובד עם אימייל זה כבר קיים במערכת אך אינו פעיל.<br>האם ברצונך לשחזר את הנתונים הקיימים?</p>
+    <div class="dialog-actions">
+      <button class="btn-primary" (click)="confirmRestore(true)">כן, שחזר נתונים</button>
+      <button class="btn-secondary" (click)="confirmRestore(false)">לא, התחל מחדש</button>
+    </div>
+  </div>
+</div>
 </div>

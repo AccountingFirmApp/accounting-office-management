@@ -5,7 +5,6 @@ import { WorkerService } from '../../../services/worker';
 import { WorkerInfoDto } from '../../../models/auth';
 import { AuthService } from '../../../services/auth.service';
 import { BackButtonComponent } from '../shared/back-button/back-button.component';
-import { log } from 'node:console';
 
 @Component({
   selector: 'app-management',

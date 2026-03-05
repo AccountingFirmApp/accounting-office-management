@@ -59,7 +59,6 @@ export class ReportFormComponent implements OnInit {
     comments: ''
   };
 
-  // Date strings for input binding
   periodString = '';
   receiptDateString = '';
   reportedDateString = '';
@@ -83,7 +82,6 @@ export class ReportFormComponent implements OnInit {
   loadData() {
     this.loading = true;
     
-    // טען את כל הנתונים במקביל
     Promise.all([
       this.loadCompanies(),
       this.loadReportTypes(),
@@ -164,7 +162,6 @@ export class ReportFormComponent implements OnInit {
 
   updateConfigId() {
     if (this.formData.companyId && this.formData.reportTypeId) {
-      // מצא את ה-config המתאים
       const config = this.configs.find(c => 
         c.companyId === +this.formData.companyId && 
         c.reportTypeId === +this.formData.reportTypeId
@@ -290,12 +287,6 @@ createReport() {
     }
   });
 }
-
-
-
-
-
-
   updateReport() {
     const data: UpdateReportInstance = {
       id: this.reportId!,

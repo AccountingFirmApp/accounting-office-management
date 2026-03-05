@@ -65,10 +65,6 @@ export class CompanyReportConfigListComponent implements OnInit {
     this.mode = this.route.snapshot.data['mode'] ?? 'employee';
     this.loadAll();
   }
-
-  /**
-   * טוען את כל הנתונים: חברות, סוגי דיווחים, והגדרות
-   */
   loadAll(): void {
     this.loading = true;
     Promise.all([
@@ -94,12 +90,11 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.configMatrix[company.id] = {};
 
       this.reportTypes.forEach(reportType => {
-        // מחפש הגדרה פעילה ⭐
         const config = this.configs.find(c =>
           c.companyId === company.id &&
           c.reportTypeId === reportType.id &&
           c.year === this.selectedYear &&
-          c.isActive === true // ⭐ רק פעילות
+          c.isactive === true 
         );
 
         this.configMatrix[company.id][reportType.id] = config || null;
@@ -117,12 +112,11 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.deletedMatrix[company.id] = {};
 
       this.reportTypes.forEach(reportType => {
-        // מחפש הגדרה מחוקה ⭐
         const config = this.deletedConfigs.find(c =>
           c.companyId === company.id &&
           c.reportTypeId === reportType.id &&
           c.year === this.selectedYear &&
-          c.isActive === false // ⭐ רק מחוקות
+          c.isactive === false 
         );
 
         this.deletedMatrix[company.id][reportType.id] = config || null;
@@ -178,8 +172,8 @@ export class CompanyReportConfigListComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.configService.getAll().subscribe({
         next: (data) => {
-          this.configs = data.filter(c => c.isActive === true);
-          this.deletedConfigs = data.filter(c => c.isActive === false);
+          this.configs = data.filter(c => c.isactive === true);
+          this.deletedConfigs = data.filter(c => c.isactive === false);
           resolve();
         },
         error: (err) => {
@@ -212,7 +206,7 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
 
   restoreConfig(configId: number, companyName: string, reportTypeName: string): void {
     const updateDto = {
-      isActive: true
+      isactive: true
     };
 
     this.configService.update(configId, updateDto).subscribe({
@@ -248,7 +242,7 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
     this.configService.getByCompanyId(companyId).subscribe({
       next: (configs) => {
         const previousYearConfigs = configs.filter(c => 
-          c.year === previousYear && c.isActive === true
+          c.year === previousYear && c.isactive === true
         );
 
         if (previousYearConfigs.length === 0) {
@@ -342,13 +336,13 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
   previousYear(): void {
     this.selectedYear--;
     this.buildMatrix();
-    this.buildDeletedMatrix(); // ⭐
+    this.buildDeletedMatrix();
   }
 
   nextYear(): void {
     this.selectedYear++;
     this.buildMatrix();
-    this.buildDeletedMatrix(); // ⭐
+    this.buildDeletedMatrix();
   }
 
   isReadOnly(): boolean {

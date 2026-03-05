@@ -9,6 +9,7 @@ using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Domain.Enums;
 using AutoMapper;
 using AccountingSystem.Application.Queries;
+using Microsoft.Extensions.Logging;
 
 namespace AccountingSystem.Application.Handlers
 {
@@ -103,27 +104,22 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return null;
 
-            // ? ����� DTO ������ �-memory (�� ���� LINQ query)
             return new ReportInstanceDetailDto
             {
                 Id = report.Id,
                 ConfigId = report.Configid,
 
-                // Company info
                 CompanyId = report.Config.Companyid,
                 CompanyName = report.Config.Company != null ? report.Config.Company.Name : string.Empty,
                 CompanyTaxId = report.Config.Company != null ? report.Config.Company.Taxid : string.Empty,
 
-                // Report Type info
                 ReportTypeId = report.Config.Reporttypeid,
                 ReportTypeName = report.Config.Reporttype != null ? report.Config.Reporttype.Name : string.Empty,
                 ReportTypeShortCode = report.Config.Reporttype != null ? report.Config.Reporttype.Shortcode : string.Empty,
 
-                // Frequency info
                 FrequencyName = report.Config.Frequency != null ? report.Config.Frequency.Name : string.Empty,
                 DayOfMonth = report.Config.Dayofmonth,
 
-                // Instance data
                 Period = report.Period.ToDateTime(TimeOnly.MinValue),
                 Amount = report.Amount,
                 Status = report.Status.ToString(),
@@ -157,23 +153,20 @@ namespace AccountingSystem.Application.Handlers
             var today = DateOnly.FromDateTime(DateTime.Now);
             var futureDate = today.AddDays(request.DaysAhead);
 
-            // �����
             var upcomingReports = allReports
                 .Where(r =>
                     (r.Status == ReportStatus.Pending || r.Status == ReportStatus.Reported) &&
                     r.Period <= futureDate);
 
-            // ����� ��� ����
             if (request.CompanyId.HasValue)
             {
                 upcomingReports = upcomingReports
                     .Where(r => r.Config.Companyid == request.CompanyId.Value);
             }
 
-            // ? ���� ������ �� �������, ��� �� ����� Select
             var result = upcomingReports
                 .OrderBy(r => r.Period)
-                .ToList() // ? ����� ��-DB
+                .ToList() 
                 .Select(r => new UpcomingReportDto
                 {
                     Id = r.Id,
@@ -192,30 +185,35 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
+   
     public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
     {
         private readonly IReportInstanceRepository _repository;
         private readonly ICompanyWorkerRepository _companyWorkerRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<GetAllReportsQueryHandler> _logger;
 
         public GetAllReportsQueryHandler(
             IReportInstanceRepository repository,
             ICompanyWorkerRepository companyWorkerRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<GetAllReportsQueryHandler>logger)
         {
             _repository = repository;
             _companyWorkerRepository = companyWorkerRepository;
             _mapper = mapper;
+            _logger= logger;
         }
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
-            {
 
-                // שליפת כל הדוחות
+                  public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
+            {
+                _logger.LogInformation($"📋 Handler: IsAdminMode={request.IsAdminMode}, WorkerId={request.WorkerId}");
+
                 var reports = await _repository.GetAllAsync();
 
-                //  אם יש WorkerId - סנן לפי העובד
                 if (request.WorkerId.HasValue)
                 {
+                    _logger.LogInformation($"🔍 מסנן לפי WorkerId={request.WorkerId.Value}");
 
                     reports = reports.Where(r =>
                         r.Config != null &&
@@ -227,12 +225,14 @@ namespace AccountingSystem.Application.Handlers
                     ).ToList();
                 }
 
+                _logger.LogInformation($"✅ אחרי פילטור: {reports.Count()} דוחות");
 
                 var mappedReports = _mapper.Map<List<ReportInstanceDetailDto>>(
                     reports,
                     opt => opt.Items["IsAdminMode"] = request.IsAdminMode
                 );
 
+                _logger.LogInformation($"✅ החזרת {mappedReports.Count} דוחות");
 
                 return mappedReports;
             }
@@ -259,7 +259,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 3: ������� ��� ����� ==========
 
     public class GetReportsByStatusQueryHandler : IRequestHandler<GetReportsByStatusQuery, List<ReportInstanceDetailDto>>
     {
@@ -279,7 +278,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 4: ������� ������� ==========
 
     public class GetPendingReportsQueryHandler : IRequestHandler<GetPendingReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -299,7 +297,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 5: ������� ��� ����� ==========
 
     public class GetReportsByPeriodQueryHandler : IRequestHandler<GetReportsByPeriodQuery, List<ReportInstanceDetailDto>>
     {
@@ -319,7 +316,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 6: ������� ����� ������� ==========
 
     public class GetReportsByDateRangeQueryHandler : IRequestHandler<GetReportsByDateRangeQuery, List<ReportInstanceDetailDto>>
     {
@@ -339,7 +335,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 7: ������� ������ (OVERDUE) ==========
 
     public class GetOverdueReportsQueryHandler : IRequestHandler<GetOverdueReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -359,7 +354,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 8: ������� ������� ����� ==========
 
     public class GetReportsDueInNextDaysQueryHandler : IRequestHandler<GetReportsDueInNextDaysQuery, List<ReportInstanceDetailDto>>
     {
@@ -377,11 +371,6 @@ namespace AccountingSystem.Application.Handlers
             var reports = await _repository.GetReportsDueInNextDaysAsync(request.Days);
             return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
         }
-
-
-
-
-
 
         // ========== Report Types Handlers ==========
 
@@ -466,7 +455,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive ?? true,
+                    Isactive = c.Isactive ?? true,
                     Year=c.Year
                 }).ToList();
             }
@@ -495,7 +484,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive
+                    Isactive = c.Isactive
                 }).ToList();
             }
         }
@@ -526,7 +515,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = config.Frequencyid,
                     FrequencyName = config.Frequency != null ? config.Frequency.Name : string.Empty,
                     DayOfMonth = config.Dayofmonth,
-                    IsActive = config.Isactive ?? true
+                    Isactive = config.Isactive ?? true
                 };
             }
         }

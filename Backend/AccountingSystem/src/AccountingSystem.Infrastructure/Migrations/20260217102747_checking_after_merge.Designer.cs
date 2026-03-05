@@ -3,6 +3,7 @@ using System;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AccountingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    partial class AccountingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260217102747_checking_after_merge")]
+    partial class checking_after_merge
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,10 +26,8 @@ namespace AccountingSystem.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "recurrence_type", "RecurrenceType", new[] { "OneTime", "Monthly", "BiMonthly", "Quarterly", "Yearly", "Custom" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "task_priority", new[] { "Low", "Normal", "High", "Urgent" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Accountingfirm", b =>
@@ -159,7 +160,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("firmid");
 
-                    b.Property<bool>("Isactive")
+                    b.Property<bool?>("Isactive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(true)
@@ -235,12 +236,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("duedate");
 
-                    b.Property<bool?>("Isactive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("isactive");
-
                     b.Property<string>("Notes")
                         .HasColumnType("text")
                         .HasColumnName("notes");
@@ -249,18 +244,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("period");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Status")
+                    b.Property<string>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("priority")
-                        .HasDefaultValueSql("'Normal'::task_priority");
-
-                    b.Property<int?>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("text")
                         .HasColumnName("status")
                         .HasDefaultValueSql("'Pending'::\"TaskStatus1\"");
 
@@ -271,7 +257,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("Updatedat")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updated_at")
+                        .HasColumnName("updatedat")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id")
@@ -287,180 +273,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("companytask", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTaskChecklistItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CompanyTaskId")
-                        .HasColumnType("integer")
-                        .HasColumnName("company_task_id");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("completed_at");
-
-                    b.Property<int?>("CompletedByWorkerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("completed_by_worker_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("IsCompleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_completed");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<int>("OrderIndex")
-                        .HasColumnType("integer")
-                        .HasColumnName("order_index");
-
-                    b.Property<int?>("TemplateItemId")
-                        .HasColumnType("integer")
-                        .HasColumnName("template_item_id");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyTaskId");
-
-                    b.HasIndex("CompletedByWorkerId");
-
-                    b.HasIndex("TemplateItemId");
-
-                    b.ToTable("company_task_checklist_item", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTaskConfiguration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("Assignedworkerid")
-                        .HasColumnType("integer")
-                        .HasColumnName("assignedworkerid");
-
-                    b.Property<int>("Companyid")
-                        .HasColumnType("integer")
-                        .HasColumnName("companyid");
-
-                    b.Property<DateTime?>("Createdat")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("createdat");
-
-                    b.Property<int>("Dueday")
-                        .HasColumnType("integer")
-                        .HasColumnName("dueday");
-
-                    b.Property<int>("Frequency")
-                        .HasColumnType("integer")
-                        .HasColumnName("frequency");
-
-                    b.Property<bool>("Isactive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isactive");
-
-                    b.Property<int>("Tasktypeid")
-                        .HasColumnType("integer")
-                        .HasColumnName("tasktypeid");
-
-                    b.Property<DateTime?>("Updatedat")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updatedat");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Assignedworkerid");
-
-                    b.HasIndex("Companyid");
-
-                    b.HasIndex("Tasktypeid");
-
-                    b.ToTable("companytaskconfigurations", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTaskTypeSettings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("integer")
-                        .HasColumnName("company_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("CustomDueDayOfMonth")
-                        .HasColumnType("integer")
-                        .HasColumnName("custom_due_day_of_month");
-
-                    b.Property<int?>("CustomPriority")
-                        .HasColumnType("task_priority")
-                        .HasColumnName("custom_priority");
-
-                    b.Property<int?>("DefaultAssignedWorkerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("default_assigned_worker_id");
-
-                    b.Property<string>("DefaultNotes")
-                        .HasColumnType("text")
-                        .HasColumnName("default_notes");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<int>("TaskTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("task_type_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("DefaultAssignedWorkerId");
-
-                    b.HasIndex("TaskTypeId");
-
-                    b.ToTable("company_task_type_settings", (string)null);
                 });
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Companycontact", b =>
@@ -702,7 +514,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("paiddate");
 
-                    b.Property<string>("PaymentMethod")
+                    b.Property<int?>("PaymentMethod")
                         .HasColumnType("payment_method")
                         .HasColumnName("paymentmethod");
 
@@ -718,7 +530,7 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("reporteddate");
 
-                    b.Property<string>("Status")
+                    b.Property<int?>("Status")
                         .HasColumnType("report_status")
                         .HasColumnName("status");
 
@@ -752,9 +564,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("createdat")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<short?>("DefaultDayOfMonth")
-                        .HasColumnType("smallint");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -816,162 +625,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.ToTable("role", (string)null);
                 });
 
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.TaskChecklistTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AutoCreateItems")
-                        .HasColumnType("boolean")
-                        .HasColumnName("auto_create_items");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("name");
-
-                    b.Property<int>("TaskTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("task_type_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskTypeId");
-
-                    b.ToTable("task_checklist_template", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.TaskChecklistTemplateItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<int?>("EstimatedMinutes")
-                        .HasColumnType("integer")
-                        .HasColumnName("estimated_minutes");
-
-                    b.Property<bool>("IsOptional")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_optional");
-
-                    b.Property<int>("OrderIndex")
-                        .HasColumnType("integer")
-                        .HasColumnName("order_index");
-
-                    b.Property<int>("TemplateId")
-                        .HasColumnType("integer")
-                        .HasColumnName("template_id");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TemplateId");
-
-                    b.ToTable("task_checklist_template_item", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.TaskTypeConfiguration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AutoCreateNext")
-                        .HasColumnType("boolean")
-                        .HasColumnName("auto_create_next");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("DependsOnTaskTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("depends_on_task_type_id");
-
-                    b.Property<int?>("DueDayOfMonth")
-                        .HasColumnType("integer")
-                        .HasColumnName("due_day_of_month");
-
-                    b.Property<int?>("DueDaysAfterPeriodEnd")
-                        .HasColumnType("integer")
-                        .HasColumnName("due_days_after_period_end");
-
-                    b.Property<int?>("EstimatedHours")
-                        .HasColumnType("integer")
-                        .HasColumnName("estimated_hours");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<bool>("IsMandatory")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_mandatory");
-
-                    b.Property<int>("RecurrenceType")
-                        .HasColumnType("recurrence_type")
-                        .HasColumnName("recurrence_type");
-
-                    b.Property<int>("TaskTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("task_type_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DependsOnTaskTypeId");
-
-                    b.HasIndex("TaskTypeId");
-
-                    b.ToTable("task_type_configuration", (string)null);
-                });
-
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Tasktype", b =>
                 {
                     b.Property<int>("Id")
@@ -981,8 +634,7 @@ namespace AccountingSystem.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
+                    b.Property<int>("Category")
                         .HasColumnType("task_category")
                         .HasColumnName("category");
 
@@ -1379,81 +1031,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.Navigation("Tasktype");
                 });
 
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTaskChecklistItem", b =>
-                {
-                    b.HasOne("AccountingSystem.Domain.Entities.CompanyTask", "CompanyTask")
-                        .WithMany("ChecklistItems")
-                        .HasForeignKey("CompanyTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Worker", "CompletedByWorker")
-                        .WithMany()
-                        .HasForeignKey("CompletedByWorkerId");
-
-                    b.HasOne("AccountingSystem.Domain.Entities.TaskChecklistTemplateItem", "TemplateItem")
-                        .WithMany()
-                        .HasForeignKey("TemplateItemId");
-
-                    b.Navigation("CompanyTask");
-
-                    b.Navigation("CompletedByWorker");
-
-                    b.Navigation("TemplateItem");
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTaskConfiguration", b =>
-                {
-                    b.HasOne("AccountingSystem.Domain.Entities.Worker", "Assignedworker")
-                        .WithMany()
-                        .HasForeignKey("Assignedworkerid")
-                        .HasConstraintName("fk_config_worker");
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("Companyid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_config_company");
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Tasktype", "Tasktype")
-                        .WithMany()
-                        .HasForeignKey("Tasktypeid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assignedworker");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Tasktype");
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTaskTypeSettings", b =>
-                {
-                    b.HasOne("AccountingSystem.Domain.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Worker", "DefaultAssignedWorker")
-                        .WithMany()
-                        .HasForeignKey("DefaultAssignedWorkerId");
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Tasktype", "TaskType")
-                        .WithMany()
-                        .HasForeignKey("TaskTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("DefaultAssignedWorker");
-
-                    b.Navigation("TaskType");
-                });
-
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Companycontact", b =>
                 {
                     b.HasOne("AccountingSystem.Domain.Entities.Company", "Company")
@@ -1529,45 +1106,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.Navigation("Config");
                 });
 
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.TaskChecklistTemplate", b =>
-                {
-                    b.HasOne("AccountingSystem.Domain.Entities.Tasktype", "TaskType")
-                        .WithMany()
-                        .HasForeignKey("TaskTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TaskType");
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.TaskChecklistTemplateItem", b =>
-                {
-                    b.HasOne("AccountingSystem.Domain.Entities.TaskChecklistTemplate", "Template")
-                        .WithMany("Items")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Template");
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.TaskTypeConfiguration", b =>
-                {
-                    b.HasOne("AccountingSystem.Domain.Entities.Tasktype", "DependsOnTaskType")
-                        .WithMany()
-                        .HasForeignKey("DependsOnTaskTypeId");
-
-                    b.HasOne("AccountingSystem.Domain.Entities.Tasktype", "TaskType")
-                        .WithMany()
-                        .HasForeignKey("TaskTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DependsOnTaskType");
-
-                    b.Navigation("TaskType");
-                });
-
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Worker", b =>
                 {
                     b.HasOne("AccountingSystem.Domain.Entities.Accountingfirm", "Firm")
@@ -1607,11 +1145,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                     b.Navigation("Companyworkers");
                 });
 
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.CompanyTask", b =>
-                {
-                    b.Navigation("ChecklistItems");
-                });
-
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Companyreportconfig", b =>
                 {
                     b.Navigation("Reportinstances");
@@ -1630,11 +1163,6 @@ namespace AccountingSystem.Infrastructure.Migrations
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Role", b =>
                 {
                     b.Navigation("Workers");
-                });
-
-            modelBuilder.Entity("AccountingSystem.Domain.Entities.TaskChecklistTemplate", b =>
-                {
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("AccountingSystem.Domain.Entities.Tasktype", b =>

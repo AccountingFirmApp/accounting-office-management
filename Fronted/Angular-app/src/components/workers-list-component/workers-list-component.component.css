@@ -5,31 +5,56 @@
   margin: 0 auto;
   padding: var(--space-6) var(--space-5);
   direction: rtl;
+  padding-top: 5rem;
 }
-
 .page-header {
-  margin-bottom: var(--space-5);
+  margin-bottom: 2rem;
+  text-align: center; /* ממרכז את הטקסט (כולל ה-subtitle) */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ממרכז את ה-h1 ואת ה-p במרכז המכולה */
 }
 
 .page-header h1 {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  margin: 0 0 var(--space-1) 0;
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-semibold);
-  color: var(--text-primary);
+  justify-content: center; /* חשוב: ממרכז את האייקון והטקסט בתוך ה-h1 */
+  gap: 0.5rem;
+  margin: 2rem 0 0.5rem 0;
+  font-size: 1.8rem; /* הגדלתי מעט למראה מרשים יותר במרכז */
+  font-weight: 700;
+  color: #1e293b;
 }
+
+.subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 1rem;
+  max-width: 600px; /* מונע מהטקסט להימרח יותר מדי במחשב */
+}
+/* .page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.375rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+} */
 
 .page-icon {
   display: none;
 }
 
-.subtitle {
+/* .subtitle {
   margin: 0;
-  color: var(--text-secondary);
-  font-size: var(--font-size-xs);
-}
+  color: #64748b;
+  font-size: 0.9375rem;
+} */
 
 .worker-avatar {
   width: 32px;
@@ -412,6 +437,38 @@
   border-color: var(--border-strong);
 }
 
+.button-center-container {
+  display: flex;
+  justify-content: center; /* מרכוז אופקי */
+  align-items: center;     /* מרכוז אנכי (אם יש גובה לקונטיינר) */
+  width: 100%;             /* תופס את כל רוחב הדף */
+  margin: 2rem 0;          /* מרווח מלמעלה ומלמטה כדי שלא ייצמד לאלמנטים אחרים */
+}
+
+/* הכפתור עצמו (נשאר עם העיצוב היפה מקודם) */
+.btn-create-worker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.75rem; /* הגדלתי מעט את הריפוד שייראה מרשים במרכז */
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+  direction: rtl;
+}
+
+.btn-create-worker:hover {
+  background: #2563eb;
+  transform: translateY(-2px); /* קפיצה קטנה למעלה במעבר עכבר */
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -426,6 +483,8 @@
     transform: translateY(0);
     opacity: 1;
   }
+
+  
 }
 
 @media (max-width: 768px) {

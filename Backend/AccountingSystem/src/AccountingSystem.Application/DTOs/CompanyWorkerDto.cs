@@ -8,7 +8,7 @@ public class CompanyWorkerDto
     public int Id { get; set; }
     public int CompanyId { get; set; }
     public int WorkerId { get; set; }
-    public bool IsActive { get; set; }
+    public bool Isactive { get; set; }
     public DateTime AssignedAt { get; set; }
     
     public string? CompanyName { get; set; }

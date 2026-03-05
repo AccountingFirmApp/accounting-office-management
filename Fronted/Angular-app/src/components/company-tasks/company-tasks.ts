@@ -1,5 +1,4 @@
 
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule ,Location} from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';

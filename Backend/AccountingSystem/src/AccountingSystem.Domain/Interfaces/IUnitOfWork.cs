@@ -6,7 +6,6 @@ namespace AccountingSystem.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        // ========== כל הRepositories במקום אחד ==========
         IAccountingFirmRepository AccountingFirms { get; }
         ICompanyRepository Companies { get; }
         IWorkerRepository Workers { get; }
@@ -18,18 +17,17 @@ namespace AccountingSystem.Domain.Interfaces
         ICompanyreportconfigRepository CompanyReportConfigs { get; }  
         IReportInstanceRepository ReportInstances { get; }
         ITaskTypeRepository TaskTypes { get; }
-        ICompanyTaskRepository Tasks { get; }
+        ICompanyTaskRepository CompanyTasks { get; } 
+
         IWorkerRoleTypeRepository WorkerRoleTypes { get; }
         IAuditLogRepository AuditLogs { get; }
 
-        // ========== שמירת שינויים ==========
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
         // ========== ניהול טרנזקציות ==========
        Task BeginTransactionAsync();
        Task CommitTransactionAsync();
         Task SaveChangesAsync();
-
-      
+       Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
     }
 }

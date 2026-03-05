@@ -1,4 +1,3 @@
-﻿
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -63,7 +62,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
 
         Task<TaskChecklistTemplate> GetChecklistTemplateByTaskTypeAsync(int taskTypeId);
         Task UpdateChecklistTemplateAsync(TaskChecklistTemplate template, List<TaskChecklistTemplateItem> newItems);
+        Task DeleteByCompanyIdAsync(int companyId);
+        Task SoftDeleteByCompanyIdAsync(int companyId);
 
-           
-        }
+    }
     }

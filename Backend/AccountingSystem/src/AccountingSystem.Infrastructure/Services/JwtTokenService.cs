@@ -25,7 +25,7 @@ public class JwtTokenService : ITokenService
             new Claim(ClaimTypes.Email, worker.Email),
             new Claim(ClaimTypes.Name, $"{worker.Firstname} {worker.Lastname}"),
             new Claim(ClaimTypes.Role, worker.Role.Name),
-            new Claim("EmployeeId", worker.Employeeid ?? ""),
+            new Claim("Employeeid", worker.Employeeid ?? ""),
             new Claim("FirmId", worker.Firmid.ToString())
         };
 

@@ -22,11 +22,23 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companies;
         }
 
-        // ==================== פעולות בסיסיות ====================
 
         public async Task<Company?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
+        }
+        public async Task<IEnumerable<Company>> GetAllByFirmIdAsync(int firmId, bool? isActive = null)
+        {
+            var query = _dbSet
+                .Include(c => c.Firm)
+                .Where(c => c.Firmid == firmId);
+
+            if (isActive.HasValue)
+            {
+                query = query.Where(c => c.Isactive == isActive.Value);
+            }
+
+            return await query.ToListAsync();
         }
         public async Task<List<Company?>> GetByIdWorkerAsync(int workerId)
         {
@@ -46,6 +58,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+     
         public async Task<IEnumerable<Company>> FindAsync(Expression<Func<Company, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
@@ -78,7 +91,6 @@ namespace AccountingSystem.Infrastructure.Repositories
             return await _dbSet.CountAsync();
         }
 
-        // ==================== פעולות ייחודיות לCompany ====================
 
         public async Task<Company?> GetCompanyWithContactsAsync(int companyId)
         {
@@ -123,7 +135,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Company>> GetCompaniesByFirmIdAsync(int firmId)
         {
             return await _dbSet
-                .Where(c => c.Firmid == firmId)
+        .Where(c => c.Firmid == firmId && c.Isactive == true)
                 .Include(c => c.Firm)
                 .ToListAsync();
         }
@@ -158,5 +170,15 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             await _dbSet.AddAsync(company);
         }
+
+
+        public async Task<Company?> GetByTaxIdAsync(string taxId)
+        {
+            return await _dbSet
+                .Include(c => c.Firm)
+                .FirstOrDefaultAsync(c => c.Taxid == taxId);
+        }
+
+       
     }
 }

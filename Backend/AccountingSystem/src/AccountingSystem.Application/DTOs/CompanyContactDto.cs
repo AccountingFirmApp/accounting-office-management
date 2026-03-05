@@ -12,6 +12,7 @@ public class CompanyContactDto
     public string FullName => $"{FirstName} {LastName}";
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string Position { get; set; } = string.Empty;
     public string Position { get; set; } = string.Empty; 
     public bool IsPrimary { get; set; }
     public DateTime CreatedAt { get; set; }

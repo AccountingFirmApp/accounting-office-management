@@ -27,6 +27,7 @@ namespace AccountingSystem.Domain.Entities
         [Column("updated_at")]
         public DateTime? Updatedat { get; set; }
         public TaskStatus1? Status { get; set; }
+        public bool? Isactive { get; set; } = true;
 
         public virtual Worker? Assignedworker { get; set; }
 

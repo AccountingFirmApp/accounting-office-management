@@ -13,6 +13,6 @@ namespace AccountingSystem.Application.Commands
         public int Id { get; set; }
         public int? FrequencyId { get; set; }
         public int? DayOfMonth { get; set; }
-        public bool? IsActive { get; set; }
+        public bool? Isactive { get; set; }
     }
 }

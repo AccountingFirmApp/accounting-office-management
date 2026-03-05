@@ -8,9 +8,7 @@
   <!-- Error -->
   <app-error-message *ngIf="error" [message]="error" type="error"></app-error-message>
   
-  <!-- Success -->
   <div *ngIf="companies && !loading">
-    <!-- רשימת חברות -->
     <div *ngIf="companies.length > 0">
       <ul class="company-list">
         <li *ngFor="let company of companies" class="company-card">
@@ -22,15 +20,15 @@
           <p><strong>אימייל:</strong> {{ company.email }}</p>
           <p>
             <strong>סטטוס:</strong>
-            <span [class.active]="company.isActive" [class.inactive]="!company.isActive">
-              {{ company.isActive ? 'פעילה' : 'לא פעילה' }}
+            <span [class.active]="company.isactive" [class.inactive]="!company.isactive">
+              {{ company.isactive ? 'פעילה' : 'לא פעילה' }}
             </span>
           </p>
           <p class="notes"><strong>הערות:</strong> {{ company.notes || 'אין הערות' }}</p>
           
           <!-- כפתורי פעולה -->
           <div class="action-buttons">
-            <button class="btn-action btn-tasks" (click)="goToCompanyTasks(company.id-1)" [attr.aria-label]="'צפה במשימות של ' + company.name">
+            <button class="btn-action btn-tasks" (click)="goToCompanyTasks(company.id)" [attr.aria-label]="'צפה במשימות של ' + company.name">
               <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                 <polyline points="14 2 14 8 20 8"/>
@@ -39,7 +37,7 @@
               </svg>
               משימות
             </button>
-            <button class="btn-action btn-reports" (click)="goToCompanyReports(company.id-1)" [attr.aria-label]="'צפה בדיווחים של ' + company.name">
+            <button class="btn-action btn-reports" (click)="goToCompanyReports(company.id)" [attr.aria-label]="'צפה בדיווחים של ' + company.name">
               <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="20" x2="12" y2="10"/>
                 <line x1="18" y1="20" x2="18" y2="4"/>

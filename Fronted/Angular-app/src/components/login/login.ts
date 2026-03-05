@@ -1,4 +1,3 @@
-
 import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -130,7 +129,6 @@ finally{
       error: (error) => {
         // console.error('🔴 שגיאה בהתחברות Google:', error);
         this.isLoading = false;
-
         if (error.status === 0) {
           this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט';
         } else if (error.status === 401) {

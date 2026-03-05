@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
+
 {
     public class WorkerRepository:IWorkerRepository
     {
@@ -23,6 +24,43 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         }
 
+      
+        public async Task<IEnumerable<Worker>> GetAllByFirmIdAsync(int firmId, bool? isActive = true)
+        {
+            var query = _dbSet
+                .Include(w => w.Role)
+                .Include(w => w.Firm)
+                .Where(w => w.Firmid == firmId);
+
+            if (isActive.HasValue)
+                query = query.Where(w => w.Isactive == isActive.Value);
+
+            return await query
+                .OrderBy(w => w.Lastname)
+                .ThenBy(w => w.Firstname)
+                .ToListAsync();
+        }
+        public async Task<Worker?> GetByIdAndFirmIdAsync(int id, int firmId)
+        {
+            return await _dbSet
+                .Include(w => w.Role)
+                .Include(w => w.Firm)
+                .FirstOrDefaultAsync(w => w.Id == id && w.Firmid == firmId);
+        }
+
+       
+        public async Task<Worker?> GetByEmailAsync(string email)
+        {
+            return await _dbSet
+                .Include(w => w.Role)
+                .Include(w => w.Firm)
+                .FirstOrDefaultAsync(w => w.Email == email);
+        }
+        public async Task<Worker?> GetByEmailAsync(string email, int firmId)
+        {
+            return await _dbSet
+                .FirstOrDefaultAsync(w => w.Email == email && w.Firmid == firmId);
+        }
         public async Task AddAsync(Worker entity)
         {
             await context.AddAsync(entity);
@@ -67,25 +105,28 @@ namespace AccountingSystem.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        // WorkerRepository.cs
         public async Task<IEnumerable<Worker>> GetAllAsync()
         {
             return await _dbSet
+                .Include(w => w.Role)      
+                .Include(w => w.Firm)      
                 .Include(w => w.Role)     
                 .Include(w => w.Firm)       
                 .ToListAsync();
         }
-
-        public Task<Worker?> GetByIdAsync(int id)
+        public async Task<Worker?> GetByIdAsync(int id)
         {
-            return context.Workers.FirstOrDefaultAsync(w => w.Id == id);
+            return await context.Workers
+        .Include(w => w.Companyworkers.Where(cw => cw.Isactive == true))
+                    .ThenInclude(wc => wc.Company)
+                .FirstOrDefaultAsync(w => w.Id == id);
         }
 
         public async Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId)
         {
             return await context.Companyworkers
-                .Where(cw => cw.Companyid == companyId).Where(x=>x.Isactive==true)
-                .Include(cw => cw.Worker)
+                .Where(cw => cw.Companyid == companyId)
+                .Include(cw => cw.Worker) 
                 .Select(cw => cw.Worker)   
                 .ToListAsync();
         }
@@ -123,8 +164,11 @@ namespace AccountingSystem.Infrastructure.Repositories
             existingWorker.Firmid = entity.Firmid;
             existingWorker.Isactive = entity.Isactive;
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(); 
         }
 
+
+
+ 
     }
 }
