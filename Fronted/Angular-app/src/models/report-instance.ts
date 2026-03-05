@@ -1,7 +1,5 @@
 
-/**
- * דיווח בסיסי - תואם ל-ReportInstanceDto בשרת
- */
+
 export interface ReportInstance {
   id: number;
   configId: number;
@@ -26,9 +24,9 @@ export interface ReportInstanceDetail {
   reportTypeId: number;
   reportTypeName: string;
   reportTypeShortCode: string;
-    frequencyName: string;
+  frequencyName: string;
   dayOfMonth?: number;
-    period: Date;
+  period: Date;
   amount?: number;
   status: string;
   paymentMethod?: string;
@@ -36,16 +34,16 @@ export interface ReportInstanceDetail {
   reportedDate?: Date;
   paidDate?: Date;
   comments?: string;
-    createdAt?: Date;
+  
+  createdAt?: Date;
   updatedAt?: Date;
-    periodFormatted?: string;
+  
+  periodFormatted?: string;
   daysOverdue?: number;
   workerNames: string[];
 }
 
-/**
- * דיווח קרוב/באיחור - תואם ל-UpcomingReportDto בשרת
- */
+
 export interface UpcomingReport {
   id: number;
   companyName: string;
@@ -58,14 +56,11 @@ export interface UpcomingReport {
   daysOverdue: number;
 }
 
-/**
- * יצירת דיווח חדש - תואם ל-CreateReportInstanceDto בשרת
- */
+
 export interface CreateReportInstance {
-  companyId: number;      // 🆕 חובה
-  reportTypeId: number;   // 🆕 חובה
-  frequencyId?: number;   // 🆕 אופציונלי
-  // configId: number;
+  companyId: number;    
+  reportTypeId: number;   
+  frequencyId?: number;   
   period: Date;
   amount?: number;
   paymentMethod?: string;
@@ -73,9 +68,7 @@ export interface CreateReportInstance {
   comments?: string;
 }
 
-/**
- * עדכון מלא של דיווח - תואם ל-UpdateReportInstanceDto בשרת
- */
+
 export interface UpdateReportInstance {
   id: number;
   amount?: number;
@@ -87,17 +80,12 @@ export interface UpdateReportInstance {
   comments?: string;
 }
 
-/**
- * עדכון סטטוס בלבד - תואם ל-UpdateReportStatusDto בשרת
- */
+
 export interface UpdateReportStatus {
   id: number;
   status: string;
 }
 
-/**
- * עדכון תשלום בלבד - תואם ל-UpdateReportPaymentDto בשרת
- */
 export interface UpdateReportPayment {
   id: number;
   amount: number;

@@ -9,7 +9,6 @@ export interface CompanyDto {
     IsActive: boolean;
     createdAt?: Date;
     updatedAt?: Date;
-    // notes?: string;
   }
   
   export interface CreateCompanyCommand {

@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReportService } from '../../services/report';
@@ -24,7 +26,7 @@ export class ReportsDashboardComponent implements OnInit {
 
   filterByCompanyId: number | null = null;
   companyName: string = '';
-  isAdminMode: boolean = false;
+  isAdminMode: boolean = false;  
 
   constructor(
     private router: Router,
@@ -45,12 +47,14 @@ export class ReportsDashboardComponent implements OnInit {
   loadStatistics() {
     this.reportService.getAll(this.isAdminMode).subscribe({
       next: (reports) => {
+      
+        
         let filteredReports = reports;
 
         // פילטר לפי companyId אם קיים
         if (this.filterByCompanyId !== null) {
           filteredReports = reports.filter(r => r.companyId === this.filterByCompanyId);
-
+          
           if (filteredReports.length > 0) {
             this.companyName = filteredReports[0].companyName;
           } else {
@@ -58,16 +62,17 @@ export class ReportsDashboardComponent implements OnInit {
           }
         }
 
-        // חישוב סטטיסטיקות
         this.stats.pending = filteredReports.filter(r => r.status === 'Pending').length;
         this.stats.reported = filteredReports.filter(r => r.status === 'Reported').length;
         this.stats.paid = filteredReports.filter(r => r.status === 'Paid').length;
-
+        
         const today = new Date();
-        this.stats.overdue = filteredReports.filter(r => 
-          (r.status === 'Pending' || r.status === 'Reported') &&
-          new Date(r.period) < today
-        ).length;
+        this.stats.overdue = filteredReports.filter(r => {
+          return (r.status === 'Pending' || r.status === 'Reported') &&
+                 new Date(r.period) < today;
+        }).length;
+        
+        
       },
       error: (err) => {
       }

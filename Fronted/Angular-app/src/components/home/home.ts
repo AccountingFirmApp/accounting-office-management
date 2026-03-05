@@ -24,15 +24,17 @@ export class HomeComponent implements OnInit{
     this.currentWorker=this.workerService.currentWorker;
   }
 
-  // ניווט לדף חברות עובדת
   navigateToWorkerCompanies(): void {
+
+
     if(this.currentWorker!=null)
     this.router.navigate([`/workers/${this.currentWorker.id}/companies`]);
 
   }
     navigateToTaskCompanies(): void {
-    if(this.currentWorker!=null)
-    this.router.navigate([`companies/3/tasks`]);
+  
+    
+    this.router.navigate([`workers/${this.currentWorker.id}/tasks`]);
 
   }
   navigateToReports() {

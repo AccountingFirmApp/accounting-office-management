@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class BackButtonComponent {
   @Input() route: string = '/home';
+  @Input() text: string = '';
 
   constructor(
     private router: Router

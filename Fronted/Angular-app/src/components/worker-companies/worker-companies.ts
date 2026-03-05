@@ -49,7 +49,6 @@ export class WorkerCompaniesComponent implements OnInit {
     this.workerService.getWorkerCompanies(this.currentWorker.id).subscribe({
       next: (response) => {
         this.companies = response;
-        // console.log('🏢 טענת חברות עבור עובדת:', this.currentWorker.id, this.companies); // ← הוסף
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -70,13 +69,11 @@ export class WorkerCompaniesComponent implements OnInit {
     this.router.navigate([`./workers/${this.workerId}/companies`]);
   }
 
-  // מעבר למשימות של חברה
   goToCompanyTasks(companyId: number): void {
     this.router.navigate(['/companies', companyId, 'tasks']);
   }
-  // מעבר לדוחות של חברה
 goToCompanyReports(companyId: number): void {
-  // console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
+  
   this.router.navigate(['/reports'], { 
     queryParams: { companyId: companyId } 
   });

@@ -25,9 +25,7 @@ export class ManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentWorker = this.workerService.currentWorker;
-    // console.log(this.workerService)
-    // אם לא מנהל, חזור לדף הבית
-    if (!this.auth.isAdmin()) {
+       if (!this.auth.isAdmin()) {
       this.router.navigate(['/home']);
     }
   }
@@ -40,21 +38,23 @@ export class ManagementComponent implements OnInit {
     this.router.navigate(['/workers']);
   }
 
-  // navigateToReports(): void {
-  //   this.router.navigate(['/reports']);
-  // }
 
  navigateToReports(): void {
- // 🔥 מוסיפים adminMode=true כשנכנסים מפאנל ניהול
+ 
   this.router.navigate(['/reports'], { 
     queryParams: { adminMode: 'true' } 
   });}
 
   navigateToStatistics(): void {
-    // בקרוב
   }
 
   navigateToSettings(): void {
     this.router.navigate(['/settings/report-config']);
+  }
+  navigateToSettingstask(): void {
+    this.router.navigate(['/admin/task-matrix']);
+  }
+  navigateToSettingsCheclist(): void {
+    this.router.navigate(['/admin/checklist-templates']);
   }
 }

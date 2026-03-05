@@ -6,6 +6,7 @@ using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using AccountingSystem.Infrastructure.Jobs;
 using AccountingSystem.Infrastructure.Repositories;
 using AccountingSystem.Infrastructure.Services;
 using AutoMapper;
@@ -47,14 +48,17 @@ var nullNameTranslator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
 
 builder.Services.AddDbContext<AccountingDbContext>(options =>
 {
-    options.UseNpgsql(connectionString, npgsqlOptions =>
-    {
-        // Map enums
-        npgsqlOptions.MapEnum<TaskStatus1>("TaskStatus1", nameTranslator: nullNameTranslator);
-        npgsqlOptions.MapEnum<TaskCategory>("task_category", nameTranslator: nullNameTranslator);
-        npgsqlOptions.MapEnum<ReportStatus>("report_status", nameTranslator: nullNameTranslator);
-        npgsqlOptions.MapEnum<PaymentMethod>("payment_method", nameTranslator: nullNameTranslator);
-    });
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        npgsqlOptions =>
+        {
+            // Map enums WITHOUT name transformation (keep PascalCase)
+            // Reuse the same translator instance to avoid creating multiple ServiceProviders
+            npgsqlOptions.MapEnum<TaskStatus1>("TaskStatus1", nameTranslator: nullNameTranslator);
+            npgsqlOptions.MapEnum<TaskCategory>("task_category", nameTranslator: nullNameTranslator);
+            npgsqlOptions.MapEnum<ReportStatus>("report_status", nameTranslator: nullNameTranslator);
+            npgsqlOptions.MapEnum<PaymentMethod>("payment_method", nameTranslator: nullNameTranslator);
+            npgsqlOptions.MapEnum<RecurrenceType>("recurrence_type", nameTranslator: nullNameTranslator);
+        });
 });
 
 // ========================================
@@ -81,15 +85,26 @@ builder.Services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
 builder.Services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
 builder.Services.AddScoped<IWorkerRoleTypeRepository, WorkerRoleTypeRepository>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+builder.Services.AddScoped<IChecklistItemRepository, ChecklistItemRepository>();
+builder.Services.AddScoped<ITaskConfigurationRepository, TaskConfigurationRepository>();
+// ========================================
+// 3. AutoMapper
+// ========================================
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+// ========================================
+// 4. Dependency Injection
+// ========================================
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
-// ========================================
-// AutoMapper
-// ========================================
-var mapperConfig = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile()));
-builder.Services.AddSingleton(mapperConfig.CreateMapper());
+
 
 // ========================================
 // MediatR + Validation
@@ -130,6 +145,8 @@ builder.Services.AddAuthorization();
 // ========================================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHostedService<AutomaticTaskGenerationJob>();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Accounting API", Version = "v1" });

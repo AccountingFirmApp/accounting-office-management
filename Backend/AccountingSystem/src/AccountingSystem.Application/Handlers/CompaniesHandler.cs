@@ -1,12 +1,14 @@
 ﻿// Application/Handlers/Companies/CompaniesHandler.cs
-using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application;
+using AccountingSystem.Application.Commands.Tasks;
+using AccountingSystem.Application.DTOs;
+using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Application.Queries.Companies;
 using AccountingSystem.Application.Queries.Tasks;
-
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces;
+using AccountingSystem.Domain.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 
@@ -138,108 +140,6 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
 
 }
 
-// ========================================
-// CREATE COMPANY COMMAND HANDLER
-// ========================================
-
-
-//public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, CompanyDto>
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-//        private readonly IMapper _mapper;
-
-//        public CreateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-//        {
-//            _unitOfWork = unitOfWork;
-//            _mapper = mapper;
-//        }
-
-//        public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
-//        {
-//            var company = new Company
-//            {
-//                Name = request.Name,
-//                Taxid = request.TaxId,
-//                Firmid = request.FirmId,
-//                //Companycontacts = request.ContactPerson,
-//                Phone = request.Phone,
-//                Email = request.Email,
-//                Address = request.Address,
-//                Createdat = DateTime.UtcNow
-//            };
-
-//            await _unitOfWork.Companies.AddAsync(company);
-//            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-//            return _mapper.Map<CompanyDto>(company);
-//        }
-//    }
-
-//    // ========================================
-//    // UPDATE COMPANY COMMAND HANDLER
-//    // ========================================
-//    public class UpdateCompanyCommandHandler : IRequestHandler<UpdateCompanyCommand, CompanyDto>
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-//        private readonly IMapper _mapper;
-
-//        public UpdateCompanyCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-//        {
-//            _unitOfWork = unitOfWork;
-//            _mapper = mapper;
-//        }
-
-//        public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
-//        {
-//            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
-
-//            if (company == null)
-//            {
-//                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
-//            }
-
-//            company.Name = request.Name;
-//            company.Taxid = request.TaxId;
-//            //company.Companycontacts = request.ContactPerson;
-//            company.Phone = request.Phone;
-//            company.Email = request.Email;
-//            company.Address = request.Address;
-//            company.Updatedat = DateTime.UtcNow;
-
-//            await _unitOfWork.Companies.UpdateAsync(company);
-//            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-//            return _mapper.Map<CompanyDto>(company);
-//        }
-//    }
-
-//    // ========================================
-//    // DELETE COMPANY COMMAND HANDLER
-//    // ========================================
-//    public class DeleteCompanyCommandHandler : IRequestHandler<DeleteCompanyCommand, Unit>
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-
-//        public DeleteCompanyCommandHandler(IUnitOfWork unitOfWork)
-//        {
-//            _unitOfWork = unitOfWork;
-//        }
-
-//        public async Task<Unit> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
-//        {
-//            var company = await _unitOfWork.Companies.GetByIdAsync(request.Id);
-
-//            if (company == null)
-//            {
-//                throw new Exception($"חברה עם ID {request.Id} לא נמצאה");
-//            }
-
-//            await _unitOfWork.Companies.DeleteAsync(request.Id);
-//            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-//            return Unit.Value;
-//        }
-//    }
 
 public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompanyIdQuery, List<CompanyTaskDto>>
 {
@@ -270,12 +170,12 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
             Id = t.Id,
             CompanyId = t.Companyid,
             TaskTypeId = t.Tasktypeid,
-            Period = t.Period.ToDateTime(TimeOnly.MinValue),
+            Period = t.Period,
             DueDate = t.Duedate.HasValue
-? t.Duedate.Value.ToDateTime(TimeOnly.MinValue)
+? t.Duedate
 : null,
             CompletedDate = t.Completeddate.HasValue
-? t.Completeddate.Value.ToDateTime(TimeOnly.MinValue)
+? t.Completeddate
 : null,
             AssignedWorkerId = t.Assignedworkerid,
             Notes = t.Notes,
@@ -291,6 +191,36 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
         }).ToList();
 
         return taskDtos;
+    }
+    public class CompleteChecklistItemCommandHandler : IRequestHandler<CompleteChecklistItemCommand, CompleteChecklistItemResult>
+    {
+        private readonly IChecklistItemRepository _repository; // בהנחה שיש לך Repository כזה
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CompleteChecklistItemCommandHandler(IChecklistItemRepository repository, IUnitOfWork unitOfWork)
+        {
+            _repository = repository;
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<CompleteChecklistItemResult> Handle(CompleteChecklistItemCommand request, CancellationToken cancellationToken)
+        {
+            var item = await _repository.GetByIdAsync(request.ItemId);
+
+            if (item == null)
+                return new CompleteChecklistItemResult { Success = false, Message = "הפריט לא נמצא" };
+
+            // עדכון השדות
+            item.IsCompleted = true;
+            item.CompletedAt = DateTime.UtcNow;
+            item.CompletedByWorkerId = request.CompletedByWorkerId;
+            item.Notes = request.Notes;
+
+            _repository.Update(item);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return new CompleteChecklistItemResult { Success = true, Message = "הפריט הושלם בהצלחה" };
+        }
     }
 
 }

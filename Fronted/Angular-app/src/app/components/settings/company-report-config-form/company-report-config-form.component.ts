@@ -110,7 +110,7 @@ isAdmin: boolean =false;
         this.loadConfig();
       }
     }).catch(err => {
-      // console.error(err);
+    
       this.loading = false;
     });
   }
@@ -177,9 +177,8 @@ isAdmin: boolean =false;
     if (this.configForm.valid || this.isFixedYear || this.isEditMode) {
       this.submitting = true;
 
-      // אם יש שדות מושבתים, צריך להשתמש ב-getRawValue() במקום value
       const formData = (this.isFixedYear || this.isEditMode)
-        ? this.configForm.getRawValue() // כולל גם שדות disabled
+        ? this.configForm.getRawValue() 
         : this.configForm.value;
 
       let request$: Observable<any>;

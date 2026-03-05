@@ -282,18 +282,19 @@
 
 
 // Application/Handlers/Workers/WorkersHandler.cs
+using AccountingSystem.Application.Commands.Workers;
 using AccountingSystem.Application.DTOs;
 //using AccountingSystem.Application;
 using AccountingSystem.Application.Queries.Workers;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces;
+using AccountingSystem.Domain.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
-using AccountingSystem.Application.Commands.Workers;
 using Microsoft.AspNetCore.Authentication;
 using CreateWorkerCommand = AccountingSystem.Application.Commands.Workers.CreateWorkerCommand;
-using UpdateWorkerCommand = AccountingSystem.Application.Commands.Workers.UpdateWorkerCommand;
 using DeleteWorkerCommand = AccountingSystem.Application.Commands.Workers.DeleteWorkerCommand;
+using UpdateWorkerCommand = AccountingSystem.Application.Commands.Workers.UpdateWorkerCommand;
 
 namespace AccountingSystem.Application.Handlers.Workers;
 
@@ -331,7 +332,20 @@ public class GetAllWorkersQueryHandler : IRequestHandler<GetAllWorkersQuery, Lis
         return workerDtos;
     }
 }
+public class GetWorkerTasksQueryHandler : IRequestHandler<GetWorkerTasksQuery, IEnumerable<CompanyTask>>
+{
+    private readonly IUnitOfWork _unitOfWork;
 
+    public GetWorkerTasksQueryHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<IEnumerable<CompanyTask>> Handle(GetWorkerTasksQuery request, CancellationToken cancellationToken)
+    {
+        return await _unitOfWork.Tasks.GetTasksByWorkerIdAsync(request.WorkerId);
+    }
+}
 
 // ========================================
 // GET WORKER BY ID HANDLER
@@ -574,4 +588,27 @@ public class GoogleLoginCommandHandler : IRequestHandler<GoogleLoginCommand, Log
     {
         return await _authService.GoogleLoginAsync(request.GoogleToken, cancellationToken);
     }
+    public class GetWorkersByCompanyHandler : IRequestHandler<GetWorkersByCompanyQuery, IEnumerable<WorkerLookupDto>>
+    {
+        private readonly IWorkerRepository _workerRepository;
+
+        public GetWorkersByCompanyHandler(IWorkerRepository workerRepository)
+        {
+            _workerRepository = workerRepository;
+        }
+
+        public async Task<IEnumerable<WorkerLookupDto>> Handle(GetWorkersByCompanyQuery request, CancellationToken cancellationToken)
+        {
+            var workers = await _workerRepository.GetWorkersByCompanyIdAsync(request.CompanyId);
+
+            return workers.Select(w => new WorkerLookupDto
+            {
+                Id = w.Id,
+                FullName = $"{w.Firstname} {w.Lastname}"
+            });
+        }
+    }
 }
+
+
+

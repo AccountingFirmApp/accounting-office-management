@@ -3,6 +3,7 @@ using AccountingSystem.Domain.DTOs;
 using AccountingSystem.Domain.Entities;
 using AutoMapper;
 using AccountingSystem.Application.Mappings.Resolvers;
+using AccountingSystem.Application.DTOs.Tasks;
 namespace AccountingSystem.Application.Mappings
 {
     /// <summary>

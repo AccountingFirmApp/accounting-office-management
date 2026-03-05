@@ -1,58 +1,4 @@
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Observable } from 'rxjs';
-// import { LoginRequestDto, LoginResponseDto, GoogleLoginRequestDto } from '../models/auth';
-// import { environment } from '../environments/environment';
-// import jwtDecode from 'jwt-decode';
 
-// interface JwtPayload {
-//   role?: string;
-//   roles?: string[];
-// }
-
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class AuthService {
-//   private apiUrl = `${environment.apiUrl}/auth`;
-
-//   constructor(private http: HttpClient) { }
-
-//   login(request: LoginRequestDto): Observable<LoginResponseDto> {
-//     return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, request);
-//   }
-
-//   googleLogin(request: GoogleLoginRequestDto): Observable<LoginResponseDto> {
-//     return this.http.post<LoginResponseDto>(`${this.apiUrl}/login-google`, request);
-//   }
-
-//   saveToken(token: string): void {
-//     localStorage.setItem('authToken', token);
-//   }
-
-//   getToken(): string | null {
-//     return localStorage.getItem('authToken');
-//   }
-
-//   saveWorkerInfo(worker: any): void {
-//     localStorage.setItem('workerInfo', JSON.stringify(worker));
-//   }
-
-//   getWorkerInfo(): any {
-//     const workerInfo = localStorage.getItem('workerInfo');
-//     return workerInfo ? JSON.parse(workerInfo) : null;
-//   }
-
-//   logout(): void {
-//     localStorage.removeItem('authToken');
-//     localStorage.removeItem('workerInfo');
-//   }
-
-//   isAuthenticated(): boolean {
-//     return !!this.getToken();
-//   }
-// }
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
@@ -82,6 +28,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          this.saveWorkerInfo(response.worker);
         })
       );
   }
@@ -94,6 +41,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.token); // 🔥 שמירה אוטומטית
+          this.saveWorkerInfo(response.worker); 
         })
       );
   }
@@ -128,10 +76,11 @@ export class AuthService {
   // =========================
   // Logout
   // =========================
+  
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem('workerInfo'); // ⭐ הוסף את זה!
   }
-
   // =========================
   // Authentication Helpers
   // =========================
@@ -139,29 +88,6 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  // =========================
-  // Role / Admin Helpers
-  // =========================
-  // getUserRole(): string | null {
-  //   const token = this.getToken();
-  //   if (!token) return null;
-
-  //   try {
-  //     const decoded = jwtDecode<JwtPayload>(token);
-
-  //     if (decoded.role) {
-  //       return decoded.role;
-  //     }
-
-  //     if (decoded.roles && decoded.roles.length > 0) {
-  //       return decoded.roles[0];
-  //     }
-
-  //     return null;
-  //   } catch {
-  //     return null;
-  //   }
-  // }
   getUserRole(): string | null {
     const token = this.getToken();
     if (!token) return null;
