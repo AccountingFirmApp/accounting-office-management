@@ -103,8 +103,7 @@ public class ReportInstanceDetailDto
     public DateTime? PaidDate { get; set; }
     public string Comments { get; set; } = string.Empty;
     public List<string> WorkerNames { get; set; } = new List<string>();
-    //public string WorkerNamesDisplay => string.Join(", ", WorkerNames);
-    // Calculated fields
+
     public int? DaysOverdue 
     {
         get

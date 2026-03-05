@@ -17,7 +17,6 @@ public class CompanyDto
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     
-    // Navigation (optional)
     public string? FirmName { get; set; }
 }
 

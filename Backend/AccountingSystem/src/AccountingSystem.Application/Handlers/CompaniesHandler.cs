@@ -1,5 +1,4 @@
-﻿// Application/Handlers/Companies/CompaniesHandler.cs
-using AccountingSystem.Application;
+﻿using AccountingSystem.Application;
 using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.DTOs.Tasks;

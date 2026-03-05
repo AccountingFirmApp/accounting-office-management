@@ -19,7 +19,6 @@ namespace AccountingSystem.Domain.Entities
         public string? Notes { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        // Navigation
         public virtual CompanyTask CompanyTask { get; set; } = null!;
         public virtual TaskChecklistTemplateItem? TemplateItem { get; set; }
         public virtual Worker? CompletedByWorker { get; set; }

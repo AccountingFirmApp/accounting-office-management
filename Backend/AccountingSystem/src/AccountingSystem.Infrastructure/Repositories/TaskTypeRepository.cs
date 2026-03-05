@@ -1,7 +1,7 @@
 ﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore; // חשוב מאוד עבור ToListAsync
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +18,14 @@ namespace AccountingSystem.Infrastructure.Repositories
         public TaskTypeRepository(AccountingDbContext context)
         {
             _context = context;
-            _dbSet = context.Tasktypes; // ודאי שזה השם ב-DbContext שלך
+            _dbSet = context.Tasktypes;
         }
 
-        // הפונקציה הקריטית ביותר עבור המטריצה
         public async Task<IEnumerable<Tasktype>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
 
-        // מימוש שאר הפונקציות כדי שהקומפיילר לא יצעק
         public async Task<Tasktype?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
@@ -71,7 +69,6 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Tasktype>> GetByCategoryAsync(string category)
         {
-            // אם אין לך עמודת קטגוריה ב-DB, אפשר להחזיר רשימה ריקה בינתיים
             return await _dbSet.ToListAsync();
         }
     }

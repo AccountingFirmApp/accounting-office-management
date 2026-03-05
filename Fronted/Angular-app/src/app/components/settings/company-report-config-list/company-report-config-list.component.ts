@@ -80,7 +80,6 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.buildDeletedMatrix(); // ⭐
       this.loading = false;
     }).catch(err => {
-      // console.error(err);
       this.loading = false;
     });
   }
@@ -248,7 +247,6 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
 
     this.configService.getByCompanyId(companyId).subscribe({
       next: (configs) => {
-        // ⭐ מסנן רק הגדרות פעילות מהשנה הקודמת
         const previousYearConfigs = configs.filter(c => 
           c.year === previousYear && c.isActive === true
         );
@@ -292,7 +290,6 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
             },
             error: (err) => {
               errorCount++;
-              // console.error('שגיאה ביצירת הגדרה:', err);
               if (successCount + errorCount === totalConfigs) {
                 this.handleCopyComplete(successCount, errorCount, companyName, this.selectedYear);
               }
@@ -301,7 +298,6 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
         });
       },
       error: (err) => {
-        // console.error(err);
       }
     });
   }

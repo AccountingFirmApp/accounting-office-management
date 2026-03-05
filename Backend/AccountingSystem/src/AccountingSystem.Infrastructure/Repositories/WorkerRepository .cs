@@ -71,23 +71,22 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Worker>> GetAllAsync()
         {
             return await _dbSet
-                .Include(w => w.Role)        // ✅ Worker.Role
-                .Include(w => w.Firm)        // ✅ Worker.Firm (שזה Accountingfirm)
+                .Include(w => w.Role)     
+                .Include(w => w.Firm)       
                 .ToListAsync();
         }
 
         public Task<Worker?> GetByIdAsync(int id)
         {
-            return  context.Workers
-                   .FirstOrDefaultAsync(w => w.Id == id);
+            return context.Workers.FirstOrDefaultAsync(w => w.Id == id);
         }
 
         public async Task<IEnumerable<Worker>> GetWorkersByCompanyIdAsync(int companyId)
         {
             return await context.Companyworkers
-                .Where(cw => cw.Companyid == companyId)
-                .Include(cw => cw.Worker) // טעינת נתוני העובד מטבלת Worker
-                .Select(cw => cw.Worker)   // החזרת הישות של העובד בלבד
+                .Where(cw => cw.Companyid == companyId).Where(x=>x.Isactive==true)
+                .Include(cw => cw.Worker)
+                .Select(cw => cw.Worker)   
                 .ToListAsync();
         }
 
@@ -115,7 +114,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             var existingWorker = await context.Workers.FindAsync(entity.Id);
             if (existingWorker == null)
-                throw new KeyNotFoundException("Worker not found."); // זה יזרוק חריגה אם לא קיים
+                throw new KeyNotFoundException("Worker not found."); 
 
             existingWorker.Firstname = entity.Firstname;
             existingWorker.Lastname = entity.Lastname;
@@ -124,7 +123,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             existingWorker.Firmid = entity.Firmid;
             existingWorker.Isactive = entity.Isactive;
 
-            await context.SaveChangesAsync(); // ✅ בסוף המתודה יש Task שמסתיים
+            await context.SaveChangesAsync();
         }
 
     }

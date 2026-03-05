@@ -19,6 +19,6 @@ namespace AccountingSystem.Domain.Entities
         public DateTime? Createdat { get; set; }
         public short? DefaultDayOfMonth { get; set; }
 
-        public virtual ICollection<Companyreportconfig> Companyreportconfigs { get; set; } // ✓ רבים    }
+        public virtual ICollection<Companyreportconfig> Companyreportconfigs { get; set; }
     }
 }

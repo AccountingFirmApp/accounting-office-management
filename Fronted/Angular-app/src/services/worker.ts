@@ -36,7 +36,6 @@ export class WorkerService {
       return this.http.post<WorkerInfoDto>(this.apiUrl, worker);  
     }
 
-    // WorkerService
 getWorkerById(id: number): Observable<WorkerInfoDto> {
   const token = this.authService.getToken();
   return this.http.get<WorkerInfoDto>(`${this.apiUrl}/${id}`, {
@@ -45,12 +44,10 @@ getWorkerById(id: number): Observable<WorkerInfoDto> {
     }
   });
 }
-// ⭐ קבל את העובד הנוכחי
 getCurrentWorker(): WorkerInfoDto | null {
   return this.authService.getWorkerInfo();
 }
 
-// ⭐ קבל את ה-workerId הנוכחי
 getCurrentWorkerId(): number | null {
   const worker = this.getCurrentWorker();
   return worker ? worker.id : null;

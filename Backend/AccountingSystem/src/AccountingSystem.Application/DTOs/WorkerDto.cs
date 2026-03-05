@@ -80,20 +80,20 @@ public class GoogleLoginRequestDto
 }
 public class LoginResponseDto
 {
-    public string Token { get; set; } = null!;
+    public string Token { get; set; } 
     public string TokenType { get; set; } = "Bearer";
     public int ExpiresIn { get; set; } 
-    public WorkerInfoDto Worker { get; set; } = null!;
+    public WorkerInfoDto Worker { get; set; }
 }
 
 public class WorkerInfoDto
 {
     public int Id { get; set; }
-    public string EmployeeId { get; set; } = null!;
-    public string Firstname { get; set; } = null!;
-    public string Lastname { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string RoleName { get; set; } = null!;
+    public string EmployeeId { get; set; } 
+            public string Firstname { get; set; } 
+    public string Lastname { get; set; }
+    public string Email { get; set; } 
+    public string RoleName { get; set; } 
     public int FirmId { get; set; }
 }
 public class WorkerLookupDto

@@ -10,16 +10,6 @@ namespace AccountingSystem.API.Controller
     [Authorize]
     public class FrequencyController : ControllerBase
     {
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<FrequencyDto>> GetById(int id)
-        //{
-        //    var query = new GetFrequencyByIdQuery { Id = id };
-        //    var result = await _mediator.Send(query);
 
-        //    if (result == null)
-        //        return NotFound();
-
-        //    return Ok(result);
-        //}
     }
 }

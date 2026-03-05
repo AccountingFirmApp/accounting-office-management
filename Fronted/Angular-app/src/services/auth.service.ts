@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { LoginRequestDto, LoginResponseDto, GoogleLoginRequestDto } from '../models/auth';
-import { environment } from '../environments/environment';
+import { envConfig } from '../app/app.config.env.example';
 import { jwtDecode } from 'jwt-decode';
 
 interface JwtPayload {
@@ -15,7 +15,7 @@ interface JwtPayload {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl = `${envConfig.apiUrl}/auth`;
   private readonly TOKEN_KEY = 'authToken';
 
   constructor(private http: HttpClient) { }

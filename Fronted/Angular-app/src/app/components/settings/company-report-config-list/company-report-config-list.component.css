@@ -144,7 +144,7 @@
 }
 
 .active {
-  color: green;
+  background: #3b82f6;
   font-weight: bold;
 }
 

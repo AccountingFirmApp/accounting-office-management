@@ -51,11 +51,6 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, Guid entityId)
         {
             throw new NotImplementedException();
-
-            //return await _dbSet
-            //    .Where(a => a.Entitytype == entityType && a.Entityid == entityId)
-            //    .OrderByDescending(a => a.Createdat)
-            //    .ToListAsync();
         }
 
         public Task<IEnumerable<Auditlog>> GetLogsByEntityAsync(string entityType, int entityId)
@@ -66,11 +61,6 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(Guid workerId)
         {
             throw new NotImplementedException();
-
-            //return await _dbSet
-            //    .Where(a => a.Workerid == workerId)
-            //    .OrderByDescending(a => a.Createdat)
-            //    .ToListAsync();
         }
 
         public Task<IEnumerable<Auditlog>> GetLogsByWorkerAsync(int workerId)
@@ -82,11 +72,6 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             throw new NotImplementedException();
 
-            //return await _dbSet
-            //    .OrderByDescending(a => a.Createdat)
-            //    .Take(count)
-            //    .Include(a => a.Worker)
-            //    .ToListAsync();
         }
 
         public System.Threading.Tasks.Task UpdateAsync(Auditlog entity)

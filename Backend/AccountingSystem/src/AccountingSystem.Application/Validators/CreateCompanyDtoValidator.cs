@@ -10,42 +10,34 @@ namespace AccountingSystem.Application.Validators.Company
     {
         public CreateCompanyDtoValidator()
         {
-            // שם חברה - חובה
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("שם החברה הוא שדה חובה")
                 .MaximumLength(255).WithMessage("שם החברה לא יכול להיות יותר מ-255 תווים")
                 .MinimumLength(2).WithMessage("שם החברה חייב להכיל לפחות 2 תווים");
 
-            // ח.פ/ע.מ - חובה וולידציה מיוחדת
             RuleFor(x => x.TaxId)
                 .NotEmpty().WithMessage("מספר ח.פ/ע.מ הוא שדה חובה")
                 .MaximumLength(20).WithMessage("מספר ח.פ/ע.מ לא יכול להיות יותר מ-20 תווים")
                 .Matches(@"^\d{9}$").WithMessage("מספר ח.פ/ע.מ חייב להכיל 9 ספרות")
                 .When(x => !string.IsNullOrEmpty(x.TaxId));
 
-            // משרד רואי חשבון - חובה
             RuleFor(x => x.FirmId)
                 .NotEmpty().WithMessage("חובה לבחור משרד רואי חשבון")
                 .GreaterThan(0).WithMessage("משרד רואי חשבון לא תקין");
 
-            // אימייל - אופציונלי, אבל אם קיים צריך להיות תקין
             RuleFor(x => x.Email)
                 .EmailAddress().WithMessage("פורמט אימייל לא תקין")
                 .MaximumLength(255).WithMessage("אימייל לא יכול להיות יותר מ-255 תווים")
                 .When(x => !string.IsNullOrEmpty(x.Email));
-
-            // טלפון - אופציונלי
             RuleFor(x => x.Phone)
                 .MaximumLength(50).WithMessage("מספר טלפון לא יכול להיות יותר מ-50 תווים")
                 .Matches(@"^[\d\-\+\(\)\s]+$").WithMessage("מספר טלפון מכיל תווים לא חוקיים")
                 .When(x => !string.IsNullOrEmpty(x.Phone));
 
-            // כתובת - אופציונלי
             RuleFor(x => x.Address)
                 .MaximumLength(500).WithMessage("כתובת לא יכולה להיות יותר מ-500 תווים")
                 .When(x => !string.IsNullOrEmpty(x.Address));
 
-            // הערות - אופציונלי
             RuleFor(x => x.Notes)
                 .MaximumLength(2000).WithMessage("הערות לא יכולות להיות יותר מ-2000 תווים")
                 .When(x => !string.IsNullOrEmpty(x.Notes));

@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequestDto, GoogleLoginRequestDto } from '../../models/auth';
-import { environment } from '../../environments/environment';
+import { envConfig } from "../../app/environments/app.config.env";
 import { WorkerService } from '../../services/worker';
 
 declare const google: any;
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   showPassword: boolean = false;
 
-  private googleClientId: string = environment.googleClientId;
+  private googleClientId: string = envConfig.googleClientId;
 
   constructor(
     public authService: AuthService,
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (document.querySelector('script[src="https://accounts.google.com/gsi/client"]')) {
       return;
     }
-
+    console.log(this.googleClientId);
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
@@ -76,7 +76,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.ngZone.run(() => {
             this.handleGoogleCallback(response);
           });
-        }
+        },
+        
+  use_fedcm_for_prompt: false  
       });
 
       google.accounts.id.renderButton(

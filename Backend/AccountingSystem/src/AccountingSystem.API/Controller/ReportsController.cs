@@ -256,28 +256,6 @@ namespace AccountingSystem.API.Controllers
             return Ok(reports);
         }
 
-        /// <summary>
-        /// יצירת דיווח חדש
-        /// </summary>
-        //[HttpPost]
-        //public async System.Threading.Tasks.Task<ActionResult<ReportInstanceDto>> CreateReport(
-        //    [FromBody] CreateReportInstanceDto dto)
-        //{
-        //    var command = new CreateReportInstanceCommand
-        //    {
-        //        ConfigId = dto.ConfigId,
-        //        Period = dto.Period,
-        //        Amount = dto.Amount,
-        //        PaymentMethod = dto.PaymentMethod,
-        //        ReceiptDate = dto.ReceiptDate,
-        //        Comments = dto.Comments
-        //    };
-
-        //    var report = await _mediator.Send(command);
-        //    return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
-        //}
-
-
 
 
         [HttpPost]
@@ -286,9 +264,9 @@ namespace AccountingSystem.API.Controllers
         {
             var command = new CreateReportInstanceCommand
             {
-                CompanyId = dto.CompanyId,           // 🆕
-                ReportTypeId = dto.ReportTypeId,     // 🆕
-                FrequencyId = dto.FrequencyId,       // 🆕
+                CompanyId = dto.CompanyId,         
+                ReportTypeId = dto.ReportTypeId,  
+                FrequencyId = dto.FrequencyId,      
                 Period = dto.Period,
                 Amount = dto.Amount,
                 PaymentMethod = dto.PaymentMethod,
@@ -375,89 +353,7 @@ namespace AccountingSystem.API.Controllers
             return Ok(new { message = "Report updated successfully" });
         }
 
-        // ========== פונקציות חדשות מה-Repository ==========
-
-        /// <summary>
-        /// קבלת כל הדיווחים במערכת
-        /// GET: api/reports/all
-        /// </summary>
-        //[HttpGet("all")]
-        //public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
-        //{
-        //    var query = new GetAllReportsQuery();
-        //    var reports = await _mediator.Send(query);
-        //    return Ok(reports);
-        //}
-
-        //[HttpGet("all")]
-        //public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports()
-        //{
-        //    try
-        //    {
-        //        // 🔥 מחלץ את ה-WorkerId מה-Token
-        //        var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        //        if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
-        //        {
-        //            return Unauthorized(new { message = "משתמש לא מזוהה" });
-        //        }
-
-        //        // שליחת Query עם WorkerId
-        //        var query = new GetAllReportsQuery { WorkerId = workerId };
-        //        var reports = await _mediator.Send(query);
-
-        //        return Ok(reports);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
-        //    }
-        //}
-
-        //    [HttpGet("all")]
-        //    public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports(
-        //[FromQuery] bool isAdminMode = false) // 🆕 פרמטר חדש
-        //    {
-        //        try
-        //        {
-        //            // 🔥 מחלץ את ה-WorkerId וה-Role מה-Token
-        //            var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        //            var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
-
-        //            if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
-        //            {
-        //                return Unauthorized(new { message = "משתמש לא מזוהה" });
-        //            }
-
-        //            // 🔥 אם זה מנהל במצב ניהול - לא שולחים WorkerId
-        //            int? filterByWorkerId = null;
-
-        //            if (isAdminMode && roleClaim == "Admin")
-        //            {
-        //                // מנהל במצב ניהול - רואה הכל
-        //                filterByWorkerId = null;
-        //            }
-        //            else
-        //            {
-        //                // כל המשתמשים האחרים (כולל מנהל שלא במצב ניהול) - רואים רק את שלהם
-        //                filterByWorkerId = workerId;
-        //            }
-
-        //            var query = new GetAllReportsQuery
-        //            {
-        //                WorkerId = filterByWorkerId,
-        //                IsAdminMode = isAdminMode
-        //            };
-
-        //            var reports = await _mediator.Send(query);
-        //            return Ok(reports);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
-        //        }
-        //    }
-
+      
 
         [HttpGet("all")]
         public async System.Threading.Tasks.Task<ActionResult<List<ReportInstanceDetailDto>>> GetAllReports(

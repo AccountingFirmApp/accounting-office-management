@@ -1,5 +1,3 @@
-// Copy this file to app.config.env.ts and fill in your actual values
-// This file is generated from .env - keep them in sync
 export const envConfig = {
   apiUrl: 'https://localhost:7118/api',
   googleClientId: '1028039254668-34t0v9qqdsv4b2n6k0g6ftkt6c7abinv.apps.googleusercontent.com'

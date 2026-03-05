@@ -17,7 +17,6 @@ namespace AccountingSystem.Domain.DTOs
         public string? NewValue { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        // Navigation (optional)
         public string? WorkerName { get; set; }
     }
 }
