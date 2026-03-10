@@ -18,8 +18,6 @@ namespace AccountingSystem.Application.Mappings.Resolvers
             {
                 return new List<string>();
             }
-
-            // 🔥 הלוגיקה לחישוב שמות העובדות (רק למנהל!)
             if (source.Config?.Company?.Companyworkers == null)
                 return new List<string>();
 
