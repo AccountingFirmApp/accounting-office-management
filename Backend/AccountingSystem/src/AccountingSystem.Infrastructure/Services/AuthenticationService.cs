@@ -100,7 +100,7 @@ CancellationToken cancellationToken = default)
     {
         try
         {
-            // 1️⃣ אימות Google Token
+            //  אימות Google Token
             var googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID")
                 ?? _configuration["Authentication:Google:ClientId"]
                 ?? throw new InvalidOperationException("Google ClientId not configured. Set GOOGLE_CLIENT_ID environment variable.");
@@ -116,7 +116,7 @@ CancellationToken cancellationToken = default)
             }
 
 
-            // 2️⃣ חיפוש משתמש קיים
+            //  חיפוש משתמש קיים
             var worker = await _context.Workers
                 .Include(w => w.Role)
                 .Include(w => w.Firm)
@@ -133,13 +133,13 @@ CancellationToken cancellationToken = default)
                 
             }
 
-            // 3️⃣ בדיקה שהחשבון פעיל
+            //  בדיקה שהחשבון פעיל
             if (worker.Isactive != true)
             {
                 throw new UnauthorizedAccessException("חשבון המשתמש אינו פעיל");
             }
 
-            // 4️⃣ עדכון Google ID אם חסר
+            //  עדכון Google ID אם חסר
             if (string.IsNullOrEmpty(worker.GoogleId))
             {
                 worker.GoogleId = payload.Subject;
@@ -150,14 +150,14 @@ CancellationToken cancellationToken = default)
                 _logger.LogInformation($"📝 Updated worker {worker.Email} with Google ID");
             }
 
-            // 5️⃣ יצירת Token והחזרת תשובה
+            //  יצירת Token והחזרת תשובה
             string token = _tokenService.GenerateToken(worker);
 
             return new LoginResponseDto
             {
                 Token = token,
                 TokenType = "Bearer",
-                ExpiresIn = 3600,
+                ExpiresIn = 360000,
                 Worker = new WorkerInfoDto
                 {
                     Id = worker.Id,
@@ -172,7 +172,7 @@ CancellationToken cancellationToken = default)
         }
         catch (InvalidJwtException ex)
         {
-            _logger.LogInformation($"❌ Invalid Google token: {ex.Message}");
+            _logger.LogInformation($" Invalid Google token: {ex.Message}");
             throw new UnauthorizedAccessException("Google token לא תקין");
         }
     }
