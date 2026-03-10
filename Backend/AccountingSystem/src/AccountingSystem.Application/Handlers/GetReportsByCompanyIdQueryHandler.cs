@@ -224,14 +224,14 @@ namespace AccountingSystem.Application.Handlers
                     ).ToList();
                 }
 
-                _logger.LogInformation($"✅ אחרי פילטור: {reports.Count()} דוחות");
+                _logger.LogInformation($" אחרי פילטור: {reports.Count()} דוחות");
 
                 var mappedReports = _mapper.Map<List<ReportInstanceDetailDto>>(
                     reports,
                     opt => opt.Items["IsAdminMode"] = request.IsAdminMode
                 );
 
-                _logger.LogInformation($"✅ החזרת {mappedReports.Count} דוחות");
+                _logger.LogInformation($" החזרת {mappedReports.Count} דוחות");
 
                 return mappedReports;
             }
