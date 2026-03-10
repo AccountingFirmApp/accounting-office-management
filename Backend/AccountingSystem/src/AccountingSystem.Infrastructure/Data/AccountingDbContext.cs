@@ -45,17 +45,14 @@ public partial class AccountingDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
   
-        // המרה עבור TaskCategory
         modelBuilder.Entity<Tasktype>()
             .Property(e => e.Category)
             .HasConversion<string>();
 
-        // המרה עבור PaymentMethod ב-ReportInstance
         modelBuilder.Entity<Reportinstance>()
             .Property(e => e.PaymentMethod)
             .HasConversion<string>();
 
-        // המרה עבור Status ב-ReportInstance
         modelBuilder.Entity<Reportinstance>()
             .Property(e => e.Status)
             .HasConversion<string>();
@@ -716,7 +713,6 @@ public partial class AccountingDbContext : DbContext
           .HasForeignKey(d => d.TemplateId)// המפתח הזר הוא TemplateId
           .HasPrincipalKey(d => d.Id);     // המפתח הראשי הוא Id
     });
-        // ⭐ חשוב מאוד: הוספתי את המיפוי הזה כדי למנוע את שגיאת template_id1
         modelBuilder.Entity<TaskChecklistTemplateItem>(entity =>
         {
             entity.ToTable("task_checklist_template_item");
