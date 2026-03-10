@@ -40,12 +40,10 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // 1. Database + ENUM mapping
 // ========================================
 
-// ✅ הגדרה אחת בלבד של connectionString
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Database connection string not configured.");
 
-// ✅ הגדרה אחת בלבד של nullNameTranslator
 var nullNameTranslator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
@@ -59,7 +57,6 @@ dataSourceBuilder.MapEnum<RecurrenceType>("recurrence_type", nameTranslator: nul
 
 var dataSource = dataSourceBuilder.Build();
 
-// ✅ רישום DbContext אחד בלבד
 builder.Services.AddDbContext<AccountingDbContext>(options =>
     options.UseNpgsql(dataSource));
 
