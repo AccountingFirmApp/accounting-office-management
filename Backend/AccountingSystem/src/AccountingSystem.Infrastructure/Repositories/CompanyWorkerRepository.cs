@@ -128,8 +128,8 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<Companyworker?> GetByWorkerAndCompany(int workerId, int companyId)
         {
             return await _context.Companyworkers
-                .Include(cw => cw.Company)   // כולל את החברה
-                .Include(cw => cw.Worker)    // כולל את העובד
+                .Include(cw => cw.Company)   
+                .Include(cw => cw.Worker)
                 .FirstOrDefaultAsync(cw => cw.Workerid == workerId
                                         && cw.Companyid == companyId);
         }
