@@ -7,27 +7,22 @@ namespace AccountingSystem.Application.Validators.ReportInstance
     {
         public UpdateReportInstanceDtoValidator()
         {
-            // ID - חובה
             RuleFor(x => x.Id)
                 .NotEmpty().WithMessage("ID הוא שדה חובה")
                 .GreaterThan(0).WithMessage("ID לא תקין");
 
-            // סכום
             RuleFor(x => x.Amount)
                 .GreaterThanOrEqualTo(0).WithMessage("סכום לא יכול להיות שלילי")
                 .When(x => x.Amount.HasValue);
 
-            // סטטוס
             RuleFor(x => x.Status)
                 .NotEmpty().WithMessage("סטטוס הוא שדה חובה")
                 .Must(BeValidStatus).WithMessage("סטטוס לא תקין");
 
-            // אמצעי תשלום
             RuleFor(x => x.PaymentMethod)
                 .Must(BeValidPaymentMethod).WithMessage("אמצעי תשלום לא תקין")
                 .When(x => !string.IsNullOrEmpty(x.PaymentMethod));
 
-            // הערות
             RuleFor(x => x.Comments)
                 .MaximumLength(2000).WithMessage("הערות לא יכולות להיות יותר מ-2000 תווים")
                 .When(x => !string.IsNullOrEmpty(x.Comments));
