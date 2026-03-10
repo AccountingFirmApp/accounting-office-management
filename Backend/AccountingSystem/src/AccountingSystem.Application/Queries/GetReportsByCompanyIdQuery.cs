@@ -32,9 +32,8 @@ namespace AccountingSystem.Application.Queries
         /// </summary>
         public class GetAllReportsQuery : IRequest<List<ReportInstanceDetailDto>>
         {
-        public int? WorkerId { get; set; } // 🆕 הוספנו WorkerId אופציונלי
-        public bool IsAdminMode { get; set; } = false; // 🆕 דגל חדש
-
+        public int? WorkerId { get; set; } 
+        public bool IsAdminMode { get; set; } = false;
     }
 
     // ========== Query 2: דיווחים לפי Config ==========
