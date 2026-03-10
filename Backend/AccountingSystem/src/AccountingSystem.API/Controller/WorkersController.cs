@@ -129,7 +129,6 @@ namespace AccountingSystem.API.Controllers
         {
             try
             {
-                // 🔥 שלב 1: קבלת FirmId מה-Token
                 var firmIdClaim = User.FindFirst("FirmId")?.Value;
 
                 if (string.IsNullOrEmpty(firmIdClaim) || !int.TryParse(firmIdClaim, out int firmId))
@@ -137,17 +136,14 @@ namespace AccountingSystem.API.Controllers
                     return Unauthorized(new { message = "לא נמצא FirmId עבור המשתמש המחובר" });
                 }
 
-                // 🔥 שלב 2: בדיקה שהמשתמש הוא מנהל
                 var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
                 if (roleClaim != "Admin") // שנה ל-"Admin" או מה שמתאים לך
                 {
                     return Forbid();
                 }
 
-                // ✅ שלב 3: הזרקת FirmId לתוך ה-Command
                 command.Firmid = firmId;
 
-                // ✅ שלב 4: שליחה ל-Handler
                 var result = await _mediator.Send(command);
 
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
@@ -223,7 +219,6 @@ namespace AccountingSystem.API.Controllers
         [HttpGet("by-company/{companyId}")]
         public async Task<IActionResult> GetWorkersByCompany(int companyId)
         {
-            // יצירת השאילתה ושליחתה דרך המתווך (Mediator)
             var result = await _mediator.Send(new GetWorkersByCompanyQuery(companyId));
             return Ok(result);
         }
