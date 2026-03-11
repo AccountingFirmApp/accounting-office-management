@@ -64,4 +64,8 @@ getCurrentWorkerId(): number | null {
   getWorkersbyCompany(companyId: number): Observable<WorkerInfoDto[]> {
     return this.http.get<WorkerInfoDto[]>(`${this.apiUrl}/by-company/${companyId}`);
   }
+  getWorkerTasks(workerId: number): Observable<WorkerTask[]> {
+    return this.http.get<WorkerTask[]>(`${this.apiUrl}/${workerId}/tasks`);
+  }
+  
 }

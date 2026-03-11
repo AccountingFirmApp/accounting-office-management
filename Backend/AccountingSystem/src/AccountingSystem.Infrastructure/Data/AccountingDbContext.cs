@@ -279,21 +279,24 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
             entity.Property(e => e.Priority)
-          .HasColumnName("priority") 
-          .HasConversion<int>();     
+          .HasColumnName("priority")
+          .HasConversion<int>();
             entity.Property(e => e.Status)
-          .HasConversion<string>()
-          .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
-          .HasColumnName("status");
+      .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
+      .HasColumnName("status")
+      ;
+
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Period).HasColumnName("period");
+
             entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
             entity.Property(e => e.Updatedat)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updated_at");
-
+            entity.Property(e => e.Isactive) // המאפיין ב-C#
+      .HasColumnName("isactive"); // השם החדש ב-DB
             entity.HasOne(d => d.Assignedworker).WithMany(p => p.CompanyTasks)
                 .HasForeignKey(d => d.Assignedworkerid)
                 .OnDelete(DeleteBehavior.SetNull)
@@ -307,14 +310,68 @@ public partial class AccountingDbContext : DbContext
                 .HasForeignKey(d => d.Tasktypeid)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_task_tasktype");
-            entity.Property(e => e.Isactive)
-    .HasDefaultValue(true)
-    .HasColumnName("isactive");
-            entity.Property(e => e.Priority)
-    .HasColumnName("priority")
-    .HasConversion<string>()
-    .HasDefaultValueSql("'Normal'::task_priority");
         });
+
+
+        //    modelBuilder.Entity<CompanyTask>(entity =>
+        //    {
+
+        //        entity.HasKey(e => e.Id).HasName("task_pkey");
+
+        //        entity.ToTable("companytask");
+
+        //        entity.HasIndex(e => e.Assignedworkerid, "idx_task_assigned");
+
+        //        entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
+        //        entity.HasIndex(e => new { e.Companyid, e.Period }, "idx_task_company_period");
+
+        //        entity.HasIndex(e => new { e.Companyid, e.Tasktypeid, e.Period }, "uq_task_period").IsUnique();
+
+        //        entity.Property(e => e.Id).HasColumnName("id");
+        //        entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid");
+        //        entity.Property(e => e.Companyid).HasColumnName("companyid");
+        //        entity.Property(e => e.Completeddate).HasColumnName("completeddate");
+        //        entity.Property(e => e.Createdat)
+        //            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+        //            .HasColumnType("timestamp without time zone")
+        //            .HasColumnName("createdat");
+        //        entity.Property(e => e.Priority)
+        //      .HasColumnName("priority") 
+        //      .HasConversion<int>();     
+        //        entity.Property(e => e.Status)
+        //      .HasConversion<string>()
+        //      .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
+        //      .HasColumnName("status");
+        //        entity.Property(e => e.Duedate).HasColumnName("duedate");
+        //        entity.Property(e => e.Notes).HasColumnName("notes");
+        //        entity.Property(e => e.Period).HasColumnName("period");
+        //        entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
+        //        entity.Property(e => e.Updatedat)
+        //            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+        //            .HasColumnType("timestamp without time zone")
+        //            .HasColumnName("updated_at");
+
+        //        entity.HasOne(d => d.Assignedworker).WithMany(p => p.CompanyTasks)
+        //            .HasForeignKey(d => d.Assignedworkerid)
+        //            .OnDelete(DeleteBehavior.SetNull)
+        //            .HasConstraintName("fk_task_worker");
+
+        //        entity.HasOne(d => d.Company).WithMany(p => p.CompanyTasks)
+        //            .HasForeignKey(d => d.Companyid)
+        //            .HasConstraintName("fk_task_company");
+
+        //        entity.HasOne(d => d.Tasktype).WithMany(p => p.CompanyTasks)
+        //            .HasForeignKey(d => d.Tasktypeid)
+        //            .OnDelete(DeleteBehavior.Restrict)
+        //            .HasConstraintName("fk_task_tasktype");
+        //        entity.Property(e => e.Isactive)
+        //.HasDefaultValue(true)
+        //.HasColumnName("isactive");
+        //        entity.Property(e => e.Priority)
+        //.HasColumnName("priority")
+        //.HasConversion<string>()
+        //.HasDefaultValueSql("'Normal'::task_priority");
+        //    });
 
 
         modelBuilder.Entity<Companyworker>(entity =>

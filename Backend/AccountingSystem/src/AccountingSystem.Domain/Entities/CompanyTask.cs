@@ -19,6 +19,7 @@ namespace AccountingSystem.Domain.Entities
         [Column("updated_at")]
         public DateTime? Updatedat { get; set; }
         public TaskStatus1? Status { get; set; }
+        [Column("isactive")] // השם המדויק כפי שהוא מופיע בבסיס הנתונים
         public bool? Isactive { get; set; } = true;
         public virtual Worker? Assignedworker { get; set; }
         public virtual Company Company { get; set; } = null!;
