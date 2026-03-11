@@ -152,6 +152,32 @@ namespace AccountingSystem.Infrastructure.Jobs
                         $"❌ [AutoTaskGen] שגיאה ביצירת משימות שנתיות ל-{currentYear}");
                 }
             }
+            // ==========================================
+            // 4. משימות דו-חודשיות (BiMonthly)
+            // ==========================================
+            // דוגמה: יצירה בכל חודש אי-זוגי (1, 3, 5...)
+            if (currentMonth % 2 != 0)
+            {
+                try
+                {
+                    var biMonthlyResult = await mediator.Send(
+                        new GenerateBiMonthlyTasksCommand 
+                        {
+                            Year = currentYear,
+                            Month = currentMonth
+                        },
+                        cancellationToken
+                    );
+
+                    _logger.LogInformation(
+                        $"✅ [AutoTaskGen] נוצרו {biMonthlyResult.TasksCreated} משימות דו-חודשיות חדשות"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "❌ [AutoTaskGen] שגיאה ביצירת משימות דו-חודשיות");
+                }
+            }
         }
 
         public override async Task StopAsync(CancellationToken cancellationToken)

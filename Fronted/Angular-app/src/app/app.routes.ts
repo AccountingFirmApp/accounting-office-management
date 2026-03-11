@@ -16,9 +16,9 @@ import { ChecklistTemplateManagerComponent } from '../components/checklist-templ
 import { TaskMatrixComponent } from '../components/task-matrix/task-matrix';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent, title: 'התחברות' },  // ⬅️ דף התחברות
-  { path: 'home', component: HomeComponent, title: 'דף הבית' },  // ⬅️ דף הבית
-  { path: 'management', component: ManagementComponent, title: 'פאנל ניהול' },  // ⬅️ דף ניהול
+  { path: 'login', component: LoginComponent, title: 'התחברות' },  // דף התחברות
+  { path: 'home', component: HomeComponent, title: 'דף הבית' },  //  דף הבית
+  { path: 'management', component: ManagementComponent, title: 'פאנל ניהול' },  //  דף ניהול
 { 
   path: 'settings/report-config', 
   component: CompanyReportConfigListComponent, 
@@ -31,21 +31,21 @@ export const routes: Routes = [
   component: CompanyReportConfigListComponent, 
   data: { mode: 'employee' }, 
   title: 'הדיווחים שלי' 
-},  { path: 'settings/report-config/create', component: CompanyReportConfigFormComponent, title: 'הגדרת דיווח חדשה' },  // ⬅️ יצירת הגדרה
-  { path: 'settings/report-config/:id/edit', component: CompanyReportConfigFormComponent, title: 'עריכת הגדרת דיווח' },  // ⬅️ עריכת הגדרה
-   {path:'workers',component:WorkersListComponent,title:'רשימת עובדים'}, // ⬅️ דף רשימת עובדים
+},  { path: 'settings/report-config/create', component: CompanyReportConfigFormComponent, title: 'הגדרת דיווח חדשה' },  //  יצירת הגדרה
+  { path: 'settings/report-config/:id/edit', component: CompanyReportConfigFormComponent, title: 'עריכת הגדרת דיווח' },  //  עריכת הגדרה
+   {path:'workers',component:WorkersListComponent,title:'רשימת עובדים'}, //  דף רשימת עובדים
    { path: 'workers', component: WorkersListComponent, title:'רשימת עובדים' },
    { path: 'workers/create', component: WorkerFormComponent, title: 'הוספת עובד' },
    { path: 'workers/:id/edit', component: WorkerFormComponent, title: 'עריכת עובד' },
-   { path: 'workers/:id/companies', component: WorkerCompaniesComponent, title: 'חברות עובדת' },  // ⬅️ דף חברות עובדת
+   { path: 'workers/:id/companies', component: WorkerCompaniesComponent, title: 'חברות עובדת' },  //  דף חברות עובדת
   {
     path: 'reports',
     loadChildren: () => import('../components/reports-module').then(m => m.ReportsModule)
   }, 
     { path: 'companies', component: CompanyListComponent,runGuardsAndResolvers: 'always'  },
-    { path: 'companies/create', component: CompanyCreateComponent },  // ← חייב להיות לפני 
-    { path: 'companies/:id/edit', component: CompanyCreateComponent }, // ← עריכה
-    { path: 'companies/:id/tasks', component: CompanyTasksComponent }, // ← משימות
+    { path: 'companies/create', component: CompanyCreateComponent },  //  חייב להיות לפני 
+    { path: 'companies/:id/edit', component: CompanyCreateComponent }, //  עריכה
+    { path: 'companies/:id/tasks', component: CompanyTasksComponent }, //  משימות
       { path: 'workers/:workerId/tasks', component: WorkerTasksComponent },
       { 
         path: 'admin/checklist-templates', 
@@ -54,6 +54,6 @@ export const routes: Routes = [
       { path: 'admin/task-matrix', component:TaskMatrixComponent  }, // ← משימות
 
 
-  { path: '', redirectTo: '/login', pathMatch: 'full' },  // ⬅️ דף ראשי -> התחברות
-  { path: '**', redirectTo: '/log/in' }  // ⬅️ כל דף לא קיים -> חזרה להתחברות
+  { path: '', redirectTo: '/login', pathMatch: 'full' },  //  דף ראשי -> התחברות
+  { path: '**', redirectTo: '/log/in' }  //  כל דף לא קיים -> חזרה להתחברות
 ];

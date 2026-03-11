@@ -104,7 +104,6 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return null;
 
-            // ? ����� DTO ������ �-memory (�� ���� LINQ query)
             return new ReportInstanceDetailDto
             {
                 Id = report.Id,
@@ -158,23 +157,20 @@ namespace AccountingSystem.Application.Handlers
             var today = DateOnly.FromDateTime(DateTime.Now);
             var futureDate = today.AddDays(request.DaysAhead);
 
-            // �����
             var upcomingReports = allReports
                 .Where(r =>
                     (r.Status == ReportStatus.Pending || r.Status == ReportStatus.Reported) &&
                     r.Period <= futureDate);
 
-            // ����� ��� ����
             if (request.CompanyId.HasValue)
             {
                 upcomingReports = upcomingReports
                     .Where(r => r.Config.Companyid == request.CompanyId.Value);
             }
 
-            // ? ���� ������ �� �������, ��� �� ����� Select
             var result = upcomingReports
                 .OrderBy(r => r.Period)
-                .ToList() // ? ����� ��-DB
+                .ToList() 
                 .Select(r => new UpcomingReportDto
                 {
                     Id = r.Id,
@@ -193,24 +189,7 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 1: ���� �� �������� ==========
-
-    //public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
-    //{
-    //    private readonly IReportInstanceRepository _repository;
-    //    private readonly IMapper _mapper;
-
-    //    public GetAllReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-    //    {
-    //        _repository = repository;
-    //        _mapper = mapper;
-    //    }
-
-    //    public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
-    //    {
-    //        var reports = await _repository.GetAllAsync();
-    //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-    //    }
+   
     public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
     {
         private readonly IReportInstanceRepository _repository;
@@ -227,100 +206,14 @@ namespace AccountingSystem.Application.Handlers
             _mapper = mapper;
         }
 
-        //    public async Task<List<ReportInstanceDetailDto>> Handle(
-        //        GetAllReportsQuery request,
-        //        CancellationToken cancellationToken)
-        //    {
-        //        // קבלת כל הדוחות
-        //        var reports = await _repository.GetAllAsync();
-
-        //        // 🔥 אם יש WorkerId - מסננים רק לחברות של העובדת הזו
-        //        if (request.WorkerId.HasValue)
-        //        {
-        //            // קבלת כל החברות של העובדת
-        //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
-        //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
-
-        //            // סינון הדוחות רק לחברות האלה
-        //            reports = reports
-        //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
-        //                .ToList();
-        //        }
-
-        //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-        //    }
-        //}
-
-
-        //    public async Task<List<ReportInstanceDetailDto>> Handle(
-        //GetAllReportsQuery request,
-        //CancellationToken cancellationToken)
-        //    {
-        //        var reports = await _repository.GetAllAsync();
-
-        //        // 🔥 אם יש WorkerId - מסננים רק לחברות של העובד הזה
-        //        // אם אין WorkerId (null) - מחזירים הכל (מצב מנהל)
-        //        if (request.WorkerId.HasValue)
-        //        {
-        //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
-        //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
-
-        //            reports = reports
-        //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
-        //                .ToList();
-        //        }
-
-        //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-        //    }
-        //}
-
-
-    //    public async Task<List<ReportInstanceDetailDto>> Handle(
-    //GetAllReportsQuery request,
-    //CancellationToken cancellationToken)
-    //    {
-    //        Console.WriteLine($"🔍 Handler קיבל: WorkerId={request.WorkerId}, IsAdminMode={request.IsAdminMode}");
-
-    //        var reports = await _repository.GetAllAsync();
-
-    //        Console.WriteLine($"📊 סה\"כ דוחות במסד: {reports.Count()}");
-
-    //        if (request.WorkerId.HasValue)
-    //        {
-    //            Console.WriteLine($"🔍 מסנן לעובד {request.WorkerId.Value}");
-
-    //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
-    //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
-
-    //            Console.WriteLine($"📊 העובד משויך ל-{companyIds.Count} חברות: {string.Join(", ", companyIds)}");
-
-    //            reports = reports
-    //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
-    //                .ToList();
-
-    //            Console.WriteLine($"✅ אחרי סינון: {reports.Count()} דוחות");
-    //        }
-    //        else
-    //        {
-    //            Console.WriteLine("✅ אין סינון - מחזיר הכל");
-    //        }
-
-    //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-    //    }
-    //}
-
-
+       
             public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
             {
-                Console.WriteLine($"📋 Handler: IsAdminMode={request.IsAdminMode}, WorkerId={request.WorkerId}");
 
-                // שליפת כל הדוחות
                 var reports = await _repository.GetAllAsync();
 
-                // 🔥 אם יש WorkerId - סנן לפי העובד
                 if (request.WorkerId.HasValue)
                 {
-                    Console.WriteLine($"🔍 מסנן לפי WorkerId={request.WorkerId.Value}");
 
                     reports = reports.Where(r =>
                         r.Config != null &&
@@ -332,7 +225,6 @@ namespace AccountingSystem.Application.Handlers
                     ).ToList();
                 }
 
-                Console.WriteLine($"✅ אחרי פילטור: {reports.Count()} דוחות");
 
                 // 🔒 העברת isAdminMode ל-AutoMapper דרך context.Items
                 var mappedReports = _mapper.Map<List<ReportInstanceDetailDto>>(
@@ -340,7 +232,6 @@ namespace AccountingSystem.Application.Handlers
                     opt => opt.Items["IsAdminMode"] = request.IsAdminMode
                 );
 
-                Console.WriteLine($"✅ החזרת {mappedReports.Count} דוחות");
 
                 return mappedReports;
             }
@@ -367,7 +258,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 3: ������� ��� ����� ==========
 
     public class GetReportsByStatusQueryHandler : IRequestHandler<GetReportsByStatusQuery, List<ReportInstanceDetailDto>>
     {
@@ -387,7 +277,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 4: ������� ������� ==========
 
     public class GetPendingReportsQueryHandler : IRequestHandler<GetPendingReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -407,7 +296,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 5: ������� ��� ����� ==========
 
     public class GetReportsByPeriodQueryHandler : IRequestHandler<GetReportsByPeriodQuery, List<ReportInstanceDetailDto>>
     {
@@ -427,7 +315,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 6: ������� ����� ������� ==========
 
     public class GetReportsByDateRangeQueryHandler : IRequestHandler<GetReportsByDateRangeQuery, List<ReportInstanceDetailDto>>
     {
@@ -447,7 +334,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 7: ������� ������ (OVERDUE) ==========
 
     public class GetOverdueReportsQueryHandler : IRequestHandler<GetOverdueReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -467,7 +353,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 8: ������� ������� ����� ==========
 
     public class GetReportsDueInNextDaysQueryHandler : IRequestHandler<GetReportsDueInNextDaysQuery, List<ReportInstanceDetailDto>>
     {

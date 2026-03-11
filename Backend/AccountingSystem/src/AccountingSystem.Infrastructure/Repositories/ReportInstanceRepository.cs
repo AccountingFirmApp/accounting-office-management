@@ -29,9 +29,6 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         // ========== פונקציות בסיסיות מ-IGenericRepository ==========
 
-        /// <summary>
-        /// תביא לי דוח לפי ID
-        /// </summary>
         public async Task<Reportinstance?> GetByIdAsync(int id)
         {
             return await _context.Reportinstances
@@ -220,7 +217,6 @@ namespace AccountingSystem.Infrastructure.Repositories
         /// </summary>
         public async Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status)
         {
-            // המרה מ-string ל-Enum
             if (Enum.TryParse<AccountingSystem.Domain.Enums.ReportStatus>(status, out var reportStatus))
             {
                 return await _context.Reportinstances
@@ -340,36 +336,6 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .OrderBy(r => r.Period)
                 .ToListAsync();
         }
-
-        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
-        //{
-
-        //    throw new NotImplementedException();
-        //}
-
-        //public async Task<Reportinstance> AddAsync(Reportinstance entity)
-        //{
-        //    if (entity == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(entity));
-        //    }
-
-        //    // הוספת תאריך יצירה אם לא הוגדר
-        //    if (entity.Createdat == default)
-        //    {
-        //        entity.Createdat = DateTime.UtcNow;
-        //    }
-
-        //    await _context.Reportinstances.AddAsync(entity);
-        //    await _context.SaveChangesAsync();
-
-        //    return entity;
-        //}
-
-        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
-        //{
-        //    return AddAsync(entity);
-        //}
 
         public async Task AddAsync(Reportinstance entity)
         {

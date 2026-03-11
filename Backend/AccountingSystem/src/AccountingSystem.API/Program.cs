@@ -22,7 +22,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load environment variables from .env file (for development)
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".env");
 if (File.Exists(envPath))
 {
@@ -58,9 +57,20 @@ builder.Services.AddDbContext<AccountingDbContext>(options =>
             npgsqlOptions.MapEnum<ReportStatus>("report_status", nameTranslator: nullNameTranslator);
             npgsqlOptions.MapEnum<PaymentMethod>("payment_method", nameTranslator: nullNameTranslator);
             npgsqlOptions.MapEnum<RecurrenceType>("recurrence_type", nameTranslator: nullNameTranslator);
+            npgsqlOptions.MapEnum<TaskPriority>("task_priority", nameTranslator: nullNameTranslator);
+
         });
 });
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
+dataSourceBuilder.MapEnum<TaskStatus1>("task_status1"); 
+dataSourceBuilder.MapEnum<TaskCategory>("task_category");
+dataSourceBuilder.MapEnum<ReportStatus>("report_status");
+dataSourceBuilder.MapEnum<PaymentMethod>("payment_method");
+dataSourceBuilder.MapEnum<RecurrenceType>("recurrence_type");
+dataSourceBuilder.MapEnum<TaskPriority>("task_priority");
+
+var dataSource = dataSourceBuilder.Build();
 // ========================================
 // Hangfire
 // ========================================
@@ -139,7 +149,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
+builder.Services.AddHttpContextAccessor();
 // ========================================
 // Controllers + Swagger
 // ========================================

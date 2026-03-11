@@ -1,6 +1,7 @@
-﻿using System;
+﻿using AccountingSystem.Domain.Entities;
+using System;
 using System.Collections.Generic;
-using AccountingSystem.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountingSystem.Domain.Entities
 {
@@ -26,7 +27,7 @@ namespace AccountingSystem.Domain.Entities
         public bool Isactive { get; set; }
 
         public DateTime? Createdat { get; set; }
-
+        [Column("updated_at")]
         public DateTime? Updatedat { get; set; }
 
         public virtual ICollection<Companyworker> Companyworkers { get; set; } = new List<Companyworker>();

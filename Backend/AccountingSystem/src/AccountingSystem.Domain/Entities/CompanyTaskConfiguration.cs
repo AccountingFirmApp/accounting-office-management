@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccountingSystem.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,9 +21,9 @@ using System.Threading.Tasks;
 
             public int? Assignedworkerid { get; set; }
 
-            public int Frequency { get; set; }
-
-            public int Dueday { get; set; }
+        [Column("frequency")] 
+        public RecurrenceType Frequency { get; set; } = RecurrenceType.Monthly;
+        public int Dueday { get; set; }
 
             public bool Isactive { get; set; }
 
@@ -30,7 +31,7 @@ using System.Threading.Tasks;
 
             public DateTime? Updatedat { get; set; }
 
-            // קשרי גומלין (Navigation Properties)
+            // קשרי גומלין 
             public virtual Company Company { get; set; } = null!;
             public virtual Tasktype Tasktype { get; set; } = null!;
             public virtual Worker? Assignedworker { get; set; }

@@ -101,7 +101,6 @@ export class ReportFormComponent implements OnInit {
         }
       });
     }).catch(err => {
-      // console.error('Error loading data:', err);
       this.loading = false;
     });
   }
@@ -114,7 +113,6 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
-          // console.error('Error loading companies:', err);
           reject(err);
         }
       });
@@ -130,7 +128,6 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
-          // console.error('Error loading report types:', err);
           reject(err);
         }
       });
@@ -145,7 +142,6 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
-          // console.error('Error loading configs:', err);
           reject(err);
         }
       });
@@ -164,7 +160,6 @@ export class ReportFormComponent implements OnInit {
 
   updateConfigId() {
     if (this.formData.companyId && this.formData.reportTypeId) {
-      // מצא את ה-config המתאים
       const config = this.configs.find(c => 
         c.companyId === +this.formData.companyId && 
         c.reportTypeId === +this.formData.reportTypeId
@@ -173,7 +168,6 @@ export class ReportFormComponent implements OnInit {
       if (config) {
         this.formData.configId = config.id;
       } else {
-        console.warn('No matching config found for company and report type');
         this.formData.configId = '';
       }
     } else {
@@ -217,7 +211,6 @@ export class ReportFormComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        // console.error('Error loading report:', err);
         this.goBack();
       }
     });

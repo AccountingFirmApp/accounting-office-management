@@ -1,6 +1,7 @@
 ﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,12 @@ namespace AccountingSystem.Infrastructure.Repositories
     {
         private readonly AccountingDbContext _context;
         private readonly DbSet<CompanyTaskConfiguration> _dbSet;
-
-        public TaskConfigurationRepository(AccountingDbContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public TaskConfigurationRepository(AccountingDbContext context , IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _dbSet = context.CompanyTaskConfigurations;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // ==================== פעולות בסיסיות (כדי לממש את IGenericRepository) ====================
@@ -41,7 +43,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         public Task UpdateAsync(CompanyTaskConfiguration entity)
         {
             _dbSet.Update(entity);
-            return Task.CompletedTask; // מחזירים משימה שהושלמה כי אין כאן פעולת IO אסינכרונית
+            return Task.CompletedTask; 
         }
 
         public async Task DeleteAsync(int id)
@@ -60,15 +62,30 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         // ==================== פעולות ייחודיות למטריצה ====================
 
+       
+
         public async Task<IEnumerable<CompanyTaskConfiguration>> GetAllWithWorkersAsync()
         {
+            // גישה ישירה לכל ה-Claims
+            var claims = _httpContextAccessor.HttpContext?.User?.Claims;
+
+            var firmIdClaim = claims?.FirstOrDefault(c => c.Type == "FirmId")?.Value;
+
+            if (string.IsNullOrEmpty(firmIdClaim))
+            {
+                throw new UnauthorizedAccessException("FirmId claim missing!");
+            }
+
+            int firmId = int.Parse(firmIdClaim);
+           
+
             return await _dbSet
                 .Include(x => x.Assignedworker)
+                .Include(x => x.Company)
+                .Where(x => x.Company.Firmid == firmId)
                 .AsNoTracking()
                 .ToListAsync();
         }
-
-        // פונקציה לבדיקה אם הגדרה קיימת (לפי לקוח וסוג משימה)
         public async Task<CompanyTaskConfiguration?> GetByCompanyAndTypeAsync(int companyId, int taskTypeId)
         {
             return await _dbSet
@@ -80,11 +97,9 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
         public async Task<int> CountAsync(Func<object, bool> predicate)
         {
-            // מימוש תואם למה שכתבת ב-CompanyRepository
             return await _dbSet.CountAsync();
         }
 
-        // בתוך ה-Repository Implementation
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

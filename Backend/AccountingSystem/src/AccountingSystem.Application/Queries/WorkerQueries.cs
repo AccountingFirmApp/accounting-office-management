@@ -53,10 +53,7 @@ public class GetWorkerTasksQuery : IRequest<IEnumerable<CompanyTask>>
 {
     public int WorkerId { get; set; }
 
-    //public GetWorkerTasksQuery(int workerId)
-    //{
-    //    WorkerId = workerId;
-    //}
+   
 }
 public class GetWorkersByCompanyQuery : IRequest<IEnumerable<WorkerLookupDto>>
 {

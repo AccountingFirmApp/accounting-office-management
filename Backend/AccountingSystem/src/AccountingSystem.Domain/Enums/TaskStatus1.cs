@@ -9,25 +9,25 @@ public enum TaskStatus1
     /// <summary>
     /// ממתין - המשימה טרם החלה
     /// </summary>
-    Pending,
+    Pending=1,
     
     /// <summary>
     /// בביצוע - המשימה החלה אך טרם הושלמה
     /// </summary>
-    InProgress,
+    InProgress=2,
     
     /// <summary>
     /// בוצע - המשימה הושלמה
     /// </summary>
-    Done,
+    Done=3,
     
     /// <summary>
     /// שולם - המשימה הושלמה והתשלום בוצע
     /// </summary>
-    Paid,
+    Paid=4,
     
     /// <summary>
     /// לא נדרש - המשימה לא נדרשת לתקופה זו
     /// </summary>
-    NotRequired
+    NotRequired=5
 }

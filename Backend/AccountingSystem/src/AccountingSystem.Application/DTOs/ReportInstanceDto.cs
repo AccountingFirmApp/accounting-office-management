@@ -26,27 +26,13 @@ public class AutoReportInstanceDto
     public DateTime Period { get; set; }
 }
 
-/// <summary>
-/// DTO ליצירת מופע דיווח חדש
-/// </summary>
-//public class CreateReportInstanceDto
-//{
-//    public int ConfigId { get; set; }
-//    public DateTime Period { get; set; }
-//    public decimal? Amount { get; set; }
-//    public string? PaymentMethod { get; set; }
-//    public DateTime? ReceiptDate { get; set; }
-//    public string Comments { get; set; } = string.Empty;
-//}
-
 
 
 public class CreateReportInstanceDto
 {
-    // ❌ לא צריך ConfigId יותר
-    public int CompanyId { get; set; }        // 🆕
-    public int ReportTypeId { get; set; }     // 🆕
-    public int? FrequencyId { get; set; }     // 🆕 אופציונלי
+    public int CompanyId { get; set; }        
+    public int ReportTypeId { get; set; }     
+    public int? FrequencyId { get; set; }     
 
     public DateTime Period { get; set; }
     public decimal? Amount { get; set; }
@@ -103,7 +89,6 @@ public class ReportInstanceDetailDto
     public DateTime? PaidDate { get; set; }
     public string Comments { get; set; } = string.Empty;
     public List<string> WorkerNames { get; set; } = new List<string>();
-    //public string WorkerNamesDisplay => string.Join(", ", WorkerNames);
     // Calculated fields
     public int? DaysOverdue 
     {

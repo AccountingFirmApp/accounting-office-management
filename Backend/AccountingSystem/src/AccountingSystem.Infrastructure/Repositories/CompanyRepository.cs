@@ -22,7 +22,6 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companies;
         }
 
-        // ==================== פעולות בסיסיות ====================
 
         public async Task<Company?> GetByIdAsync(int id)
         {
@@ -78,7 +77,6 @@ namespace AccountingSystem.Infrastructure.Repositories
             return await _dbSet.CountAsync();
         }
 
-        // ==================== פעולות ייחודיות לCompany ====================
 
         public async Task<Company?> GetCompanyWithContactsAsync(int companyId)
         {
@@ -157,6 +155,14 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task AddAsync(Company company)
         {
             await _dbSet.AddAsync(company);
+        }
+       
+
+        public async Task<IEnumerable<Company>> GetAllByFirmIdAsync(int firmId)
+        {
+            return await _context.Companies
+                .Where(c => c.Firmid == firmId)
+                .ToListAsync();
         }
     }
 }

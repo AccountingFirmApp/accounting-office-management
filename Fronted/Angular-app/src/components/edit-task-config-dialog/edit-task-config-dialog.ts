@@ -11,7 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CompanyTaskConfigDto } from '../../models/auth';
 import { WorkerService } from '../../services/worker';
-
+import { RECURRENCE_OPTIONS } from '../../models/enums';
 @Component({
   selector: 'app-edit-task-config-dialog',
   standalone: true,
@@ -34,7 +34,7 @@ import { WorkerService } from '../../services/worker';
 
 export class EditTaskConfigDialogComponent implements OnInit {
   workers: any[] = []; 
-
+  recurrenceOptions = RECURRENCE_OPTIONS;
   constructor(
     private workerService: WorkerService, 
     public dialogRef: MatDialogRef<EditTaskConfigDialogComponent>,
@@ -52,8 +52,10 @@ export class EditTaskConfigDialogComponent implements OnInit {
           this.workers = res;
          
         },
-        error: (err) => console.error('שגיאה בטעינת עובדים', err)
+        error: (err) =>
+           console.error('שגיאה בטעינת עובדים', err)
       });
+
     }
   }
   save() {

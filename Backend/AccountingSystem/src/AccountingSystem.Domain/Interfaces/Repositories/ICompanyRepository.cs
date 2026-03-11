@@ -62,5 +62,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         /// excludeCompanyId = אל תבדוק את החברה הזאת (שימושי בעדכון)
         /// </summary>
         System.Threading.Tasks.Task<bool> TaxIdExistsAsync(string taxId, int? excludeCompanyId = null);
+        Task<IEnumerable<Company>> GetAllByFirmIdAsync(int firmId);
     }
 }

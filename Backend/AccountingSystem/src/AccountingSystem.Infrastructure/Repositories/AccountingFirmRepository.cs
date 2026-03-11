@@ -81,20 +81,3 @@ namespace AccountingSystem.Infrastructure.Repositories
     }
 
 
-//        public async Task<PagedResult<Accountingfirm>> GetPageAsync(int page, int pageSize)
-//        {
-//            var total = await _dbSet.CountAsync();
-//            var items = await _dbSet
-//            .Skip((page - 1) * pageSize)
-//            .Take(pageSize)
-//            .ToListAsync();
-
-
-//            return new PagedResult<Accountingfirm>
-//            {
-//                Items = items,
-//                TotalCount = total
-//            };
-//        }
-//    }
-//}

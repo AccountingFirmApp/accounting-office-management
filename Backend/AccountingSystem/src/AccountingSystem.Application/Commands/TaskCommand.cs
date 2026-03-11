@@ -1,12 +1,4 @@
-﻿//using MediatR;
-
-//namespace AccountingSystem.Application.Commands.Tasks;
-
-//public class UpdateTaskStatusCommand : IRequest<Unit>
-//{
-//    public int TaskId { get; set; }
-//    public string Status { get; set; }
-//}
+﻿
 
 using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Domain.Enums;
@@ -64,7 +56,12 @@ namespace AccountingSystem.Application.Commands.Tasks
     {
         public int Year { get; set; }
     }
-
+    public class GenerateBiMonthlyTasksCommand : IRequest<GenerateTasksResult>
+    {
+        public int Year { get; set; }
+        public int Month { get; set; } // החודש שבו מופעלת היצירה (למשל חודש 3 עבור תקופה 1-2)
+        public int PeriodNumber => (Month + 1) / 2;
+    }
     // תוצאה משותפת ליצירה אוטומטית
     public class GenerateTasksResult
     {
@@ -177,7 +174,6 @@ namespace AccountingSystem.Application.Commands.Tasks
         public int ItemId { get; set; }
         public int? WorkerId { get; set; }
 
-        // קונסטרקטור (אופציונלי, עוזר ביצירה מהירה)
         public ToggleChecklistItemCommand(int itemId, int? workerId)
         {
             ItemId = itemId;

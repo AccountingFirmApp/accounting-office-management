@@ -24,7 +24,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         System.Threading.Tasks.Task<IEnumerable<Companyreportconfig>> GetConfigsByReportTypeIdAsync(int reportTypeId);
         System.Threading.Tasks.Task<IEnumerable<Companyreportconfig>> GetConfigsByFrequencyIdAsync(int frequencyId);
         
-        // בדיקות
         System.Threading.Tasks.Task<bool> ConfigExistsAsync(int companyId, int reportTypeId);
         System.Threading.Tasks.Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId);
     }

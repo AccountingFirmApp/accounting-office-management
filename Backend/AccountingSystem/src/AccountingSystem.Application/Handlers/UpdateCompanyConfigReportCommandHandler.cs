@@ -31,7 +31,6 @@ namespace AccountingSystem.Application.Handlers
             if (config == null)
                 throw new Exception($"Company report config with ID {request.Id} not found");
 
-            // עדכן רק את השדות שנשלחו
             if (request.FrequencyId!=0)
             {
                 var frequencyExists = await _unitOfWork.Frequencies.GetByIdAsync(request.FrequencyId.Value);
@@ -52,10 +51,8 @@ namespace AccountingSystem.Application.Handlers
             }
 
             config.Isactive = request.IsActive;
-            // שמור שינויים
             await _unitOfWork.SaveChangesAsync();
 
-            // החזר DTO
             return _mapper.Map<CompanyReportConfigDto>(config);
         }
     }

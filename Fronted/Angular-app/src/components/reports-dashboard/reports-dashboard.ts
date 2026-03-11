@@ -36,7 +36,6 @@ export class ReportsDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // קריאה לפרמטרים מה-URL
     this.route.queryParams.subscribe(params => {
       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
       this.isAdminMode = params['adminMode'] === 'true';

@@ -3,11 +3,15 @@ import { ChecklistTemplate } from '../../models/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChecklistService } from '../../services/checklistTemplateService';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-checklist-template-manager',
   templateUrl: './checklist-template-manager.component.html',
   styleUrls: ['./checklist-template-manager.component.css'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,FormsModule,MatSelectModule,MatFormFieldModule,
+    MatCardModule],
   standalone: true,
 
 })
@@ -74,7 +78,6 @@ export class ChecklistTemplateManagerComponent implements OnInit {
         alert('התבנית נשמרה בהצלחה!');
       },
       error: (err) => {
-        console.error('שגיאה בשמירה:', err);
         alert('שגיאה בשמירה: ' + (err.error?.errors?.["Items[0].Description"] || 'בדקי את הקונסול'));
       }
     });

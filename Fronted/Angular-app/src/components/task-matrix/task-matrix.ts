@@ -11,7 +11,16 @@ import { MatTableModule } from '@angular/material/table';
 import { EditTaskConfigDialogComponent } from '../edit-task-config-dialog/edit-task-config-dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Pipe, PipeTransform } from '@angular/core';
+import { RECURRENCE_OPTIONS,RecurrenceType } from '../../models/enums';
 
+
+@Pipe({ name: 'recurrenceLabel', standalone: true })
+export class RecurrenceLabelPipe implements PipeTransform {
+  transform(value: RecurrenceType): string {
+    return RECURRENCE_OPTIONS.find(o => o.value === value)?.label || 'לא ידוע';
+  }
+}
 @Component({
   selector: 'app-task-matrix',
   standalone: true,
@@ -22,7 +31,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTableModule,
     MatDialogModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    RecurrenceLabelPipe
   ],
   templateUrl: './task-matrix.html',
   styleUrls: ['./task-matrix.css']
@@ -41,17 +51,22 @@ export class TaskMatrixComponent implements OnInit {
     this.loadMatrix();
   }
 
+  
   loadMatrix(): void {
     this.configService.getTaskMatrix().subscribe({
       next: (data) => {
         this.matrixData = data;
+        
         this.distinctTaskTypes = [...new Set(data.map(item => item.taskTypeName))].sort();
+        
+        
         this.distinctCompanies = [...new Set(data.map(item => item.companyName))].sort();
+        
+        
       },
       error: (err) => console.error('שגיאה בטעינת המטריצה:', err)
     });
   }
-
   getConfig(company: string, taskType: string): CompanyTaskConfigDto | undefined {
     return this.matrixData.find(m => 
       m.companyName === company && m.taskTypeName === taskType

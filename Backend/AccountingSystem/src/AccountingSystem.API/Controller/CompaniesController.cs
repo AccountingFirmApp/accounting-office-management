@@ -183,28 +183,7 @@ namespace AccountingSystem.API.Controllers
             }
         }
 
-        //[HttpPatch("{companyId}/tasks/{taskId}/status")]
-        //public async System.Threading.Tasks.Task<ActionResult> UpdateTaskStatus(
-        //int companyId,
-        //int taskId,
-        //[FromBody] UpdateTaskStatusRequest request)
-        //{
-        //    try
-        //    {
-        //        var command = new UpdateTaskStatusCommand
-        //        {
-        //            TaskId = taskId,
-        //            Status = request.Status
-        //        };
-
-        //        await _mediator.Send(command);
-        //        return Ok(new { message = "הסטטוס עודכן בהצלחה" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
+       
         [HttpPatch("{companyId}/tasks/{taskId}/status")]
         public async Task<ActionResult> UpdateTaskStatus(int companyId, int taskId, [FromBody] UpdateTaskStatusRequest request)
         {
@@ -243,7 +222,6 @@ namespace AccountingSystem.API.Controllers
         // DTO לבקשה
         public class UpdateTaskStatusRequest
         {
-            //[JsonConverter(typeof(JsonStringEnumConverter))] // זה הקסם שפותר את השגיאה
             public string Status { get; set; }
         }
 

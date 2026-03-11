@@ -21,7 +21,7 @@ import { CompanyService } from '../../services/company';
   ],
 })
 export class WorkerFormComponent implements OnInit {
-  @Input() worker: any = null; // אם יש - מצב עריכה
+  @Input() worker: any = null;
   @Output() saved = new EventEmitter<void>();
 
   isEditMode = false;
@@ -38,7 +38,7 @@ export class WorkerFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private workerService: WorkerService,
-    private companyService: CompanyService, // ✅ הוסף שירות החברות
+    private companyService: CompanyService, 
     private router: Router,
     private route: ActivatedRoute,
     
@@ -48,7 +48,7 @@ export class WorkerFormComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      roleId: [null, Validators.required],   // ✅ עכשיו יש roleId
+      roleId: [null, Validators.required],  
       firmId: [null, Validators.required],
       isActive: [true],
       PasswordHash: ['', this.isEditMode ? [] : [Validators.minLength(6)]]

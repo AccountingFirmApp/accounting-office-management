@@ -36,7 +36,7 @@ export class CompanyTasksComponent implements OnInit {
   };
 
   availableStatuses = ['Pending', 'InProgress', 'Done', 'Paid', 'NotRequired'];
-selectedTaskDetails: any = null; // יחזיק את המשימה המורחבת כולל הצ'קליסט
+selectedTaskDetails: any = null; // המשימה המורחבת כולל הצ'קליסט
 showChecklistModal = false;     
 
   constructor(
@@ -65,7 +65,6 @@ showChecklistModal = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        // console.error('❌ שגיאה בטעינת פרטי החברה:', err);
       }
     });
   }
@@ -82,7 +81,6 @@ showChecklistModal = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        // console.error('❌ שגיאה בטעינת המשימות:', err);
         this.error = `שגיאה בטעינת המשימות: ${err.message}`;
         this.loading = false;
         this.cdr.detectChanges();
@@ -107,7 +105,6 @@ showChecklistModal = false;
       
       },
       error: (err) => {
-        // console.error('❌ שגיאה בעדכון סטטוס:', err);
         
         task.status = oldStatus;
         this.updatingTaskId = null;
@@ -159,7 +156,6 @@ openTaskDetails(taskId: number): void {
       this.cdr.detectChanges();
     },
     error: (err) => {
-      console.error('❌ שגיאה בטעינת פרטי צ\'קליסט:', err);
       this.loading = false;
     }
   });
@@ -177,17 +173,11 @@ toggleChecklistItem(item: any): void {
       this.cdr.detectChanges();
     },
     error: (err) => {
-      console.error('שגיאה בעדכון:', err);
     }
   });
 }
 
-// private updateProgressLocally(): void {
-//   if (this.selectedTaskDetails) {
-//     const completed = this.selectedTaskDetails.checklistItems.filter((i: any) => i.isCompleted).length;
-//     this.selectedTaskDetails.checklistProgress.completed = completed;
-//   }
-// }
+
 
 private checkAndUpdatingTaskStatus(): void {
   if (!this.selectedTaskDetails) return;
@@ -222,7 +212,6 @@ private checkAndUpdatingTaskStatus(): void {
 
   // רק אם הסטטוס באמת השתנה, נשלח עדכון לשרת
   if (targetStatus) {
-    console.log(`עדכון אוטומטי לסטטוס: ${targetStatus}`);
     this.onStatusChange(currentTaskInList, targetStatus);
   }
 }

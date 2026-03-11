@@ -8,31 +8,31 @@
         /// <summary>
         /// חד פעמי - לא חוזר
         /// </summary>
-        OneTime,
+        OneTime=0,
 
         /// <summary>
         /// חודשי - כל חודש
         /// </summary>
-        Monthly,
+        Monthly=1,
 
         /// <summary>
         /// רבעוני - כל 3 חודשים
         /// </summary>
-        Quarterly,
+        Quarterly=2,
 
         /// <summary>
         /// שנתי - פעם בשנה
         /// </summary>
-        Yearly,
+        Yearly=3,
 
         /// <summary>
         /// דו-חודשי (חודש אחד כן חודש אחד לא)
         /// </summary>
-        BiMonthly,
+        BiMonthly=4,
 
         /// <summary>
         /// מותאם אישית - לא בתבנית קבועה
         /// </summary>
-        Custom
+        Custom=5
     }
 }

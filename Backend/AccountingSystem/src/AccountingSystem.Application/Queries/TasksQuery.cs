@@ -7,15 +7,7 @@ using System.Collections.Generic;
 
 namespace AccountingSystem.Application.Queries.Tasks
 {
-    //public class GetTasksByCompanyIdQuery : IRequest<List<CompanyTaskDto>>
-    //{
-    //    public int CompanyId { get; set; }
-
-    //    public GetTasksByCompanyIdQuery(int companyId)
-    //    {
-    //        CompanyId = companyId;
-    //    }
-    //}
+   
     public class GetTasksByCompanyIdQuery : IRequest<List<CompanyTaskDto>>
     {
         public int CompanyId { get; }

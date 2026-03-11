@@ -6,6 +6,7 @@ import { WorkerTask } from '../../models/auth';
 import { WorkerService } from '../../services/worker';
 import { CompanyService } from '../../services/company';
 import { CompantTaskService } from '../../services/compant-task.service';
+import { TaskcompanyDto } from '../../models/taskcompany';
 
 @Component({
   selector: 'app-worker-tasks',
@@ -25,6 +26,8 @@ export class WorkerTasksComponent implements OnInit {
 
   tasks: WorkerTask[] = [];
   filteredTasks: WorkerTask[] = [];
+  companyId!: number;
+  updatingTaskId: number | null = null;  
 
   loading = false;
   workerId: number | null = null;
@@ -56,7 +59,6 @@ export class WorkerTasksComponent implements OnInit {
   ngOnInit(): void {
     const currentWorker = this.workerService.getCurrentWorker();
     if (!currentWorker) {
-      console.error('❌ אין עובד מחובר');
       return;
     }
     this.workerId = currentWorker.id;
@@ -76,7 +78,6 @@ export class WorkerTasksComponent implements OnInit {
         this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('❌ שגיאה בטעינת משימות', err);
         this.loading = false;
       }
     });
@@ -84,25 +85,25 @@ export class WorkerTasksComponent implements OnInit {
 
 
 
-  openTaskDetails(taskId: number): void {
 
-    this.loading = true;
+loadingDetails = false; 
+
+openTaskDetails(taskId: number): void {
+    this.loadingDetails = true;
     
     this.companyTaskService.getTaskDetails(taskId).subscribe({
       next: (data) => {
-
         this.selectedTaskDetails = data;
         this.showChecklistModal = true;
-        this.loading = false;
+        this.loadingDetails = false; 
         this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('❌ שגיאה בטעינת הצ\'קליסט:', err);
-        this.loading = false;
+        this.loadingDetails = false;
         this.cdr.detectChanges();
       }
     });
-  }
+}
 
   toggleChecklistItem(item: any): void {
     if (!this.workerId) return;
@@ -114,7 +115,6 @@ export class WorkerTasksComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ שגיאה בעדכון פריט:', err);
       }
     });
   }
@@ -177,13 +177,20 @@ export class WorkerTasksComponent implements OnInit {
     this.applyFilters();
   }
   updateTaskStatus(task: WorkerTask, newStatus: number): void {
+    const oldStatus = task.status;
+    task.status = newStatus; 
+  
+    
     this.companyService.updateTaskStatus(task.companyid, task.id, newStatus.toString()).subscribe({
       next: () => {
-        task.status = newStatus; 
-        this.calculateStats();  
-        this.cdr.detectChanges(); 
+        this.calculateStats();
+        // this.applyFilters();
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('❌ שגיאה בעדכון סטטוס:', err)
+      error: (err) => {
+        task.status = oldStatus;
+        this.cdr.detectChanges();
+      }
     });
   }
   calculateStats(): void {
@@ -214,4 +221,22 @@ export class WorkerTasksComponent implements OnInit {
     if (diffDays <= 3) return 'urgent';
     return '';
   }
-}
+
+  onStatusChange(task: WorkerTask, newStatus: string): void {
+    const statusAsNumber = parseInt(newStatus, 10);
+    
+    this.updatingTaskId = task.id;
+    
+    this.companyService.updateTaskStatus(task.companyid, task.id, newStatus).subscribe({
+        next: () => {
+           
+            task.status = statusAsNumber; 
+            this.updatingTaskId = null;
+            this.calculateStats(); 
+            this.applyFilters();   
+        },
+        error: (err) => {
+            this.updatingTaskId = null;
+        }
+    });
+}}

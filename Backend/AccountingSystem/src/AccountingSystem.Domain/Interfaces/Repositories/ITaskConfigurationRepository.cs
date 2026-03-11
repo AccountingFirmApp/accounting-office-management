@@ -3,7 +3,6 @@ using AccountingSystem.Domain.Interfaces.Repositories;
 
 public interface ITaskConfigurationRepository : IGenericRepository<CompanyTaskConfiguration>
 {
-    // מחזיר רק את השורות שקיימות בטבלה הזו
     Task<IEnumerable<CompanyTaskConfiguration>> GetAllWithWorkersAsync();
     Task<CompanyTaskConfiguration?> GetByCompanyAndTypeAsync(int companyId, int taskTypeId);
 
@@ -12,4 +11,3 @@ public interface ITaskConfigurationRepository : IGenericRepository<CompanyTaskCo
         Task UpdateAsync(CompanyTaskConfiguration config);
     Task SaveChangesAsync();
 }
-//}

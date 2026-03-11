@@ -64,7 +64,6 @@ export class CompanyCreateComponent implements OnInit {
           });
         },
         error: (err) => {
-          // console.error(err);
         }
       });
     }
@@ -86,7 +85,6 @@ export class CompanyCreateComponent implements OnInit {
             this.router.navigate(['/companies']);
           },
           error: (err) => {
-            // console.error(err);
             this.loading = false;
           }
         });
@@ -97,7 +95,6 @@ export class CompanyCreateComponent implements OnInit {
             this.router.navigate(['/companies']);
           },
           error: (err) => {
-            // console.error(err);
             this.loading = false;
           }
         });
@@ -115,7 +112,6 @@ export class CompanyCreateComponent implements OnInit {
         this.accountingFirms = data;
       },
       error: (err) => {
-        // console.error(err);
       }
     });
   }

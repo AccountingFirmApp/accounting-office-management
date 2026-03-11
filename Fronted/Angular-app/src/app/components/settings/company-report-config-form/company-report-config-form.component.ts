@@ -67,12 +67,10 @@ isAdmin: boolean =false;
       }
     });
 
-    // בדיקה אם יש query parameters (מגיעים מכפתור "הוסף")
     this.route.queryParams.subscribe(queryParams => {
       if (queryParams['fixedYear'] === 'true') {
         this.isFixedYear = true;
 
-        // ממלא את השדות מראש
         const companyId = queryParams['companyId'];
         const reportTypeId = queryParams['reportTypeId'];
         const year = +queryParams['year'];

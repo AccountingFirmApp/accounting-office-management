@@ -64,7 +64,7 @@ public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleL
 {
     try
     {
-        // 1️⃣ אימות הטוקן מול Google
+        //  אימות הטוקן מול Google
         var settings = new GoogleJsonWebSignature.ValidationSettings()
         {
             Audience = new[] { _googleClientId } 

@@ -14,7 +14,6 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
             void Update(CompanyTaskChecklistItem item);
             Task<bool> SaveChangesAsync(CancellationToken cancellationToken);
 
-            // אם תרצי בעתיד להוסיף פריט ידנית למשימה קיימת
             Task AddAsync(CompanyTaskChecklistItem item);
         }
     }

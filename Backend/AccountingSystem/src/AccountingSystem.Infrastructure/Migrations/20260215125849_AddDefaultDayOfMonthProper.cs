@@ -8,7 +8,6 @@ namespace AccountingSystem.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // הוספת העמודה אם אינה קיימת
             migrationBuilder.Sql(@"
 DO $$
 BEGIN

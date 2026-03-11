@@ -33,11 +33,18 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" floatLabel="always">
+        <!-- <mat-form-field appearance="outline" floatLabel="always">
           <mat-label>תדירות (חודשים)</mat-label>
           <input matInput type="number" [(ngModel)]="data.frequency" placeholder="0">
+        </mat-form-field> -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>תדירות</mat-label>
+          <mat-select [(ngModel)]="data.frequency">
+            <mat-option *ngFor="let option of recurrenceOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
-
         <mat-form-field appearance="outline" floatLabel="always">
           <mat-label>יום יעד</mat-label>
           <input matInput type="number" [(ngModel)]="data.dueDay" placeholder="1-31">

@@ -14,7 +14,6 @@ public class UnitOfWork : IUnitOfWork
     private readonly AccountingDbContext _context;
     public readonly ILogger<ReportInstanceRepository> _logger;
 
-    // Lazy initialization של repositories
     private IAccountingFirmRepository? _accountingFirms;
     private ICompanyRepository? _companies;
     private IWorkerRepository? _workers;
@@ -26,8 +25,7 @@ public class UnitOfWork : IUnitOfWork
     private ICompanyreportconfigRepository? _companyReportConfigs;
     private IReportInstanceRepository? _reportInstances;
     private ITaskTypeRepository? _taskTypes;
-    private ICompanyTaskRepository? _tasks;  // ?? שונה מ-ITaskRepository!
-    private IWorkerRoleTypeRepository? _workerRoleTypes;
+    private ICompanyTaskRepository? _tasks;      private IWorkerRoleTypeRepository? _workerRoleTypes;
     private IAuditLogRepository? _auditLogs;
 
     public UnitOfWork(AccountingDbContext context, ILogger<ReportInstanceRepository> logger)
@@ -36,7 +34,6 @@ public class UnitOfWork : IUnitOfWork
         _logger = logger;
     }
 
-    // Properties
     public IAccountingFirmRepository AccountingFirms =>
         _accountingFirms ??= new AccountingFirmRepository(_context);
 
@@ -71,7 +68,7 @@ public class UnitOfWork : IUnitOfWork
         _taskTypes ??= new TaskTypeRepository(_context);
 
     public ICompanyTaskRepository Tasks =>
-        _tasks ??= new CompanyTaskRepository(_context);  // ?? שונה מ-TaskRepository!
+        _tasks ??= new CompanyTaskRepository(_context);  
 
     public IWorkerRoleTypeRepository WorkerRoleTypes =>
         _workerRoleTypes ??= new WorkerRoleTypeRepository(_context);
@@ -79,25 +76,19 @@ public class UnitOfWork : IUnitOfWork
     public IAuditLogRepository AuditLogs =>
         _auditLogs ??= new AuditLogRepository(_context);
 
-    // ? הפונקציה החשובה!
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        Console.WriteLine("?? UnitOfWork.SaveChangesAsync נקרא");
         try
         {
             var result = await _context.SaveChangesAsync(cancellationToken);
-            Console.WriteLine($"? נשמרו {result} שורות בהצלחה");
             return result;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"? שגיאה בשמירה: {ex.Message}");
-            Console.WriteLine($"? Stack: {ex.StackTrace}");
             throw;
         }
     }
 
-    // ? הפונקציה השנייה (ללא cancellationToken)
     public async Task SaveChangesAsync()
     {
         await SaveChangesAsync(CancellationToken.None);
@@ -116,11 +107,9 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine($"?? UnitOfWork.UpdateTaskStatusAsync - TaskId={taskId}, Status={status}");
 
         try
         {
-            // בדוק אם הסטטוס הוא Completed
             bool isCompleted = status.Equals("Completed", StringComparison.OrdinalIgnoreCase);
 
             int rowsAffected;
@@ -150,13 +139,10 @@ public class UnitOfWork : IUnitOfWork
                 );
             }
 
-            Console.WriteLine($"? עודכנו {rowsAffected} שורות");
             return rowsAffected;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"? שגיאה בעדכון סטטוס: {ex.Message}");
-            Console.WriteLine($"? Inner: {ex.InnerException?.Message}");
             throw;
         }
     }

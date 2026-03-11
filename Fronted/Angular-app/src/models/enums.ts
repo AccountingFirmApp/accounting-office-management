@@ -22,6 +22,22 @@ export enum ReportStatus {
   NotRequired = 'NotRequired'
 }
 
+export enum RecurrenceType {
+  OneTime = 0,
+  Monthly = 1,
+  Quarterly = 2,
+  Yearly = 3,
+  BiMonthly = 4,
+  Custom = 5
+}
+export const RECURRENCE_OPTIONS = [
+  { value: RecurrenceType.OneTime, label: 'חד-פעמי' },
+  { value: RecurrenceType.Monthly, label: 'חודשי' },
+  { value: RecurrenceType.Quarterly, label: 'רבעוני' },
+  { value: RecurrenceType.Yearly, label: 'שנתי' },
+  { value: RecurrenceType.BiMonthly, label: 'דו-חודשי' },
+  { value: RecurrenceType.Custom, label: 'מותאם אישית' },
+];
 /**
  * פונקציות עזר לתרגום
  */

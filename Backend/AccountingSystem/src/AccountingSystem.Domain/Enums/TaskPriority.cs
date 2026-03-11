@@ -5,9 +5,9 @@
     /// </summary>
     public enum TaskPriority
     {
-        Low,      // נמוכה
-        Normal,   // רגילה
-        High,     // גבוהה
-        Urgent    // דחוף
+        Low=0,      
+        Normal=1,   
+        High = 2,    
+        Urgent=3   
     }
 }

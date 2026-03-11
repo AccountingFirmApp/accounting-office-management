@@ -22,7 +22,6 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.Companyreportconfigs;
         }
 
-        // ==================== ������ ������� ====================
 
         public async Task<Companyreportconfig?> GetByIdAsync(int id)
         {
@@ -57,44 +56,27 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             try
             {
-                Console.WriteLine("=== CompanyReportConfig Details ===");
-                Console.WriteLine($"Id: {config.Id}");
-                Console.WriteLine($"CompanyId: {config.Companyid}");
-                Console.WriteLine($"ReportTypeId: {config.Reporttypeid}");
-                Console.WriteLine($"FrequencyId: {config.Frequencyid}");
-                Console.WriteLine($"DayOfMonth: {config.Dayofmonth}");
-                Console.WriteLine($"IsActive: {config.Isactive}");
-                Console.WriteLine($"CreatedAt: {config.Createdat}");
-                Console.WriteLine($"UpdatedAt: {config.Updatedat}");
-                Console.WriteLine($"Year: {config.Year}");
+                
 
-                // אם רוצים גם מידע מהניווטים
                 if (config.Company != null)
-                    Console.WriteLine($"Company Name: {config.Company.Name}");
 
                 if (config.Frequency != null)
-                    Console.WriteLine($"Frequency Name: {config.Frequency.Name}");
 
                 if (config.Reporttype != null)
-                    Console.WriteLine($"ReportType Name: {config.Reporttype.Name}");
 
-                Console.WriteLine($"Number of ReportInstances: {config.Reportinstances.Count}");
 
                 _dbSet.Add(config);
                 var result = await _context.SaveChangesAsync();
 
-                Console.WriteLine($"Saved rows: {result}");
             }
             catch (DbUpdateException dbEx)
             {
-                Console.WriteLine("=== DbUpdateException ===");
-                Console.WriteLine(dbEx.InnerException?.Message ?? dbEx.Message);
+                
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("=== Exception ===");
-                Console.WriteLine(ex.Message);
+                
                 throw;
             }
         }
@@ -121,11 +103,8 @@ namespace AccountingSystem.Infrastructure.Repositories
         }
 
      
-        // ==================== ������ �������� ====================
 
-        /// <summary>
-        /// ���� �� ������� �� ���� ������
-        /// </summary>
+        
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByCompanyIdAsync(int companyId)
         {
             return await _dbSet
@@ -137,9 +116,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� �� ������� ������� ����
-        /// </summary>
+        
         public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsAsync()
         {
             return await _dbSet
@@ -150,10 +127,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� ������ ������ ��� ����
-        /// </summary>
-        public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsByCompanyIdAsync(int companyId)
+                public async Task<IEnumerable<Companyreportconfig>> GetActiveConfigsByCompanyIdAsync(int companyId)
         {
             return await _dbSet
                 .Where(c => c.Companyid == companyId && c.Isactive == true)
@@ -163,10 +137,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� ������ ��� ��� �����
-        /// </summary>
-        public async Task<IEnumerable<Companyreportconfig>> GetConfigsByReportTypeIdAsync(int reportTypeId)
+                public async Task<IEnumerable<Companyreportconfig>> GetConfigsByReportTypeIdAsync(int reportTypeId)
         {
             return await _dbSet
                 .Where(c => c.Reporttypeid == reportTypeId)
@@ -176,9 +147,7 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ���� ������ ��� ������
-        /// </summary>
+       
         public async Task<IEnumerable<Companyreportconfig>> GetConfigsByFrequencyIdAsync(int frequencyId)
         {
             return await _dbSet
@@ -189,18 +158,14 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// ����� �� ����� ��� ����� ����� ����� ����� �����
-        /// </summary>
+       
         public async Task<bool> ConfigExistsAsync(int companyId, int reportTypeId)
         {
             return await _dbSet
                 .AnyAsync(c => c.Companyid == companyId && c.Reporttypeid == reportTypeId);
         }
 
-        /// <summary>
-        /// ���� ����� ������� ����� ���� �����
-        /// </summary>
+       
         public async Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId)
         {
             return await _dbSet

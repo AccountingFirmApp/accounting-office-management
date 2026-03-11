@@ -24,15 +24,15 @@ import { log } from 'console';
 })
 export class CompanyReportConfigListComponent implements OnInit {
   @Input() mode: 'admin' | 'employee' = 'employee';
-  configs: CompanyReportConfigDto[] = []; // ⭐ רק פעילות
-  deletedConfigs: CompanyReportConfigDto[] = []; // ⭐ רק מחוקות
+  configs: CompanyReportConfigDto[] = []; //  רק פעילות
+  deletedConfigs: CompanyReportConfigDto[] = []; //  רק מחוקות
   companies: CompanyDto[] = [];
   reportTypes: ReportTypeDto[] = [];
 
   // מטריצה: companyId -> reportTypeId -> config פעיל
   configMatrix: { [companyId: number]: { [reportTypeId: number]: CompanyReportConfigDto | null } } = {};
 
-  // ⭐ מטריצה למחוקות: companyId -> reportTypeId -> config מחוק
+  //  מטריצה למחוקות: companyId -> reportTypeId -> config מחוק
   deletedMatrix: { [companyId: number]: { [reportTypeId: number]: CompanyReportConfigDto | null } } = {};
 
   loading = false;
@@ -77,16 +77,15 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.loadAllConfigs()
     ]).then(() => {
       this.buildMatrix();
-      this.buildDeletedMatrix(); // ⭐
+      this.buildDeletedMatrix(); 
       this.loading = false;
     }).catch(err => {
-      // console.error(err);
       this.loading = false;
     });
   }
 
   /**
-   * בונה מטריצה של חברות X סוגי דיווחים לשנה הנבחרת - רק פעילות ⭐
+   * בונה מטריצה של חברות X סוגי דיווחים לשנה הנבחרת - רק פעילות 
    */
   buildMatrix(): void {
     this.configMatrix = {};
@@ -95,12 +94,11 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.configMatrix[company.id] = {};
 
       this.reportTypes.forEach(reportType => {
-        // מחפש הגדרה פעילה ⭐
         const config = this.configs.find(c =>
           c.companyId === company.id &&
           c.reportTypeId === reportType.id &&
           c.year === this.selectedYear &&
-          c.isActive === true // ⭐ רק פעילות
+          c.isActive === true 
         );
 
         this.configMatrix[company.id][reportType.id] = config || null;
@@ -109,7 +107,7 @@ export class CompanyReportConfigListComponent implements OnInit {
   }
 
   /**
-   * ⭐ בונה מטריצה של הגדרות מחוקות
+   *  בונה מטריצה של הגדרות מחוקות
    */
   buildDeletedMatrix(): void {
     this.deletedMatrix = {};
@@ -118,12 +116,12 @@ export class CompanyReportConfigListComponent implements OnInit {
       this.deletedMatrix[company.id] = {};
 
       this.reportTypes.forEach(reportType => {
-        // מחפש הגדרה מחוקה ⭐
+        // מחפש הגדרה מחוקה 
         const config = this.deletedConfigs.find(c =>
           c.companyId === company.id &&
           c.reportTypeId === reportType.id &&
           c.year === this.selectedYear &&
-          c.isActive === false // ⭐ רק מחוקות
+          c.isActive === false //  רק מחוקות
         );
 
         this.deletedMatrix[company.id][reportType.id] = config || null;
@@ -148,8 +146,6 @@ export class CompanyReportConfigListComponent implements OnInit {
           return new Promise((resolve, reject) => {
       this.companySer.getCompanyByWorkerId(this.workerService.currentWorker.id).subscribe({
         next: (data) => {
-          console.log('חברות לעובד:', data);
-          console.log('חברות:', this.workerService.currentWorker);
           this.companies = data;
           resolve();
         },
@@ -248,7 +244,7 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
 
     this.configService.getByCompanyId(companyId).subscribe({
       next: (configs) => {
-        // ⭐ מסנן רק הגדרות פעילות מהשנה הקודמת
+        //  מסנן רק הגדרות פעילות מהשנה הקודמת
         const previousYearConfigs = configs.filter(c => 
           c.year === previousYear && c.isActive === true
         );
@@ -292,7 +288,6 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
             },
             error: (err) => {
               errorCount++;
-              // console.error('שגיאה ביצירת הגדרה:', err);
               if (successCount + errorCount === totalConfigs) {
                 this.handleCopyComplete(successCount, errorCount, companyName, this.selectedYear);
               }
@@ -301,7 +296,7 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
         });
       },
       error: (err) => {
-        // console.error(err);
+       
       }
     });
   }
@@ -346,13 +341,13 @@ this.router.navigate(['/settings/report-config/create'], { queryParams: { isAdmi
   previousYear(): void {
     this.selectedYear--;
     this.buildMatrix();
-    this.buildDeletedMatrix(); // ⭐
+    this.buildDeletedMatrix();
   }
 
   nextYear(): void {
     this.selectedYear++;
     this.buildMatrix();
-    this.buildDeletedMatrix(); // ⭐
+    this.buildDeletedMatrix(); 
   }
 
   isReadOnly(): boolean {

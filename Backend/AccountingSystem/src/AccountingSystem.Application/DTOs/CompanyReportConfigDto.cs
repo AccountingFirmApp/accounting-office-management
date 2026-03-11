@@ -15,7 +15,6 @@ public class CompanyReportConfigDto
     public DateTime UpdatedAt { get; set; }
     public int Year { get; set; }
 
-    // Navigation (optional)
     public string? CompanyName { get; set; }
     public string? ReportTypeName { get; set; }
     public string? ReportTypeShortCode { get; set; }

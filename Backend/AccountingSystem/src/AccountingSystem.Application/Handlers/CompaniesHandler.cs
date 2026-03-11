@@ -1,5 +1,4 @@
-﻿// Application/Handlers/Companies/CompaniesHandler.cs
-using AccountingSystem.Application;
+﻿using AccountingSystem.Application;
 using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.DTOs.Tasks;
@@ -127,12 +126,11 @@ public class GetCompaniesByFirmIdQueryWithReportHandler
     {
         var companies = await _unitOfWork.Companies.GetCompaniesByFirmIdAsync(request.FirmId);
 
-        // המרה ל־DTO מתאים
         var result = companies.Select(c => new CompanyWithPendingReportsDto
         {
             Id = c.Id,
             Name = c.Name,
-            PendingReportsCount = c.Companyreportconfigs.Count(r => /* תנאי לדוחות ממתינים */ true)
+            PendingReportsCount = c.Companyreportconfigs.Count(r => true)
         }).ToList();
 
         return result;
@@ -154,17 +152,14 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
 
     public async Task<List<CompanyTaskDto>> Handle(GetTasksByCompanyIdQuery request, CancellationToken cancellationToken)
     {
-        // 1. בדוק שהחברה קיימת
         var companyExists = await _unitOfWork.Companies.ExistsAsync(request.CompanyId);
         if (!companyExists)
         {
             throw new Exception($"חברה עם ID {request.CompanyId} לא נמצאה");
         }
 
-        // 2. קבל את כל המשימות של החברה
         var tasks = await _unitOfWork.Tasks.GetTasksByCompanyIdAsync(request.CompanyId);
 
-        // 3. המר ל-DTOs
         var taskDtos = tasks.Select(t => new CompanyTaskDto
         {
             Id = t.Id,
@@ -210,7 +205,6 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
             if (item == null)
                 return new CompleteChecklistItemResult { Success = false, Message = "הפריט לא נמצא" };
 
-            // עדכון השדות
             item.IsCompleted = true;
             item.CompletedAt = DateTime.UtcNow;
             item.CompletedByWorkerId = request.CompletedByWorkerId;

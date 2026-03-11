@@ -55,56 +55,19 @@ namespace AccountingSystem.Application.DTOs.Tasks
     /// <summary>
     /// DTO מפורט למשימה - לתצוגת פרטים מלאים
     /// </summary>
-    public class CompanyTaskDetailDto
+    /// 
+    public class CompanyTaskDetailDto : CompanyTaskDto
     {
-        public int Id { get; set; }
 
-        // Company info
-        public int CompanyId { get; set; }
-        public string CompanyName { get; set; } = string.Empty;
         public string? CompanyTaxId { get; set; }
-
-        // Task Type info
-        public int TaskTypeId { get; set; }
-        public string TaskTypeName { get; set; } = string.Empty;
-        public string? TaskTypeCategory { get; set; }
         public string? TaskTypeDescription { get; set; }
-
-        // Task data
-        public DateOnly Period { get; set; }
-        public string PeriodFormatted => Period.ToString("MM/yyyy");
-
-        public string Status { get; set; } = string.Empty;
-        public string StatusDisplay => Status.ToString();
-
-        public TaskPriority Priority { get; set; }
-        public string PriorityDisplay => Priority.ToString();
-
-        public DateOnly? DueDate { get; set; }
-        public DateOnly? CompletedDate { get; set; }
-
-        // Worker info
-        public int? AssignedWorkerId { get; set; }
         public string? AssignedWorkerFirstName { get; set; }
         public string? AssignedWorkerLastName { get; set; }
+
         public string? AssignedWorkerFullName =>
             !string.IsNullOrEmpty(AssignedWorkerFirstName) && !string.IsNullOrEmpty(AssignedWorkerLastName)
                 ? $"{AssignedWorkerFirstName} {AssignedWorkerLastName}"
                 : null;
-
-        public string? Notes { get; set; }
-
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-
-        // Checklist
-        public ChecklistProgressDto ChecklistProgress { get; set; } = new();
-        public List<ChecklistItemDto> ChecklistItems { get; set; } = new();
-
-        // Calculated fields
-        public bool IsOverdue => DueDate.HasValue
-            && DueDate.Value < DateOnly.FromDateTime(DateTime.Now)
-           && Status != "Done" && Status != "Paid";
 
         public int DaysUntilDue
         {
@@ -116,6 +79,7 @@ namespace AccountingSystem.Application.DTOs.Tasks
             }
         }
     }
+    
 
     /// <summary>
     /// DTO קל משקל לרשימות פעילות ודשבורד
@@ -216,6 +180,7 @@ namespace AccountingSystem.Application.DTOs.Tasks
         public DateTime? CompletedAt { get; set; }
         public int? CompletedByWorkerId { get; set; }
         public string? CompletedByWorkerName { get; set; }
+
         public string? Notes { get; set; }
     }
 
@@ -285,6 +250,8 @@ namespace AccountingSystem.Application.DTOs.Tasks
         public string? Description { get; set; }
         public bool IsCompleted { get; set; }
         public int OrderIndex { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public string? CompletedByWorkerName { get; set; }
     }
     public class ChecklistTemplateDto
     {
@@ -311,7 +278,7 @@ namespace AccountingSystem.Application.DTOs.Tasks
         public int? ConfigurationId { get; set; }
         public int? assignedWorkerId { get; set; }
         public string? WorkerName { get; set; }
-        public int Frequency { get; set; } = 1; // ברירת מחדל חודשי
+        public RecurrenceType Frequency { get; set; } = RecurrenceType.Monthly;
         public int DueDay { get; set; } = 15;   // ברירת מחדל 15 לחודש
         public bool IsActive { get; set; } = false; // כברירת מחדל לא משובץ
     }

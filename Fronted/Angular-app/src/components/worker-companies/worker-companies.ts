@@ -42,15 +42,15 @@ export class WorkerCompaniesComponent implements OnInit {
     this.location.back();
   }
 
+
   loadData(): void {
     this.loading = true;
-    this.cdr.detectChanges();
-
     this.workerService.getWorkerCompanies(this.currentWorker.id).subscribe({
       next: (response) => {
-        this.companies = response;
+        // יצירת עותק חדש כדי לוודא זיהוי שינויים (Change Detection)
+        this.companies = [...response]; 
         this.loading = false;
-        this.cdr.detectChanges();
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
         this.error = `שגיאה: ${err.status} - ${err.message}`;
@@ -59,7 +59,6 @@ export class WorkerCompaniesComponent implements OnInit {
       }
     });
   }
-
   changeWorker(id: number): void {
     this.workerId = id;
     this.companies = null;

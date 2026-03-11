@@ -463,3 +463,24 @@
     text-align: center;
   }
 }
+
+
+/* 1. עיצוב משימות ששובצו אלייך אישית */
+.assigned-to-me {
+  background-color: #e3f2fd !important; /* כחול בהיר */
+  border-right: 5px solid #2196F3 !important; /* פס צד כחול כהה */
+}
+
+/* 2. עיצוב משימות חברה כלליות */
+.assigned-to-company {
+  background-color: #ffffff;
+  border-right: 5px solid #e0e0e0; /* פס צד אפור */
+}
+
+/* עיצוב הסמל */
+.type-icon {
+  margin-left: 8px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+

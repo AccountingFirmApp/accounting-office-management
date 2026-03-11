@@ -25,7 +25,6 @@ namespace AccountingSystem.Application.Handlers
 
         public async Task<CompanyReportConfigDto> Handle(CreateCompanyConfigReportCommand request, CancellationToken cancellationToken)
         {
-            // בדיקות תקינות לערכים שנשלחו לפונקציה
             var companyExists = await _unitOfWork.Companies.ExistsAsync(request.CompanyId);
             if (!companyExists)
                 throw new Exception($"חברה עם ID {request.CompanyId} לא נמצאה");

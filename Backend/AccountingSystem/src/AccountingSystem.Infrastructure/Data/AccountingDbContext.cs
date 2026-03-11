@@ -51,8 +51,9 @@ public partial class AccountingDbContext : DbContext
             .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
             .HasPostgresEnum("TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" })  // ⭐ שונה ל-TaskStatus1
             .HasPostgresEnum("task_priority", new[] { "Low", "Normal", "High", "Urgent" })
-            .HasPostgresEnum("recurrence_type", new[] { "Daily", "Weekly", "Monthly", "Quarterly", "Yearly" })
-            .HasPostgresEnum<RecurrenceType>("recurrence_type");
+            .HasPostgresEnum<TaskPriority>("task_priority")
+        .HasPostgresEnum<RecurrenceType>("recurrence_type");
+
         modelBuilder.Entity<Accountingfirm>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("accountingfirm_pkey");
@@ -131,6 +132,7 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
+            entity.Property(e => e.Updatedat).HasColumnName("updated_at");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
@@ -148,10 +150,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Taxid)
                 .HasMaxLength(20)
                 .HasColumnName("taxid");
-            entity.Property(e => e.Updatedat)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("updatedat");
+            
 
             entity.HasOne(d => d.Firm).WithMany(p => p.Companies)
                 .HasForeignKey(d => d.Firmid)
@@ -266,21 +265,18 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
+            entity.Property(e => e.Priority)
+          .HasColumnName("priority") 
+          .HasConversion<int>();     
             entity.Property(e => e.Status)
-      //.HasColumnType("\"TaskStatus1\"")  // ← הוסף את זה!
       .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
-      //.HasConversion<string>()
       .HasColumnName("status")
       ;
-            //entity.Property(e => e.Status)
-            //    .HasConversion<string>()
-            //    .HasColumnName("status");
+            
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Period).HasColumnName("period");
-            //entity.Property(e => e.Status)
-            //    .HasDefaultValueSql("'Pending'::\"TaskStatus1\"")
-            //    .HasColumnName("status");
+            
             entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
             entity.Property(e => e.Updatedat)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -359,6 +355,7 @@ public partial class AccountingDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("reportinstance_pkey");
 
             entity.ToTable("reportinstance");
+            
 
             entity.HasIndex(e => e.Configid, "idx_report_config");
 
@@ -449,7 +446,7 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
-            entity.Property(e => e.Category)  // ⭐ הוסף
+            entity.Property(e => e.Category)  
                 .HasColumnName("category");
             entity.Property(e => e.Defaultorder)
                 .HasDefaultValue(99)
@@ -466,7 +463,7 @@ public partial class AccountingDbContext : DbContext
                 .ToView("vw_activetasks");
 
             entity.Property(e => e.Assignedworkername).HasColumnName("assignedworkername");
-            entity.Property(e => e.Category)  // ⭐ הוסף
+            entity.Property(e => e.Category) 
                 .HasColumnName("category");
             entity.Property(e => e.Companyname)
                 .HasMaxLength(255)
@@ -477,7 +474,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Period).HasColumnName("period");
-            entity.Property(e => e.Status)  // ⭐ הוסף
+            entity.Property(e => e.Status)  
                 .HasColumnName("status");
             entity.Property(e => e.Tasktypename)
                 .HasMaxLength(255)
@@ -543,7 +540,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Shortcode)
                 .HasMaxLength(20)
                 .HasColumnName("shortcode");
-            entity.Property(e => e.Status)  // ⭐ הוסף
+            entity.Property(e => e.Status) 
                 .HasColumnName("status");
         });
 
@@ -617,11 +614,9 @@ public partial class AccountingDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("phone");
             entity.Property(e => e.Roleid).HasColumnName("roleid");
-            entity.Property(e => e.Updatedat)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("updatedat");
-
+           
+            entity.Property(e=>e.Updatedat)
+        .HasColumnName("updated_at");
             entity.HasOne(d => d.Firm).WithMany(p => p.Workers)
                 .HasForeignKey(d => d.Firmid)
                 .HasConstraintName("fk_worker_firm");
@@ -689,11 +684,10 @@ public partial class AccountingDbContext : DbContext
 
             
         entity.HasMany(d => d.Items)           // לתבנית יש הרבה פריטים
-          .WithOne(p => p.Template)        // לכל פריט יש תבנית אחת (המאפיין ששלחת לי במודל)
+          .WithOne(p => p.Template)        // לכל פריט יש תבנית אחת 
           .HasForeignKey(d => d.TemplateId)// המפתח הזר הוא TemplateId
           .HasPrincipalKey(d => d.Id);     // המפתח הראשי הוא Id
     });
-        // ⭐ חשוב מאוד: הוספתי את המיפוי הזה כדי למנוע את שגיאת template_id1
         modelBuilder.Entity<TaskChecklistTemplateItem>(entity =>
         {
             entity.ToTable("task_checklist_template_item");
@@ -701,7 +695,6 @@ public partial class AccountingDbContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
 
-            // כאן אנחנו מוודאים ש-EF יודע ש-TemplateId (מהמודל) הוא העמודה template_id (ב-DB)
             entity.Property(e => e.TemplateId).HasColumnName("template_id");
 
             entity.Property(e => e.Title).HasColumnName("title");
@@ -770,7 +763,6 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.AutoCreateItems).HasColumnName("auto_create_items");
         });
 
-        // 3. וודאי שגם פריטי התבנית ממופים (אחרת ה-Include של ה-Items יחזור ריק)
         modelBuilder.Entity<TaskChecklistTemplateItem>(entity =>
         {
             entity.ToTable("task_checklist_template_item");
@@ -787,23 +779,20 @@ public partial class AccountingDbContext : DbContext
 
         modelBuilder.Entity<CompanyTaskConfiguration>(entity =>
         {
-            // מיפוי שם הטבלה לאותיות קטנות
             entity.ToTable("companytaskconfigurations");
 
             entity.HasKey(e => e.Id);
 
-            // מיפוי כל עמודה לשם המדויק ב-Postgres (אותיות קטנות)
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Companyid).HasColumnName("companyid");
             entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
             entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid"); // פותר את השגיאה שלך!
-            entity.Property(e => e.Frequency).HasColumnName("frequency");
+            entity.Property(e => e.Frequency);
             entity.Property(e => e.Dueday).HasColumnName("dueday");
             entity.Property(e => e.Isactive).HasColumnName("isactive");
             entity.Property(e => e.Createdat).HasColumnName("createdat");
             entity.Property(e => e.Updatedat).HasColumnName("updatedat");
 
-            // הגדרת קשרים (Foreign Keys) כדי שה-Include יעבוד
             entity.HasOne(d => d.Assignedworker)
                   .WithMany()
                   .HasForeignKey(d => d.Assignedworkerid)

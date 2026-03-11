@@ -25,7 +25,6 @@ namespace AccountingSystem.Application.Queries
 
 
     
-        // ========== Query 1: קבלת כל הדיווחים ==========
 
         /// <summary>
         /// שאילתה לקבלת כל הדיווחים במערכת
@@ -37,7 +36,6 @@ namespace AccountingSystem.Application.Queries
 
     }
 
-    // ========== Query 2: דיווחים לפי Config ==========
 
     /// <summary>
     /// שאילתה לקבלת דיווחים לפי Config ID
@@ -47,7 +45,6 @@ namespace AccountingSystem.Application.Queries
             public int ConfigId { get; set; }
         }
 
-        // ========== Query 3: דיווחים לפי סטטוס ==========
 
         /// <summary>
         /// שאילתה לקבלת דיווחים לפי סטטוס
@@ -57,7 +54,6 @@ namespace AccountingSystem.Application.Queries
             public string Status { get; set; } = string.Empty;
         }
 
-        // ========== Query 4: דיווחים ממתינים ==========
 
         /// <summary>
         /// שאילתה לקבלת דיווחים ממתינים (Pending)
@@ -66,7 +62,6 @@ namespace AccountingSystem.Application.Queries
         {
         }
 
-        // ========== Query 5: דיווחים לפי תקופה ==========
 
         /// <summary>
         /// שאילתה לקבלת דיווחים לפי תקופה (חודש/שנה)
@@ -76,7 +71,6 @@ namespace AccountingSystem.Application.Queries
             public DateTime Period { get; set; }
         }
 
-        // ========== Query 6: דיווחים בטווח תאריכים ==========
 
         /// <summary>
         /// שאילתה לקבלת דיווחים בטווח תאריכים
@@ -87,7 +81,6 @@ namespace AccountingSystem.Application.Queries
             public DateTime EndDate { get; set; }
         }
 
-        // ========== Query 7: דיווחים באיחור (OVERDUE) ==========
 
         /// <summary>
         /// שאילתה לקבלת דיווחים באיחור - קריטי!
@@ -96,7 +89,6 @@ namespace AccountingSystem.Application.Queries
         {
         }
 
-        // ========== Query 8: דיווחים שמגיעים בקרוב ==========
 
         /// <summary>
         /// שאילתה לקבלת דיווחים שצריך להגיש בעוד X ימים

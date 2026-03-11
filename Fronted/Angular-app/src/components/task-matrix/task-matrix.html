@@ -89,7 +89,7 @@
                     <div class="details" *ngIf="config.isActive; else emptyState">
                       <span class="worker">{{ config.workerName || 'לא שובץ' }}</span>
                       <div class="meta-row">
-                        <span>{{ config.frequency }} חוד'</span>
+                        <span>{{ config.frequency | recurrenceLabel }}</span>                        
                         <span class="bullet">•</span>
                         <span>יום {{ config.dueDay }}</span>
                       </div>
