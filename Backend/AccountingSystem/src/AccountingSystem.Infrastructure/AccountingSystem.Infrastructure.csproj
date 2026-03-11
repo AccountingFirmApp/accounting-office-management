@@ -20,6 +20,7 @@
 
 	<!-- Infrastructure Packages - מימושים טכנולוגיים -->
 	<ItemGroup>
+		<PackageReference Include="Hangfire" Version="1.8.17" />
 		<!-- Database -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">

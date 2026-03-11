@@ -17,7 +17,6 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using AccountingSystem.Domain.Enums;
 using Npgsql;
-using AccountingSystem.API.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,11 +50,8 @@ dataSourceBuilder.MapEnum<TaskStatus1>("TaskStatus1");
 dataSourceBuilder.MapEnum<ReportStatus>("report_status");
 dataSourceBuilder.MapEnum<PaymentMethod>("payment_method");
 dataSourceBuilder.MapEnum<TaskCategory>("task_category");
-dataSourceBuilder.MapEnum<RecurrenceType>("recurrence_type", nameTranslator: nullNameTranslator);
-
-
+dataSourceBuilder.MapEnum<RecurrenceType>("recurrence_type");
 var dataSource = dataSourceBuilder.Build();
-
 builder.Services.AddDbContext<AccountingDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -220,21 +216,41 @@ builder.Services.AddCors(options =>
     });
 });
 
+//builder.Services.AddHealthChecks()
+//    .AddDbContextCheck<AccountingDbContext>()
+//    .AddHangfire();
+
 var app = builder.Build();
 
 // ========================================
 // Hangfire Dashboard + Recurring Jobs
 // ========================================
-app.UseHangfireDashboard();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new HangfireAuthorizationFilter() }
+});
+
+var israelTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
 
 RecurringJob.AddOrUpdate<ReportGenerationJob>(
     "monthly-report-25",
     job => job.RunMonthlyReport(),
-    "0 1 25 * *");
+    "0 1 25 * *",
+    new RecurringJobOptions
+    {
+        TimeZone = israelTimeZone
+    }
+);
 
-BackgroundJob.Schedule<CheckReportGenerationJob>(
+RecurringJob.AddOrUpdate<CheckReportGenerationJob>(
+    "check-report-generation",
     job => job.RunDailyCheckReport(),
-    TimeSpan.FromMinutes(1));
+    "0 0 * * *",
+    new RecurringJobOptions
+    {
+        TimeZone = israelTimeZone
+    }
+);
 
 // ========================================
 // HTTP Pipeline
@@ -250,6 +266,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+//app.MapHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
