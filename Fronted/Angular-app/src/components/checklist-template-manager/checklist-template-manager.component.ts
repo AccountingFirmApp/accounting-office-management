@@ -6,12 +6,12 @@ import { ChecklistService } from '../../services/checklistTemplateService';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
+import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
 @Component({
   selector: 'app-checklist-template-manager',
   templateUrl: './checklist-template-manager.component.html',
   styleUrls: ['./checklist-template-manager.component.css'],
-  imports: [CommonModule, FormsModule,FormsModule,MatSelectModule,MatFormFieldModule,
-    MatCardModule],
+  imports: [CommonModule, FormsModule, BackButtonComponent],
   standalone: true,
 
 })

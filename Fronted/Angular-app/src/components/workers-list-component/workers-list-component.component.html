@@ -1,4 +1,4 @@
-<app-back-button [route]="'/home'"></app-back-button>
+<app-back-button [route]="'/management'"></app-back-button>
 
 <div class="workers-page">
 
@@ -33,14 +33,14 @@
           <h3>{{ worker.firstName || '?' }} {{ worker.lastName || '?' }}</h3>
           <span class="role-badge">{{ worker.roleName || '?' }}</span>
         </div>
-        <span
+        <!-- <span
           class="status-badge"
           [class.active]="worker.isactive"
           [class.inactive]="!worker.isactive"
-        >
-          <span class="status-dot"></span>
+        > -->
+          <!-- <span class="status-dot"></span>
           {{ worker.isactive ? 'פעיל' : 'לא פעיל' }}
-        </span>
+        </span> -->
       </div>
 
       <!-- Content -->

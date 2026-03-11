@@ -18,7 +18,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
      
         System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetReportsByStatusAsync(string status);
 
-      
+
         System.Threading.Tasks.Task<IEnumerable<Reportinstance>> GetPendingReportsAsync();
 
       

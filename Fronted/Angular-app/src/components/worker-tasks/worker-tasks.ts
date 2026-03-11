@@ -7,13 +7,14 @@ import { WorkerService } from '../../services/worker';
 import { CompanyService } from '../../services/company';
 import { CompantTaskService } from '../../services/compant-task.service';
 import { TaskcompanyDto } from '../../models/taskcompany';
+import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
 
 @Component({
   selector: 'app-worker-tasks',
   templateUrl: './worker-tasks.html',
   styleUrls: ['./worker-tasks.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BackButtonComponent],
 })
 export class WorkerTasksComponent implements OnInit {
   private readonly STATUS = {

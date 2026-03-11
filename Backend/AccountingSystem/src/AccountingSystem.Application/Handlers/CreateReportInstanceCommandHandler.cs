@@ -144,7 +144,7 @@ namespace AccountingSystem.Application.Handlers
                 report.Paiddate = DateOnly.FromDateTime(DateTime.Now);
             }
 
-            _reportInstanceRepository.UpdateAsync(report);
+            //_reportInstanceRepository.UpdateAsync(report);
             await _unitOfWork.SaveChangesAsync();
 
             return true;

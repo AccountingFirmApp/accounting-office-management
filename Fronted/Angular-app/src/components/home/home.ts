@@ -38,13 +38,13 @@ export class HomeComponent implements OnInit{
 
   }
   navigateToReports() {
-    this.router.navigate(['/reports']);
+    this.router.navigate(['/reports'], { queryParams: { returnUrl: '/home' } });
   }
 
   navigateToManagement() {
     this.router.navigate(['/management']);
   }
     navigateToSettings(): void {
-    this.router.navigate(['/dashboard/report-config']);
+    this.router.navigate(['/dashboard/report-config'],{ queryParams: { returnUrl: '/home' } });
   }
 }

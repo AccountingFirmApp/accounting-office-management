@@ -71,7 +71,7 @@ namespace AccountingSystem.API.Controllers
         //add config
 
         [HttpPost]
-        public async Task<ActionResult<CompanyReportConfigDto>> AddAsync(CreateCompanyReportConfigDto request)
+        public async Task<ActionResult<CompanyReportConfigDto>> AddAsync([FromBody] CreateCompanyReportConfigDto request)
         {
             try
             {

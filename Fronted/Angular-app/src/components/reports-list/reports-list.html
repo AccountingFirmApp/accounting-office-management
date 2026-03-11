@@ -1,4 +1,3 @@
-
 <div class="reports-container">
 
   <!-- 🔥 המודל לצפייה -->
@@ -9,7 +8,6 @@
     (editClicked)="onEditFromModal($event)"
   ></app-report-view-modal>
 
-  <!-- 🆕 Modal מרכזי לעובדות - יפה ומעוצב! -->
   <div 
     *ngIf="openWorkerPopoverId !== null" 
     class="workers-modal-overlay"
@@ -19,7 +17,6 @@
       class="workers-modal"
       (click)="$event.stopPropagation()"
     >
-      <!-- כותרת -->
       <div class="modal-header">
         <h3 class="modal-title">עובדות משויכות</h3>
         <button
@@ -33,8 +30,6 @@
           </svg>
         </button>
       </div>
-      
-      <!-- תוכן -->
       <div class="modal-body">
         <ul class="workers-list">
           <li *ngFor="let worker of selectedReportWorkers; let i = index" class="worker-item">
@@ -43,18 +38,12 @@
           </li>
         </ul>
       </div>
-      
-      <!-- תחתית -->
       <div class="modal-footer">
         <span class="workers-count">סה"כ {{ selectedReportWorkers.length }} עובדות</span>
-        <button class="btn-close-modal" (click)="closeWorkerPopover()">
-          סגור
-        </button>
+        <button class="btn-close-modal" (click)="closeWorkerPopover()">סגור</button>
       </div>
     </div>
   </div>
-
-  <!-- פילטרים -->
   <div class="filters-section">
     <div class="search-box">
       <input 
@@ -77,6 +66,8 @@
         <option value="Reported">דווח</option>
         <option value="Approved">אושר</option>
         <option value="Paid">שולם</option>
+        <option value="NotRequired">לא נדרש</option>
+
       </select>
 
       <select 
@@ -90,7 +81,6 @@
         </option>
       </select>
 
-      <!-- 🔥 סינון לפי סוג דיווח -->
       <select 
         [(ngModel)]="selectedReportType" 
         (change)="applyFilters()"
@@ -125,7 +115,7 @@
         <tr>
           <th>חברה</th>
           <th>סוג דיווח</th>
-          <th>קוד</th>
+          <!-- <th>קוד</th> -->
           <th>תקופה</th>
           <th>סכום</th>
           <th>אמצעי תשלום</th>
@@ -147,27 +137,32 @@
             {{ report.companyName }}
           </td>
           <td>{{ report.reportTypeName }}</td>
-          <td class="short-code">{{ report.reportTypeShortCode }}</td>
+          <!-- <td class="short-code">{{ report.reportTypeShortCode }}</td> -->
           <td>{{ formatDate(report.period) }}</td>
           <td class="amount">{{ formatAmount(report.amount) }}</td>
           <td>
             <span *ngIf="report.paymentMethod">{{ getPaymentMethodText(report.paymentMethod) }}</span>
             <span *ngIf="!report.paymentMethod" class="no-data">-</span>
           </td>
+         
           <td>
-            <span class="status-badge" [ngClass]="getStatusColor(report.status)">
-              {{ getStatusText(report.status) }}
-            </span>
-          </td>
+  <select
+    class="status-select"
+    [ngClass]="getStatusColor(report.status)"
+    [(ngModel)]="report.status"
+    (change)="updateStatus(report)"
+  >
+    <option *ngFor="let status of statuses" [value]="status">
+      {{ getStatusText(status) }}
+    </option>
+  </select>
+</td>
           <td>{{ formatDate(report.reportedDate) }}</td>
           <td>{{ formatDate(report.paidDate) }}</td>
-        
+
           <td *ngIf="isAdminMode" class="worker-names-cell">
-            <!-- אם יש עובדות -->
             <div *ngIf="hasWorkers(report)" class="workers-preview">
               <span class="first-worker">{{ report.workerNames[0] }}</span>
-              
-              <!-- כפתור + -->
               <button 
                 *ngIf="getWorkerCount(report) > 1"
                 class="more-workers-btn"
@@ -176,11 +171,7 @@
                 +{{ getWorkerCount(report) - 1 }}
               </button>
             </div>
-
-            <!-- אם אין עובדות -->
-            <span *ngIf="!hasWorkers(report)" class="no-workers">
-              -
-            </span>
+            <span *ngIf="!hasWorkers(report)" class="no-workers">-</span>
           </td>
 
           <td class="actions">
@@ -190,25 +181,26 @@
                 <circle cx="12" cy="12" r="3"/>
               </svg>
             </button>
-            <!-- <button (click)="editReport(report.id)" class="btn-edit" title="עריכה" aria-label="ערוך דוח">
+            <button (click)="editReport(report.id)" class="btn-edit" title="עריכה" aria-label="ערוך דוח">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
-            </button> -->
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
 
-   <!-- אין תוצאות -->
-<div *ngIf="filteredReports.length === 0" class="empty-state empty-state--success">
-  <svg class="empty-icon empty-icon--success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-    <polyline points="22 4 12 14.01 9 11.01"/>
-  </svg>
-  <h3 class="empty-title empty-title--success">🎉 כל הכבוד!</h3>
-  <p class="empty-description empty-description--success">אין דיווחים שעליך לטפל בהם כרגע</p>
-</div>
+    <!-- אין תוצאות -->
+    <div *ngIf="filteredReports.length === 0" class="empty-state empty-state--success">
+      <svg class="empty-icon empty-icon--success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <h3 class="empty-title empty-title--success">🎉 כל הכבוד!</h3>
+      <p class="empty-description empty-description--success">אין דיווחים שעליך לטפל בהם כרגע</p>
+    </div>
 
   </div>
+</div>

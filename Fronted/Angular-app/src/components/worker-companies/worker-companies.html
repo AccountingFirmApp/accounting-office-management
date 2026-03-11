@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- כפתור חזרה לדף הבית -->
   <app-back-button [route]="'/home'"></app-back-button>  
   
   <!-- Loading -->
@@ -13,17 +12,10 @@
       <ul class="company-list">
         <li *ngFor="let company of companies" class="company-card">
           <h5>{{ company.name }}</h5>
-          
           <p><strong>ח.פ:</strong> {{ company.taxId }}</p>
           <p><strong>כתובת:</strong> {{ company.address }}</p>
           <p><strong>טלפון:</strong> {{ company.phone }}</p>
           <p><strong>אימייל:</strong> {{ company.email }}</p>
-          <p>
-            <strong>סטטוס:</strong>
-            <span [class.active]="company.isactive" [class.inactive]="!company.isactive">
-              {{ company.isactive ? 'פעילה' : 'לא פעילה' }}
-            </span>
-          </p>
           <p class="notes"><strong>הערות:</strong> {{ company.notes || 'אין הערות' }}</p>
           
           <!-- כפתורי פעולה -->

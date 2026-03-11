@@ -47,6 +47,8 @@ export class CompanyReportConfigListComponent implements OnInit {
   isModalOpen: boolean = false;
   selectedConfig: CompanyReportConfigDto | null = null;
  isAdmin: boolean=false;
+   returnUrl: string = '/home'; // ברירת מחדל
+
   constructor(
     private configService: CompanyReportConfigService,
     private router: Router,
@@ -62,9 +64,13 @@ export class CompanyReportConfigListComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.mode = this.route.snapshot.data['mode'] ?? 'employee';
-    this.loadAll();
-  }
+    this.mode = this.route.snapshot.data['mode'] ?? 'employee'; // ← קודם
+    
+    this.route.queryParams.subscribe(params => {
+        this.returnUrl = params['returnUrl'] || '/home';
+        this.loadAll();
+    });
+}
   loadAll(): void {
     this.loading = true;
     Promise.all([

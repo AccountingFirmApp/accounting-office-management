@@ -47,9 +47,9 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<CompanyTask>> FindAsync(Expression<Func<CompanyTask, bool>> predicate)
         {
             return await _dbSet
-                .Include(t => t.Company)
-                .Include(t => t.Tasktype)
-                .Include(t => t.Assignedworker)
+                //.Include(t => t.Company)
+                //.Include(t => t.Tasktype)
+                //.Include(t => t.Assignedworker)
                 .Where(predicate)
                 .ToListAsync();
         }

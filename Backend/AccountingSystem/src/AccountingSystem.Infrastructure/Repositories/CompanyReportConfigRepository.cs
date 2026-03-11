@@ -46,9 +46,9 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await _dbSet
                 .Where(predicate)
-                .Include(c => c.Company)
-                .Include(c => c.Reporttype)
-                .Include(c => c.Frequency)
+                //.Include(c => c.Company)
+                //.Include(c => c.Reporttype)
+                //.Include(c => c.Frequency)
                 .ToListAsync();
         }
 

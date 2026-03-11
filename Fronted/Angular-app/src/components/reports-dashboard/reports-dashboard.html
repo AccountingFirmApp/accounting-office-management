@@ -2,10 +2,9 @@
   <!-- Header -->
   <header class="dashboard-header">
     <div class="header-content">
-      <app-back-button [route]="'/home'"></app-back-button>
+      <app-back-button [route]="returnUrl"></app-back-button>
       <h1>
         ניהול דיווחים
-        <!-- ← הצג את שם החברה אם מפולטר -->
         <span *ngIf="companyName" style="font-size: 0.7em; font-weight: 400; opacity: 0.9;">
           - {{ companyName }}
         </span>

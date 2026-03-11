@@ -60,20 +60,18 @@ export class CompanyListComponent implements OnInit {
     this.router.navigate(['/companies', id, 'tasks']);
   }
 
-  // ✅ תוקן - מתודה אחת נקייה בלי כפילות
   viewCompanyReports(companyId: number): void {
     const queryParams: { companyId: number; adminMode?: string } = { companyId };
     if (this.auth.isAdmin()) {
       queryParams.adminMode = 'true';
     }
-    this.router.navigate(['/reports'], { queryParams });
+    this.router.navigate(['/reports'], { queryParams: {returnUrl: '/companies'} });
   }
 
   editCompany(id: number): void {
     this.router.navigate(['/companies', id, 'edit']);
   }
 
-  // ✅ תוקן - משתמש ב-ConfirmationModal במקום confirm()
   deleteCompany(id: number): void {
     this.companyToDelete = id;
     this.showDeleteConfirmation = true;
