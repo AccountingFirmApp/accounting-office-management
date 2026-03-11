@@ -431,7 +431,11 @@
   background-color: #f3e5f5;
   color: #7c3aed;
 }
-
+.status-badge.not-required,
+.status-not-required {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
 /* פעולות */
 .actions {
   display: flex;
@@ -813,4 +817,15 @@
   .worker-name {
     font-size: 0.95rem;
   }
+  .status-select {
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.status-select:focus {
+  outline: 2px solid #6366f1;
+}
 }

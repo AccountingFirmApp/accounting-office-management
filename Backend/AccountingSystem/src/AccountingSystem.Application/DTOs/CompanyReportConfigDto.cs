@@ -40,7 +40,7 @@ public class UpdateCompanyReportConfigDto
     public int FrequencyId { get; set; }
     public short? DayOfMonth { get; set; }
     public bool? Isactive { get; set; }
-
+}
     /// <summary>
     /// DTO מורחב - עם כל הפרטים
     /// </summary>
@@ -57,4 +57,4 @@ public class UpdateCompanyReportConfigDto
         public short? DayOfMonth { get; set; }
         public bool Isactive { get; set; }
     }
-}
+

@@ -89,20 +89,20 @@ namespace AccountingSystem.API.Controllers
         /// קבלת חברות לפי משרד
         /// GET: api/companies/firm/1
         /// </summary>
-        [HttpGet("firm/{firmId}")]
-        public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetByFirmId(int firmId)
-        {
-            try
-            {
-                var query = new GetCompaniesByFirmIdQuery(firmId);
-                var result = await _mediator.Send(query);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+        //[HttpGet("firm/{firmId}")]
+        //public async System.Threading.Tasks.Task<ActionResult<List<CompanyDto>>> GetByFirmId(int firmId)
+        //{
+        //    try
+        //    {
+        //        var query = new GetCompaniesByFirmIdQuery(firmId);
+        //        var result = await _mediator.Send(query);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
 
         /// <summary>
         /// יצירת חברה חדשה
@@ -130,7 +130,8 @@ namespace AccountingSystem.API.Controllers
                 Address = dto.Address,
                 Phone = dto.Phone,
                 Email = dto.Email,
-                Notes = dto.Notes
+                Notes = dto.Notes,
+                RestoreExistingData = dto.RestoreExistingData
             };
 
             var result = await _mediator.Send(command);

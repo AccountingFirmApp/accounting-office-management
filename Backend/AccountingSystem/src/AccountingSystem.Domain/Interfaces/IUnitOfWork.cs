@@ -31,6 +31,6 @@ namespace AccountingSystem.Domain.Interfaces
 
        Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
         // ← הוסף את זה! פונקציה לעדכון סטטוס
-       //Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
+        //Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default);
     }
 }

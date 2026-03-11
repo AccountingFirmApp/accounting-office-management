@@ -50,19 +50,21 @@ public partial class AccountingDbContext : DbContext
             .Property(e => e.Category)
             .HasConversion<string>();
 
-        // המרה עבור PaymentMethod ב-ReportInstance
-        modelBuilder.Entity<Reportinstance>()
-            .Property(e => e.PaymentMethod)
-            .HasConversion<string>();
+        //המרה עבור PaymentMethod ב-ReportInstance
+        //modelBuilder.Entity<Reportinstance>()
+        //    .Property(e => e.PaymentMethod)
+        //.HasConversion<string>();
 
         // המרה עבור Status ב-ReportInstance
-        modelBuilder.Entity<Reportinstance>()
-            .Property(e => e.Status)
-            .HasConversion<string>();
+        //modelBuilder.Entity<Reportinstance>()
+        //    .Property(e => e.Status)
+        //    .HasConversion<string>();
         modelBuilder
+            .HasPostgresEnum<ReportStatus>("report_status", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
+    .HasPostgresEnum<PaymentMethod>("payment_method", nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator())
             .HasPostgresEnum("audit_entity", new[] { "ReportInstance", "Task", "Company", "Worker" })
-            .HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
-            .HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
+            //.HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
+            //.HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
             .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
             .HasPostgresEnum("TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" })  
             .HasPostgresEnum("task_priority", new[] { "Low", "Normal", "High", "Urgent" })
@@ -399,12 +401,12 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnName("updatedat");
 
             entity.Property(e => e.Status)
-                .HasColumnType("report_status")
-                .HasColumnName("status");
+                .HasColumnName("status")
+                            .HasConversion<string>();
 
             entity.Property(e => e.PaymentMethod)
-                .HasColumnType("payment_method")
-                .HasColumnName("paymentmethod");
+                .HasColumnName("paymentmethod")
+                .HasConversion<string>(); 
 
             entity.HasOne(d => d.Config).WithMany(p => p.Reportinstances)
                 .HasForeignKey(d => d.Configid)

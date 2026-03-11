@@ -2,8 +2,9 @@
 
 <div class="container">
   <div class="header">
-    <app-back-button [route]="'/companies'" [text]="'חזרה לחברות'"></app-back-button>
-    <h2>משימות - {{ company?.name || 'טוען...' }}</h2>
+    <app-back-button></app-back-button>
+    <!-- <app-back-button [route]="'/worker/' + workerService.currentWorker.id + '/companies'" [text]="'חזרה לחברות'"></app-back-button> -->
+
   </div>
 
   <div *ngIf="loading && !showChecklistModal" class="loading">טוען משימות...</div>

@@ -9,7 +9,7 @@ import { LoadingComponent } from '../../app/components/shared/loading/loading.co
 import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
 import { CompanyDto } from '../../models/company.dto';
 import { ReportTypeDto } from '../../models/report-type.dto';
-
+import { Location } from '@angular/common'; // ← צריך להיות כך
 interface ReportFormData {
   id?: number;
   companyId: string | number;
@@ -39,7 +39,7 @@ export class ReportFormComponent implements OnInit {
   reportId: number | null = null;
   loading = false;
   submitting = false;
-
+isAdminMode = false;
   // Success/Error messages
   successMessage: string | null = null;
   errorMessage: string | null = null;
@@ -72,7 +72,9 @@ export class ReportFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private reportService: ReportService
+    private reportService: ReportService,
+        private location: Location 
+
   ) {}
 
   ngOnInit() {
@@ -81,7 +83,10 @@ export class ReportFormComponent implements OnInit {
 
   loadData() {
     this.loading = true;
-    
+      this.route.queryParams.subscribe(params => {
+    this.isAdminMode = params['adminMode'] === 'true';
+
+  });
     Promise.all([
       this.loadCompanies(),
       this.loadReportTypes(),
@@ -312,10 +317,12 @@ createReport() {
       }
     });
   }
-
-  goBack() {
-    this.router.navigate(['/reports'], { 
-    queryParams: { adminMode: 'true' } 
-  });}
-  
+  // goBack() {
+  //   this.router.navigate(['/reports'], { 
+  //         queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
+  //   // queryParams: { adminMode: 'true' } 
+  // });}
+goBack() {
+    this.location.back();
+}
 }

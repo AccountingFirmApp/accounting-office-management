@@ -39,16 +39,15 @@ export class ManagementComponent implements OnInit {
 
 
  navigateToReports(): void {
- 
-  this.router.navigate(['/reports'], { 
-    queryParams: { adminMode: 'true' } 
-  });}
+   this.router.navigate(['/reports'], { queryParams: { adminMode: 'true', returnUrl: '/management' } });
+
+  ;}
 
   navigateToStatistics(): void {
   }
 
   navigateToSettings(): void {
-    this.router.navigate(['/settings/report-config']);
+    this.router.navigate(['/settings/report-config'],{ queryParams: { returnUrl: '/management' } });
   }
   navigateToSettingstask(): void {
     this.router.navigate(['/admin/task-matrix']);

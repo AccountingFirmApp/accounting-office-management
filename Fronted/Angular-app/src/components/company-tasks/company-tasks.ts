@@ -10,12 +10,13 @@ import { BackButtonComponent } from '../../app/components/shared/back-button/bac
 import { CompantTaskService } from '../../services/compant-task.service';
 import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
 import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
+import { WorkerService } from '../../services/worker';
 
 @Component({
   selector: 'app-company-tasks',
   standalone: true,
   imports: [CommonModule, FormsModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent],
-  templateUrl: './company-tasks.html',
+  templateUrl:'./company-tasks.html',
   styleUrls: ['./company-tasks.css']
 })
 export class CompanyTasksComponent implements OnInit {
@@ -44,7 +45,8 @@ showChecklistModal = false;
     private companyService: CompanyService,
     private taskService: CompantTaskService,
     private cdr: ChangeDetectorRef,
-    private location:Location
+    private location:Location,
+    public workerService:WorkerService
 
   ) { 
   }
@@ -181,12 +183,6 @@ toggleChecklistItem(item: any): void {
   });
 }
 
-// private updateProgressLocally(): void {
-//   if (this.selectedTaskDetails) {
-//     const completed = this.selectedTaskDetails.checklistItems.filter((i: any) => i.isCompleted).length;
-//     this.selectedTaskDetails.checklistProgress.completed = completed;
-//   }
-// }
 
 private checkAndUpdatingTaskStatus(): void {
   if (!this.selectedTaskDetails) return;

@@ -53,7 +53,7 @@ namespace AccountingSystem.Infrastructure.Repositories
 
         public Task<Reporttype?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return context.Reporttypes.FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public Task<Reporttype?> GetByShortcodeAsync(string shortcode)

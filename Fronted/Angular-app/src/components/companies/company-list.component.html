@@ -1,8 +1,7 @@
 <div class="container">
   <!-- כפתור חזרה לדף הבית -->
-  <app-back-button [route]="'/home'"></app-back-button>
+  <app-back-button [route]="'/management'"></app-back-button>
   
-  <!-- כותרת ראשית -->
   <div class="page-header">
     <h1 class="page-title">
       <svg class="icon-header" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -16,13 +15,10 @@
     <p class="page-subtitle">ניהול וצפייה בכל החברות במערכת</p>
   </div>
   
-  <!-- Loading -->
   <app-loading *ngIf="loading" message="טוען חברות..."></app-loading>
 
-  <!-- Error -->
   <app-error-message *ngIf="error" [message]="error" type="error"></app-error-message>
 
-  <!-- Success -->
   <app-error-message *ngIf="successMessage" [message]="successMessage" type="success" [dismissible]="true" (dismiss)="successMessage = null"></app-error-message>
 
   <!-- Companies -->
@@ -36,12 +32,6 @@
         <p><strong>כתובת:</strong> {{ company.address || '-' }}</p>
         <p><strong>טלפון:</strong> {{ company.phone || '-' }}</p>
         <p><strong>אימייל:</strong> {{ company.email || '-' }}</p>
-        <p *ngIf="company.isactive !== undefined">
-          <strong>סטטוס:</strong>
-          <span [class.active]="company.isactive" [class.inactive]="!company.isactive">
-            {{ company.isactive ? 'פעילה' : 'לא פעילה' }}
-          </span>
-        </p>        
         <div class="action-buttons">
           <button class="btn-action btn-tasks" (click)="viewCompanyTasks(company.id)" [attr.aria-label]="'צפה במשימות של ' + company.name">
             <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

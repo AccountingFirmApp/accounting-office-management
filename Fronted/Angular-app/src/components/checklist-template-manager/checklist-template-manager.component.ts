@@ -3,11 +3,12 @@ import { ChecklistTemplate } from '../../models/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChecklistService } from '../../services/checklistTemplateService';
+import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
 @Component({
   selector: 'app-checklist-template-manager',
   templateUrl: './checklist-template-manager.component.html',
   styleUrls: ['./checklist-template-manager.component.css'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BackButtonComponent],
   standalone: true,
 
 })

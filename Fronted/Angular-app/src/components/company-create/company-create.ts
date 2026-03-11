@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CompanyService } from '../../services/company';
 import { AccountingFirmService } from '../../services/accounting-firm.ts.service'
 import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
+import { log } from 'console';
 @Component({
   selector: 'app-company-create',
   standalone: true,
@@ -20,8 +21,8 @@ export class CompanyCreateComponent implements OnInit {
   loading = false;
     accountingFirms: any[] = [];
 
- showRestoreDialog = false; // ✅ חדש
-  pendingTaxId = ''; // ✅ חדש
+ showRestoreDialog = false;
+  pendingTaxId = ''; 
 
   constructor(
     private fb: FormBuilder,
@@ -69,7 +70,7 @@ export class CompanyCreateComponent implements OnInit {
             notes: data.notes
           });
           
-          // ✅ נעילת שדה taxId בעריכה (כדי למנוע שינויים)
+          // נעילת שדה taxId בעריכה (כדי למנוע שינויים)
           if (this.isEditMode) {
             this.companyForm.get('taxId')?.disable();
           }
@@ -132,6 +133,7 @@ onSubmit(): void {
       ...this.companyForm.value,
       restoreExistingData
     };
+    
     this.companyService.createCompany(command).subscribe({
       next: () => this.router.navigate(['/companies']),
       error: () => { this.loading = false; }

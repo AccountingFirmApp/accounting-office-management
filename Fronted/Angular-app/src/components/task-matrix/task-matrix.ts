@@ -11,6 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { EditTaskConfigDialogComponent } from '../edit-task-config-dialog/edit-task-config-dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
 
 @Component({
   selector: 'app-task-matrix',
@@ -22,8 +23,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTableModule,
     MatDialogModule,
     MatIconModule,
-    MatTooltipModule
-  ],
+    MatTooltipModule,
+    BackButtonComponent
+],
   templateUrl: './task-matrix.html',
   styleUrls: ['./task-matrix.css']
 })
