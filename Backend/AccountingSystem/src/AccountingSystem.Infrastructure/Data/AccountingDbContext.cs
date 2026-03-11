@@ -44,7 +44,7 @@ public partial class AccountingDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-  
+
         modelBuilder.Entity<Tasktype>()
             .Property(e => e.Category)
             .HasConversion<string>();
@@ -61,9 +61,9 @@ public partial class AccountingDbContext : DbContext
             .HasPostgresEnum("payment_method", new[] { "Credit", "Transfer", "Check", "Online", "Cash" })
             .HasPostgresEnum("report_status", new[] { "Pending", "Reported", "Paid", "Approved", "NotRequired" })
             .HasPostgresEnum("task_category", new[] { "Banks", "Income", "Expenses", "Reconciliations", "Other" })
-            .HasPostgresEnum("TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" })  
+            .HasPostgresEnum("TaskStatus1", new[] { "Pending", "InProgress", "Done", "Paid", "NotRequired" })
             .HasPostgresEnum("task_priority", new[] { "Low", "Normal", "High", "Urgent" })
-           .HasPostgresEnum<RecurrenceType>( "recurrence_type",
+           .HasPostgresEnum<RecurrenceType>("recurrence_type",
     nameTranslator: new Npgsql.NameTranslation.NpgsqlNullNameTranslator());
         modelBuilder.Entity<Accountingfirm>(entity =>
         {
@@ -450,17 +450,17 @@ public partial class AccountingDbContext : DbContext
                 .HasColumnName("name");
         });
 
-    
+
         // הגדרת ה-Enum עבור PostgreSQL
         modelBuilder.HasPostgresEnum<TaskCategory>();
 
         modelBuilder.Entity<Tasktype>(entity =>
         {
             entity.Property(e => e.Category)
-                  .HasColumnType("task_category"); 
+                  .HasColumnType("task_category");
         });
-    
-    modelBuilder.Entity<Tasktype>(entity =>
+
+        modelBuilder.Entity<Tasktype>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("tasktype_pkey");
 
@@ -471,7 +471,7 @@ public partial class AccountingDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
-            entity.Property(e => e.Category) 
+            entity.Property(e => e.Category)
                 .HasColumnName("category");
             entity.Property(e => e.Defaultorder)
                 .HasDefaultValue(99)
@@ -488,7 +488,7 @@ public partial class AccountingDbContext : DbContext
                 .ToView("vw_activetasks");
 
             entity.Property(e => e.Assignedworkername).HasColumnName("assignedworkername");
-            entity.Property(e => e.Category) 
+            entity.Property(e => e.Category)
                 .HasColumnName("category");
             entity.Property(e => e.Companyname)
                 .HasMaxLength(255)
@@ -499,7 +499,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Duedate).HasColumnName("duedate");
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Period).HasColumnName("period");
-            entity.Property(e => e.Status)  
+            entity.Property(e => e.Status)
                 .HasColumnName("status");
             entity.Property(e => e.Tasktypename)
                 .HasMaxLength(255)
@@ -565,7 +565,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Shortcode)
                 .HasMaxLength(20)
                 .HasColumnName("shortcode");
-            entity.Property(e => e.Status)  
+            entity.Property(e => e.Status)
                 .HasColumnName("status");
         });
 
@@ -668,7 +668,7 @@ public partial class AccountingDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("name");
         });
-        
+
         modelBuilder.Entity<TaskTypeConfiguration>(entity =>
         {
             entity.ToTable("task_type_configuration");
@@ -678,7 +678,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.TaskTypeId).HasColumnName("task_type_id");
             entity.Property(e => e.RecurrenceType)
     .HasColumnName("recurrence_type")
-    .HasColumnType("recurrence_type"); 
+    .HasColumnType("recurrence_type");
             entity.Property(e => e.DueDayOfMonth).HasColumnName("due_day_of_month");
             entity.Property(e => e.DueDaysAfterPeriodEnd).HasColumnName("due_days_after_period_end");
             entity.Property(e => e.IsMandatory).HasColumnName("is_mandatory");
@@ -707,12 +707,12 @@ public partial class AccountingDbContext : DbContext
 
             entity.HasOne(d => d.TaskType).WithMany().HasForeignKey(d => d.TaskTypeId);
 
-            
-        entity.HasMany(d => d.Items)           // לתבנית יש הרבה פריטים
-          .WithOne(p => p.Template)        // לכל פריט יש תבנית אחת (המאפיין ששלחת לי במודל)
-          .HasForeignKey(d => d.TemplateId)// המפתח הזר הוא TemplateId
-          .HasPrincipalKey(d => d.Id);     // המפתח הראשי הוא Id
-    });
+
+            entity.HasMany(d => d.Items)           // לתבנית יש הרבה פריטים
+              .WithOne(p => p.Template)        // לכל פריט יש תבנית אחת (המאפיין ששלחת לי במודל)
+              .HasForeignKey(d => d.TemplateId)// המפתח הזר הוא TemplateId
+              .HasPrincipalKey(d => d.Id);     // המפתח הראשי הוא Id
+        });
         modelBuilder.Entity<TaskChecklistTemplateItem>(entity =>
         {
             entity.ToTable("task_checklist_template_item");
@@ -755,7 +755,7 @@ public partial class AccountingDbContext : DbContext
         });
         modelBuilder.Entity<CompanyTaskChecklistItem>(entity =>
         {
-            entity.ToTable("company_task_checklist_item"); 
+            entity.ToTable("company_task_checklist_item");
             entity.HasKey(e => e.Id);
 
             entity.Property(e => e.Id).HasColumnName("id");
@@ -815,7 +815,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Companyid).HasColumnName("companyid");
             entity.Property(e => e.Tasktypeid).HasColumnName("tasktypeid");
-            entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid"); 
+            entity.Property(e => e.Assignedworkerid).HasColumnName("assignedworkerid");
             entity.Property(e => e.Frequency).HasColumnName("frequency");
             entity.Property(e => e.Dueday).HasColumnName("dueday");
             entity.Property(e => e.Isactive).HasColumnName("isactive");
@@ -838,4 +838,3 @@ public partial class AccountingDbContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
-    

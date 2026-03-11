@@ -1,7 +1,8 @@
 ﻿using AccountingSystem.Application.Queries;
 using Hangfire;
 using MediatR;
-namespace AccountingSystem.API.Jobs
+using Microsoft.Extensions.Logging;
+namespace AccountingSystem.Infrastructure.Jobs
 {
     public class CheckReportGenerationJob
     {

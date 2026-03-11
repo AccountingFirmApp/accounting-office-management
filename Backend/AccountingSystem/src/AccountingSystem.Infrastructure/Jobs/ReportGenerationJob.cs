@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AccountingSystem.API.Jobs
+namespace AccountingSystem.Infrastructure.Jobs
 {
     public class ReportGenerationJob
     {
