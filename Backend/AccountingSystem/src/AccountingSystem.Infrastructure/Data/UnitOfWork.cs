@@ -1,3 +1,4 @@
+﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Repositories;
@@ -12,7 +13,7 @@ namespace AccountingSystem.Infrastructure.Data;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly AccountingDbContext _context;
-    public readonly ILogger<ReportInstanceRepository> _logger;
+    public readonly ILogger<ReportInstanceRepository> _logger; 
 
     private IAccountingFirmRepository? _accountingFirms;
     private ICompanyRepository? _companies;
@@ -25,7 +26,10 @@ public class UnitOfWork : IUnitOfWork
     private ICompanyreportconfigRepository? _companyReportConfigs;
     private IReportInstanceRepository? _reportInstances;
     private ITaskTypeRepository? _taskTypes;
-    private ICompanyTaskRepository? _tasks;      private IWorkerRoleTypeRepository? _workerRoleTypes;
+    private ICompanyTaskRepository? _tasks;     
+     private IWorkerRoleTypeRepository? _workerRoleTypes;
+
+    private ICompanyTaskRepository? _companyTasks;
     private IAuditLogRepository? _auditLogs;
 
     public UnitOfWork(AccountingDbContext context, ILogger<ReportInstanceRepository> logger)
@@ -62,13 +66,13 @@ public class UnitOfWork : IUnitOfWork
         _companyReportConfigs ??= new CompanyReportConfigRepository(_context);
 
     public IReportInstanceRepository ReportInstances =>
-        _reportInstances ??= new ReportInstanceRepository(_context,_logger);
+        _reportInstances ??= new ReportInstanceRepository(_context, _logger);
 
     public ITaskTypeRepository TaskTypes =>
         _taskTypes ??= new TaskTypeRepository(_context);
 
-    public ICompanyTaskRepository Tasks =>
-        _tasks ??= new CompanyTaskRepository(_context);  
+    public ICompanyTaskRepository CompanyTasks =>
+        _companyTasks ??= new CompanyTaskRepository(_context);
 
     public IWorkerRoleTypeRepository WorkerRoleTypes =>
         _workerRoleTypes ??= new WorkerRoleTypeRepository(_context);
@@ -80,10 +84,9 @@ public class UnitOfWork : IUnitOfWork
     {
         try
         {
-            var result = await _context.SaveChangesAsync(cancellationToken);
-            return result;
+            return await _context.SaveChangesAsync(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
@@ -94,7 +97,6 @@ public class UnitOfWork : IUnitOfWork
         await SaveChangesAsync(CancellationToken.None);
     }
 
-    // Transactions
     public async Task BeginTransactionAsync()
     {
         await _context.Database.BeginTransactionAsync();
@@ -107,7 +109,6 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task<int> UpdateTaskStatusAsync(int taskId, string status, CancellationToken cancellationToken = default)
     {
-
         try
         {
             bool isCompleted = status.Equals("Completed", StringComparison.OrdinalIgnoreCase);
@@ -117,10 +118,10 @@ public class UnitOfWork : IUnitOfWork
             {
                 rowsAffected = await _context.Database.ExecuteSqlRawAsync(
                     @"UPDATE companytask 
-                  SET status = {0}::task_status, 
-                      updatedat = NOW(),
-                      completeddate = CURRENT_DATE
-                  WHERE id = {1}",
+                      SET status = {0}::task_status, 
+                          updatedat = NOW(),
+                          completeddate = CURRENT_DATE
+                      WHERE id = {1}",
                     status,
                     taskId,
                     cancellationToken
@@ -130,9 +131,9 @@ public class UnitOfWork : IUnitOfWork
             {
                 rowsAffected = await _context.Database.ExecuteSqlRawAsync(
                     @"UPDATE companytask 
-                  SET status = {0}::task_status, 
-                      updatedat = NOW()
-                  WHERE id = {1}",
+                      SET status = {0}::task_status, 
+                          updatedat = NOW()
+                      WHERE id = {1}",
                     status,
                     taskId,
                     cancellationToken
@@ -141,7 +142,7 @@ public class UnitOfWork : IUnitOfWork
 
             return rowsAffected;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }

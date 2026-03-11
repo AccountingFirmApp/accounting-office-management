@@ -8,6 +8,8 @@ namespace AccountingSystem.Application.Queries.Companies;
 // ========================================
 public class GetAllCompaniesQuery : IRequest<List<CompanyDto>>
 {
+    public bool? IsActive { get; set; } = true;
+
 }
 
 // ========================================
@@ -60,4 +62,3 @@ public class GetCompaniesByFirmIdQueryWithReport : IRequest<List<CompanyWithPend
         FirmId = firmId;
     }
 }
-

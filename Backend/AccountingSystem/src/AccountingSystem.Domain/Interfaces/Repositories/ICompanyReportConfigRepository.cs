@@ -26,5 +26,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         
         System.Threading.Tasks.Task<bool> ConfigExistsAsync(int companyId, int reportTypeId);
         System.Threading.Tasks.Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId);
+        Task DeleteByCompanyIdAsync(int companyId);
+        Task SoftDeleteByCompanyIdAsync(int companyId);
+        Task<List<int>> GetConfigIdsByCompanyIdAsync(int companyId); // עדיין צריך את זה למחיקה הקשה
     }
 }

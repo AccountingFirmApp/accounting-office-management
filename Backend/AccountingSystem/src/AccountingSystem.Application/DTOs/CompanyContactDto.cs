@@ -12,12 +12,10 @@ public class CompanyContactDto
     public string FullName => $"{FirstName} {LastName}";
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public string Position { get; set; } = string.Empty; // מנכ"ל, רו"ח, בעלים
+    public string Position { get; set; } = string.Empty;
     public bool IsPrimary { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    
-    // Navigation (optional)
     public string? CompanyName { get; set; }
 }
 

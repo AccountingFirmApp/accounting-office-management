@@ -13,9 +13,7 @@ using System.Linq.Expressions;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    /// <summary>
-    /// מימוש של פעולות Repository עבור דוחות
-    /// </summary>
+   
     public class ReportInstanceRepository : IReportInstanceRepository
     {
         private readonly AccountingDbContext _context;
@@ -25,6 +23,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             _context = context;
             _logger = logger;
+
         }
 
         // ========== פונקציות בסיסיות מ-IGenericRepository ==========
@@ -102,21 +101,29 @@ namespace AccountingSystem.Infrastructure.Repositories
                 await connection.CloseAsync();
             }
         }
+       
+
         public async Task<IEnumerable<Reportinstance>> GetAllAsync()
-            {
-                return await _context.Reportinstances
-                    .Include(r => r.Config)
-                        .ThenInclude(c => c.Company)
-                            .ThenInclude(co => co.Companyworkers.Where(cw => cw.Isactive == true)) // 🔥 רק עובדות פעילות
+        {
+            return await _context.Reportinstances
+
+                .Include(r => r.Config)
+                    .ThenInclude(c => c.Company)
+                        .ThenInclude(co => co.Companyworkers
+                            .Where(cw => cw.Isactive == true))
                                 .ThenInclude(cw => cw.Worker)
-                    .Include(r => r.Config)
-                        .ThenInclude(c => c.Reporttype)
-                    .Include(r => r.Config)
-                        .ThenInclude(c => c.Frequency)
-                    .AsNoTracking() 
-                    .ToListAsync();
-            }
-        
+
+                .Include(r => r.Config)
+                    .ThenInclude(c => c.Reporttype)
+
+                .Include(r => r.Config)
+                    .ThenInclude(c => c.Frequency)
+
+                .Where(r => r.Config.Isactive == true) 
+
+                .AsNoTracking()
+                .ToListAsync();
+        }
 
 
 
@@ -156,6 +163,25 @@ namespace AccountingSystem.Infrastructure.Repositories
             {
                 _context.Reportinstances.Remove(entity);
             }
+        }
+
+
+        public async Task DeleteByConfigIdAsync(int configId)
+        {
+            var instances = await _context.Reportinstances
+                .Where(r => r.Configid == configId)
+                .ToListAsync();
+
+            _context.Reportinstances.RemoveRange(instances);
+        }
+
+        public async Task DeleteByConfigIdsAsync(List<int> configIds)
+        {
+            var instances = await _context.Reportinstances
+                .Where(r => configIds.Contains(r.Configid))
+                .ToListAsync();
+
+            _context.Reportinstances.RemoveRange(instances);
         }
 
         /// <summary>

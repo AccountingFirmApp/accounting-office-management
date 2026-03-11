@@ -10,11 +10,10 @@ public class CompanyReportConfigDto
     public int ReportTypeId { get; set; }
     public int FrequencyId { get; set; }
     public short? DayOfMonth { get; set; } 
-    public bool? IsActive { get; set; }
+    public bool? Isactive { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public int Year { get; set; }
-
     public string? CompanyName { get; set; }
     public string? ReportTypeName { get; set; }
     public string? ReportTypeShortCode { get; set; }
@@ -40,7 +39,7 @@ public class UpdateCompanyReportConfigDto
 {
     public int FrequencyId { get; set; }
     public short? DayOfMonth { get; set; }
-    public bool? IsActive { get; set; }
+    public bool? Isactive { get; set; }
 
     /// <summary>
     /// DTO מורחב - עם כל הפרטים
@@ -56,6 +55,6 @@ public class UpdateCompanyReportConfigDto
         public int FrequencyId { get; set; }
         public string FrequencyName { get; set; } = string.Empty;
         public short? DayOfMonth { get; set; }
-        public bool IsActive { get; set; }
+        public bool Isactive { get; set; }
     }
 }

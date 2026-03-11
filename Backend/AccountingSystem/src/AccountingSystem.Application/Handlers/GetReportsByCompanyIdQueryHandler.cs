@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Domain.Enums;
 using AutoMapper;
-//using Xunit;
-using AccountingSystem.Application.Queries;
+using Microsoft.Extensions.Logging;
 
 namespace AccountingSystem.Application.Handlers
 {
@@ -109,21 +108,17 @@ namespace AccountingSystem.Application.Handlers
                 Id = report.Id,
                 ConfigId = report.Configid,
 
-                // Company info
                 CompanyId = report.Config.Companyid,
                 CompanyName = report.Config.Company != null ? report.Config.Company.Name : string.Empty,
                 CompanyTaxId = report.Config.Company != null ? report.Config.Company.Taxid : string.Empty,
 
-                // Report Type info
                 ReportTypeId = report.Config.Reporttypeid,
                 ReportTypeName = report.Config.Reporttype != null ? report.Config.Reporttype.Name : string.Empty,
                 ReportTypeShortCode = report.Config.Reporttype != null ? report.Config.Reporttype.Shortcode : string.Empty,
 
-                // Frequency info
                 FrequencyName = report.Config.Frequency != null ? report.Config.Frequency.Name : string.Empty,
                 DayOfMonth = report.Config.Dayofmonth,
 
-                // Instance data
                 Period = report.Period.ToDateTime(TimeOnly.MinValue),
                 Amount = report.Amount,
                 Status = report.Status.ToString(),
@@ -195,25 +190,29 @@ namespace AccountingSystem.Application.Handlers
         private readonly IReportInstanceRepository _repository;
         private readonly ICompanyWorkerRepository _companyWorkerRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<GetAllReportsQueryHandler> _logger;
 
         public GetAllReportsQueryHandler(
             IReportInstanceRepository repository,
             ICompanyWorkerRepository companyWorkerRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<GetAllReportsQueryHandler>logger)
         {
             _repository = repository;
             _companyWorkerRepository = companyWorkerRepository;
             _mapper = mapper;
+            _logger= logger;
         }
 
-       
-            public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
+                  public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
             {
+                _logger.LogInformation($"📋 Handler: IsAdminMode={request.IsAdminMode}, WorkerId={request.WorkerId}");
 
                 var reports = await _repository.GetAllAsync();
 
                 if (request.WorkerId.HasValue)
                 {
+                    _logger.LogInformation($"🔍 מסנן לפי WorkerId={request.WorkerId.Value}");
 
                     reports = reports.Where(r =>
                         r.Config != null &&
@@ -225,13 +224,14 @@ namespace AccountingSystem.Application.Handlers
                     ).ToList();
                 }
 
+                _logger.LogInformation($" אחרי פילטור: {reports.Count()} דוחות");
 
-                // 🔒 העברת isAdminMode ל-AutoMapper דרך context.Items
                 var mappedReports = _mapper.Map<List<ReportInstanceDetailDto>>(
                     reports,
                     opt => opt.Items["IsAdminMode"] = request.IsAdminMode
                 );
 
+                _logger.LogInformation($" החזרת {mappedReports.Count} דוחות");
 
                 return mappedReports;
             }
@@ -371,11 +371,6 @@ namespace AccountingSystem.Application.Handlers
             return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
         }
 
-
-
-
-
-
         // ========== Report Types Handlers ==========
 
         public class GetAllReportTypesQueryHandler : IRequestHandler<GetAllReportTypesQuery, List<ReportTypeDto>>
@@ -459,7 +454,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive ?? true,
+                    Isactive = c.Isactive ?? true,
                     Year=c.Year
                 }).ToList();
             }
@@ -488,7 +483,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive
+                    Isactive = c.Isactive
                 }).ToList();
             }
         }
@@ -519,7 +514,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = config.Frequencyid,
                     FrequencyName = config.Frequency != null ? config.Frequency.Name : string.Empty,
                     DayOfMonth = config.Dayofmonth,
-                    IsActive = config.Isactive ?? true
+                    Isactive = config.Isactive ?? true
                 };
             }
         }

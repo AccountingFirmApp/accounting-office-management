@@ -10,5 +10,11 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         System.Threading.Tasks.Task<IEnumerable<Companyworker>> GetByCompanyIdAsync(int companyId);
         System.Threading.Tasks.Task<IEnumerable<Companyworker>> GetByWorkerIdAsync(int workerId);
         System.Threading.Tasks.Task<bool> AssignmentExistsAsync(int companyId, int workerId);
+        Task<Companyworker> AddAsync(Companyworker entity);
+        Task DeleteByWorkerIdAsync(int workerId); 
+        Task DeleteByCompanyIdAsync(int companyId);
+        Task<Companyworker> GetByWorkerAndCompany(int workerId, int companyId);
+        Task SoftDeleteByCompanyIdAsync(int companyId);
+
     }
 }

@@ -1,4 +1,3 @@
-
 import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,7 +6,6 @@ import { AuthService } from '../../services/auth.service';
 import { LoginRequestDto, GoogleLoginRequestDto } from '../../models/auth';
 import { environment } from '../../environments/environment';
 import { WorkerService } from '../../services/worker';
-import { log } from 'node:console';
 
 declare const google: any;
 
@@ -129,7 +127,6 @@ finally{
       error: (error) => {
         // console.error('🔴 שגיאה בהתחברות Google:', error);
         this.isLoading = false;
-
         if (error.status === 0) {
           this.errorMessage = 'לא ניתן להתחבר לשרת. אנא בדוק את החיבור לאינטרנט';
         } else if (error.status === 401) {

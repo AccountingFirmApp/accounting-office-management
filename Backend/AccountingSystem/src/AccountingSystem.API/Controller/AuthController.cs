@@ -64,7 +64,6 @@ public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleL
 {
     try
     {
-        //  אימות הטוקן מול Google
         var settings = new GoogleJsonWebSignature.ValidationSettings()
         {
             Audience = new[] { _googleClientId } 
@@ -77,18 +76,17 @@ public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleL
         }
         catch (InvalidJwtException)
         {
-            _logger.LogInformation("❌ Google login failed: invalid token");
+            _logger.LogInformation(" Google login failed: invalid token");
             return Unauthorized(new { message = "Google token לא תקין" });
         }
 
         // אופציונלי: בדיקה אם המייל מאומת
         if (!payload.EmailVerified)
         {
-            _logger.LogInformation($"❌ Google login failed: email not verified ({payload.Email})");
+            _logger.LogInformation($"Google login failed: email not verified ({payload.Email})");
             return Unauthorized(new { message = "Email לא מאומת ב-Google" });
         }
 
-        // 2️⃣ אם הכל תקין, יוצרים את ה-Command ל-MediatR
         var command = new GoogleLoginCommand
         {
             GoogleToken = request.GoogleToken,
@@ -96,18 +94,18 @@ public async Task<ActionResult<LoginResponseDto>> GoogleLogin([FromBody] GoogleL
 
         var result = await _mediator.Send(command);
 
-        _logger.LogInformation($"✅ Google login successful for: {result.Worker.Email}");
+        _logger.LogInformation($" Google login successful for: {result.Worker.Email}");
 
         return Ok(result);
     }
     catch (UnauthorizedAccessException ex)
     {
-        _logger.LogInformation($"❌ Google login failed: {ex.Message}");
+        _logger.LogInformation($" Google login failed: {ex.Message}");
         return Unauthorized(new { message = ex.Message });
     }
     catch (Exception ex)
     {
-        _logger.LogError(ex, "💥 Google login error");
+        _logger.LogError(ex, " Google login error");
         return StatusCode(500, new { message = "שגיאה פנימית בשרת" });
     }
 }

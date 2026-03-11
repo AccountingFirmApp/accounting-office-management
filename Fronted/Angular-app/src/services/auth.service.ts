@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
@@ -19,10 +18,6 @@ export class AuthService {
   private readonly TOKEN_KEY = 'authToken';
 
   constructor(private http: HttpClient) { }
-
-  // =========================
-  // Auth API Calls
-  // =========================
   login(request: LoginRequestDto): Observable<LoginResponseDto> {
     return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, request)
       .pipe(
@@ -61,9 +56,6 @@ export class AuthService {
     return localStorage.getItem('authToken');
   }
 
-  // =========================
-  // Worker Info Storage
-  // =========================
   saveWorkerInfo(worker: any): void {
     localStorage.setItem('workerInfo', JSON.stringify(worker));
   }
@@ -95,7 +87,6 @@ export class AuthService {
     try {
       const decoded = jwtDecode<any>(token);
   
-      // בדיקה לפי השדה של Microsoft Identity
       const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       return role ?? null;
   

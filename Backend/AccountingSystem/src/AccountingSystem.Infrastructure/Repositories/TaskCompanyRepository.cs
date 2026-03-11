@@ -1,6 +1,4 @@
-﻿
-
-using AccountingSystem.Domain.Entities;
+﻿﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
@@ -25,7 +23,6 @@ namespace AccountingSystem.Infrastructure.Repositories
             _dbSet = context.CompanyTasks;
         }
 
-        // ==================== פעולות בסיסיות ====================
 
         public async Task<CompanyTask?> GetByIdAsync(int id)
         {
@@ -60,7 +57,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task AddAsync(CompanyTask entity)
         {
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(CompanyTask entity)
@@ -78,6 +75,14 @@ namespace AccountingSystem.Infrastructure.Repositories
             }
         }
 
+        public async Task DeleteByCompanyIdAsync(int companyId)
+        {
+            var tasks = await _context.CompanyTasks
+                .Where(t => t.Companyid == companyId)
+                .ToListAsync();
+
+            _context.CompanyTasks.RemoveRange(tasks);
+        }
         public async Task<bool> ExistsAsync(int id)
         {
             return await _dbSet.AnyAsync(t => t.Id == id);
@@ -93,7 +98,7 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<IEnumerable<CompanyTask>> GetTasksByCompanyIdAsync(int companyId)
         {
             return await _dbSet
-                .Where(t => t.Companyid == companyId)
+        .Where(t => t.Companyid == companyId && t.Isactive == true)
                 .Include(t => t.Company)
                 .Include(t => t.Tasktype)
                 .Include(t => t.Assignedworker)
@@ -202,6 +207,7 @@ namespace AccountingSystem.Infrastructure.Repositories
 
        
 
+           
         public async Task<TaskTypeConfiguration?> GetConfigurationByTaskTypeAsync(int taskTypeId)
         {
             return await _context.TaskTypeConfiguration
@@ -381,7 +387,16 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await _context.TaskTypeConfiguration
                 .Where(t => t.RecurrenceType == recurrence && t.IsActive)
+                .ToListAsync();}
+
+        public async Task SoftDeleteByCompanyIdAsync(int companyId)
+        {
+            var tasks = await _context.CompanyTasks
+                .Where(t => t.Companyid == companyId)
                 .ToListAsync();
+
+            foreach (var task in tasks)
+                task.Isactive = false;
         }
     }
     }

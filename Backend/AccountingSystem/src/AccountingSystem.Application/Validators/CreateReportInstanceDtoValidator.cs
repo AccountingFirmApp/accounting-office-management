@@ -1,7 +1,4 @@
-﻿
-
-
-using AccountingSystem.Application.DTOs;
+﻿﻿using AccountingSystem.Application.DTOs;
 using FluentValidation;
 
 namespace AccountingSystem.Application.Validators.ReportInstance
@@ -33,7 +30,6 @@ namespace AccountingSystem.Application.Validators.ReportInstance
                 .Must(BeValidPaymentMethod).WithMessage("אמצעי תשלום לא תקין")
                 .When(x => !string.IsNullOrEmpty(x.PaymentMethod));
 
-             
             RuleFor(x => x.Comments)
                 .MaximumLength(2000).WithMessage("הערות לא יכולות להיות יותר מ-2000 תווים")
                 .When(x => !string.IsNullOrEmpty(x.Comments));

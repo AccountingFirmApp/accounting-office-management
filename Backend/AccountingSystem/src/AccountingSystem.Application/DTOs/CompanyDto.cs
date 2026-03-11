@@ -13,7 +13,7 @@ public class CompanyDto
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public bool Isactive { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public string? FirmName { get; set; }
@@ -23,9 +23,7 @@ public class CompanyDto
 /// DTO ליצירת חברה חדשה
 /// </summary>
 public class CreateCompanyDto
-{
-    public int FirmId { get; set; }
-    public string Name { get; set; } = string.Empty;
+{    public string Name { get; set; } = string.Empty;
     public string TaxId { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
@@ -45,7 +43,7 @@ public class UpdateCompanyDto
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public bool Isactive { get; set; }
 }
 
 /// <summary>
@@ -57,5 +55,5 @@ public class CompanyListDto
     public string Name { get; set; } = string.Empty;
     public string TaxId { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public bool Isactive { get; set; }
 }

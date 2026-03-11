@@ -39,20 +39,20 @@ namespace AccountingSystem.Infrastructure.Jobs
             {
                 try
                 {
-                    _logger.LogInformation("⏰ [AutoTaskGen] התחלת בדיקה ליצירת משימות אוטומטית...");
+                    _logger.LogInformation(" [AutoTaskGen] התחלת בדיקה ליצירת משימות אוטומטית...");
                     await GenerateTasksIfNeeded(stoppingToken);
-                    _logger.LogInformation("✅ [AutoTaskGen] בדיקה הסתיימה בהצלחה");
+                    _logger.LogInformation(" [AutoTaskGen] בדיקה הסתיימה בהצלחה");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "❌ [AutoTaskGen] שגיאה קריטית ביצירה אוטומטית של משימות");
+                    _logger.LogError(ex, " [AutoTaskGen] שגיאה קריטית ביצירה אוטומטית של משימות");
                 }
 
-                _logger.LogInformation($"💤 [AutoTaskGen] ממתין {_checkInterval.TotalHours} שעות עד הבדיקה הבאה");
+                _logger.LogInformation($" [AutoTaskGen] ממתין {_checkInterval.TotalHours} שעות עד הבדיקה הבאה");
                 await Task.Delay(_checkInterval, stoppingToken);
             }
 
-            _logger.LogInformation("🛑 [AutoTaskGen] Background Service נעצר");
+            _logger.LogInformation("= [AutoTaskGen] Background Service נעצר");
         }
 
         private async Task GenerateTasksIfNeeded(CancellationToken cancellationToken)
@@ -65,13 +65,13 @@ namespace AccountingSystem.Infrastructure.Jobs
             var currentMonth = now.Month;
             var currentYear = now.Year;
 
-            _logger.LogInformation($"📅 [AutoTaskGen] תאריך נוכחי: {now:dd/MM/yyyy}, יום בחודש: {today}");
+            _logger.LogInformation($" [AutoTaskGen] תאריך נוכחי: {now:dd/MM/yyyy}, יום בחודש: {today}");
 
             // רק בימים 1-3 של החודש
             //if (today > 3)
             //{
 
-            //    _logger.LogInformation($"⏭️ [AutoTaskGen] לא תחילת חודש (יום {today}) - מדלג על יצירת משימות");
+            //    _logger.LogInformation($" [AutoTaskGen] לא תחילת חודש (יום {today}) - מדלג על יצירת משימות");
             //    return;
             //}
 
@@ -90,12 +90,12 @@ namespace AccountingSystem.Infrastructure.Jobs
                 );
 
                 _logger.LogInformation(
-                    $"✅ [AutoTaskGen] נוצרו {monthlyResult.TasksCreated} משימות חודשיות חדשות"
+                    $" [AutoTaskGen] נוצרו {monthlyResult.TasksCreated} משימות חודשיות חדשות"
                 );
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ [AutoTaskGen] שגיאה ביצירת משימות חודשיות");
+                _logger.LogError(ex, " [AutoTaskGen] שגיאה ביצירת משימות חודשיות");
             }
 
             // ==========================================
@@ -117,13 +117,13 @@ namespace AccountingSystem.Infrastructure.Jobs
                     );
 
                     _logger.LogInformation(
-                        $"✅ [AutoTaskGen] נוצרו {quarterlyResult.TasksCreated} משימות רבעוניות חדשות"
+                        $" [AutoTaskGen] נוצרו {quarterlyResult.TasksCreated} משימות רבעוניות חדשות"
                     );
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex,
-                        $"❌ [AutoTaskGen] שגיאה ביצירת משימות רבעוניות לרבעון {quarter}");
+                        $" [AutoTaskGen] שגיאה ביצירת משימות רבעוניות לרבעון {quarter}");
                 }
             }
 
@@ -143,13 +143,13 @@ namespace AccountingSystem.Infrastructure.Jobs
                     );
 
                     _logger.LogInformation(
-                        $"✅ [AutoTaskGen] נוצרו {yearlyResult.TasksCreated} משימות שנתיות חדשות"
+                        $" [AutoTaskGen] נוצרו {yearlyResult.TasksCreated} משימות שנתיות חדשות"
                     );
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex,
-                        $"❌ [AutoTaskGen] שגיאה ביצירת משימות שנתיות ל-{currentYear}");
+                        $" [AutoTaskGen] שגיאה ביצירת משימות שנתיות ל-{currentYear}");
                 }
             }
             // ==========================================
@@ -182,7 +182,7 @@ namespace AccountingSystem.Infrastructure.Jobs
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("🛑 [AutoTaskGen] מקבל פקודת עצירה...");
+            _logger.LogInformation(" [AutoTaskGen] מקבל פקודת עצירה...");
             await base.StopAsync(cancellationToken);
         }
     }

@@ -17,7 +17,6 @@ import { ReportFormComponent } from './report-form/report-form';
     ReportsDashboardComponent,
     ReportsListComponent,
     ReportFormComponent,
-    
   ]
 })
 export class ReportsModule { }

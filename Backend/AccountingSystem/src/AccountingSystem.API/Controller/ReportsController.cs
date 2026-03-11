@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -84,29 +84,6 @@ namespace AccountingSystem.API.Controllers
             return Ok(reports);
         }
 
-        /// <summary>
-        /// יצירת דיווח חדש
-        /// </summary>
-        //[HttpPost]
-        //public async System.Threading.Tasks.Task<ActionResult<ReportInstanceDto>> CreateReport(
-        //    [FromBody] CreateReportInstanceDto dto)
-        //{
-        //    var command = new CreateReportInstanceCommand
-        //    {
-        //        ConfigId = dto.ConfigId,
-        //        Period = dto.Period,
-        //        Amount = dto.Amount,
-        //        PaymentMethod = dto.PaymentMethod,
-        //        ReceiptDate = dto.ReceiptDate,
-        //        Comments = dto.Comments
-        //    };
-
-        //    var report = await _mediator.Send(command);
-        //    return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
-        //}
-
-
-
 
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult<ReportInstanceDto>> CreateReport(
@@ -114,9 +91,9 @@ namespace AccountingSystem.API.Controllers
         {
             var command = new CreateReportInstanceCommand
             {
-                CompanyId = dto.CompanyId,           // 🆕
-                ReportTypeId = dto.ReportTypeId,     // 🆕
-                FrequencyId = dto.FrequencyId,       // 🆕
+                CompanyId = dto.CompanyId,           
+                ReportTypeId = dto.ReportTypeId,     
+                FrequencyId = dto.FrequencyId,      
                 Period = dto.Period,
                 Amount = dto.Amount,
                 PaymentMethod = dto.PaymentMethod,
@@ -211,12 +188,12 @@ namespace AccountingSystem.API.Controllers
         {
             try
             {
-                _logger.LogInformation($"🔍 GetAllReports נקרא עם isAdminMode={isAdminMode}");
+                _logger.LogInformation($" GetAllReports נקרא עם isAdminMode={isAdminMode}");
 
                 var workerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
 
-                _logger.LogInformation($"🔍 WorkerId={workerIdClaim}, Role={roleClaim}");
+                _logger.LogInformation($" WorkerId={workerIdClaim}, Role={roleClaim}");
 
                 if (string.IsNullOrEmpty(workerIdClaim) || !int.TryParse(workerIdClaim, out int workerId))
                 {
@@ -227,12 +204,12 @@ namespace AccountingSystem.API.Controllers
 
                 if (isAdminMode && roleClaim == "Admin")
                 {
-                    _logger.LogInformation("✅ מנהל במצב ניהול - מחזיר הכל");
+                    _logger.LogInformation("מנהל במצב ניהול - מחזיר הכל");
                     filterByWorkerId = null;
                 }
                 else
                 {
-                    _logger.LogInformation($"✅ מצב רגיל - מסנן לעובד {workerId}");
+                    _logger.LogInformation($" מצב רגיל - מסנן לעובד {workerId}");
                     filterByWorkerId = workerId;
                 }
 
@@ -244,13 +221,13 @@ namespace AccountingSystem.API.Controllers
 
                 var reports = await _mediator.Send(query);
 
-                _logger.LogInformation($"✅ מחזיר {reports.Count} דוחות");
+                _logger.LogInformation($" מחזיר {reports.Count} דוחות");
 
                 return Ok(reports);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"❌ שגיאה: {ex.Message}");
+                _logger.LogInformation($" שגיאה: {ex.Message}");
                 return StatusCode(500, new { message = "שגיאה בטעינת הדוחות", detail = ex.Message });
             }
         }

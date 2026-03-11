@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AccountingSystem.Application.Handlers
 {
-    public class UpdateCompanyConfigReportCommandHandler: IRequestHandler<UpdateCompanyConfigReportCommand, CompanyReportConfigDto>
+    public class UpdateCompanyConfigReportCommandHandler : IRequestHandler<UpdateCompanyConfigReportCommand, CompanyReportConfigDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -23,15 +23,14 @@ namespace AccountingSystem.Application.Handlers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<CompanyReportConfigDto> Handle( UpdateCompanyConfigReportCommand request,
+        public async Task<CompanyReportConfigDto> Handle(UpdateCompanyConfigReportCommand request,
             CancellationToken cancellationToken)
         {
-            // מצא רשומה קיימת
             var config = await _unitOfWork.CompanyReportConfigs.GetByIdAsync(request.Id);
             if (config == null)
                 throw new Exception($"Company report config with ID {request.Id} not found");
 
-            if (request.FrequencyId!=0)
+            if (request.FrequencyId != 0)
             {
                 var frequencyExists = await _unitOfWork.Frequencies.GetByIdAsync(request.FrequencyId.Value);
                 if (frequencyExists == null)
@@ -43,16 +42,13 @@ namespace AccountingSystem.Application.Handlers
 
             if (request.DayOfMonth.HasValue)
             {
-                // ולידציה אופציונלית
                 if (request.DayOfMonth.Value < 1 || request.DayOfMonth.Value > 31)
                     throw new Exception("Day of month must be between 1 and 31");
 
                 config.Dayofmonth = (short?)request.DayOfMonth.Value;
             }
-
-            config.Isactive = request.IsActive;
+            config.Isactive = request.Isactive;
             await _unitOfWork.SaveChangesAsync();
-
             return _mapper.Map<CompanyReportConfigDto>(config);
         }
     }

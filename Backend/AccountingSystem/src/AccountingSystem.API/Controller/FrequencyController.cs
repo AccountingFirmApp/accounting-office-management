@@ -10,6 +10,6 @@ namespace AccountingSystem.API.Controller
     [Authorize]
     public class FrequencyController : ControllerBase
     {
-        
+      
     }
 }

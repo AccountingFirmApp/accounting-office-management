@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
@@ -41,6 +40,7 @@ export class WorkersListComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
+        this.errorMessage = 'אירעה שגיאה בטעינת העובדים';
         this.isLoading = false;
       }
     });
@@ -56,7 +56,6 @@ export class WorkersListComponent implements OnInit {
     this.router.navigate(['/workers', worker.id, 'edit']);
   }
   
-  
   viewWorker(worker: WorkerInfoDto): void {
     this.selectedWorker= worker;
    
@@ -65,4 +64,20 @@ export class WorkersListComponent implements OnInit {
   closeModal(): void {
     this.selectedWorker = null;
   }
+
+  deleteWorker(worker: WorkerInfoDto): void {
+  const confirmed = confirm(`האם אתה בטוח שברצונך למחוק את ${worker.firstName} ${worker.lastName}?`);
+  
+  if (!confirmed) {
+    return;
+  }
+
+  this.WorkerService.deleteWorker(worker.id).subscribe({
+    next: () => {
+      this.loadWorkers();
+    },
+    error: (err) => {
+    }
+  });
 }
+}  

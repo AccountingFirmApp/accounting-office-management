@@ -1,4 +1,3 @@
-
 using AccountingSystem.Application.DTOs.Tasks;
 using AccountingSystem.Domain.Enums;
 using System;
@@ -273,8 +272,6 @@ namespace AccountingSystem.Application.DTOs.Tasks
         public string CompanyName { get; set; }
         public int TaskTypeId { get; set; }
         public string TaskTypeName { get; set; }
-
-        // נתונים מהקונפיגורציה (יכולים להיות null אם עדיין לא הוגדרו)
         public int? ConfigurationId { get; set; }
         public int? assignedWorkerId { get; set; }
         public string? WorkerName { get; set; }

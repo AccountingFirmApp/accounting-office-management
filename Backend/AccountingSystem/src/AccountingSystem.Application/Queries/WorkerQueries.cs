@@ -9,6 +9,8 @@ namespace AccountingSystem.Application.Queries.Workers;
 // ========================================
 public class GetAllWorkersQuery : IRequest<List<WorkerDto>>
 {
+    public bool? IsActive { get; set; } = true;
+
 }
 
 // ========================================

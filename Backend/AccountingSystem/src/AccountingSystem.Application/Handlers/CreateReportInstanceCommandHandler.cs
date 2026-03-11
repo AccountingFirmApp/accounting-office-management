@@ -45,7 +45,7 @@ namespace AccountingSystem.Application.Handlers
                     {
                         Companyid = request.CompanyId,
                         Reporttypeid = request.ReportTypeId,
-                        Frequencyid = request.FrequencyId ?? 1, 
+                        Frequencyid = request.FrequencyId ?? 1,
                         Dayofmonth = null, 
                         Isactive = true,
                         Createdat = DateTime.UtcNow,
@@ -89,7 +89,7 @@ namespace AccountingSystem.Application.Handlers
                     ConfigId = reportInstance.Configid,
                     Period = reportInstance.Period.ToDateTime(TimeOnly.MinValue),
                     Amount = reportInstance.Amount,
-                    Status = reportInstance.Status.ToString(),
+                    Status = reportInstance.Status.ToString() ?? string.Empty,
                     PaymentMethod = reportInstance.PaymentMethod?.ToString(),
                     ReceiptDate = reportInstance.Receiptdate?.ToDateTime(TimeOnly.MinValue),
                     Comments = reportInstance.Comments ?? string.Empty,
@@ -130,7 +130,7 @@ namespace AccountingSystem.Application.Handlers
             }
             else
             {
-                return false; 
+                return false;
             }
 
             report.Updatedat = DateTime.UtcNow;

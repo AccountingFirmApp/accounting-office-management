@@ -12,27 +12,33 @@ import { BackButtonComponent } from "../../app/components/shared/back-button/bac
   templateUrl: './company-create.html',
   styleUrls: ['./company-create.css']
 })
+
 export class CompanyCreateComponent implements OnInit {
   companyForm: FormGroup;
   isEditMode = false;
   companyId: number | null = null;
   loading = false;
-  accountingFirms: any[] = [];
+    accountingFirms: any[] = [];
+
+ showRestoreDialog = false; // ✅ חדש
+  pendingTaxId = ''; // ✅ חדש
+
   constructor(
     private fb: FormBuilder,
     private companyService: CompanyService,
     private accountingFirmService: AccountingFirmService,
+
     private router: Router,
     private route: ActivatedRoute
+    
   ) {
     this.companyForm = this.fb.group({
       name: ['', Validators.required],
       taxId: ['', Validators.required],
-      firmId: [null, Validators.required],
       phone: [''],
       email: ['', Validators.email],
       address: [''],
-      isActive: [true]  
+      notes: ['']
     });
   }
 
@@ -57,11 +63,16 @@ export class CompanyCreateComponent implements OnInit {
           this.companyForm.patchValue({
             name: data.name,
             taxId: data.taxId,
-            firmId: data.firmId,
             phone: data.phone,
             email: data.email,
-            address: data.address
+            address: data.address,
+            notes: data.notes
           });
+          
+          // ✅ נעילת שדה taxId בעריכה (כדי למנוע שינויים)
+          if (this.isEditMode) {
+            this.companyForm.get('taxId')?.disable();
+          }
         },
         error: (err) => {
         }
@@ -69,38 +80,61 @@ export class CompanyCreateComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+ 
+onSubmit(): void {
     if (this.companyForm.valid) {
       this.loading = true;
 
       if (this.isEditMode && this.companyId) {
-        // עדכון חברה קיימת
-        const updateCommand = {
+        // עריכה - נשאר אותו דבר
+        const updateCommand: any = {
           id: this.companyId,
-          ...this.companyForm.value
+          name: this.companyForm.value.name,
+          phone: this.companyForm.value.phone,
+          email: this.companyForm.value.email,
+          address: this.companyForm.value.address,
+          notes: this.companyForm.value.notes
         };
-        
         this.companyService.updateCompany(this.companyId, updateCommand).subscribe({
-          next: () => {
-            this.router.navigate(['/companies']);
-          },
-          error: (err) => {
-            this.loading = false;
-          }
+          next: () => this.router.navigate(['/companies']),
+          error: () => { this.loading = false; }
         });
       } else {
-        // יצירת חברה חדשה
-        this.companyService.createCompany(this.companyForm.value).subscribe({
-          next: () => {
-            this.router.navigate(['/companies']);
+        // ✅ הוספה - קודם בודקים אם קיימת ולא פעילה
+        const taxId = this.companyForm.value.taxId;
+        this.companyService.getInactiveCompanyByTaxId(taxId).subscribe({
+          next: (existing) => {
+            if (existing) {
+              // חברה קיימת ולא פעילה - מציגים דיאלוג
+              this.loading = false;
+              this.showRestoreDialog = true;
+              this.pendingTaxId = taxId;
+            } else {
+              // חברה לא קיימת - הוספה רגילה
+              this.submitCreate(false);
+            }
           },
-          error: (err) => {
-            this.loading = false;
-          }
+          error: () => { this.loading = false; }
         });
       }
-    } else {
     }
+  }
+
+  confirmRestore(restore: boolean): void {
+    this.showRestoreDialog = false;
+    this.loading = true;
+    this.submitCreate(restore);
+  }
+
+  private submitCreate(restoreExistingData: boolean): void {
+    const command = {
+      ...this.companyForm.value,
+      restoreExistingData
+    };
+    this.companyService.createCompany(command).subscribe({
+      next: () => this.router.navigate(['/companies']),
+      error: () => { this.loading = false; }
+    });
   }
 
   cancel(): void {

@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
 import { AuthService } from '../../services/auth.service';
-import { log } from 'console';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +21,7 @@ export class HomeComponent implements OnInit{
   currentWorker!:WorkerInfoDto;
   ngOnInit(): void {
     this.currentWorker=this.workerService.currentWorker;
+
   }
 
   navigateToWorkerCompanies(): void {

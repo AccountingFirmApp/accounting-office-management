@@ -1,115 +1,104 @@
-<div class="container">
-    <h2>{{ isEditMode ? 'עריכת חברה' : 'חברה חדשה' }}</h2>
-  
-    <form [formGroup]="companyForm" (ngSubmit)="onSubmit()" class="form">
-      <div class="form-group">
-        <label for="name">שם החברה <span class="required">*</span></label>
-        <input 
-          id="name"
-          type="text" 
-          formControlName="name" 
-          placeholder="הזן שם חברה"
-          class="form-control"
-          [class.error]="companyForm.get('name')?.invalid && companyForm.get('name')?.touched">
-        <div *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
-          שדה חובה
-        </div>
+  <div class="container">
+  <h2>{{ isEditMode ? 'עריכת חברה' : 'חברה חדשה' }}</h2>
+
+  <form [formGroup]="companyForm" (ngSubmit)="onSubmit()" class="form">
+    <div class="form-group">
+      <label for="name">שם החברה <span class="required">*</span></label>
+      <input 
+        id="name"
+        type="text" 
+        formControlName="name" 
+        placeholder="הזן שם חברה"
+        class="form-control"
+        [class.error]="companyForm.get('name')?.invalid && companyForm.get('name')?.touched">
+      <div *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
+        שדה חובה
       </div>
-  
-      <div class="form-group">
-        <label for="taxId">ח.פ / ע.מ <span class="required">*</span></label>
-        <input 
-          id="taxId"
-          type="text" 
-          formControlName="taxId" 
-          placeholder="הזן מספר ח.פ"
-          class="form-control"
-          [class.error]="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched">
-        <div *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
-          שדה חובה
-        </div>
+    </div>
+
+    <div class="form-group">
+      <label for="taxId">ח.פ / ע.מ <span class="required">*</span></label>
+      <input 
+        id="taxId"
+        type="text" 
+        formControlName="taxId" 
+        placeholder="הזן מספר ח.פ"
+        class="form-control"
+        [class.error]="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched">
+      <div *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
+        שדה חובה
       </div>
-  
-      <!-- <div class="form-group">
-        <label for="firmId">מזהה משרד <span class="required">*</span></label>
-        <input 
-          id="firmId"
-          type="number" 
-          formControlName="firmId" 
-          placeholder="הזן מזהה משרד"
-          class="form-control"
-          [class.error]="companyForm.get('firmId')?.invalid && companyForm.get('firmId')?.touched">
-        <div *ngIf="companyForm.get('firmId')?.invalid && companyForm.get('firmId')?.touched" class="error-message">
-          שדה חובה
-        </div>
-      </div> -->
-      <div class="form-group">
-        <label for="firmId"> שם משרד<span class="required">*</span></label>
-      
-        <select
-          id="firmId"
-          formControlName="firmId"
-          class="form-control"
-          [class.error]="companyForm.get('firmId')?.invalid && companyForm.get('firmId')?.touched">
-      
-          <option value="" disabled selected>בחר משרד</option>
-      
-          <option *ngFor="let firm of accountingFirms" [value]="firm.id">
-            {{ firm.name }}
-          </option>
-        </select>
-      
-        <div *ngIf="companyForm.get('firmId')?.invalid && companyForm.get('firmId')?.touched"
-             class="error-message">
-          שדה חובה
-        </div>
+      <!-- ✅ הודעה בעריכה -->
+      <div *ngIf="isEditMode" class="info-message">
+        לא ניתן לשנות ח.פ/ע.מ בעריכה
       </div>
-      <div class="form-group">
-        <label for="phone">טלפון</label>
-        <input 
-          id="phone"
-          type="tel" 
-          formControlName="phone" 
-          placeholder="הזן מספר טלפון"
-          class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="phone">טלפון</label>
+      <input 
+        id="phone"
+        type="tel" 
+        formControlName="phone" 
+        placeholder="הזן מספר טלפון"
+        class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="email">אימייל</label>
+      <input 
+        id="email"
+        type="email" 
+        formControlName="email" 
+        placeholder="הזן כתובת אימייל"
+        class="form-control"
+        [class.error]="companyForm.get('email')?.invalid && companyForm.get('email')?.touched">
+      <div *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
+        כתובת אימייל לא תקינה
       </div>
-  
-      <div class="form-group">
-        <label for="email">אימייל</label>
-        <input 
-          id="email"
-          type="email" 
-          formControlName="email" 
-          placeholder="הזן כתובת אימייל"
-          class="form-control"
-          [class.error]="companyForm.get('email')?.invalid && companyForm.get('email')?.touched">
-        <div *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
-          כתובת אימייל לא תקינה
-        </div>
-      </div>
-  
-      <div class="form-group">
-        <label for="address">כתובת</label>
-        <textarea 
-          id="address"
-          formControlName="address" 
-          placeholder="הזן כתובת"
-          class="form-control"
-          rows="3"></textarea>
-      </div>
-      <div class="form-group checkbox">
-        <label>
-          <input type="checkbox" formControlName="isActive" />
-           פעיל
-        </label>
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn-primary" [disabled]="loading || !companyForm.valid">
-          {{ loading ? 'שומר...' : (isEditMode ? 'עדכן' : 'צור חברה') }}
-        </button>
-        <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="loading">
-          ביטול
-        </button>
-      </div>
-    </form>
+    </div>
+
+    <div class="form-group">
+      <label for="address">כתובת</label>
+      <textarea 
+        id="address"
+        formControlName="address" 
+        placeholder="הזן כתובת"
+        class="form-control"
+        rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="notes">הערות</label>
+      <textarea 
+        id="notes"
+        formControlName="notes" 
+        placeholder="הזן הערות"
+        class="form-control"
+        rows="4"></textarea>
+    </div>
+
+    <!-- ❌ הסרת שדה isactive - לא ניתן לערוך אותו -->
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="loading || !companyForm.valid">
+        {{ loading ? 'שומר...' : (isEditMode ? 'עדכן' : 'צור חברה') }}
+      </button>
+      <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="loading">
+        ביטול
+      </button>
+    </div>
+  </form>
+
+<div *ngIf="showRestoreDialog" class="dialog-overlay">
+  <div class="dialog">
+    <div class="dialog-icon">⚠️</div>
+    <h3 class="dialog-title">חברה קיימת במערכת</h3>
+    <p class="dialog-message">חברה עם ח.פ זה כבר קיימת במערכת אך אינה פעילה.<br>האם ברצונך לשחזר את הנתונים הקיימים?</p>
+    <div class="dialog-actions">
+      <button class="btn-primary" (click)="confirmRestore(true)">כן, שחזר נתונים</button>
+      <button class="btn-secondary" (click)="confirmRestore(false)">לא, התחל מחדש</button>
+    </div>
   </div>
+</div>
+</div>

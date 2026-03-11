@@ -1,9 +1,8 @@
-﻿
-
-using AccountingSystem.Domain.Entities;
+﻿﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,7 +14,8 @@ namespace AccountingSystem.Infrastructure.Repositories
     {
         private readonly AccountingDbContext _context;
 
-        public CompanyWorkerRepository(AccountingDbContext context)
+        public CompanyWorkerRepository(AccountingDbContext context
+            )
         {
             _context = context;
         }
@@ -25,18 +25,15 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             try
             {
-
                 var result = await _context.Companyworkers
                     .Include(cw => cw.Company)
                     .Include(cw => cw.Worker)
-                    .Where(cw => cw.Workerid == workerId)
+        .Where(cw => cw.Workerid == workerId && cw.Isactive == true)
                     .ToListAsync();
-
                 return result;
             }
             catch (Exception ex)
             {
-              
                 throw;
             }
         }
@@ -46,7 +43,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             return await _context.Companyworkers
                 .Include(cw => cw.Worker)
                 .Include(cw => cw.Company)
-                .Where(cw => cw.Companyid == companyId)
+        .Where(cw => cw.Companyid == companyId && cw.Isactive == true)
                 .ToListAsync();
         }
 
@@ -111,8 +108,41 @@ namespace AccountingSystem.Infrastructure.Repositories
         {
             return await _context.Companyworkers.CountAsync();
         }
+        public async Task DeleteByWorkerIdAsync(int workerId)
+        {
+            var companyWorkers = await _context.Companyworkers
+                .Where(cw => cw.Workerid == workerId)
+                .ToListAsync();
 
-     
+            _context.Companyworkers.RemoveRange(companyWorkers);
+        }
+        public async Task DeleteByCompanyIdAsync(int companyId)
+        {
+            var companyWorkers = await _context.Companyworkers
+                .Where(cw => cw.Companyid == companyId)
+                .ToListAsync();
 
+            _context.Companyworkers.RemoveRange(companyWorkers);
+        }
+
+        public async Task<Companyworker?> GetByWorkerAndCompany(int workerId, int companyId)
+        {
+            return await _context.Companyworkers
+                .Include(cw => cw.Company)   
+                .Include(cw => cw.Worker)
+                .FirstOrDefaultAsync(cw => cw.Workerid == workerId
+                                        && cw.Companyid == companyId);
+        }
+
+
+        public async Task SoftDeleteByCompanyIdAsync(int companyId)
+        {
+            var workers = await _context.Companyworkers
+                .Where(w => w.Companyid == companyId)
+                .ToListAsync();
+
+            foreach (var worker in workers)
+                worker.Isactive = false;
+        }
     }
 }

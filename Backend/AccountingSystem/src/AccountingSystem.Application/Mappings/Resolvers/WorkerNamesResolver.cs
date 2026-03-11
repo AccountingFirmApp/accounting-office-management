@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Application.DTOs;
 
@@ -20,7 +18,6 @@ namespace AccountingSystem.Application.Mappings.Resolvers
             {
                 return new List<string>();
             }
-
             if (source.Config?.Company?.Companyworkers == null)
                 return new List<string>();
 

@@ -35,10 +35,6 @@ export class ReportService {
   getById(id: number): Observable<ReportInstanceDetail> {
     return this.api.get<ReportInstanceDetail>(`${this.endpoint}/${id}`);
   }
-
-  // ========== חיפושים לפי חברה ==========
-
-  
   getByCompanyId(
     companyId: number,
     status?: string,
@@ -59,24 +55,18 @@ export class ReportService {
     return this.api.get<ReportInstanceDetail[]>(url);
   }
 
-
   getByConfigId(configId: number): Observable<ReportInstanceDetail[]> {
     return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/config/${configId}`);
   }
 
-  // ========== חיפושים לפי סטטוס ==========
-
-  
   getByStatus(status: string): Observable<ReportInstanceDetail[]> {
     return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/status/${status}`);
   }
 
- 
   getPending(): Observable<ReportInstanceDetail[]> {
     return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/pending`);
   }
 
-  // ========== חיפושים לפי תקופה ==========
 
   getByPeriod(year: number, month: number): Observable<ReportInstanceDetail[]> {
     return this.api.get<ReportInstanceDetail[]>(
@@ -84,16 +74,14 @@ export class ReportService {
     );
   }
 
-  
+ 
   getByDateRange(startDate: Date, endDate: Date): Observable<ReportInstanceDetail[]> {
     return this.api.get<ReportInstanceDetail[]>(
       `${this.endpoint}/daterange?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
     );
   }
 
-  // ========== דיווחים חשובים ומיוחדים ==========
 
- 
   getUpcoming(companyId?: number, daysAhead: number = 30): Observable<UpcomingReport[]> {
     let url = `${this.endpoint}/upcoming?daysAhead=${daysAhead}`;
     if (companyId) {
@@ -112,7 +100,6 @@ export class ReportService {
     return this.api.get<ReportInstanceDetail[]>(`${this.endpoint}/due?days=${days}`);
   }
 
-  // ========== כתיבה - יצירה ועדכון ==========
 
  
   create(report: CreateReportInstance): Observable<ReportInstance> {
@@ -124,7 +111,7 @@ export class ReportService {
     return this.api.put<void>(`${this.endpoint}/${id}`, report);
   }
 
-  
+ 
   updateStatus(dto: UpdateReportStatus): Observable<void> {
     return this.api.put<void>(`${this.endpoint}/status`, dto);
   }
@@ -134,16 +121,13 @@ export class ReportService {
     return this.api.put<void>(`${this.endpoint}/payment`, dto);
   }
 
-  // ========== מחיקה ==========
 
  
   delete(id: number): Observable<void> {
     return this.api.delete<void>(`${this.endpoint}/${id}`);
   }
 
-  // ========== פונקציות עזר נוספות ==========
 
- 
   getCurrentMonthReports(): Observable<ReportInstanceDetail[]> {
     const now = new Date();
     return this.getByPeriod(now.getFullYear(), now.getMonth() + 1);
@@ -157,32 +141,27 @@ export class ReportService {
     return this.getByDateRange(startDate, endDate);
   }
 
-  
+ 
   getNextWeekReports(): Observable<ReportInstanceDetail[]> {
     return this.getReportsDueInDays(7);
   }
 
-  /**
-   * קבלת דיווחים לחודש הקרוב
-   */
+  
   getNextMonthReports(): Observable<ReportInstanceDetail[]> {
     return this.getReportsDueInDays(30);
   }
 
-  // ========== מתודות חדשות לטופס ==========
 
   
   getCompanies(): Observable<any[]> {
     return this.api.get<any[]>('/companies');
   }
 
-  
   getReportTypes(): Observable<any[]> {
     return this.api.get<any[]>('/report-types');
   }
  
 
- 
   getConfigs(): Observable<any[]> {
     return this.api.get<any[]>('/company-report-configs');
   }

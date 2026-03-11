@@ -50,15 +50,14 @@ namespace AccountingSystem.Application.Mappings
 
             // ========================================
             // Worker Mappings
-            // ========================================
-           
-            CreateMap<Worker, WorkerDto>()
+            // =======================================
+     CreateMap<Worker, WorkerDto>()
     .ForMember(d => d.FirmId, opt => opt.MapFrom(s => s.Firmid))
     .ForMember(d => d.RoleId, opt => opt.MapFrom(s => s.Roleid))
     .ForMember(d => d.FirstName, opt => opt.MapFrom(s => s.Firstname))
     .ForMember(d => d.LastName, opt => opt.MapFrom(s => s.Lastname))
-    .ForMember(d => d.EmployeeId, opt => opt.MapFrom(s => s.Employeeid ?? string.Empty))
-    .ForMember(d => d.IsActive, opt => opt.MapFrom(s => s.Isactive ?? false))
+    .ForMember(d => d.Employeeid, opt => opt.MapFrom(s => s.Employeeid ?? string.Empty))
+    .ForMember(d => d.Isactive, opt => opt.MapFrom(s => s.Isactive ?? false))
     .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.Createdat ?? DateTime.MinValue))
     .ForMember(d => d.UpdatedAt, opt => opt.MapFrom(s => s.Updatedat ?? DateTime.MinValue))
     .ForMember(d => d.HireDate,
@@ -71,8 +70,9 @@ namespace AccountingSystem.Application.Mappings
         opt => opt.MapFrom(s => s.Firm != null ? s.Firm.Name : string.Empty))
     .ForMember(d => d.RoleName,
         opt => opt.MapFrom(s => s.Role != null ? s.Role.Name : string.Empty))
-    .ForMember(d => d.FullName, opt => opt.Ignore()); // ⛔ מחושב אוטומטית
-
+    .ForMember(d => d.FullName, opt => opt.Ignore()) 
+   .ForMember(d => d.CompanyIds,
+                opt => opt.MapFrom(src => src.Companyworkers.Select(wc => wc.Companyid).ToList()));
             CreateMap<CreateWorkerDto, Worker>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
@@ -174,16 +174,13 @@ namespace AccountingSystem.Application.Mappings
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Companyreportconfigs, opt => opt.Ignore());
 
-            // ========================================
-            // CompanyReportConfig Mappings
-            // ========================================
-            
+    
             CreateMap<Companyreportconfig, CompanyReportConfigDto>()
               .ForMember(d => d.CompanyId, opt => opt.MapFrom(s => s.Companyid))
               .ForMember(d => d.ReportTypeId, opt => opt.MapFrom(s => s.Reporttypeid))
               .ForMember(d => d.FrequencyId, opt => opt.MapFrom(s => s.Frequencyid))
               .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Dayofmonth))
-              .ForMember(d => d.IsActive, opt => opt.MapFrom(s => s.Isactive))
+              .ForMember(d => d.Isactive, opt => opt.MapFrom(s => s.Isactive))
               .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.Createdat ?? DateTime.MinValue))
               .ForMember(d => d.UpdatedAt, opt => opt.MapFrom(s => s.Updatedat ?? DateTime.MinValue))
               .ForMember(d => d.Year, opt => opt.MapFrom(s => s.Year))
@@ -195,8 +192,6 @@ namespace AccountingSystem.Application.Mappings
                   opt => opt.MapFrom(s => s.Reporttype != null ? s.Reporttype.Shortcode : null))
               .ForMember(d => d.FrequencyName,
                   opt => opt.MapFrom(s => s.Frequency != null ? s.Frequency.Name : null));
-
-            
 
             CreateMap<CreateCompanyReportConfigDto, Companyreportconfig>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
@@ -256,8 +251,7 @@ CreateMap<Reportinstance, ReportInstanceDto>()
                 .ForMember(d => d.ReportTypeShortCode, opt => opt.MapFrom(s => s.Config != null && s.Config.Reporttype != null ? s.Config.Reporttype.Shortcode : string.Empty))
                 .ForMember(d => d.FrequencyName, opt => opt.MapFrom(s => s.Config != null && s.Config.Frequency != null ? s.Config.Frequency.Name : string.Empty))
                 .ForMember(d => d.DayOfMonth, opt => opt.MapFrom(s => s.Config != null ? s.Config.Dayofmonth : null))
-                               
-                                .ForMember(d => d.WorkerNames, opt => opt.MapFrom<WorkerNamesResolver>()); // 🆕
+                .ForMember(d => d.WorkerNames, opt => opt.MapFrom<WorkerNamesResolver>()); 
 
             CreateMap<CreateReportInstanceDto, Reportinstance>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
@@ -318,6 +312,7 @@ CreateMap<Reportinstance, ReportInstanceDto>()
 
             CreateMap<CreateCompanyTaskDto, CompanyTask>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.Isactive, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
                 .ForMember(d => d.Company, opt => opt.Ignore())
@@ -326,12 +321,12 @@ CreateMap<Reportinstance, ReportInstanceDto>()
 
             CreateMap<UpdateCompanyTaskDto, CompanyTask>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.Isactive, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
                 .ForMember(d => d.Updatedat, opt => opt.Ignore())
                 .ForMember(d => d.Company, opt => opt.Ignore())
                 .ForMember(d => d.Tasktype, opt => opt.Ignore())
                 .ForMember(d => d.Assignedworker, opt => opt.Ignore());
-
             // ========================================
             // AuditLog Mappings
             // ========================================

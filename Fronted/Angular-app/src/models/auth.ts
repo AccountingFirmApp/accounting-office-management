@@ -16,15 +16,18 @@ export interface LoginResponseDto {
 
 export interface WorkerInfoDto {
   id: number;
-  employeeId: string;
-  firstname: string;
-  lastname: string;
+  employeeid: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phone?: string;
   roleName: string;
   roleId: number; 
   password: string;
-  firmId: number;
-  isActive: boolean;
+  firmid: number;
+  isactive: boolean;
+  companyIds?: number[]; 
+  hireDate?: Date;
 }
 export interface WorkerTask {
   id: number;
