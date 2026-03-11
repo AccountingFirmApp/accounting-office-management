@@ -3,15 +3,15 @@ import { ChecklistTemplate } from '../../models/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChecklistService } from '../../services/checklistTemplateService';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectModule, MatOption, MatLabel, MatFormField } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule, MatCard } from '@angular/material/card';
 import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
 @Component({
   selector: 'app-checklist-template-manager',
   templateUrl: './checklist-template-manager.component.html',
   styleUrls: ['./checklist-template-manager.component.css'],
-  imports: [CommonModule, FormsModule, BackButtonComponent],
+  imports: [CommonModule, FormsModule, BackButtonComponent, MatOption, MatLabel, MatFormField, MatCard],
   standalone: true,
 
 })
