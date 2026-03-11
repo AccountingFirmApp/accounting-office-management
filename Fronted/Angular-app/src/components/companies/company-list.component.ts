@@ -1,432 +1,18 @@
-// // // import { Component, OnInit } from '@angular/core';
-// // // import { CommonModule } from '@angular/common';
-// // // import { Router } from '@angular/router';  // ← הוסף
-// // // import { CompanyService } from '../../services/company';
-// // // import { CompanyDto } from '../../models/Company';
-
-// // // @Component({
-// // //   selector: 'app-company-list',
-// // //   standalone: true,
-// // //   imports: [CommonModule],
-// // //   templateUrl: './company-list.component.html',
-// // //   styleUrls: ['./company-list.component.css']
-// // // })
-// // // export class CompanyListComponent implements OnInit {
-// // //   companies: CompanyDto[] = [];
-// // //   loading = false;
-// // //   error: string | null = null;
-
-// // //   constructor(
-// // //     private companyService: CompanyService,
-// // //     private router: Router  // ← הוסף
-// // //   ) { }
-
-// // //   ngOnInit(): void {
-// // //     this.loadCompanies();
-// // //   }
-
-// // //   loadCompanies(): void {
-// // //     this.loading = true;
-// // //     this.error = null;
-    
-// // //     this.companyService.getAllCompanies().subscribe({
-// // //       next: (data) => {
-// // //         this.companies = data;
-// // //         this.loading = false;
-// // //       },
-// // //       error: (err) => {
-// // //         this.error = 'שגיאה בטעינת החברות';
-// // //         this.loading = false;
-// // //         console.error(err);
-// // //       }
-// // //     });
-// // //   }
-
-// // //   createCompany(): void {
-// // //     this.router.navigate(['/Companies/create']);
-// // //   }
-
-// // //   editCompany(id: number): void {
-// // //     this.router.navigate(['/Companies', id, 'edit']);
-// // //   }
-
-// // //   viewCompanyTasks(id: number): void {
-// // //     this.router.navigate(['/Companies', id, 'tasks']);
-// // //   }
-
-// // //   deleteCompany(id: number): void {
-// // //     if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
-// // //       this.companyService.deleteCompany(id).subscribe({
-// // //         next: () => {
-// // //           this.loadCompanies();
-// // //         },
-// // //         error: (err) => {
-// // //           alert('שגיאה במחיקת החברה');
-// // //           console.error(err);
-// // //         }
-// // //       });
-// // //     }
-// // //   }
-// // // }
-// // // import { Component, OnInit } from '@angular/core';
-// // // import { CommonModule } from '@angular/common';
-// // // import { Router } from '@angular/router';
-// // // import { CompanyService } from '../../services/company';
-// // // import { CompanyDto } from '../../models/Company';
-// // // import { TaskDto } from '../../models/task';
-// // // import { HttpErrorResponse } from '@angular/common/http';  // ← צריך
-
-// // // @Component({
-// // //   selector: 'app-company-list',
-// // //   standalone: true,
-// // //   imports: [CommonModule],
-// // //   templateUrl: './company-list.component.html',
-// // //   styleUrls: ['./company-list.component.css']
-// // // })
-// // // export class CompanyListComponent implements OnInit {
-// // //   companies: CompanyDto[] = [];
-// // //   loading = false;
-// // //   error: string | null = null;
-
-// // //   // נתונים של משימות
-// // //   selectedCompanyTasks: TaskDto[] = [];
-// // //   tasksLoading = false;
-// // //   tasksError: string | null = null;
-// // //   selectedCompanyName: string | null = null;
-
-// // //   constructor(
-// // //     private companyService: CompanyService,
-// // //     private router: Router
-// // //   ) { }
-
-// // //   ngOnInit(): void {
-// // //     this.loadCompanies();
-// // //   }
-
-// // //   loadCompanies(): void {
-// // //     this.loading = true;
-// // //     this.error = null;
-
-// // //     this.companyService.getAllCompanies().subscribe({
-// // //       next: (data) => {
-// // //         this.companies = data;
-// // //         this.loading = false;
-// // //       },
-// // //       error: (err: HttpErrorResponse) => {  // ← טיפוס ברור
-// // //         this.error = 'שגיאה בטעינת החברות';
-// // //         this.loading = false;
-// // //         console.error(err);
-// // //       }
-// // //     });
-// // //   }
-
-// // //   createCompany(): void {
-// // //     this.router.navigate(['/Companies/create']);
-// // //   }
-
-// // //   editCompany(id: number): void {
-// // //     this.router.navigate(['/Companies', id, 'edit']);
-// // //   }
-
-// // //   viewCompanyTasks(companyId: number, companyName: string): void {
-// // //     this.selectedCompanyTasks = [];
-// // //     this.tasksLoading = true;
-// // //     this.tasksError = null;
-// // //     this.selectedCompanyName = companyName;
-
-// // //     this.companyService.getTasksByCompanyId(companyId).subscribe({
-// // //         next: (tasks: TaskDto[]) => {
-// // //           this.selectedCompanyTasks = tasks;
-// // //           this.tasksLoading = false;
-// // //         },
-// // //         error: (err: HttpErrorResponse) => {
-// // //           this.tasksError = 'שגיאה בטעינת המשימות';
-// // //           this.tasksLoading = false;
-// // //           console.error(err);
-// // //         }
-// // //       });
-// // //     }      
-
-// // //   deleteCompany(id: number): void {
-// // //     if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
-// // //       this.companyService.deleteCompany(id).subscribe({
-// // //         next: () => {
-// // //           this.loadCompanies();
-// // //         },
-// // //         error: (err: HttpErrorResponse) => {  // ← טיפוס ברור
-// // //           alert('שגיאה במחיקת החברה');
-// // //           console.error(err);
-// // //         }
-// // //       });
-// // //     }
-// // //   }
-// // // }
-// // // import { Component, OnInit } from '@angular/core';
-// // // import { CommonModule } from '@angular/common';
-// // // import { Router } from '@angular/router';
-// // // import { CompanyService } from '../../services/company';
-// // // import { CompanyDto } from '../../models/Company';
-
-// // // @Component({
-// // //   selector: 'app-company-list',
-// // //   standalone: true,
-// // //   imports: [CommonModule],
-// // //   templateUrl: './company-list.component.html',
-// // //   styleUrls: ['./company-list.component.css']
-// // // })
-// // // export class CompanyListComponent implements OnInit {
-// // //   companies: CompanyDto[] = [];
-// // //   loading = false;
-// // //   error: string | null = null;
-
-// // //   constructor(
-// // //     private companyService: CompanyService,
-// // //     private router: Router
-// // //   ) { }
-
-// // //   ngOnInit(): void {
-// // //     this.loadCompanies();
-// // //   }
-
-// // //   loadCompanies(): void {
-// // //     this.loading = true;
-// // //     this.error = null;
-    
-// // //     this.companyService.getAllCompanies().subscribe({
-// // //       next: (data) => {
-// // //         this.companies = data;
-// // //         this.loading = false;
-// // //       },
-// // //       error: (err) => {
-// // //         this.error = 'שגיאה בטעינת החברות';
-// // //         this.loading = false;
-// // //         console.error(err);
-// // //       }
-// // //     });
-// // //   }
-
-// // //   // ← זה מנווט למשימות
-// // //   viewCompanyTasks(id: number): void {
-// // //     this.router.navigate(['/companies', id, 'tasks']);
-// // //   }
-
-// // //   // ← זה מנווט לעריכה
-// // //   editCompany(id: number): void {
-// // //     this.router.navigate(['/companies', id, 'edit']);
-// // //   }
-
-// // //   deleteCompany(id: number): void {
-// // //     if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
-// // //       this.companyService.deleteCompany(id).subscribe({
-// // //         next: () => {
-// // //           this.loadCompanies();
-// // //         },
-// // //         error: (err) => {
-// // //           alert('שגיאה במחיקת החברה');
-// // //           console.error(err);
-// // //         }
-// // //       });
-// // //     }
-// // //   }
-// // // }
-// // import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-// // import { CommonModule ,Location} from '@angular/common';
-// // import { Router } from '@angular/router';
-// // import { CompanyService } from '../../services/company';
-// // import { CompanyDto } from '../../models/Company';
-// // import { AuthService } from '../../services/auth.service';
-// // import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
-
-// // @Component({
-// //   selector: 'app-company-list',
-// //   standalone: true,
-// //   imports: [CommonModule, BackButtonComponent],
-// //   templateUrl: './company-list.component.html',
-// //   styleUrls: ['./company-list.component.css']
-// // })
-// // export class CompanyListComponent implements OnInit {
-// //   companies: CompanyDto[] = [];
-// //   loading = false;
-// //   error: string | null = null;
-
-// //   constructor(
-// //     private companyService: CompanyService,
-// //     private router: Router,
-// //     private cdr: ChangeDetectorRef , // ← הוסף את זה
-// //     private location:Location,
-// //     public auth: AuthService
-
-// //   ) { 
-// //   }
-
-// //   ngOnInit(): void {
-// //     this.loadCompanies();
-// //   }
-
-// //   loadCompanies(): void {
-// //     this.loading = true;
-// //     this.error = null;
-// //     this.cdr.detectChanges(); // ← הוסף את זה
-    
-// //     this.companyService.getAllCompanies().subscribe({
-// //       next: (data) => {
-// //         this.companies = data;
-// //         this.loading = false;
-// //         this.cdr.detectChanges(); // ← הוסף את זה
-// //       },
-// //       error: (err) => {
-// //         console.error('❌ שגיאה בטעינת חברות:', err);
-// //         this.error = 'שגיאה בטעינת החברות';
-// //         this.loading = false;
-// //         this.cdr.detectChanges(); // ← הוסף את זה
-// //       }
-// //     });
-// //   }
-
-// //   viewCompanyTasks(id: number): void {
-// //     this.router.navigate(['/companies', id, 'tasks']);
-// //   }
-
-// //   viewCompanyReports(companyId: number): void {
-// //   console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
-// //   this.router.navigate(['/reports'], { 
-// //     queryParams: { companyId: companyId } 
-// //   });
-// // }
-
-// //   editCompany(id: number): void {
-// //     this.router.navigate(['/companies', id, 'edit']);
-// //   }
-
-// //   deleteCompany(id: number): void {
-// //     if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
-// //       this.companyService.deleteCompany(id).subscribe({
-// //         next: () => {
-// //           this.loadCompanies();
-// //         },
-// //         error: (err) => {
-// //           console.error('❌ שגיאה במחיקת החברה:', err);
-// //           alert('שגיאה במחיקת החברה');
-// //         }
-// //       });
-// //     }
-// //   }
-// // addCompany(): void {
-// //     this.router.navigate(['/companies/create']);
-// //   }
-// //   goHome(): void {
-// //     this.router.navigate(['/home']);
-// //   }
-// // }
-
-
-
-// import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-// import { CommonModule ,Location} from '@angular/common';
-// import { Router } from '@angular/router';
-// import { CompanyService } from '../../services/company';
-// import { CompanyDto } from '../../models/Company';
-// import { AuthService } from '../../services/auth.service';
-// import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
-
-// @Component({
-//   selector: 'app-company-list',
-//   standalone: true,
-//   imports: [CommonModule, BackButtonComponent],
-//   templateUrl: './company-list.component.html',
-//   styleUrls: ['./company-list.component.css']
-// })
-// export class CompanyListComponent implements OnInit {
-//   companies: CompanyDto[] = [];
-//   loading = false;
-//   error: string | null = null;
-
-//   constructor(
-//     private companyService: CompanyService,
-//     private router: Router,
-//     private cdr: ChangeDetectorRef,
-//     private location:Location,
-//     public auth: AuthService
-
-//   ) { 
-//   }
-
-//   ngOnInit(): void {
-//     this.loadCompanies();
-//   }
-
-//   loadCompanies(): void {
-//     this.loading = true;
-//     this.error = null;
-//     this.cdr.detectChanges();
-    
-//     this.companyService.getAllCompanies().subscribe({
-//       next: (data) => {
-//         this.companies = data;
-//         this.loading = false;
-//         this.cdr.detectChanges();
-//       },
-//       error: (err) => {
-//         console.error('❌ שגיאה בטעינת חברות:', err);
-//         this.error = 'שגיאה בטעינת החברות';
-//         this.loading = false;
-//         this.cdr.detectChanges();
-//       }
-//     });
-//   }
-
-//   viewCompanyTasks(id: number): void {
-//     this.router.navigate(['/companies', id, 'tasks']);
-//   }
-
-//   viewCompanyReports(companyId: number): void {
-//     console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
-//     this.router.navigate(['/reports'], { 
-//       queryParams: { companyId: companyId } 
-//     });
-//   }
-
-//   editCompany(id: number): void {
-//     this.router.navigate(['/companies', id, 'edit']);
-//   }
-
-//   deleteCompany(id: number): void {
-//     if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
-//       this.companyService.deleteCompany(id).subscribe({
-//         next: () => {
-//           this.loadCompanies();
-//         },
-//         error: (err) => {
-//           console.error('❌ שגיאה במחיקת החברה:', err);
-//           alert('שגיאה במחיקת החברה');
-//         }
-//       });
-//     }
-//   }
-
-//   addCompany(): void {
-//     this.router.navigate(['/companies/create']);
-//   }
-
-//   goHome(): void {
-//     this.router.navigate(['/home']);
-//   }
-// }
-
-
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule ,Location} from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { CompanyService } from '../../services/company';
 import { CompanyDto } from '../../models/Company';
 import { AuthService } from '../../services/auth.service';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
+import { ConfirmationModalComponent } from '../../app/components/shared/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-company-list',
   standalone: true,
-  imports: [CommonModule, BackButtonComponent],
+  imports: [CommonModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent, ConfirmationModalComponent],
   templateUrl: './company-list.component.html',
   styleUrls: ['./company-list.component.css']
 })
@@ -434,16 +20,18 @@ export class CompanyListComponent implements OnInit {
   companies: CompanyDto[] | null = null;
   loading = false;
   error: string | null = null;
+  successMessage: string | null = null;
+
+  showDeleteConfirmation = false;
+  companyToDelete: number | null = null;
 
   constructor(
     private companyService: CompanyService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private location:Location,
+    private location: Location,
     public auth: AuthService
-
-  ) { 
-  }
+  ) { }
 
   ngOnInit(): void {
     this.loadCompanies();
@@ -453,7 +41,7 @@ export class CompanyListComponent implements OnInit {
     this.loading = true;
     this.error = null;
     this.cdr.detectChanges();
-    
+
     this.companyService.getAllCompanies().subscribe({
       next: (data) => {
         this.companies = data;
@@ -461,7 +49,6 @@ export class CompanyListComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('❌ שגיאה בטעינת חברות:', err);
         this.error = 'שגיאה בטעינת החברות';
         this.loading = false;
         this.cdr.detectChanges();
@@ -473,44 +60,44 @@ export class CompanyListComponent implements OnInit {
     this.router.navigate(['/companies', id, 'tasks']);
   }
 
-  // viewCompanyReports(companyId: number): void {
-  //   console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
-  //   this.router.navigate(['/reports'], { 
-  //     queryParams: { companyId: companyId } 
-  //   });
-  // }
-
+  // ✅ תוקן - מתודה אחת נקייה בלי כפילות
   viewCompanyReports(companyId: number): void {
-  console.log('🏢 ID של החברה שלחצתי עליה:', companyId);
-  
-  // 🔥 אם זה מנהל, הוסף adminMode=true
-  const queryParams: any = { companyId: companyId };
-  
-  if (this.auth.isAdmin()) {
-    queryParams.adminMode = 'true';
+    const queryParams: { companyId: number; adminMode?: string } = { companyId };
+    if (this.auth.isAdmin()) {
+      queryParams.adminMode = 'true';
+    }
+    this.router.navigate(['/reports'], { queryParams });
   }
-  
-  this.router.navigate(['/reports'], { 
-    queryParams: queryParams
-  });
-}
 
   editCompany(id: number): void {
     this.router.navigate(['/companies', id, 'edit']);
   }
 
+  // ✅ תוקן - משתמש ב-ConfirmationModal במקום confirm()
   deleteCompany(id: number): void {
-    if (confirm('האם אתה בטוח שברצונך למחוק חברה זו?')) {
-      this.companyService.deleteCompany(id).subscribe({
+    this.companyToDelete = id;
+    this.showDeleteConfirmation = true;
+  }
+
+  confirmDelete(): void {
+    if (this.companyToDelete !== null) {
+      this.companyService.deleteCompany(this.companyToDelete).subscribe({
         next: () => {
+          this.showDeleteConfirmation = false;
+          this.companyToDelete = null;
           this.loadCompanies();
         },
-        error: (err) => {
-          console.error('❌ שגיאה במחיקת החברה:', err);
-          alert('שגיאה במחיקת החברה');
+        error: () => {
+          this.error = 'שגיאה במחיקת החברה';
+          this.showDeleteConfirmation = false;
         }
       });
     }
+  }
+
+  cancelDelete(): void {
+    this.showDeleteConfirmation = false;
+    this.companyToDelete = null;
   }
 
   addCompany(): void {

@@ -1,21 +1,14 @@
 <div class="container">
   <!-- כפתור חזרה לדף הבית -->
-  <!-- <app-back-button [route]="'/home'" [text]="'חזרה לדף הבית'"></app-back-button>   -->
+  <app-back-button [route]="'/home'"></app-back-button>  
   
   <!-- Loading -->
-  <div *ngIf="loading" class="alert alert-warning">
-    טוען נתונים...
-  </div>
-  
+  <app-loading *ngIf="loading" message="טוען חברות..."></app-loading>
+
   <!-- Error -->
-  <div *ngIf="error" class="alert alert-error">
-    <h3>שגיאה</h3>
-    <pre>{{ error }}</pre>
-  </div>
+  <app-error-message *ngIf="error" [message]="error" type="error"></app-error-message>
   
-  <!-- Success -->
   <div *ngIf="companies && !loading">
-    <!-- רשימת חברות -->
     <div *ngIf="companies.length > 0">
       <ul class="company-list">
         <li *ngFor="let company of companies" class="company-card">
@@ -27,20 +20,29 @@
           <p><strong>אימייל:</strong> {{ company.email }}</p>
           <p>
             <strong>סטטוס:</strong>
-            <span [class.active]="company.isActive" [class.inactive]="!company.isActive">
-              {{ company.isActive ? 'פעילה' : 'לא פעילה' }}
+            <span [class.active]="company.isactive" [class.inactive]="!company.isactive">
+              {{ company.isactive ? 'פעילה' : 'לא פעילה' }}
             </span>
           </p>
           <p class="notes"><strong>הערות:</strong> {{ company.notes || 'אין הערות' }}</p>
           
           <!-- כפתורי פעולה -->
           <div class="action-buttons">
-            <button class="btn-action btn-tasks" (click)="goToCompanyTasks(company.id)">
-              <span class="icon">📋</span>
+            <button class="btn-action btn-tasks" (click)="goToCompanyTasks(company.id)" [attr.aria-label]="'צפה במשימות של ' + company.name">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="9" y1="13" x2="15" y2="13"/>
+                <line x1="9" y1="17" x2="15" y2="17"/>
+              </svg>
               משימות
             </button>
-            <button class="btn-action btn-reports" (click)="goToCompanyReports(company.id)">
-              <span class="icon">📊</span>
+            <button class="btn-action btn-reports" (click)="goToCompanyReports(company.id)" [attr.aria-label]="'צפה בדיווחים של ' + company.name">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="20" x2="12" y2="10"/>
+                <line x1="18" y1="20" x2="18" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="16"/>
+              </svg>
               דיווחים
             </button>
           </div>
@@ -49,8 +51,10 @@
     </div>
     
     <!-- אין חברות -->
-    <div *ngIf="companies.length === 0" class="no-companies">
-      לא נמצאו חברות עבור עובדת זו
+    <div *ngIf="companies.length === 0" class="empty-state">
+   
+      <h3 class="empty-title">אין חברות משויכות</h3>
+      <p class="empty-description">לא נמצאו חברות עבור עובדת זו</p>
     </div>
   </div>
 </div>

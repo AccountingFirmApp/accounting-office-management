@@ -1,13 +1,16 @@
 ﻿using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.AccountingFirmQuery;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingSystem.API.Controller
 {
+
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountingFirmController : ControllerBase
     {
 

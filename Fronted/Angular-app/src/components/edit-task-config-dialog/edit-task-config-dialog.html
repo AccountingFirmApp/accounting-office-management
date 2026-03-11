@@ -1,0 +1,63 @@
+<div dir="rtl" class="dialog-wrapper">
+  <header class="dialog-header">
+    <h2 class="main-title">הגדרת משימה</h2>
+    <div class="sub-header">{{data.taskTypeName}}</div>
+  </header>
+
+  <mat-dialog-content class="dialog-content">
+    <div class="form-section">
+      <span class="section-title">מידע כללי</span>
+      <div class="read-only-row">
+        <div class="data-group">
+          <label>לקוח</label>
+          <div class="static-value">{{data.companyName}}</div>
+        </div>
+        <div class="data-group">
+          <label>מזהה חברה</label>
+          <div class="static-value">#{{data.companyId}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <span class="section-title">תזמון וביצוע</span>
+      <div class="form-grid">
+        
+        <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+          <mat-label>עובד אחראי</mat-label>
+          <mat-select [(ngModel)]="data.assignedWorkerId" name="workerSelect">
+            <mat-option *ngIf="workers.length === 0" disabled>טוען עובדים...</mat-option>
+            <mat-option *ngFor="let worker of workers" [value]="worker.id">
+              {{ worker.fullName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>תדירות (חודשים)</mat-label>
+          <input matInput type="number" [(ngModel)]="data.frequency" placeholder="0">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>יום יעד</mat-label>
+          <input matInput type="number" [(ngModel)]="data.dueDay" placeholder="1-31">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- <div class="status-section">
+      <span class="status-label">סטטוס פעיל</span>
+      <mat-slide-toggle [(ngModel)]="data.isActive" color="primary"></mat-slide-toggle>
+    </div> -->
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button color="warn" (click)="deleteConfig()" style="margin-left: auto;">
+      <mat-icon>delete</mat-icon>
+      מחיקת הגדרה
+    </button>
+    <button mat-button (click)="onNoClick()">ביטול</button>
+    <button mat-raised-button color="primary" (click)="save()">שמור שינויים</button>
+    <!-- <button mat-raised-button color="primary" [mat-dialog-close]="data">שמור שינויים</button> -->
+  </mat-dialog-actions>
+</div>

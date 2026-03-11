@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,19 +9,14 @@ import { Router } from '@angular/router';
   styleUrl: './back-button.component.css'
 })
 export class BackButtonComponent {
-  @Input() text: string = 'חזרה';
-  @Input() route?: string;
+  @Input() route: string = '/home';
+  @Input() text: string = '';
 
   constructor(
-    private location: Location,
     private router: Router
   ) {}
 
   goBack(): void {
-    if (this.route) {
-      this.router.navigate([this.route]);
-    } else {
-      this.location.back();
-    }
+    this.router.navigate([this.route]);
   }
 }

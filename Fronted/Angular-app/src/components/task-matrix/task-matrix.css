@@ -1,0 +1,114 @@
+/* מיכל ראשי */
+.matrix-container {
+    margin: 20px;
+    direction: rtl; /* התאמה לעברית */
+  }
+  
+  /* כותרת הכרטיס */
+  mat-card-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #3f51b5;
+    margin-bottom: 15px !important;
+    font-weight: bold;
+  }
+  
+  /* ניהול הגלילה של הטבלה */
+  .table-responsive {
+    overflow-x: auto;
+    max-height: 75vh; /* גובה מקסימלי עם גלילה אנכית */
+    border: 1px solid #e0e0e0;
+  }
+  
+  /* עיצוב הטבלה */
+  .matrix-table {
+    width: 100%;
+    border-collapse: separate; /* חשוב בשביל ה-Sticky */
+    border-spacing: 0;
+    background-color: white;
+  }
+  
+  /* עיצוב כותרות ותאים */
+  .matrix-table th, 
+  .matrix-table td {
+    padding: 12px;
+    border: 1px solid #f0f0f0;
+    text-align: center;
+    min-width: 140px;
+  }
+  
+  /* שורת הכותרת */
+  .matrix-table thead th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  /* העמודה הראשונה (שמות הלקוחות) - נשארת קבועה בגלילה */
+  .sticky-col {
+    position: sticky;
+    right: 0; /* ב-RTL זה נצמד לימין */
+    background-color: #fcfcfc !important;
+    font-weight: bold;
+    z-index: 5;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+    min-width: 180px !important;
+    text-align: right !important;
+    color: #3f51b5;
+  }
+  
+  /* עיצוב תא הגדרה */
+  .config-cell {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .config-cell:hover {
+    background-color: #e8eaf6;
+  }
+  
+  /* קופסת התוכן בתוך התא */
+  .config-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    gap: 5px;
+  }
+  
+  .config-box.active {
+    border-radius: 4px;
+  }
+  
+  /* פרטי המשימה כשהיא פעילה */
+  .details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  
+  .worker {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2e7d32; /* ירוק עדין לעובד */
+  }
+  
+  .freq {
+    font-size: 0.75rem;
+    color: #666;
+  }
+  
+  /* עיצוב למצב לא מוגדר */
+  .no-config {
+    font-size: 0.8rem;
+    color: #bdbdbd;
+    font-style: italic;
+  }
+  
+  /* תיקון ל-Checkbox שיהיה במרכז */
+  ::ng-deep .mat-mdc-checkbox {
+    margin-bottom: -5px;
+  }

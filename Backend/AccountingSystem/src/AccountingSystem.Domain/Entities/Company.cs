@@ -23,7 +23,7 @@ namespace AccountingSystem.Domain.Entities
 
         public string? Notes { get; set; }
 
-        public bool? Isactive { get; set; }
+        public bool Isactive { get; set; }
 
         public DateTime? Createdat { get; set; }
 

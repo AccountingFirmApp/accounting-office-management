@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using AccountingSystem.Application.Queries;
 using AccountingSystem.Application.DTOs;
 using System.Threading.Tasks;
+using static GetReportsDueInNextDaysQueryHandler;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AccountingSystem.API.Controllers
 {
     [ApiController]
     [Route("api/report-types")]
+    [Authorize]
     public class ReportTypesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,9 +25,16 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/report-types
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<List<ReportTypeDto>>> GetAllReportTypes()  // 👈 שונה!
+        public async Task<ActionResult<List<ReportTypeDto>>> GetAllReportTypes()  
         {
             var query = new GetAllReportTypesQuery();
+            var reportTypes = await _mediator.Send(query);
+            return Ok(reportTypes);
+        }
+        [HttpGet("ToEdit")]
+        public async Task<ActionResult<List<ReportTypeDto>>> GetReportTypesToEdit() 
+        {
+            var query = new GetAllReportTypesToEditQuery();
             var reportTypes = await _mediator.Send(query);
             return Ok(reportTypes);
         }
@@ -34,7 +44,7 @@ namespace AccountingSystem.API.Controllers
         /// GET: api/report-types/5
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<ActionResult<ReportTypeDto>> GetReportTypeById(int id)  // 👈 שונה!
+        public async Task<ActionResult<ReportTypeDto>> GetReportTypeById(int id) 
         {
             var query = new GetReportTypeByIdQuery { Id = id };
             var reportType = await _mediator.Send(query);

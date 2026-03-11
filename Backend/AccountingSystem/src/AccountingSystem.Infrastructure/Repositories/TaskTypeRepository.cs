@@ -1,70 +1,78 @@
 ﻿using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore; // חשוב מאוד עבור ToListAsync
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    public class TaskTypeRepository:ITaskTypeRepository
+    public class TaskTypeRepository : ITaskTypeRepository
     {
-        private AccountingDbContext context;
+        private readonly AccountingDbContext _context;
+        private readonly DbSet<Tasktype> _dbSet;
 
         public TaskTypeRepository(AccountingDbContext context)
         {
-            this.context = context;
+            _context = context;
+            _dbSet = context.Tasktypes; // ודאי שזה השם ב-DbContext שלך
         }
 
-        public Task<Tasktype> AddAsync(Tasktype entity)
-
+        // הפונקציה הקריטית ביותר עבור המטריצה
+        public async Task<IEnumerable<Tasktype>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet.ToListAsync();
         }
 
-        public Task<int> CountAsync(Func<object, bool> value)
+        // מימוש שאר הפונקציות כדי שהקומפיילר לא יצעק
+        public async Task<Tasktype?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public Task DeleteAsync(int id)
+        public async Task<Tasktype> AddAsync(Tasktype entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
+            return entity;
         }
 
-        public Task<bool> ExistsAsync(int id)
+        public async Task UpdateAsync(Tasktype entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+            await Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Tasktype>> FindAsync(Expression<Func<Tasktype, bool>> predicate)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+            }
         }
 
-        public Task<IEnumerable<Tasktype>> GetAllAsync()
+        public async Task<bool> ExistsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AnyAsync(t => t.Id == id);
         }
 
-        public Task<IEnumerable<Tasktype>> GetByCategoryAsync(string category)
+        public async Task<IEnumerable<Tasktype>> FindAsync(Expression<Func<Tasktype, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public Task<Tasktype?> GetByIdAsync(int id)
+        public async Task<int> CountAsync(Func<object, bool> value)
         {
-            throw new NotImplementedException();
+            return await _dbSet.CountAsync();
         }
 
-        public Task UpdateAsync(Tasktype entity)
+        public async Task<IEnumerable<Tasktype>> GetByCategoryAsync(string category)
         {
-            throw new NotImplementedException();
+            // אם אין לך עמודת קטגוריה ב-DB, אפשר להחזיר רשימה ריקה בינתיים
+            return await _dbSet.ToListAsync();
         }
-
-    
     }
 }

@@ -5,12 +5,14 @@ using AccountingSystem.Application.DTOs;
 using System.Threading.Tasks;
 using AccountingSystem.Application.Commands;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace AccountingSystem.API.Controllers
 {
     [ApiController]
     [Route("api/company-report-configs")]
+    [Authorize]
     public class CompanyReportConfigsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -31,7 +33,14 @@ namespace AccountingSystem.API.Controllers
             var configs = await _mediator.Send(query);
             return Ok(configs);
         }
+        [HttpGet("by-worker/{workerId:int}")]
+        public async Task<ActionResult<List<CompanyReportConfigDto>>>  GetConfigsByWorkerId([FromRoute] int workerId)
 
+        {
+            var query = new GetConfigsByWorkerId() { WorkerId = workerId };
+            var configs = await _mediator.Send(query);
+            return Ok(configs);
+        }
         /// <summary>
         /// קבלת קונפיגורציות לפי חברה
         /// GET: api/company-report-configs/company/5
@@ -96,7 +105,7 @@ namespace AccountingSystem.API.Controllers
                     Id = id,
                     FrequencyId = request.FrequencyId,
                     DayOfMonth = request.DayOfMonth,
-                    IsActive=request.IsActive
+                    Isactive=request.Isactive
                 };
 
                 var result = await _mediator.Send(command);

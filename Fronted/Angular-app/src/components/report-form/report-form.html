@@ -1,15 +1,30 @@
 <div class="report-form-container">
   <!-- Header -->
   <div class="form-header">
-    <!-- <app-back-button></app-back-button> -->
+    <app-back-button [route]="'/reports'"></app-back-button>
     <h2>{{ isEditMode ? 'עריכת דיווח' : 'דיווח חדש' }}</h2>
   </div>
 
+  <!-- Success Message -->
+  <app-error-message
+    *ngIf="successMessage"
+    [message]="successMessage"
+    type="success"
+    [dismissible]="true"
+    (dismiss)="successMessage = null">
+  </app-error-message>
+
+  <!-- Error Message -->
+  <app-error-message
+    *ngIf="errorMessage"
+    [message]="errorMessage"
+    type="error"
+    [dismissible]="true"
+    (dismiss)="errorMessage = null">
+  </app-error-message>
+
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>טוען נתונים...</p>
-  </div>
+  <app-loading *ngIf="loading" message="טוען נתונים..."></app-loading>
 
   <!-- Form -->
   <form *ngIf="!loading" class="report-form" (ngSubmit)="onSubmit()">

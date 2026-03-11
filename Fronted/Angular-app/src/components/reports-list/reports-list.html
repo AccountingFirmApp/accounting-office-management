@@ -9,13 +9,50 @@
     (editClicked)="onEditFromModal($event)"
   ></app-report-view-modal>
 
-  <!-- כותרת -->
-  <!-- <div class="header">
-    <h1>הדיווחים שלי</h1>
-    <p class="subtitle" *ngIf="workerService.currentWorker">
-      שלום {{ workerService.currentWorker.firstname }} {{ workerService.currentWorker.lastname }}
-    </p>
-  </div> -->
+  <!-- 🆕 Modal מרכזי לעובדות - יפה ומעוצב! -->
+  <div 
+    *ngIf="openWorkerPopoverId !== null" 
+    class="workers-modal-overlay"
+    (click)="closeWorkerPopover()"
+  >
+    <div 
+      class="workers-modal"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- כותרת -->
+      <div class="modal-header">
+        <h3 class="modal-title">עובדות משויכות</h3>
+        <button
+          class="modal-close-btn"
+          (click)="closeWorkerPopover()"
+          aria-label="סגור"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- תוכן -->
+      <div class="modal-body">
+        <ul class="workers-list">
+          <li *ngFor="let worker of selectedReportWorkers; let i = index" class="worker-item">
+            <span class="worker-number">{{ i + 1 }}</span>
+            <span class="worker-name">{{ worker }}</span>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- תחתית -->
+      <div class="modal-footer">
+        <span class="workers-count">סה"כ {{ selectedReportWorkers.length }} עובדות</span>
+        <button class="btn-close-modal" (click)="closeWorkerPopover()">
+          סגור
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- פילטרים -->
   <div class="filters-section">
@@ -76,16 +113,10 @@
   </div>
 
   <!-- טעינה -->
-  <div *ngIf="isLoading" class="loading">
-    <div class="spinner"></div>
-    <p>טוען דיווחים...</p>
-  </div>
+  <app-loading *ngIf="isLoading" message="טוען דיווחים..." size="large"></app-loading>
 
   <!-- הודעת שגיאה -->
-  <div *ngIf="errorMessage" class="error-message">
-    <span class="error-icon">⚠️</span>
-    {{ errorMessage }}
-  </div>
+  <app-error-message *ngIf="errorMessage" [message]="errorMessage" type="error"></app-error-message>
 
   <!-- טבלת דוחות -->
   <div *ngIf="!isLoading && !errorMessage" class="reports-table-wrapper">
@@ -101,13 +132,18 @@
           <th>סטטוס</th>
           <th>תאריך דיווח</th>
           <th>תאריך תשלום</th>
+          <th *ngIf="isAdminMode">עובדות משויכות</th>
           <th>פעולות</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let report of filteredReports" class="report-row" [class.delayed-report]="isReportDelayed(report)">
           <td class="company-name">
-            <span *ngIf="isReportDelayed(report)" class="delay-badge" [title]="getDelayText(report)">⚠️</span>
+            <svg *ngIf="isReportDelayed(report)" class="delay-badge" [title]="getDelayText(report)" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
             {{ report.companyName }}
           </td>
           <td>{{ report.reportTypeName }}</td>
@@ -125,22 +161,54 @@
           </td>
           <td>{{ formatDate(report.reportedDate) }}</td>
           <td>{{ formatDate(report.paidDate) }}</td>
+        
+          <td *ngIf="isAdminMode" class="worker-names-cell">
+            <!-- אם יש עובדות -->
+            <div *ngIf="hasWorkers(report)" class="workers-preview">
+              <span class="first-worker">{{ report.workerNames[0] }}</span>
+              
+              <!-- כפתור + -->
+              <button 
+                *ngIf="getWorkerCount(report) > 1"
+                class="more-workers-btn"
+                (click)="openWorkerPopover(report, $event)"
+              >
+                +{{ getWorkerCount(report) - 1 }}
+              </button>
+            </div>
+
+            <!-- אם אין עובדות -->
+            <span *ngIf="!hasWorkers(report)" class="no-workers">
+              -
+            </span>
+          </td>
+
           <td class="actions">
-            <button (click)="viewReport(report.id)" class="btn-view" title="צפייה">
-              👁️
+            <button (click)="viewReport(report.id)" class="btn-view" title="צפייה" aria-label="צפייה בדוח">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
             </button>
-            <button (click)="editReport(report.id)" class="btn-edit" title="עריכה">
-              ✏️
-            </button>
+            <!-- <button (click)="editReport(report.id)" class="btn-edit" title="עריכה" aria-label="ערוך דוח">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button> -->
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- אין תוצאות -->
-    <div *ngIf="filteredReports.length === 0" class="no-results">
-      <p>לא נמצאו דיווחים</p>
-      <button (click)="clearFilters()" class="btn-primary">נקה סינון</button>
-    </div>
-  </div>
+   <!-- אין תוצאות -->
+<div *ngIf="filteredReports.length === 0" class="empty-state empty-state--success">
+  <svg class="empty-icon empty-icon--success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+  <h3 class="empty-title empty-title--success">🎉 כל הכבוד!</h3>
+  <p class="empty-description empty-description--success">אין דיווחים שעליך לטפל בהם כרגע</p>
 </div>
+
+  </div>

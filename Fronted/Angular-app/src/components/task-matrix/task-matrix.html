@@ -1,0 +1,57 @@
+
+  <div class="matrix-container mat-elevation-z8">
+    <mat-card>
+      <mat-card-header>
+        <div class="header-content">
+          <mat-icon color="primary">grid_view</mat-icon>
+          <mat-card-title>מטריצת הגדרות משימות ללקוחות</mat-card-title>
+        </div>
+      </mat-card-header>
+  
+      <div class="table-responsive">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th class="sticky-col">לקוח / משימה</th>
+              <th *ngFor="let type of distinctTaskTypes; trackBy: trackByTaskType">{{ type }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let company of distinctCompanies; trackBy: trackByCompany">
+              <td class="sticky-col company-name">{{ company }}</td>
+              
+              <td *ngFor="let type of distinctTaskTypes; trackBy: trackByTaskType" class="config-cell">
+                <ng-container *ngIf="getConfig(company, type) as config">
+                  
+                  <div class="config-box" 
+                       [class.active]="config.isActive"
+                       (click)="openEditDialog(config)"
+                       [matTooltip]="config.isActive ? 'לחץ לעריכה' : 'לחץ להגדרה'">
+                    
+                    <div class="status-indicator" [class.is-active]="config.isActive"></div>
+                    
+                    <div class="details" *ngIf="config.isActive; else emptyState">
+                      <span class="worker">{{ config.workerName || 'לא שובץ' }}</span>
+                      <div class="meta-row">
+                        <span>{{ config.frequency }} חוד'</span>
+                        <span class="bullet">•</span>
+                        <span>יום {{ config.dueDay }}</span>
+                      </div>
+                    </div>
+                    
+                    <ng-template #emptyState>
+                      <div class="no-config">
+                        <mat-icon>add</mat-icon>
+                        <span>הגדר</span>
+                      </div>
+                    </ng-template>
+                  </div>
+  
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
+  </div>

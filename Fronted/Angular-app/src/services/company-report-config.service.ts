@@ -32,12 +32,9 @@ update(id: number, dto: any): Observable<CompanyReportConfigDto> {
 delete(id: number): Observable<void> {
   return this.api.delete<void>(`${this.endpoint}/${id}`);
 }
-  // Helper: קבלת תדירויות (ערכים קבועים זמני)
   getFrequencies(): Observable<any[]> {
-    // אופציה 1: אם יש endpoint בבאקאנד
-    // return this.api.get<any[]>('/frequencies');
+   
 
-    // אופציה 2: ערכים קבועים (זמני)
     return new Observable(observer => {
       observer.next([
         { id: 1, name: 'חודשי' },

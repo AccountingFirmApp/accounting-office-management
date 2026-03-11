@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Domain.Enums;
 using AutoMapper;
-//using Xunit;
+using Microsoft.Extensions.Logging;
 
 namespace AccountingSystem.Application.Handlers
 {
@@ -28,17 +28,14 @@ namespace AccountingSystem.Application.Handlers
         {
             var reports = await _reportInstanceRepository.GetAllAsync();
 
-            // ����� ��� ����
             var filteredReports = reports
                 .Where(r => r.Config != null && r.Config.Companyid == request.CompanyId);
 
-            // ����� ��� �����
             if (!string.IsNullOrEmpty(request.Status))
             {
                 filteredReports = filteredReports.Where(r => r.Status.ToString() == request.Status);
             }
 
-            // ����� ��� �����
             if (request.FromPeriod.HasValue)
             {
                 var fromDateOnly = DateOnly.FromDateTime(request.FromPeriod.Value);
@@ -51,30 +48,25 @@ namespace AccountingSystem.Application.Handlers
                 filteredReports = filteredReports.Where(r => r.Period <= toDateOnly);
             }
 
-            // ���� �-DTO - ? ��� null propagation operator
             var result = filteredReports
                 .OrderByDescending(r => r.Period)
-                .ToList() // ? ���� ������ �� ������� ��-DB
+                .ToList()
                 .Select(r => new ReportInstanceDetailDto
                 {
                     Id = r.Id,
                     ConfigId = r.Configid,
 
-                    // Company info
                     CompanyId = r.Config.Companyid,
                     CompanyName = r.Config.Company != null ? r.Config.Company.Name : string.Empty,
                     CompanyTaxId = r.Config.Company != null ? r.Config.Company.Taxid : string.Empty,
 
-                    // Report Type info
                     ReportTypeId = r.Config.Reporttypeid,
                     ReportTypeName = r.Config.Reporttype != null ? r.Config.Reporttype.Name : string.Empty,
                     ReportTypeShortCode = r.Config.Reporttype != null ? r.Config.Reporttype.Shortcode : string.Empty,
 
-                    // Frequency info
                     FrequencyName = r.Config.Frequency != null ? r.Config.Frequency.Name : string.Empty,
                     DayOfMonth = r.Config.Dayofmonth,
 
-                    // Instance data
                     Period = r.Period.ToDateTime(TimeOnly.MinValue),
                     Amount = r.Amount,
                     Status = r.Status.ToString(),
@@ -111,27 +103,22 @@ namespace AccountingSystem.Application.Handlers
             if (report == null)
                 return null;
 
-            // ? ����� DTO ������ �-memory (�� ���� LINQ query)
             return new ReportInstanceDetailDto
             {
                 Id = report.Id,
                 ConfigId = report.Configid,
 
-                // Company info
                 CompanyId = report.Config.Companyid,
                 CompanyName = report.Config.Company != null ? report.Config.Company.Name : string.Empty,
                 CompanyTaxId = report.Config.Company != null ? report.Config.Company.Taxid : string.Empty,
 
-                // Report Type info
                 ReportTypeId = report.Config.Reporttypeid,
                 ReportTypeName = report.Config.Reporttype != null ? report.Config.Reporttype.Name : string.Empty,
                 ReportTypeShortCode = report.Config.Reporttype != null ? report.Config.Reporttype.Shortcode : string.Empty,
 
-                // Frequency info
                 FrequencyName = report.Config.Frequency != null ? report.Config.Frequency.Name : string.Empty,
                 DayOfMonth = report.Config.Dayofmonth,
 
-                // Instance data
                 Period = report.Period.ToDateTime(TimeOnly.MinValue),
                 Amount = report.Amount,
                 Status = report.Status.ToString(),
@@ -165,23 +152,20 @@ namespace AccountingSystem.Application.Handlers
             var today = DateOnly.FromDateTime(DateTime.Now);
             var futureDate = today.AddDays(request.DaysAhead);
 
-            // �����
             var upcomingReports = allReports
                 .Where(r =>
                     (r.Status == ReportStatus.Pending || r.Status == ReportStatus.Reported) &&
                     r.Period <= futureDate);
 
-            // ����� ��� ����
             if (request.CompanyId.HasValue)
             {
                 upcomingReports = upcomingReports
                     .Where(r => r.Config.Companyid == request.CompanyId.Value);
             }
 
-            // ? ���� ������ �� �������, ��� �� ����� Select
             var result = upcomingReports
                 .OrderBy(r => r.Period)
-                .ToList() // ? ����� ��-DB
+                .ToList() 
                 .Select(r => new UpcomingReportDto
                 {
                     Id = r.Id,
@@ -200,130 +184,63 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 1: ���� �� �������� ==========
-
-    //public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
-    //{
-    //    private readonly IReportInstanceRepository _repository;
-    //    private readonly IMapper _mapper;
-
-    //    public GetAllReportsQueryHandler(IReportInstanceRepository repository, IMapper mapper)
-    //    {
-    //        _repository = repository;
-    //        _mapper = mapper;
-    //    }
-
-    //    public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
-    //    {
-    //        var reports = await _repository.GetAllAsync();
-    //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-    //    }
-
-
-
-    // Application/Handlers/GetAllReportsQueryHandler.cs
+   
     public class GetAllReportsQueryHandler : IRequestHandler<GetAllReportsQuery, List<ReportInstanceDetailDto>>
     {
         private readonly IReportInstanceRepository _repository;
         private readonly ICompanyWorkerRepository _companyWorkerRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<GetAllReportsQueryHandler> _logger;
 
         public GetAllReportsQueryHandler(
             IReportInstanceRepository repository,
             ICompanyWorkerRepository companyWorkerRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<GetAllReportsQueryHandler>logger)
         {
             _repository = repository;
             _companyWorkerRepository = companyWorkerRepository;
             _mapper = mapper;
+            _logger= logger;
         }
 
-        //    public async Task<List<ReportInstanceDetailDto>> Handle(
-        //        GetAllReportsQuery request,
-        //        CancellationToken cancellationToken)
-        //    {
-        //        // קבלת כל הדוחות
-        //        var reports = await _repository.GetAllAsync();
-
-        //        // 🔥 אם יש WorkerId - מסננים רק לחברות של העובדת הזו
-        //        if (request.WorkerId.HasValue)
-        //        {
-        //            // קבלת כל החברות של העובדת
-        //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
-        //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
-
-        //            // סינון הדוחות רק לחברות האלה
-        //            reports = reports
-        //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
-        //                .ToList();
-        //        }
-
-        //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-        //    }
-        //}
-
-
-        //    public async Task<List<ReportInstanceDetailDto>> Handle(
-        //GetAllReportsQuery request,
-        //CancellationToken cancellationToken)
-        //    {
-        //        var reports = await _repository.GetAllAsync();
-
-        //        // 🔥 אם יש WorkerId - מסננים רק לחברות של העובד הזה
-        //        // אם אין WorkerId (null) - מחזירים הכל (מצב מנהל)
-        //        if (request.WorkerId.HasValue)
-        //        {
-        //            var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
-        //            var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
-
-        //            reports = reports
-        //                .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
-        //                .ToList();
-        //        }
-
-        //        return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
-        //    }
-        //}
-
-
-        public async Task<List<ReportInstanceDetailDto>> Handle(
-    GetAllReportsQuery request,
-    CancellationToken cancellationToken)
-        {
-            Console.WriteLine($"🔍 Handler קיבל: WorkerId={request.WorkerId}, IsAdminMode={request.IsAdminMode}");
-
-            var reports = await _repository.GetAllAsync();
-
-            Console.WriteLine($"📊 סה\"כ דוחות במסד: {reports.Count()}");
-
-            if (request.WorkerId.HasValue)
+                  public async Task<List<ReportInstanceDetailDto>> Handle(GetAllReportsQuery request, CancellationToken cancellationToken)
             {
-                Console.WriteLine($"🔍 מסנן לעובד {request.WorkerId.Value}");
+                _logger.LogInformation($"📋 Handler: IsAdminMode={request.IsAdminMode}, WorkerId={request.WorkerId}");
 
-                var workerCompanies = await _companyWorkerRepository.GetByWorkerIdAsync(request.WorkerId.Value);
-                var companyIds = workerCompanies.Select(cw => cw.Companyid).ToHashSet();
+                var reports = await _repository.GetAllAsync();
 
-                Console.WriteLine($"📊 העובד משויך ל-{companyIds.Count} חברות: {string.Join(", ", companyIds)}");
+                if (request.WorkerId.HasValue)
+                {
+                    _logger.LogInformation($"🔍 מסנן לפי WorkerId={request.WorkerId.Value}");
 
-                reports = reports
-                    .Where(r => r.Config != null && companyIds.Contains(r.Config.Companyid))
-                    .ToList();
+                    reports = reports.Where(r =>
+                        r.Config != null &&
+                        r.Config.Company != null &&
+                        r.Config.Company.Companyworkers.Any(cw =>
+                            cw.Workerid == request.WorkerId.Value &&
+                            cw.Isactive == true
+                        )
+                    ).ToList();
+                }
 
-                Console.WriteLine($"✅ אחרי סינון: {reports.Count()} דוחות");
+                _logger.LogInformation($" אחרי פילטור: {reports.Count()} דוחות");
+
+                var mappedReports = _mapper.Map<List<ReportInstanceDetailDto>>(
+                    reports,
+                    opt => opt.Items["IsAdminMode"] = request.IsAdminMode
+                );
+
+                _logger.LogInformation($" החזרת {mappedReports.Count} דוחות");
+
+                return mappedReports;
             }
-            else
-            {
-                Console.WriteLine("✅ אין סינון - מחזיר הכל");
-            }
-
-            return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
         }
     }
 
+    // ========== Handler 2: דיווחים לפי Config ==========
 
-        // ========== Handler 2: דיווחים לפי Config ==========
-
-        public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
+    public class GetReportsByConfigIdQueryHandler : IRequestHandler<GetReportsByConfigIdQuery, List<ReportInstanceDetailDto>>
     {
         private readonly IReportInstanceRepository _repository;
         private readonly IMapper _mapper;
@@ -341,7 +258,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 3: ������� ��� ����� ==========
 
     public class GetReportsByStatusQueryHandler : IRequestHandler<GetReportsByStatusQuery, List<ReportInstanceDetailDto>>
     {
@@ -361,7 +277,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 4: ������� ������� ==========
 
     public class GetPendingReportsQueryHandler : IRequestHandler<GetPendingReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -381,7 +296,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 5: ������� ��� ����� ==========
 
     public class GetReportsByPeriodQueryHandler : IRequestHandler<GetReportsByPeriodQuery, List<ReportInstanceDetailDto>>
     {
@@ -401,7 +315,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 6: ������� ����� ������� ==========
 
     public class GetReportsByDateRangeQueryHandler : IRequestHandler<GetReportsByDateRangeQuery, List<ReportInstanceDetailDto>>
     {
@@ -421,7 +334,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 7: ������� ������ (OVERDUE) ==========
 
     public class GetOverdueReportsQueryHandler : IRequestHandler<GetOverdueReportsQuery, List<ReportInstanceDetailDto>>
     {
@@ -441,7 +353,6 @@ namespace AccountingSystem.Application.Handlers
         }
     }
 
-    // ========== Handler 8: ������� ������� ����� ==========
 
     public class GetReportsDueInNextDaysQueryHandler : IRequestHandler<GetReportsDueInNextDaysQuery, List<ReportInstanceDetailDto>>
     {
@@ -459,11 +370,6 @@ namespace AccountingSystem.Application.Handlers
             var reports = await _repository.GetReportsDueInNextDaysAsync(request.Days);
             return _mapper.Map<List<ReportInstanceDetailDto>>(reports);
         }
-
-
-
-
-
 
         // ========== Report Types Handlers ==========
 
@@ -484,8 +390,26 @@ namespace AccountingSystem.Application.Handlers
                 return _mapper.Map<List<ReportTypeDto>>(reportTypes);
             }
         }
+    public class GetReportTypesToEditQueryHandler : IRequestHandler<GetAllReportTypesToEditQuery, List<ReportTypeDto>>
+    {
+        private readonly IReportTypeRepository _repository;
+        private readonly IMapper _mapper;
 
-        public class GetReportTypeByIdQueryHandler : IRequestHandler<GetReportTypeByIdQuery, ReportTypeDto?>
+    
+
+        public GetReportTypesToEditQueryHandler(IReportTypeRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
+
+        public async Task<List<ReportTypeDto>> Handle(GetAllReportTypesToEditQuery request, CancellationToken cancellationToken)
+        {
+            var reportTypes = await _repository.GetToEdit();
+            return _mapper.Map<List<ReportTypeDto>>(reportTypes);
+        }
+    }
+    public class GetReportTypeByIdQueryHandler : IRequestHandler<GetReportTypeByIdQuery, ReportTypeDto?>
         {
             private readonly IReportTypeRepository _repository;
             private readonly IMapper _mapper;
@@ -530,7 +454,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive ?? true,
+                    Isactive = c.Isactive ?? true,
                     Year=c.Year
                 }).ToList();
             }
@@ -559,7 +483,7 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = c.Frequencyid,
                     FrequencyName = c.Frequency != null ? c.Frequency.Name : string.Empty,
                     DayOfMonth = c.Dayofmonth,
-                    IsActive = c.Isactive
+                    Isactive = c.Isactive
                 }).ToList();
             }
         }
@@ -590,9 +514,8 @@ namespace AccountingSystem.Application.Handlers
                     FrequencyId = config.Frequencyid,
                     FrequencyName = config.Frequency != null ? config.Frequency.Name : string.Empty,
                     DayOfMonth = config.Dayofmonth,
-                    IsActive = config.Isactive ?? true
+                    Isactive = config.Isactive ?? true
                 };
             }
         }
     }
-}

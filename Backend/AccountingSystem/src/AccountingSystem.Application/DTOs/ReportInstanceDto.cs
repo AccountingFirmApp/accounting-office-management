@@ -9,37 +9,31 @@ public class ReportInstanceDto
     public int ConfigId { get; set; }
     public DateTime Period { get; set; } // 2025-09-01
     public decimal? Amount { get; set; }
-    public string Status { get; set; } = string.Empty; // Pending, Reported, Paid, Approved, NotRequired
-    public string? PaymentMethod { get; set; } // Credit, Transfer, Check, Online, Cash
-    public DateTime? ReceiptDate { get; set; } // קבלת חומר מלקוח
+    public string Status { get; set; } = string.Empty; 
+    public string? PaymentMethod { get; set; } 
+    public DateTime? ReceiptDate { get; set; } 
     public DateTime? ReportedDate { get; set; }
     public DateTime? PaidDate { get; set; }
     public string Comments { get; set; } = string.Empty;
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }
+public class AutoReportInstanceDto
+{
+    public int ConfigId { get; set; }
+    public string CompanyName { get; set; }
+    public string ReportTypeName { get; set; }
+    public DateTime Period { get; set; }
+}
 
 /// <summary>
 /// DTO ליצירת מופע דיווח חדש
 /// </summary>
-//public class CreateReportInstanceDto
-//{
-//    public int ConfigId { get; set; }
-//    public DateTime Period { get; set; }
-//    public decimal? Amount { get; set; }
-//    public string? PaymentMethod { get; set; }
-//    public DateTime? ReceiptDate { get; set; }
-//    public string Comments { get; set; } = string.Empty;
-//}
-
-
-
 public class CreateReportInstanceDto
 {
-    // ❌ לא צריך ConfigId יותר
-    public int CompanyId { get; set; }        // 🆕
-    public int ReportTypeId { get; set; }     // 🆕
-    public int? FrequencyId { get; set; }     // 🆕 אופציונלי
+    public int CompanyId { get; set; }      
+    public int ReportTypeId { get; set; }  
+    public int? FrequencyId { get; set; }   
 
     public DateTime Period { get; set; }
     public decimal? Amount { get; set; }
@@ -70,24 +64,16 @@ public class ReportInstanceDetailDto
 {
     public int Id { get; set; }
     public int ConfigId { get; set; }
-    
-    // Company info
     public int CompanyId { get; set; }
     public string CompanyName { get; set; } = string.Empty;
     public string CompanyTaxId { get; set; } = string.Empty;
-    
-    // Report Type info
     public int ReportTypeId { get; set; }
     public string ReportTypeName { get; set; } = string.Empty;
     public string ReportTypeShortCode { get; set; } = string.Empty;
-    
-    // Frequency info
     public string FrequencyName { get; set; } = string.Empty;
     public short? DayOfMonth { get; set; }
-    
-    // Instance data
     public DateTime Period { get; set; }
-    public string PeriodFormatted => Period.ToString("MM/yyyy"); // 09/2025
+    public string PeriodFormatted => Period.ToString("MM/yyyy"); 
     public decimal? Amount { get; set; }
     public string Status { get; set; } = string.Empty;
     public string? PaymentMethod { get; set; }
@@ -95,8 +81,7 @@ public class ReportInstanceDetailDto
     public DateTime? ReportedDate { get; set; }
     public DateTime? PaidDate { get; set; }
     public string Comments { get; set; } = string.Empty;
-    
-    // Calculated fields
+    public List<string> WorkerNames { get; set; } = new List<string>();
     public int? DaysOverdue 
     {
         get

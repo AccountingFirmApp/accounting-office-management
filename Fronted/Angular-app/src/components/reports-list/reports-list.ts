@@ -1,110 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router'; // ← הוסף ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReportService } from '../../services/report';
 import { ReportInstanceDetail } from '../../models/report-instance';
 import { WorkerService } from '../../services/worker';
 import { ReportViewModalComponent } from '../report-view/report-view';
+import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
 
 @Component({
   selector: 'app-reports-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReportViewModalComponent],
+  imports: [CommonModule, FormsModule, ReportViewModalComponent, LoadingComponent, ErrorMessageComponent],
   templateUrl: './reports-list.html',
   styleUrls: ['./reports-list.css']
 })
-// export class ReportsListComponent implements OnInit {
-//   reports: ReportInstanceDetail[] = [];
-//   filteredReports: ReportInstanceDetail[] = [];
-//   isLoading: boolean = false;
-//   errorMessage: string = '';
-  
-//   selectedReport: ReportInstanceDetail | null = null;
-//   isModalOpen: boolean = false;
-  
-//   // פילטרים
-//   searchTerm: string = '';
-//   selectedStatus: string = 'all';
-//   selectedCompany: string = 'all';
-//   selectedReportType: string = 'all';
-  
-//   // ← הוסף משתנה לאחסון companyId מה-URL
-//   filterByCompanyId: number | null = null;
-  
-//   // רשימות ייחודיות לפילטרים
-//   companies: string[] = [];
-//   reportTypes: string[] = [];
-//   statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
-
-//   constructor(
-//     private reportService: ReportService,
-//     public workerService: WorkerService,
-//     private router: Router,
-//     private route: ActivatedRoute // ← הוסף ActivatedRoute
-//   ) { }
-//   isAdminMode: boolean = false; // 🆕 דגל מצב
-
-//   ngOnInit(): void {
-//     // ← קרא את companyId מה-query params
-//     this.route.queryParams.subscribe(params => {
-//       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-//       this.loadReports();
-//     });
-    
-//     console.log('Worker in ReportsListComponent:', this.workerService.currentWorker);
-//   }
-
-//   loadReports(): void {
-//   this.isLoading = true;
-//   this.errorMessage = '';
-
-//   console.log('🔍 מחפש דוחות עבור companyId:', this.filterByCompanyId);
-
-//   this.reportService.getAll().subscribe({
-//     next: (data) => {
-//       console.log('📊 כל הדוחות:', data);
-      
-//       // הדפס את כל ה-companyId שיש בדוחות
-//       const companyIds = data.map(r => r.companyId);
-//       console.log('📊 רשימת companyId בדוחות:', companyIds);
-      
-//       this.reports = data;
-      
-//       if (this.filterByCompanyId) {
-//         this.reports = data.filter(r => {
-//           const match = r.companyId === this.filterByCompanyId;
-//           if (match) {
-//             console.log('✅ מצאתי דוח מתאים!', r);
-//           }
-//           return match;
-//         });
-//         console.log(`✅ סה"כ ${this.reports.length} דוחות מפולטרים`);
-//       }
-      
-//       this.filteredReports = this.reports;
-//       this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
-//       this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
-      
-//       this.isLoading = false;
-//     },
-//      error: (error) => {
-//       this.isLoading = false;
-//       console.error('❌ שגיאה בטעינת דוחות:', error);
-      
-//       if (error.status === 401) {
-//         this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
-//       } else if (error.status === 500) {
-//         this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
-//       } else {
-//         this.errorMessage = 'שגיאה בטעינת הדוחות';
-//       }}
-//   });
-// }
-
-
-// reports-list.component.ts
-export class ReportsListComponent implements OnInit {
+export class ReportsListComponent implements OnInit, OnDestroy {
   reports: ReportInstanceDetail[] = [];
   filteredReports: ReportInstanceDetail[] = [];
   isLoading: boolean = false;
@@ -113,13 +27,16 @@ export class ReportsListComponent implements OnInit {
   selectedReport: ReportInstanceDetail | null = null;
   isModalOpen: boolean = false;
   
+  openWorkerPopoverId: number | null = null;
+  selectedReportWorkers: string[] = [];
+
   searchTerm: string = '';
   selectedStatus: string = 'all';
   selectedCompany: string = 'all';
   selectedReportType: string = 'all';
   
   filterByCompanyId: number | null = null;
-  isAdminMode: boolean = false; // 🆕 דגל מצב מנהל
+  isAdminMode: boolean = false;
   
   companies: string[] = [];
   reportTypes: string[] = [];
@@ -132,122 +49,71 @@ export class ReportsListComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  // ngOnInit(): void {
-  //   // 🔥 קריאת query params (גם companyId וגם adminMode)
-  //   this.route.queryParams.subscribe(params => {
-  //     this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-  //     this.isAdminMode = params['adminMode'] === 'true';
-      
-  //     console.log('🔍 פרמטרים:', {
-  //       companyId: this.filterByCompanyId,
-  //       adminMode: this.isAdminMode
-  //     });
-      
-  //     this.loadReports();
-  //   });
-  // }
-
-  // loadReports(): void {
-  //   this.isLoading = true;
-  //   this.errorMessage = '';
-
-  //   console.log('🔍 טוען דוחות במצב:', {
-  //     isAdminMode: this.isAdminMode,
-  //     filterByCompanyId: this.filterByCompanyId
-  //   });
-
-  //   // 🔥 שליחת isAdminMode לשרת
-  //   this.reportService.getAll(this.isAdminMode).subscribe({
-  //     next: (data) => {
-  //       console.log('📊 קיבלתי מהשרת:', data.length, 'דוחות');
-        
-  //       this.reports = data;
-        
-  //       // 🔥 פילטור לפי companyId (אם יש) - זה פילטור בצד לקוח
-  //       if (this.filterByCompanyId) {
-  //         console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
-          
-  //         this.reports = data.filter(r => {
-  //           const match = r.companyId === this.filterByCompanyId;
-  //           if (match) {
-  //             console.log('✅ מצאתי דוח מתאים:', r);
-  //           }
-  //           return match;
-  //         });
-          
-  //         console.log(`✅ סה"כ ${this.reports.length} דוחות אחרי פילטור`);
-  //       }
-        
-  //       this.filteredReports = this.reports;
-  //       this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
-  //       this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
-        
-  //       this.isLoading = false;
-  //     },
-  //     error: (error) => {
-  //       this.isLoading = false;
-  //       console.error('❌ שגיאה בטעינת דוחות:', error);
-        
-  //       if (error.status === 401) {
-  //         this.errorMessage = 'אין הרשאה - נא להתחבר מחדש';
-  //       } else if (error.status === 500) {
-  //         this.errorMessage = 'שגיאה בשרת - נסה שוב מאוחר יותר';
-  //       } else {
-  //         this.errorMessage = 'שגיאה בטעינת הדוחות';
-  //       }
-  //     }
-  //   });
-  // }
-
-
-ngOnInit(): void {
-  this.route.queryParams.subscribe(params => {
-    this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-    this.isAdminMode = params['adminMode'] === 'true';
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+      this.isAdminMode = params['adminMode'] === 'true';      
+      this.loadReports();
+    });
     
-    console.log('🔍 Query Params שהתקבלו:', params);
-    console.log('🔍 isAdminMode:', this.isAdminMode);
-    console.log('🔍 filterByCompanyId:', this.filterByCompanyId);
-    
-    this.loadReports();
-  });
-}
+    document.addEventListener('click', () => {
+      this.closeWorkerPopover();
+    });
+  }
 
-loadReports(): void {
-  this.isLoading = true;
-  this.errorMessage = '';
+  ngOnDestroy(): void {
+    document.removeEventListener('click', () => {
+      this.closeWorkerPopover();
+    });
+  }
 
-  console.log('📞 קורא ל-getAll עם isAdminMode:', this.isAdminMode);
+  openWorkerPopover(report: ReportInstanceDetail, event: Event): void {
+    event.stopPropagation();
+    this.selectedReportWorkers = report.workerNames || [];
+    this.openWorkerPopoverId = report.id;
+  }
 
-  this.reportService.getAll(this.isAdminMode).subscribe({
-    next: (data) => {
-      console.log('✅ התקבלו דוחות מהשרת:', data);
-      console.log('✅ כמות דוחות:', data.length);
-      
-      this.reports = data;
-      
-      if (this.filterByCompanyId) {
-        console.log('🔍 מסנן לפי companyId:', this.filterByCompanyId);
-        this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
-        console.log('✅ אחרי פילטור:', this.reports.length);
+  closeWorkerPopover(): void {
+    this.openWorkerPopoverId = null;
+    this.selectedReportWorkers = [];
+  }
+
+  getWorkerCount(report: ReportInstanceDetail): number {
+    return report.workerNames?.length || 0;
+  }
+
+  hasWorkers(report: ReportInstanceDetail): boolean {
+    return report.workerNames && report.workerNames.length > 0;
+  }
+  loadReports(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+
+    this.reportService.getAll(this.isAdminMode).subscribe({
+      next: (data) => {        
+        this.reports = data;
+
+        if (this.filterByCompanyId) {
+          this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+        }
+
+        this.filteredReports = this.reports;
+        this.populateFilterOptions();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'שגיאה בטעינת הדוחות';
       }
-      
-      this.filteredReports = this.reports;
-      this.isLoading = false;
-    },
-    error: (error) => {
-      console.error('❌ שגיאה:', error);
-      this.isLoading = false;
-      this.errorMessage = 'שגיאה בטעינת הדוחות';
-    }
-  });
-}
+    });
+  }
 
-
-  // שאר הקוד נשאר אותו דבר...
-
-
-
+  populateFilterOptions(): void {
+    this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
+    this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+    
+  }
 
   applyFilters(): void {
     this.filteredReports = this.reports.filter(report => {
@@ -274,25 +140,13 @@ loadReports(): void {
     this.selectedStatus = 'all';
     this.selectedCompany = 'all';
     this.selectedReportType = 'all';
-    
-    // ← אם יש פילטר לפי חברה, אל תנקה אותו
-    if (this.filterByCompanyId) {
-      this.filteredReports = this.reports; // כבר מפולטר לפי החברה
-    } else {
-      this.filteredReports = this.reports;
-    }
+    this.filteredReports = this.reports;
   }
 
-  /**
-   * 🔥 בדיקה האם הדוח באיחור
-   */
   isReportDelayed(report: ReportInstanceDetail): boolean {
     return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
   }
 
-  /**
-   * 🔥 קבלת טקסט איחור
-   */
   getDelayText(report: ReportInstanceDetail): string {
     if (!this.isReportDelayed(report)) return '';
     const days = report.daysOverdue!;

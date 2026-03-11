@@ -5,23 +5,47 @@ import { CreateReportInstance, UpdateReportInstance } from '../../models/report-
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BackButtonComponent } from '../../app/components/shared/back-button/back-button.component';
+import { LoadingComponent } from '../../app/components/shared/loading/loading.component';
+import { ErrorMessageComponent } from '../../app/components/shared/error-message/error-message.component';
+import { CompanyDto } from '../../models/company.dto';
+import { ReportTypeDto } from '../../models/report-type.dto';
+
+interface ReportFormData {
+  id?: number;
+  companyId: string | number;
+  reportTypeId: string | number;
+  configId: string | number;
+  frequencyId?: string | number;
+  period: Date;
+  amount: number | null | undefined;
+  status: string;
+  paymentMethod: string;
+  receiptDate: Date | null;
+  reportedDate: Date | null;
+  paidDate: Date | null;
+  comments: string;
+}
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, BackButtonComponent],
+  imports: [CommonModule, FormsModule, BackButtonComponent, LoadingComponent, ErrorMessageComponent],
   selector: 'app-report-form',
   templateUrl: './report-form.html',
   styleUrls: ['./report-form.css']
 })
 export class ReportFormComponent implements OnInit {
-  
+
   isEditMode = false;
   reportId: number | null = null;
   loading = false;
   submitting = false;
 
+  // Success/Error messages
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+
   // Form data
-  formData: any = {
+  formData: ReportFormData = {
     companyId: '',
     reportTypeId: '',
     configId: '',
@@ -35,17 +59,15 @@ export class ReportFormComponent implements OnInit {
     comments: ''
   };
 
-  // Date strings for input binding
   periodString = '';
   receiptDateString = '';
   reportedDateString = '';
   paidDateString = '';
 
-  // רשימות מהשרת
   companies: any[] = [];
   reportTypes: any[] = [];
   availableReportTypes: any[] = [];
-  configs: any[] = []; // לשמירת כל ה-configs לצורך מציאת configId
+  configs: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -60,13 +82,12 @@ export class ReportFormComponent implements OnInit {
   loadData() {
     this.loading = true;
     
-    // טען את כל הנתונים במקביל
     Promise.all([
       this.loadCompanies(),
       this.loadReportTypes(),
       this.loadConfigs()
     ]).then(() => {
-      // אחרי שכל הנתונים נטענו, בדוק אם זה מצב עריכה
+     
       this.route.params.subscribe(params => {
         if (params['id']) {
           this.isEditMode = true;
@@ -78,8 +99,7 @@ export class ReportFormComponent implements OnInit {
         }
       });
     }).catch(err => {
-      console.error('Error loading data:', err);
-      alert('שגיאה בטעינת הנתונים');
+      // console.error('Error loading data:', err);
       this.loading = false;
     });
   }
@@ -92,7 +112,7 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
-          console.error('Error loading companies:', err);
+          // console.error('Error loading companies:', err);
           reject(err);
         }
       });
@@ -104,11 +124,11 @@ export class ReportFormComponent implements OnInit {
       this.reportService.getReportTypes().subscribe({
         next: (data) => {
           this.reportTypes = data;
-          this.availableReportTypes = data; // הצג את כל סוגי הדיווחים
+          this.availableReportTypes = data; 
           resolve();
         },
         error: (err) => {
-          console.error('Error loading report types:', err);
+          // console.error('Error loading report types:', err);
           reject(err);
         }
       });
@@ -123,7 +143,7 @@ export class ReportFormComponent implements OnInit {
           resolve();
         },
         error: (err) => {
-          console.error('Error loading configs:', err);
+          // console.error('Error loading configs:', err);
           reject(err);
         }
       });
@@ -131,7 +151,6 @@ export class ReportFormComponent implements OnInit {
   }
 
   onCompanyChange() {
-    // איפוס בחירות
     this.formData.reportTypeId = '';
     this.formData.configId = '';
     this.updateConfigId();
@@ -143,7 +162,6 @@ export class ReportFormComponent implements OnInit {
 
   updateConfigId() {
     if (this.formData.companyId && this.formData.reportTypeId) {
-      // מצא את ה-config המתאים
       const config = this.configs.find(c => 
         c.companyId === +this.formData.companyId && 
         c.reportTypeId === +this.formData.reportTypeId
@@ -152,7 +170,6 @@ export class ReportFormComponent implements OnInit {
       if (config) {
         this.formData.configId = config.id;
       } else {
-        // אם לא נמצא config - אולי צריך ליצור אחד או להציג הודעה
         console.warn('No matching config found for company and report type');
         this.formData.configId = '';
       }
@@ -162,7 +179,6 @@ export class ReportFormComponent implements OnInit {
   }
 
   initNewReport() {
-    // Set default period to current month
     const now = new Date();
     this.periodString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     this.formData.period = now;
@@ -173,7 +189,6 @@ export class ReportFormComponent implements OnInit {
     
     this.reportService.getById(this.reportId).subscribe({
       next: (report) => {
-        // מצא את ה-config כדי לקבל את companyId ו-reportTypeId
         const config = this.configs.find(c => c.id === report.configId);
         
         this.formData = {
@@ -182,7 +197,7 @@ export class ReportFormComponent implements OnInit {
           companyId: config?.companyId || '',
           reportTypeId: config?.reportTypeId || '',
           period: new Date(report.period),
-          amount: report.amount,
+          amount: report.amount ?? null,
           status: report.status,
           paymentMethod: report.paymentMethod || '',
           receiptDate: report.receiptDate ? new Date(report.receiptDate) : null,
@@ -191,7 +206,6 @@ export class ReportFormComponent implements OnInit {
           comments: report.comments || ''
         };
 
-        // Convert to string format for inputs
         this.periodString = this.dateToMonthString(this.formData.period);
         this.receiptDateString = this.dateToDateString(this.formData.receiptDate);
         this.reportedDateString = this.dateToDateString(this.formData.reportedDate);
@@ -200,8 +214,7 @@ export class ReportFormComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading report:', err);
-        alert('שגיאה בטעינת הדיווח');
+        // console.error('Error loading report:', err);
         this.goBack();
       }
     });
@@ -239,10 +252,7 @@ export class ReportFormComponent implements OnInit {
   }
 
   onSubmit() {
-    // if (!this.formData.configId) {
-    //   alert('יש לבחור חברה וסוג דיווח');
-    //   return;
-    // }
+   
 
     this.submitting = true;
 
@@ -254,11 +264,11 @@ export class ReportFormComponent implements OnInit {
   }
 createReport() {
   const data: CreateReportInstance = {
-    companyId: this.formData.companyId,        // מהטופס
-    reportTypeId: this.formData.reportTypeId,  // מהטופס
-    frequencyId: this.formData.frequencyId,    // אופציונלי
+    companyId: +this.formData.companyId,        
+    reportTypeId: +this.formData.reportTypeId,  
+    frequencyId: this.formData.frequencyId ? +this.formData.frequencyId : undefined,
     period: this.formData.period,
-    amount: this.formData.amount || undefined,
+    amount: this.formData.amount ?? undefined,
     paymentMethod: this.formData.paymentMethod || undefined,
     receiptDate: this.formData.receiptDate || undefined,
     comments: this.formData.comments || ''
@@ -266,22 +276,17 @@ createReport() {
 
   this.reportService.create(data).subscribe({
     next: () => {
-      alert('הדיווח נוצר בהצלחה! ✅');
-      this.goBack();
+      this.successMessage = 'הדיווח נוצר בהצלחה';
+      setTimeout(() => {
+        this.goBack();
+      }, 1500);
     },
     error: (err) => {
-      console.error('Error creating report:', err);
-      alert('שגיאה ביצירת הדיווח');
+      this.errorMessage = 'שגיאה ביצירת הדיווח';
       this.submitting = false;
     }
   });
 }
-
-
-
-
-
-
   updateReport() {
     const data: UpdateReportInstance = {
       id: this.reportId!,
@@ -296,12 +301,13 @@ createReport() {
 
     this.reportService.update(this.reportId!, data).subscribe({
       next: () => {
-        alert('הדיווח עודכן בהצלחה! ✅');
-        this.goBack();
+        this.successMessage = 'הדיווח עודכן בהצלחה';
+        setTimeout(() => {
+          this.goBack();
+        }, 1500);
       },
       error: (err) => {
-        console.error('Error updating report:', err);
-        alert('שגיאה בעדכון הדיווח');
+        this.errorMessage = 'שגיאה בעדכון הדיווח';
         this.submitting = false;
       }
     });
@@ -311,6 +317,5 @@ createReport() {
     this.router.navigate(['/reports'], { 
     queryParams: { adminMode: 'true' } 
   });}
-    // this.router.navigate(['/reports']);
   
 }

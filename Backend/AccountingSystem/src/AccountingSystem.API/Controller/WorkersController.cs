@@ -2,7 +2,9 @@
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.Queries.Workers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -23,12 +25,13 @@ namespace AccountingSystem.API.Controllers
         /// קבלת כל העובדים
         /// GET: api/workers
         /// </summary>
+
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult<List<WorkerDto>>> GetAll()
+        public async Task<ActionResult<List<WorkerDto>>> GetAll([FromQuery] bool? isActive = true)
         {
             try
             {
-                var query = new GetAllWorkersQuery();
+                var query = new GetAllWorkersQuery { IsActive = isActive };
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
@@ -37,7 +40,6 @@ namespace AccountingSystem.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
         /// <summary>
         /// קבלת עובד לפי ID
         /// GET: api/workers/5
@@ -77,15 +79,73 @@ namespace AccountingSystem.API.Controllers
         }
 
         /// <summary>
-        /// יצירת עובד חדש
-        /// POST: api/workers
+        /// קבל את כל המשימות של עובד מסוים
         /// </summary>
-        [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult<WorkerDto>> Create([FromBody] Application.Commands.Workers.CreateWorkerCommand command)
+      
+        [HttpGet("{workerId}/tasks")]
+        public async Task<ActionResult> GetWorkerTasks(int workerId)
         {
             try
             {
+                var query = new GetWorkerTasksQuery { WorkerId = workerId };
+                var tasks = await _mediator.Send(query);
+
+                var response = tasks.Select(t => new
+                {
+                    t.Id,
+                    t.Companyid,
+                    CompanyName = t.Company.Name,
+                    t.Tasktypeid,
+                    TaskTypeName = t.Tasktype.Name,
+                    t.Period,
+                    t.Duedate,
+                    t.Completeddate,
+                    t.Status,
+                    t.Notes,
+                    t.Assignedworkerid,
+                    AssignedWorkerName = t.Assignedworker != null
+                        ? $"{t.Assignedworker.Firstname} {t.Assignedworker.Lastname}"
+                        : null,
+                    t.Createdat,
+                    t.Updatedat
+                });
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "שגיאה בטעינת משימות", detail = ex.Message });
+            }
+        }
+    
+
+/// <summary>
+/// יצירת עובד חדש
+/// POST: api/workers
+/// </summary>
+  [HttpPost]
+        [Authorize] 
+        public async Task<ActionResult<WorkerDto>> Create([FromBody] CreateWorkerCommand command)
+        {
+            try
+            {
+                var firmIdClaim = User.FindFirst("FirmId")?.Value;
+
+                if (string.IsNullOrEmpty(firmIdClaim) || !int.TryParse(firmIdClaim, out int firmId))
+                {
+                    return Unauthorized(new { message = "לא נמצא FirmId עבור המשתמש המחובר" });
+                }
+
+                var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+                if (roleClaim != "Admin") // שנה ל-"Admin" או מה שמתאים לך
+                {
+                    return Forbid();
+                }
+
+                command.Firmid = firmId;
+
                 var result = await _mediator.Send(command);
+
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
             }
             catch (Exception ex)
@@ -93,7 +153,6 @@ namespace AccountingSystem.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
         /// <summary>
         /// עדכון עובד
         /// PUT: api/workers/5
@@ -155,6 +214,13 @@ namespace AccountingSystem.API.Controllers
             {
                 return NotFound(new { message = ex.Message });
             }
+        }
+
+        [HttpGet("by-company/{companyId}")]
+        public async Task<IActionResult> GetWorkersByCompany(int companyId)
+        {
+            var result = await _mediator.Send(new GetWorkersByCompanyQuery(companyId));
+            return Ok(result);
         }
     }
 }

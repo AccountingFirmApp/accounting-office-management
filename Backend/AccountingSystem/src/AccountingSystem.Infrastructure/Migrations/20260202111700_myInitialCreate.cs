@@ -7,13 +7,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AccountingSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class myInitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:audit_entity", "ReportInstance,AccountingSystem.Domain.Entities.Task,Company,Worker")
+                .Annotation("Npgsql:Enum:audit_entity", "ReportInstance,Task,Company,Worker")
                 .Annotation("Npgsql:Enum:payment_method", "Credit,Transfer,Check,Online,Cash")
                 .Annotation("Npgsql:Enum:report_status", "Pending,Reported,Paid,Approved,NotRequired")
                 .Annotation("Npgsql:Enum:task_category", "Banks,Income,Expenses,Reconciliations,Other")
@@ -91,7 +91,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    category = table.Column<string>(type: "text", nullable: false),
                     defaultorder = table.Column<int>(type: "integer", nullable: true, defaultValue: 99),
                     createdat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
@@ -159,9 +158,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                     hiredate = table.Column<DateOnly>(type: "date", nullable: true),
                     createdat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
                     updatedat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    passwordhash = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    googleid = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    authprovider = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true, defaultValue: "Local")
+                    authprovider = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true, defaultValueSql: "'Local'::character varying"),
+                    passwordhash = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false, defaultValueSql: "''::character varying"),
+                    googleid = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -219,7 +218,8 @@ namespace AccountingSystem.Infrastructure.Migrations
                     dayofmonth = table.Column<short>(type: "smallint", nullable: true),
                     isactive = table.Column<bool>(type: "boolean", nullable: true, defaultValue: true),
                     createdat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    updatedat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP")
+                    updatedat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    year = table.Column<int>(type: "integer", nullable: false, defaultValueSql: "EXTRACT(year FROM CURRENT_DATE)")
                 },
                 constraints: table =>
                 {
@@ -270,6 +270,46 @@ namespace AccountingSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "companytask",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    companyid = table.Column<int>(type: "integer", nullable: false),
+                    tasktypeid = table.Column<int>(type: "integer", nullable: false),
+                    period = table.Column<DateOnly>(type: "date", nullable: false),
+                    duedate = table.Column<DateOnly>(type: "date", nullable: true),
+                    completeddate = table.Column<DateOnly>(type: "date", nullable: true),
+                    assignedworkerid = table.Column<int>(type: "integer", nullable: true),
+                    notes = table.Column<string>(type: "text", nullable: true),
+                    createdat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    updatedat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Status = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("task_pkey", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_task_company",
+                        column: x => x.companyid,
+                        principalTable: "company",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_task_tasktype",
+                        column: x => x.tasktypeid,
+                        principalTable: "tasktype",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_task_worker",
+                        column: x => x.assignedworkerid,
+                        principalTable: "worker",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "companyworker",
                 columns: table => new
                 {
@@ -298,46 +338,6 @@ namespace AccountingSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "task",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    companyid = table.Column<int>(type: "integer", nullable: false),
-                    tasktypeid = table.Column<int>(type: "integer", nullable: false),
-                    period = table.Column<DateOnly>(type: "date", nullable: false),
-                    duedate = table.Column<DateOnly>(type: "date", nullable: true),
-                    completeddate = table.Column<DateOnly>(type: "date", nullable: true),
-                    assignedworkerid = table.Column<int>(type: "integer", nullable: true),
-                    notes = table.Column<string>(type: "text", nullable: true),
-                    status = table.Column<string>(type: "text", nullable: false),
-                    createdat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    updatedat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("task_pkey", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_task_company",
-                        column: x => x.companyid,
-                        principalTable: "company",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_task_tasktype",
-                        column: x => x.tasktypeid,
-                        principalTable: "tasktype",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "fk_task_worker",
-                        column: x => x.assignedworkerid,
-                        principalTable: "worker",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "reportinstance",
                 columns: table => new
                 {
@@ -346,14 +346,14 @@ namespace AccountingSystem.Infrastructure.Migrations
                     configid = table.Column<int>(type: "integer", nullable: false),
                     period = table.Column<DateOnly>(type: "date", nullable: false),
                     amount = table.Column<decimal>(type: "numeric(12,2)", precision: 12, scale: 2, nullable: true),
-                    status = table.Column<string>(type: "text", nullable: false),
-                    paymentmethod = table.Column<string>(type: "text", nullable: true),
                     receiptdate = table.Column<DateOnly>(type: "date", nullable: true),
                     reporteddate = table.Column<DateOnly>(type: "date", nullable: true),
                     paiddate = table.Column<DateOnly>(type: "date", nullable: true),
                     comments = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    updatedat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP")
+                    updatedat = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Status = table.Column<int>(type: "integer", nullable: true),
+                    PaymentMethod = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -382,6 +382,12 @@ namespace AccountingSystem.Infrastructure.Migrations
                 column: "workerid");
 
             migrationBuilder.CreateIndex(
+                name: "company_taxid_key",
+                table: "company",
+                column: "taxid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "idx_company_firm",
                 table: "company",
                 column: "firmid");
@@ -389,8 +395,7 @@ namespace AccountingSystem.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "idx_company_taxid",
                 table: "company",
-                column: "taxid",
-                unique: true);
+                column: "taxid");
 
             migrationBuilder.CreateIndex(
                 name: "idx_contact_company",
@@ -413,10 +418,36 @@ namespace AccountingSystem.Infrastructure.Migrations
                 column: "reporttypeid");
 
             migrationBuilder.CreateIndex(
-                name: "uq_company_report",
+                name: "uq_company_report_year",
                 table: "companyreportconfig",
-                columns: new[] { "companyid", "reporttypeid" },
+                columns: new[] { "companyid", "reporttypeid", "year" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "idx_task_assigned",
+                table: "companytask",
+                column: "assignedworkerid");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_task_company_period",
+                table: "companytask",
+                columns: new[] { "companyid", "period" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_companytask_tasktypeid",
+                table: "companytask",
+                column: "tasktypeid");
+
+            migrationBuilder.CreateIndex(
+                name: "uq_task_period",
+                table: "companytask",
+                columns: new[] { "companyid", "tasktypeid", "period" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "idx_company_worker",
+                table: "companyworker",
+                columns: new[] { "companyid", "workerid" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_companyworker_workerid",
@@ -452,25 +483,9 @@ namespace AccountingSystem.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "idx_task_assigned",
-                table: "task",
-                column: "assignedworkerid");
-
-            migrationBuilder.CreateIndex(
-                name: "idx_task_company_period",
-                table: "task",
-                columns: new[] { "companyid", "period" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_task_tasktypeid",
-                table: "task",
-                column: "tasktypeid");
-
-            migrationBuilder.CreateIndex(
-                name: "uq_task_period",
-                table: "task",
-                columns: new[] { "companyid", "tasktypeid", "period" },
-                unique: true);
+                name: "idx_worker_email",
+                table: "worker",
+                column: "email");
 
             migrationBuilder.CreateIndex(
                 name: "idx_worker_firm",
@@ -505,25 +520,28 @@ namespace AccountingSystem.Infrastructure.Migrations
                 name: "companycontact");
 
             migrationBuilder.DropTable(
+                name: "companytask");
+
+            migrationBuilder.DropTable(
                 name: "companyworker");
 
             migrationBuilder.DropTable(
                 name: "reportinstance");
 
             migrationBuilder.DropTable(
-                name: "task");
-
-            migrationBuilder.DropTable(
                 name: "workerroletype");
-
-            migrationBuilder.DropTable(
-                name: "companyreportconfig");
 
             migrationBuilder.DropTable(
                 name: "tasktype");
 
             migrationBuilder.DropTable(
                 name: "worker");
+
+            migrationBuilder.DropTable(
+                name: "companyreportconfig");
+
+            migrationBuilder.DropTable(
+                name: "role");
 
             migrationBuilder.DropTable(
                 name: "company");
@@ -533,9 +551,6 @@ namespace AccountingSystem.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "reporttype");
-
-            migrationBuilder.DropTable(
-                name: "role");
 
             migrationBuilder.DropTable(
                 name: "accountingfirm");

@@ -14,6 +14,7 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         System.Threading.Tasks.Task<IEnumerable<Companyreportconfig>> GetByCompanyIdAsync(int companyId);
         System.Threading.Tasks.Task AddAsync(Companyreportconfig company);
         System.Threading.Tasks.Task<Companyreportconfig?> GetByIdWithDetailsAsync(int id);
+        System.Threading.Tasks.Task<List<Companyreportconfig>?> GetByWorkerId(int workerId);
 
 
         // חיפושים ספציפיים
@@ -26,5 +27,8 @@ namespace AccountingSystem.Domain.Interfaces.Repositories
         // בדיקות
         System.Threading.Tasks.Task<bool> ConfigExistsAsync(int companyId, int reportTypeId);
         System.Threading.Tasks.Task<Companyreportconfig?> GetConfigByCompanyAndReportTypeAsync(int companyId, int reportTypeId);
+        Task DeleteByCompanyIdAsync(int companyId);
+        Task SoftDeleteByCompanyIdAsync(int companyId);
+        Task<List<int>> GetConfigIdsByCompanyIdAsync(int companyId); // עדיין צריך את זה למחיקה הקשה
     }
 }

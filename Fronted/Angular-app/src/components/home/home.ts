@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { WorkerService } from '../../services/worker';
 import { WorkerInfoDto } from '../../models/auth';
 import { AuthService } from '../../services/auth.service';
-import { log } from 'console';
 
 @Component({
   selector: 'app-home',
@@ -22,17 +21,20 @@ export class HomeComponent implements OnInit{
   currentWorker!:WorkerInfoDto;
   ngOnInit(): void {
     this.currentWorker=this.workerService.currentWorker;
+
   }
 
-  // ניווט לדף חברות עובדת
   navigateToWorkerCompanies(): void {
+
+
     if(this.currentWorker!=null)
     this.router.navigate([`/workers/${this.currentWorker.id}/companies`]);
 
   }
     navigateToTaskCompanies(): void {
-    if(this.currentWorker!=null)
-    this.router.navigate([`companies/3/tasks`]);
+  
+    
+    this.router.navigate([`workers/${this.currentWorker.id}/tasks`]);
 
   }
   navigateToReports() {
@@ -41,5 +43,8 @@ export class HomeComponent implements OnInit{
 
   navigateToManagement() {
     this.router.navigate(['/management']);
+  }
+    navigateToSettings(): void {
+    this.router.navigate(['/dashboard/report-config']);
   }
 }

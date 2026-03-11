@@ -1,7 +1,11 @@
-﻿using AccountingSystem.Domain.Entities;
+﻿using AccountingSystem.Application.DTOs;
+using AccountingSystem.Domain.Entities;
+using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using AccountingSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +13,17 @@ using System.Linq.Expressions;
 
 namespace AccountingSystem.Infrastructure.Repositories
 {
-    /// <summary>
-    /// מימוש של פעולות Repository עבור דוחות
-    /// </summary>
+   
     public class ReportInstanceRepository : IReportInstanceRepository
     {
         private readonly AccountingDbContext _context;
+        private readonly ILogger<ReportInstanceRepository> _logger;
 
-        public ReportInstanceRepository(AccountingDbContext context)
+        public ReportInstanceRepository(AccountingDbContext context, ILogger<ReportInstanceRepository> logger)
         {
             _context = context;
+            _logger = logger;
+
         }
 
         // ========== פונקציות בסיסיות מ-IGenericRepository ==========
@@ -38,21 +43,92 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        /// <summary>
-        /// תביא לי את כל הדוחות
-        /// </summary>
+        public async Task<List<Reportinstance>> GenerateReportsAsync(DateTime date)
+        {
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM generate_monthly_report_instances(@p_run_date)";
+                command.Parameters.Add(new NpgsqlParameter("@p_run_date", NpgsqlTypes.NpgsqlDbType.Date) { Value = date });
+                using var reader = await command.ExecuteReaderAsync();
+
+                var res = new List<Reportinstance>();
+                while (await reader.ReadAsync())
+                {
+                    res.Add(new Reportinstance
+                    {
+                        Id = reader.GetInt32(0),
+                        Configid = reader.GetInt32(1),
+                        Period = DateOnly.FromDateTime(reader.GetDateTime(2)),
+                        Amount = reader.IsDBNull(3) ? null : reader.GetDecimal(3),
+                        Status = reader.IsDBNull(4) ? null : Enum.Parse<ReportStatus>(reader.GetString(4)),
+                        PaymentMethod = reader.IsDBNull(5) ? null : Enum.Parse<PaymentMethod>(reader.GetString(5)),
+                        Receiptdate = reader.IsDBNull(6) ? null : DateOnly.FromDateTime(reader.GetDateTime(6)),
+                        Reporteddate = reader.IsDBNull(7) ? null : DateOnly.FromDateTime(reader.GetDateTime(7)),
+                        Paiddate = reader.IsDBNull(8) ? null : DateOnly.FromDateTime(reader.GetDateTime(8)),
+                        Comments = reader.IsDBNull(9) ? null : reader.GetString(9),
+                        Createdat = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
+                        Updatedat = reader.IsDBNull(11) ? null : reader.GetDateTime(11)
+                    });
+                }
+                return res;
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
+        }
+
+
+
+        public async Task<bool> CheckReportsAsync()
+        {
+            var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT check_report_health()";
+                var result = await command.ExecuteScalarAsync();
+                return result is true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Health check failed");
+                return false;
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
+        }
+       
+
         public async Task<IEnumerable<Reportinstance>> GetAllAsync()
         {
             return await _context.Reportinstances
+
                 .Include(r => r.Config)
                     .ThenInclude(c => c.Company)
+                        .ThenInclude(co => co.Companyworkers
+                            .Where(cw => cw.Isactive == true))
+                                .ThenInclude(cw => cw.Worker)
+
                 .Include(r => r.Config)
                     .ThenInclude(c => c.Reporttype)
+
                 .Include(r => r.Config)
                     .ThenInclude(c => c.Frequency)
-                .OrderByDescending(r => r.Period)
+
+                .Where(r => r.Config.Isactive == true) 
+
+                .AsNoTracking()
                 .ToListAsync();
         }
+
+
 
         /// <summary>
         /// תביא לי דוחות לפי תנאי
@@ -90,6 +166,25 @@ namespace AccountingSystem.Infrastructure.Repositories
             {
                 _context.Reportinstances.Remove(entity);
             }
+        }
+
+
+        public async Task DeleteByConfigIdAsync(int configId)
+        {
+            var instances = await _context.Reportinstances
+                .Where(r => r.Configid == configId)
+                .ToListAsync();
+
+            _context.Reportinstances.RemoveRange(instances);
+        }
+
+        public async Task DeleteByConfigIdsAsync(List<int> configIds)
+        {
+            var instances = await _context.Reportinstances
+                .Where(r => configIds.Contains(r.Configid))
+                .ToListAsync();
+
+            _context.Reportinstances.RemoveRange(instances);
         }
 
         /// <summary>
@@ -272,40 +367,12 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
-        //{
-
-        //    throw new NotImplementedException();
-        //}
-
-        //public async Task<Reportinstance> AddAsync(Reportinstance entity)
-        //{
-        //    if (entity == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(entity));
-        //    }
-
-        //    // הוספת תאריך יצירה אם לא הוגדר
-        //    if (entity.Createdat == default)
-        //    {
-        //        entity.Createdat = DateTime.UtcNow;
-        //    }
-
-        //    await _context.Reportinstances.AddAsync(entity);
-        //    await _context.SaveChangesAsync();
-
-        //    return entity;
-        //}
-
-        //Task IGenericRepository<Reportinstance>.AddAsync(Reportinstance entity)
-        //{
-        //    return AddAsync(entity);
-        //}
-
         public async Task AddAsync(Reportinstance entity)
         {
             await _context.Reportinstances.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
+
+     
     }
 }

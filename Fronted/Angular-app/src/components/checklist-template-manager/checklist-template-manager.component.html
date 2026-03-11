@@ -1,0 +1,86 @@
+  <div class="manager-container" dir="rtl">
+    <h2>ניהול תבניות צ'קליסט למשימות</h2>
+  
+    <div class="selection-card">
+      <label for="taskTypeSelect">בחר סוג משימה:</label>
+      <select id="taskTypeSelect" [(ngModel)]="selectedTaskTypeId" (change)="onTaskTypeChange()">
+        <option [ngValue]="null" disabled>-- בחר סוג משימה מתוך הרשימה --</option>
+        <option *ngFor="let type of taskTypes" [ngValue]="type.id">
+          {{ type.name }}
+        </option>
+      </select>
+    </div>
+  
+    <div *ngIf="loading" class="loader">
+      <div class="spinner"></div>
+      <span>טוען נתונים...</span>
+    </div>
+  
+    <div class="template-editor" *ngIf="selectedTaskTypeId && !loading">
+      <div class="table-header">
+        <h3>שלבי הצ'קליסט עבור הסוג הנבחר</h3>
+        <button class="btn-add" (click)="addItem()">
+          <span class="icon">+</span> הוסף שלב חדש
+        </button>
+      </div>
+  
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th style="width: 60px;">#</th>
+            <th>כותרת השלב (חובה)</th>
+            <th>תיאור נוסף</th>
+            <th style="width: 120px;" class="center">חובה/רשות</th>
+            <th style="width: 100px;" class="center">פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items; let i = index">
+            <td class="center font-weight-bold">{{ i + 1 }}</td>
+            <td>
+              <input type="text" 
+                     [(ngModel)]="item.title" 
+                     placeholder="לדוגמה: איסוף מסמכים ראשוני">
+            </td>
+            <td>
+              <input type="text" 
+                     [(ngModel)]="item.description" 
+                     placeholder="הסבר קצר לעובד (מה עליו לעשות)...">
+            </td>
+            <td class="center">
+              <div class="status-cell">
+                <label class="switch">
+                  <input type="checkbox" [(ngModel)]="item.is_optional">
+                  <span class="slider"></span>
+                </label>
+                <small [style.color]="item.is_optional ? '#718096' : '#48bb78'" 
+                       style="font-weight: 600; font-size: 11px; margin-top: 4px; display: block;">
+                  {{ item.is_optional ? 'רשות' : 'חובה' }}
+                </small>
+              </div>
+            </td>
+            <td class="center">
+              <button class="btn-remove" (click)="removeItem(i)" title="מחק שלב">
+                <span>🗑️</span>
+              </button>
+            </td>
+          </tr>
+  
+          <tr *ngIf="items.length === 0">
+            <td colspan="5" class="empty-state">
+              <div class="empty-content">
+                <p>אין שלבים מוגדרים לתבנית זו.</p>
+                <small>לחצי על כפתור "הוסף שלב חדש" כדי להתחיל.</small>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <div class="footer-actions">
+        <button class="btn-save" (click)="saveTemplate()">
+          <span class="icon">💾</span> שמור תבנית מערכת
+        </button>
+      </div>
+    </div>
+  </div>
