@@ -1064,18 +1064,19 @@ public class GetTaskMatrixHandler : IRequestHandler<GetTaskMatrixQuery, List<Com
     private readonly ITaskTypeRepository _taskTypeRepo; // ודאי שקיים ממשק כזה
     private readonly ITaskConfigurationRepository _configRepo;
     private readonly IHttpContextAccessor _httpContextAccessor; // הוספה
-
+    private readonly ITaskTypeConfigurationRepository _taskTypeConfigRepo;
     public GetTaskMatrixHandler(
         ICompanyRepository companyRepo,
         ITaskTypeRepository taskTypeRepo,
         ITaskConfigurationRepository configRepo,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        ITaskTypeConfigurationRepository taskTypeConfigRepo)
     {
         _companyRepo = companyRepo;
         _taskTypeRepo = taskTypeRepo;
         _configRepo = configRepo;
         _httpContextAccessor = httpContextAccessor;
-
+        _taskTypeConfigRepo = taskTypeConfigRepo;
     }
 
     public async Task<List<CompanyTaskConfigDto>> Handle(GetTaskMatrixQuery request, CancellationToken cancellationToken)
@@ -1087,17 +1088,25 @@ public class GetTaskMatrixHandler : IRequestHandler<GetTaskMatrixQuery, List<Com
             throw new UnauthorizedAccessException("FirmId not found in token.");
 
         int firmId = int.Parse(firmIdClaim);
+        //   
         var companies = await _companyRepo.GetAllByFirmIdAsync(firmId);
         var taskTypes = await _taskTypeRepo.GetAllAsync();
         var existingConfigs = await _configRepo.GetAllWithWorkersAsync();
 
-        // 2. בניית המטריצה (Cross Join)
+        // שליפת הטבלה הבסיסית (השכבה הגנרית)
+        var baseConfigs = await _taskTypeConfigRepo.GetAllAsync();
+
         var matrix = from c in companies
                      from tt in taskTypes
+                         // חיבור להגדרות ספציפיות
                      join conf in existingConfigs
                         on new { CId = c.Id, TtId = tt.Id }
                         equals new { CId = conf.Companyid, TtId = conf.Tasktypeid } into joined
                      from conf in joined.DefaultIfEmpty()
+
+                         // מציאת הגדרת הבסיס המתאימה לסוג המשימה
+                     let baseConf = baseConfigs.FirstOrDefault(b => b.TaskTypeId == tt.Id)
+
                      select new CompanyTaskConfigDto
                      {
                          CompanyId = c.Id,
@@ -1105,13 +1114,13 @@ public class GetTaskMatrixHandler : IRequestHandler<GetTaskMatrixQuery, List<Com
                          TaskTypeId = tt.Id,
                          TaskTypeName = tt.Name,
                          ConfigurationId = conf?.Id,
+
                          assignedWorkerId = conf?.Assignedworkerid,
+                         Frequency = conf?.Frequency ?? baseConf?.RecurrenceType ?? RecurrenceType.Monthly,
+                         DueDay = conf?.Dueday ?? baseConf?.DueDayOfMonth ?? 15,
+                         IsActive = conf?.Isactive ?? baseConf?.IsActive ?? false,
+
                          WorkerName = conf?.Assignedworker?.Firstname ?? "לא שובץ",
-                         firstName = conf?.Assignedworker?.Firstname?? "לא שובץ",
-                         lastName = conf?.Assignedworker?.Lastname ?? "לא שובץ",
-                         Frequency = conf?.Frequency ?? RecurrenceType.Monthly,
-                         DueDay = conf?.Dueday ?? 15,
-                         IsActive = conf?.Isactive ?? false
                      };
 
         return matrix.OrderBy(m => m.CompanyName).ThenBy(m => m.TaskTypeName).ToList();
