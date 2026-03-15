@@ -33,6 +33,7 @@ namespace AccountingSystem.Application.Queries
         {
         public int? WorkerId { get; set; } 
         public bool IsAdminMode { get; set; } = false;
+        public int? FirmId { get; set; }
     }
 
 

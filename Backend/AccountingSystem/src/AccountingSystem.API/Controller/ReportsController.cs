@@ -201,11 +201,23 @@ namespace AccountingSystem.API.Controllers
                 }
 
                 int? filterByWorkerId = null;
-
+                int? filterByFirmId = null;
+                //if (isAdminMode && roleClaim == "Admin")
+                //{
+                //    _logger.LogInformation("מנהל במצב ניהול - מחזיר הכל");
+                //    filterByWorkerId = null;
+                //}
                 if (isAdminMode && roleClaim == "Admin")
                 {
-                    _logger.LogInformation("מנהל במצב ניהול - מחזיר הכל");
+                    _logger.LogInformation("מנהל במצב ניהול - מחזיר הכל של המשרד");
                     filterByWorkerId = null;
+
+                    // הוסף את ה-FirmId מה-JWT
+                    var firmIdClaim = User.FindFirst("FirmId")?.Value;
+                    if (!int.TryParse(firmIdClaim, out int firmId))
+                        return Unauthorized(new { message = "לא נמצא FirmId בטוקן" });
+
+                    filterByFirmId = firmId; // פרמטר חדש
                 }
                 else
                 {
@@ -216,7 +228,8 @@ namespace AccountingSystem.API.Controllers
                 var query = new GetAllReportsQuery
                 {
                     WorkerId = filterByWorkerId,
-                    IsAdminMode = isAdminMode
+                    IsAdminMode = isAdminMode,
+                    FirmId = filterByFirmId
                 };
 
                 var reports = await _mediator.Send(query);
