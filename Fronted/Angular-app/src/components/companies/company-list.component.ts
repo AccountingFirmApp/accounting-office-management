@@ -65,7 +65,10 @@ export class CompanyListComponent implements OnInit {
     if (this.auth.isAdmin()) {
       queryParams.adminMode = 'true';
     }
-    this.router.navigate(['/reports'], { queryParams: {returnUrl: '/companies'} });
+    console.log(companyId+'11111');
+    this.router.navigate(['/reports'], { queryParams: { companyId: companyId, returnUrl: '/companies' } });
+
+    // this.router.navigate(['/reports'], { queryParams: {returnUrl: '/companies'} });
   }
 
   editCompany(id: number): void {

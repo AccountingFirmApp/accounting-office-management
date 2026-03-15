@@ -33,7 +33,8 @@ export class RecurrenceLabelPipe implements PipeTransform {
     MatDialogModule,
     MatIconModule,
     MatTooltipModule,
-    BackButtonComponent
+    BackButtonComponent,
+    RecurrenceLabelPipe
 ],
   templateUrl: './task-matrix.html',
   styleUrls: ['./task-matrix.css']

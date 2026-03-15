@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using AccountingSystem.Domain.Entities;
 using AccountingSystem.Domain.Enums;
 
@@ -24,8 +25,9 @@ public partial class Reportinstance
     public string? Comments { get; set; }
 
     public DateTime? Createdat { get; set; }
+        [Column("updated_at")]
 
-    public DateTime? Updatedat { get; set; }
+        public DateTime? Updatedat { get; set; }
         public ReportStatus? Status { get; set; }
         public PaymentMethod? PaymentMethod { get; set; }
 

@@ -18,7 +18,7 @@ namespace AccountingSystem.Domain.Entities
 
         public DateTime? Createdat { get; set; }
 
-        public DateTime? Updatedat { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 

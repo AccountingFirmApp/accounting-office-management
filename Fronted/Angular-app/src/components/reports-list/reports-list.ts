@@ -239,7 +239,7 @@ editReport(reportId: number): void {
   updateStatus(report: ReportInstanceDetail): void {
   this.reportService.updateStatus(report.id, report.status).subscribe({
     next: () => {
-      this.filteredReports = [...this.filteredReports]; // ← מאלץ רנדור מחדש
+      // this.filteredReport0s = [...this.filteredReports]; // ← מאלץ רנדור מחדש
     },
     error: () => {
       alert('שגיאה בעדכון הסטטוס');

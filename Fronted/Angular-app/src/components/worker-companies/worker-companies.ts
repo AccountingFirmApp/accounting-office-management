@@ -76,7 +76,9 @@ export class WorkerCompaniesComponent implements OnInit {
   }
 goToCompanyReports(companyId: number): void {
   console.log(companyId);
-  this.router.navigate(['/reports'], { queryParams: { companyId: companyId, returnUrl: `./workers/${this.workerId}/companies` } });
+  console.log();
+  
+  this.router.navigate(['/reports'], { queryParams: { companyId: companyId, returnUrl: `./workers/${this.currentWorker.id}/companies` } });
 }
 
 }

@@ -27,14 +27,14 @@ namespace AccountingSystem.Application.Mappings
             CreateMap<CreateAccountingFirmDto, Accountingfirm>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
-                .ForMember(d => d.Updatedat, opt => opt.Ignore())
+                .ForMember(d => d.UpdatedAt, opt => opt.Ignore())
                 .ForMember(d => d.Companies, opt => opt.Ignore())
                 .ForMember(d => d.Workers, opt => opt.Ignore());
 
             CreateMap<UpdateAccountingFirmDto, Accountingfirm>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.Createdat, opt => opt.Ignore())
-                .ForMember(d => d.Updatedat, opt => opt.Ignore())
+                .ForMember(d => d.UpdatedAt, opt => opt.Ignore())
                 .ForMember(d => d.Companies, opt => opt.Ignore())
                 .ForMember(d => d.Workers, opt => opt.Ignore());
 
