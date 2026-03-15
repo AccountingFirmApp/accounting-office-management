@@ -1,6 +1,7 @@
-﻿using System;
+﻿using AccountingSystem.Domain.Entities;
+using System;
 using System.Collections.Generic;
-using AccountingSystem.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountingSystem.Domain.Entities
 { 
@@ -19,8 +20,9 @@ public partial class Companyreportconfig
     public bool? Isactive { get; set; }
 
     public DateTime? Createdat { get; set; }
+        [Column("updated_at")]
 
-    public DateTime? Updatedat { get; set; }
+        public DateTime? Updatedat { get; set; }
 
     public int Year { get; set; }
 

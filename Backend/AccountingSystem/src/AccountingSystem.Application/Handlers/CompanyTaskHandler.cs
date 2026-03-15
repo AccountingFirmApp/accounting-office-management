@@ -1,5 +1,21 @@
 ﻿
 
+//using AccountingSystem.Application.Commands.Tasks;
+//using AccountingSystem.Application.DTOs;
+//using AccountingSystem.Application.DTOs.Tasks;
+//using AccountingSystem.Application.Queries.Tasks;
+//using AccountingSystem.Domain.Entities;
+//using AccountingSystem.Domain.Enums;
+//using AccountingSystem.Domain.Interfaces.Repositories;
+//using MediatR;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.IdentityModel.Tokens;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading;
+//using System.Threading.Tasks;
+
 using AccountingSystem.Application.Commands.Tasks;
 using AccountingSystem.Application.DTOs;
 using AccountingSystem.Application.DTOs.Tasks;
@@ -9,12 +25,6 @@ using AccountingSystem.Domain.Enums;
 using AccountingSystem.Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AccountingSystem.Application.Handlers.Tasks
 {
@@ -1097,6 +1107,8 @@ public class GetTaskMatrixHandler : IRequestHandler<GetTaskMatrixQuery, List<Com
                          ConfigurationId = conf?.Id,
                          assignedWorkerId = conf?.Assignedworkerid,
                          WorkerName = conf?.Assignedworker?.Firstname ?? "לא שובץ",
+                         firstName = conf?.Assignedworker?.Firstname?? "לא שובץ",
+                         lastName = conf?.Assignedworker?.Lastname ?? "לא שובץ",
                          Frequency = conf?.Frequency ?? RecurrenceType.Monthly,
                          DueDay = conf?.Dueday ?? 15,
                          IsActive = conf?.Isactive ?? false

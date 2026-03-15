@@ -235,7 +235,7 @@ public partial class AccountingDbContext : DbContext
             entity.Property(e => e.Updatedat)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("updatedat");
+                .HasColumnName("updated_at");
             entity.Property(e => e.Year)
                 .HasDefaultValueSql("EXTRACT(year FROM CURRENT_DATE)")
                 .HasColumnName("year");

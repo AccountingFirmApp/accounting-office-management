@@ -58,15 +58,71 @@ export class EditTaskConfigDialogComponent implements OnInit {
 
     }
   }
+  // save() {
+  
+  //   const selectedWorker = this.workers.find(w => w.id === this.data.assignedWorkerId);
+  //   // עדכון השדות שהמטריצה משתמשת בהם להצגה
+  //   this.data.firstName = selectedWorker.firstName; // וודאי שאלו השמות בתוך אובייקט ה-worker
+  //   this.data.lastName = selectedWorker.lastName;
+    
+  //   // ליתר ביטחון, אם יש מקומות שמשתמשים בשם המלא
+  //   this.data.workerName = selectedWorker.fullName;
+
+  //   this.data.workerName = selectedWorker ? selectedWorker.fullName : 'לא שובץ';
+  //   this.data.isActive = true;
+  
+  //   this.dialogRef.close(this.data);
+  // }
+  // save() {
+  //   console.log('assignedWorkerId:', this.data.assignedWorkerId);
+  // console.log('workers list:', this.workers);
+  //   // 1. מציאת האובייקט המלא של העובד שנבחר מהרשימה
+  //   const selectedWorker = this.workers.find(w => w.id == this.data.assignedWorkerId);    
+  //   if (selectedWorker) {
+  //     // 2. עדכון השדות שהמטריצה (task-matrix) מציגה ב-HTML שלה
+  //     // אנחנו חייבים לעדכן את firstName ו-lastName כי המטריצה מציגה אותם ישירות
+  //     this.data.firstName = selectedWorker.firstName;
+  //     this.data.lastName = selectedWorker.lastName;
+      
+  //     // עדכון שם מלא ליתר ביטחון
+  //     this.data.workerName = selectedWorker.fullName || (selectedWorker.firstName + ' ' + selectedWorker.lastName);
+      
+  //     // טיפול במקרה שהשדות ב-selectedWorker הם באותיות קטנות (בגלל Postgres/JSON)
+  //     if (!selectedWorker.firstName && selectedWorker['firstname']) {
+  //       this.data.firstName = selectedWorker['firstname'];
+  //       this.data.lastName = selectedWorker['lastname'];
+  //     }
+  //   } else {
+  //     // אם לא נבחר עובד
+  //     this.data.firstName = '';
+  //     this.data.lastName = '';
+  //     this.data.workerName = 'לא שובץ';
+  //   }
+  
+  //   // 3. הגדרת המשימה כפעילה וסגירת הדיאלוג עם הנתונים החדשים
+  //   this.data.isActive = true;
+  //   this.dialogRef.close(this.data);
+  // }
+
+
   save() {
   
-    const selectedWorker = this.workers.find(w => w.id === this.data.assignedWorkerId);
+    const selectedWorker = this.workers.find(w => w.id == this.data.assignedWorkerId);
     
-
-    this.data.workerName = selectedWorker ? selectedWorker.fullName : 'לא שובץ';
-    this.data.isActive = true;
+    if (selectedWorker) {
+      console.log('העובד נמצא! שם:', selectedWorker.fullName);
+      
+      this.data.firstName = selectedWorker.fullName.split(' ')[0]; // פירוק שם פרטי
+      this.data.lastName = selectedWorker.fullName.split(' ')[1] || ''; // פירוק שם משפחה
+      this.data.workerName = selectedWorker.fullName; 
+    } else {
+      this.data.firstName = null;
+      this.data.lastName = null;
+      this.data.workerName = 'לא שובץ';
+    }
   
-    this.dialogRef.close(this.data);
+    this.data.isActive = true;
+        this.dialogRef.close(this.data);
   }
   deleteConfig() {
     if (confirm('האם את בטוחה?')) {

@@ -114,6 +114,10 @@ namespace AccountingSystem.Infrastructure.Repositories
                 .Include(t => t.Tasktype)
                 .Include(t => t.Assignedworker)
                 .Where(t =>
+                t.Company.Isactive == true &&
+
+            // 2. אופציונלי: לוודא שגם המשימה עצמה פעילה ולא נמחקה לוגית
+            t.Isactive == true &&
                     // 1. שיוך לעובד או לחברה
                     (t.Assignedworkerid == workerId || t.Company.Companyworkers.Any(cw => cw.Workerid == workerId))
                     &&

@@ -31,7 +31,9 @@
                     <div class="status-indicator" [class.is-active]="config.isActive"></div>
                     
                     <div class="details" *ngIf="config.isActive; else emptyState">
-                      <span class="worker">{{ config.workerName || 'לא שובץ' }}</span>
+<span class="worker">
+  {{ (config.firstName || config.lastName) ? (config.firstName + ' ' + config.lastName) : 'לא שובץ' }}
+</span>
                       <div class="meta-row">
                         <span>{{ config.frequency | recurrenceLabel }}</span>                        
                         <span class="bullet">•</span>

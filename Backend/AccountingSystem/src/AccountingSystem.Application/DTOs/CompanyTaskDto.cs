@@ -275,6 +275,8 @@ namespace AccountingSystem.Application.DTOs.Tasks
         public int? ConfigurationId { get; set; }
         public int? assignedWorkerId { get; set; }
         public string? WorkerName { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
         public RecurrenceType Frequency { get; set; } = RecurrenceType.Monthly;
         public int DueDay { get; set; } = 15;   // ברירת מחדל 15 לחודש
         public bool IsActive { get; set; } = false; // כברירת מחדל לא משובץ

@@ -81,6 +81,9 @@ export interface CompanyTaskConfigDto {
   configurationId?: number; 
   assignedWorkerId?: number;
   workerName: string;
+firstName: string;
+lastName: string; 
+
   frequency: number;
   dueDay: number;
   isActive: boolean;
