@@ -257,13 +257,13 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
                         await _unitOfWork.CompanyReportConfigs.UpdateAsync(c);
                     }
 
-                    //var tasks = await _unitOfWork.CompanyTasks
-                    //    .FindAsync(t => t.Companyid == existing.Id);
-                    //foreach (var t in tasks)
-                    //{
-                    //    t.Isactive = true;
-                    //    await _unitOfWork.CompanyTasks.UpdateAsync(t);
-                    //}
+                    var tasks = await _unitOfWork.CompanyTasks
+                        .FindAsync(t => t.Companyid == existing.Id);
+                    foreach (var t in tasks)
+                    {
+                        t.Isactive = true;
+                        await _unitOfWork.CompanyTasks.UpdateAsync(t);
+                    }
                 }
 
                 await _unitOfWork.Companies.UpdateAsync(existing);

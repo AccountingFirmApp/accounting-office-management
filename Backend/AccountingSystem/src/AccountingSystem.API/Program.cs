@@ -772,7 +772,26 @@ RecurringJob.AddOrUpdate<ReportGenerationJob>(
         TimeZone = israelTimeZone
     }
 );
+//app.UseHangfireDashboard("/hangfire", new DashboardOptions
+//{
+//    Authorization = new[] { new HangfireAuthorizationFilter() }
+//});
 
+//var israelTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
+
+//// הרצה מיידית לצורך בדיקה
+//BackgroundJob.Enqueue<ReportGenerationJob>(job => job.RunMonthlyReport());
+
+//// השאר את ה-recurring job כמו שהיה
+//RecurringJob.AddOrUpdate<ReportGenerationJob>(
+//    "monthly-report-25",
+//    job => job.RunMonthlyReport(),
+//    "0 1 25 * *",
+//    new RecurringJobOptions
+//    {
+//        TimeZone = israelTimeZone
+//    }
+//);
 RecurringJob.AddOrUpdate<CheckReportGenerationJob>(
     "check-report-generation",
     job => job.RunDailyCheckReport(),

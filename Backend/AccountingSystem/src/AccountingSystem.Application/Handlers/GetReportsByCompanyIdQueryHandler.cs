@@ -223,8 +223,16 @@ namespace AccountingSystem.Application.Handlers
                         )
                     ).ToList();
                 }
+            if (request.FirmId.HasValue)
+            {
+                _logger.LogInformation($"🏢 מסנן לפי FirmId={request.FirmId.Value}");
+                reports = reports.Where(r =>
+                    r.Config?.Company?.Firmid == request.FirmId.Value
+                ).ToList();
+            }
 
-                _logger.LogInformation($" אחרי פילטור: {reports.Count()} דוחות");
+
+            _logger.LogInformation($" אחרי פילטור: {reports.Count()} דוחות");
 
                 var mappedReports = _mapper.Map<List<ReportInstanceDetailDto>>(
                     reports,

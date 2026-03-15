@@ -41,6 +41,7 @@ export interface ReportInstanceDetail {
   periodFormatted?: string;
   daysOverdue?: number;
   workerNames: string[];
+
 }
 
 

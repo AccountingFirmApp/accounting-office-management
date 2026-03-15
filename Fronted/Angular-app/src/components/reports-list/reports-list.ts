@@ -51,19 +51,18 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) { }
+ngOnInit(): void {
+  this.route.queryParams.subscribe(params => {
+    this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+    this.isAdminMode = params['adminMode'] === 'true';
+  });
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-      this.isAdminMode = params['adminMode'] === 'true';
-      this.loadReports();
-    });
+  this.loadReports(); // ← פעם אחת בלבד
 
-    document.addEventListener('click', () => {
-      this.closeWorkerPopover();
-    });
-  }
-
+  document.addEventListener('click', () => {
+    this.closeWorkerPopover();
+  });
+}
   ngOnDestroy(): void {
     document.removeEventListener('click', () => {
       this.closeWorkerPopover();
@@ -88,30 +87,46 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   hasWorkers(report: ReportInstanceDetail): boolean {
     return report.workerNames && report.workerNames.length > 0;
   }
+loadReports(): void {
+  this.isLoading = true;
+  this.errorMessage = '';
 
-  loadReports(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+  this.reportService.getAll(this.isAdminMode).subscribe({
+    next: (data) => {
+      this.reports = data;
 
-    this.reportService.getAll(this.isAdminMode).subscribe({
-      next: (data) => {
-        this.reports = data;
-
-        if (this.filterByCompanyId) {
-          this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
-        }
-
-        this.filteredReports = this.reports;
-        this.populateFilterOptions();
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-        this.errorMessage = 'שגיאה בטעינת הדיווחים';
+      if (this.filterByCompanyId) {
+        this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
       }
-    });
-  }
 
+      // טען מפה שמורה מ-sessionStorage
+      const stored = sessionStorage.getItem('daysOverdue');
+      const savedMap: Record<number, number> = stored ? JSON.parse(stored) : {};
+
+      this.reports.forEach(r => {
+        // שמור ערך אמיתי
+        if (r.daysOverdue !== null && r.daysOverdue !== undefined) {
+          savedMap[r.id] = r.daysOverdue;
+        }
+        // שחזר מהמפה
+        if (savedMap[r.id] !== undefined) {
+          r.daysOverdue = savedMap[r.id];
+        }
+      });
+
+      // שמור בחזרה ל-sessionStorage
+      sessionStorage.setItem('daysOverdue', JSON.stringify(savedMap));
+
+      this.filteredReports = this.reports;
+      this.populateFilterOptions();
+      this.isLoading = false;
+    },
+    error: () => {
+      this.isLoading = false;
+      this.errorMessage = 'שגיאה בטעינת הדיווחים';
+    }
+  });
+}
   populateFilterOptions(): void {
     this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
     this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
@@ -236,10 +251,23 @@ editReport(reportId: number): void {
         queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
     });
 }
-  updateStatus(report: ReportInstanceDetail): void {
-  this.reportService.updateStatus(report.id, report.status).subscribe({
+
+updateStatus(report: ReportInstanceDetail): void {
+  const newStatus = report.status;
+  
+  // קרא מ-sessionStorage ישירות
+  const stored = sessionStorage.getItem('daysOverdue');
+  const savedMap: Record<number, number> = stored ? JSON.parse(stored) : {};
+  const savedDaysOverdue = savedMap[report.id];
+
+  this.reportService.updateStatus(report.id, newStatus).subscribe({
     next: () => {
-      // this.filteredReport0s = [...this.filteredReports]; // ← מאלץ רנדור מחדש
+      report.status = newStatus;
+      if (newStatus === 'Approved' || newStatus === 'Paid' || newStatus === 'NotRequired') {
+        report.daysOverdue = undefined;
+      } else {
+        report.daysOverdue = savedDaysOverdue ?? undefined;
+      }
     },
     error: () => {
       alert('שגיאה בעדכון הסטטוס');
@@ -247,4 +275,5 @@ editReport(reportId: number): void {
     }
   });
 }
+
 }
