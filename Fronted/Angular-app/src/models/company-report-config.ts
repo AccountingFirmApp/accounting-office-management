@@ -8,7 +8,6 @@ export interface CompanyReportConfigDto {
   createdAt: Date;
   updatedAt: Date;
   year: number;
-
   companyName?: string;
   reportTypeName?: string;
   reportTypeShortCode?: string;

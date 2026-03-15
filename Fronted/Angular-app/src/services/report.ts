@@ -111,16 +111,9 @@ export class ReportService {
     return this.api.put<void>(`${this.endpoint}/${id}`, report);
   }
 
- 
-  updateStatus(dto: UpdateReportStatus): Observable<void> {
-    return this.api.put<void>(`${this.endpoint}/status`, dto);
-  }
-
- 
-  updatePayment(dto: UpdateReportPayment): Observable<void> {
-    return this.api.put<void>(`${this.endpoint}/payment`, dto);
-  }
-
+updateStatus(id: number, status: string): Observable<any> {
+  return this.api.put(`${this.endpoint}/status`, { id, status });
+}
 
  
   delete(id: number): Observable<void> {

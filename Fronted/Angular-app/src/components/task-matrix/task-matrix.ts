@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Pipe, PipeTransform } from '@angular/core';
 import { RECURRENCE_OPTIONS,RecurrenceType } from '../../models/enums';
+import { BackButtonComponent } from "../../app/components/shared/back-button/back-button.component";
 
 
 @Pipe({ name: 'recurrenceLabel', standalone: true })
@@ -32,8 +33,9 @@ export class RecurrenceLabelPipe implements PipeTransform {
     MatDialogModule,
     MatIconModule,
     MatTooltipModule,
+    BackButtonComponent,
     RecurrenceLabelPipe
-  ],
+],
   templateUrl: './task-matrix.html',
   styleUrls: ['./task-matrix.css']
 })

@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReportService } from '../../services/report';
@@ -16,6 +14,7 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule, CommonModule, BackButtonComponent]
 })
 export class ReportsDashboardComponent implements OnInit {
+returnUrl: string = '/home'; 
 
   stats = {
     pending: 0,
@@ -37,6 +36,8 @@ export class ReportsDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
+          this.returnUrl = params['returnUrl'] || '/home';
+
       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
       this.isAdminMode = params['adminMode'] === 'true';
       this.loadStatistics();

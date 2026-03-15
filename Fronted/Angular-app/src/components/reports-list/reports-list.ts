@@ -1,5 +1,3 @@
-
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,10 +21,10 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   filteredReports: ReportInstanceDetail[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
-  
+
   selectedReport: ReportInstanceDetail | null = null;
   isModalOpen: boolean = false;
-  
+
   openWorkerPopoverId: number | null = null;
   selectedReportWorkers: string[] = [];
 
@@ -34,13 +32,18 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   selectedStatus: string = 'all';
   selectedCompany: string = 'all';
   selectedReportType: string = 'all';
-  
+
   filterByCompanyId: number | null = null;
   isAdminMode: boolean = false;
-  
+
   companies: string[] = [];
   reportTypes: string[] = [];
-  statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid'];
+  statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid','NotRequired'];
+
+  // שדות לעדכון סטטוס
+  statusModalReport: ReportInstanceDetail | null = null;
+  pendingStatus: string = '';
+  isSavingStatus: boolean = false;
 
   constructor(
     private reportService: ReportService,
@@ -52,10 +55,10 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-      this.isAdminMode = params['adminMode'] === 'true';      
+      this.isAdminMode = params['adminMode'] === 'true';
       this.loadReports();
     });
-    
+
     document.addEventListener('click', () => {
       this.closeWorkerPopover();
     });
@@ -85,13 +88,13 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   hasWorkers(report: ReportInstanceDetail): boolean {
     return report.workerNames && report.workerNames.length > 0;
   }
+
   loadReports(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-
     this.reportService.getAll(this.isAdminMode).subscribe({
-      next: (data) => {        
+      next: (data) => {
         this.reports = data;
 
         if (this.filterByCompanyId) {
@@ -102,9 +105,9 @@ export class ReportsListComponent implements OnInit, OnDestroy {
         this.populateFilterOptions();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
         this.isLoading = false;
-        this.errorMessage = 'שגיאה בטעינת הדוחות';
+        this.errorMessage = 'שגיאה בטעינת הדיווחים';
       }
     });
   }
@@ -112,20 +115,19 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   populateFilterOptions(): void {
     this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
     this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
-    
   }
 
   applyFilters(): void {
     this.filteredReports = this.reports.filter(report => {
-      const matchesSearch = !this.searchTerm || 
+      const matchesSearch = !this.searchTerm ||
         report.companyName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         report.reportTypeName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         report.reportTypeShortCode?.toLowerCase().includes(this.searchTerm.toLowerCase());
 
-      const matchesStatus = this.selectedStatus === 'all' || 
+      const matchesStatus = this.selectedStatus === 'all' ||
         report.status === this.selectedStatus;
 
-      const matchesCompany = this.selectedCompany === 'all' || 
+      const matchesCompany = this.selectedCompany === 'all' ||
         report.companyName === this.selectedCompany;
 
       const matchesReportType = this.selectedReportType === 'all' ||
@@ -144,7 +146,9 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   }
 
   isReportDelayed(report: ReportInstanceDetail): boolean {
-    return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0;
+    return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0&&
+               (report.status === 'Pending' || report.status === 'Reported'); // ← הוספה
+;
   }
 
   getDelayText(report: ReportInstanceDetail): string {
@@ -153,33 +157,13 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     return days === 1 ? 'איחור של יום אחד' : `איחור של ${days} ימים`;
   }
 
-  viewReport(reportId: number): void {
-    const report = this.reports.find(r => r.id === reportId);
-    if (report) {
-      this.selectedReport = report;
-      this.isModalOpen = true;
-    }
-  }
-
-  closeModal(): void {
-    this.isModalOpen = false;
-    this.selectedReport = null;
-  }
-
-  onEditFromModal(reportId: number): void {
-    this.router.navigate(['/reports/edit', reportId]);
-  }
-
-  editReport(reportId: number): void {
-    this.router.navigate(['/reports/edit', reportId]);
-  }
-
   getStatusColor(status: string): string {
     switch (status) {
       case 'Pending': return 'status-pending';
       case 'Reported': return 'status-reported';
       case 'Approved': return 'status-approved';
       case 'Paid': return 'status-paid';
+      case 'NotRequired': return 'status-not-required';
       default: return '';
     }
   }
@@ -190,6 +174,7 @@ export class ReportsListComponent implements OnInit, OnDestroy {
       case 'Reported': return 'דווח';
       case 'Approved': return 'אושר';
       case 'Paid': return 'שולם';
+      case 'NotRequired':return 'לא נדרש'
       default: return status;
     }
   }
@@ -229,4 +214,37 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   getPaidCount(): number {
     return this.filteredReports.filter(r => r.status === 'Paid').length;
   }
+  viewReport(reportId: number): void {
+    const report = this.reports.find(r => r.id === reportId);
+    if (report) {
+      this.selectedReport = report;
+      this.isModalOpen = true;
+    }
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedReport = null;
+  }
+onEditFromModal(reportId: number): void {
+    this.router.navigate(['/reports/edit', reportId], {
+        queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
+    });
+}
+editReport(reportId: number): void {
+    this.router.navigate(['/reports/edit', reportId], {
+        queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
+    });
+}
+  updateStatus(report: ReportInstanceDetail): void {
+  this.reportService.updateStatus(report.id, report.status).subscribe({
+    next: () => {
+      // this.filteredReport0s = [...this.filteredReports]; // ← מאלץ רנדור מחדש
+    },
+    error: () => {
+      alert('שגיאה בעדכון הסטטוס');
+      this.loadReports();
+    }
+  });
+}
 }

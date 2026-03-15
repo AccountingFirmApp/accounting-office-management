@@ -235,8 +235,6 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
                 existing.Email = request.Email;
                 existing.Notes = request.Notes;
                 existing.Updatedat = DateTime.UtcNow;
-                await _unitOfWork.Companies.UpdateAsync(existing);
-
                 if (request.RestoreExistingData)
                 {
                     var workers = await _unitOfWork.CompanyWorkers
@@ -245,20 +243,30 @@ public class GetTasksByCompanyIdQueryHandler : IRequestHandler<GetTasksByCompany
                     {
                         var worker = await _unitOfWork.Workers.GetByIdAsync(cw.Workerid);
                         if (worker != null && worker.Isactive == true)
+                        {
                             cw.Isactive = true;
+                            await _unitOfWork.CompanyWorkers.UpdateAsync(cw);
+                        }
                     }
 
                     var configs = await _unitOfWork.CompanyReportConfigs
                         .FindAsync(c => c.Companyid == existing.Id);
                     foreach (var c in configs)
+                    {
                         c.Isactive = true;
+                        await _unitOfWork.CompanyReportConfigs.UpdateAsync(c);
+                    }
 
-                    var tasks = await _unitOfWork.CompanyTasks
-                        .FindAsync(t => t.Companyid == existing.Id);
-                    foreach (var t in tasks)
-                        t.Isactive = true;
+                    //var tasks = await _unitOfWork.CompanyTasks
+                    //    .FindAsync(t => t.Companyid == existing.Id);
+                    //foreach (var t in tasks)
+                    //{
+                    //    t.Isactive = true;
+                    //    await _unitOfWork.CompanyTasks.UpdateAsync(t);
+                    //}
                 }
 
+                await _unitOfWork.Companies.UpdateAsync(existing);
                 await _unitOfWork.SaveChangesAsync(ct);
                 return _mapper.Map<CompanyDto>(existing);
             }

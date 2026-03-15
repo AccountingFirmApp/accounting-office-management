@@ -1,7 +1,7 @@
 <div class="report-form-container">
   <!-- Header -->
   <div class="form-header">
-    <app-back-button [route]="'/reports'"></app-back-button>
+    <!-- <app-back-button [route]="'/reports'"></app-back-button> -->
     <h2>{{ isEditMode ? 'עריכת דיווח' : 'דיווח חדש' }}</h2>
   </div>
 
@@ -28,7 +28,9 @@
 
   <!-- Form -->
   <form *ngIf="!loading" class="report-form" (ngSubmit)="onSubmit()">
-    <div class="form-row">
+
+    <!-- Row 1: חברה / סוג דיווח / תקופה — מוסתר במצב עריכה. להחזיר: הסר את *ngIf="!isEditMode" -->
+    <div class="form-row" *ngIf="!isEditMode">
       <div class="form-group">
         <label for="companyId">
           <span class="required">*</span> חברה
@@ -105,15 +107,8 @@
 
       <div class="form-group">
         <label for="receiptDate">תאריך קבלת חומרים</label>
-        <!-- <input 
-          type="date" 
-          id="receiptDate" 
-       (ngModelChange)="onReceiptDateChange($event)"
-          name="receiptDate"
-        /> -->
         <input type="date" id="receiptDate" [(ngModel)]="receiptDateString"
           (ngModelChange)="onReceiptDateChange($event)" name="receiptDate" />
-
         <small class="help-text">מתי התקבלו החומרים מהלקוח</small>
       </div>
     </div>
