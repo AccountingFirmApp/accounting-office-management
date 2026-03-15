@@ -1114,13 +1114,18 @@ public class GetTaskMatrixHandler : IRequestHandler<GetTaskMatrixQuery, List<Com
                          TaskTypeId = tt.Id,
                          TaskTypeName = tt.Name,
                          ConfigurationId = conf?.Id,
-
                          assignedWorkerId = conf?.Assignedworkerid,
+
+                         firstName = conf?.Assignedworker?.Firstname ?? "",
+                         lastName = conf?.Assignedworker?.Lastname ?? "",
+
+                         WorkerName = (conf?.Assignedworker != null)
+                 ? (conf.Assignedworker.Firstname + " " + conf.Assignedworker.Lastname)
+                 : "לא שובץ",
                          Frequency = conf?.Frequency ?? baseConf?.RecurrenceType ?? RecurrenceType.Monthly,
                          DueDay = conf?.Dueday ?? baseConf?.DueDayOfMonth ?? 15,
                          IsActive = conf?.Isactive ?? baseConf?.IsActive ?? false,
 
-                         WorkerName = conf?.Assignedworker?.Firstname ?? "לא שובץ",
                      };
 
         return matrix.OrderBy(m => m.CompanyName).ThenBy(m => m.TaskTypeName).ToList();
