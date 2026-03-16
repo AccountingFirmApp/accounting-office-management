@@ -206,13 +206,22 @@ openTaskDetails(taskId: number): void {
       overdue: this.tasks.filter(t => t.duedate && new Date(t.duedate) < today && t.status !== this.STATUS.DONE).length
     };
   }
-
-  getStatusClass(status: number): string {
-    const map: { [key: number]: string } = {
-      1: 'status-pending', 2: 'status-in-progress', 3: 'status-done', 4: 'status-paid', 5: 'status-not-required'
-    };
-    return map[status] || '';
-  }
+getStatusClass(status: any): string {
+  const s = String(status);
+  const map: { [key: string]: string } = {
+    '1': 'status-pending',
+    '2': 'status-in-progress', 
+    '3': 'status-done',
+    '4': 'status-paid',
+    '5': 'status-not-required',
+    'Pending':     'status-pending',
+    'InProgress':  'status-in-progress',
+    'Done':        'status-done',
+    'Paid':        'status-paid',
+    'NotRequired': 'status-not-required'
+  };
+  return map[s] || 'status-pending';
+}
 
   getTaskPriority(task: WorkerTask): string {
     if (!task.duedate) return '';
