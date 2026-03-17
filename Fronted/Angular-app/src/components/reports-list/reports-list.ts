@@ -32,13 +32,31 @@ export class ReportsListComponent implements OnInit, OnDestroy {
   selectedStatus: string = 'all';
   selectedCompany: string = 'all';
   selectedReportType: string = 'all';
+  selectedMonth: string = 'all';
+  selectedYear: string = 'all';
 
   filterByCompanyId: number | null = null;
   isAdminMode: boolean = false;
 
   companies: string[] = [];
   reportTypes: string[] = [];
-  statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid','NotRequired'];
+  statuses: string[] = ['Pending', 'Reported', 'Approved', 'Paid', 'NotRequired'];
+  years: string[] = [];
+
+  months = [
+    { value: '1', label: 'ינואר' },
+    { value: '2', label: 'פברואר' },
+    { value: '3', label: 'מרץ' },
+    { value: '4', label: 'אפריל' },
+    { value: '5', label: 'מאי' },
+    { value: '6', label: 'יוני' },
+    { value: '7', label: 'יולי' },
+    { value: '8', label: 'אוגוסט' },
+    { value: '9', label: 'ספטמבר' },
+    { value: '10', label: 'אוקטובר' },
+    { value: '11', label: 'נובמבר' },
+    { value: '12', label: 'דצמבר' },
+  ];
 
   // שדות לעדכון סטטוס
   statusModalReport: ReportInstanceDetail | null = null;
@@ -51,18 +69,20 @@ export class ReportsListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) { }
-ngOnInit(): void {
-  this.route.queryParams.subscribe(params => {
-    this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
-    this.isAdminMode = params['adminMode'] === 'true';
-  });
 
-  this.loadReports(); // ← פעם אחת בלבד
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.filterByCompanyId = params['companyId'] ? +params['companyId'] : null;
+      this.isAdminMode = params['adminMode'] === 'true';
+    });
 
-  document.addEventListener('click', () => {
-    this.closeWorkerPopover();
-  });
-}
+    this.loadReports();
+
+    document.addEventListener('click', () => {
+      this.closeWorkerPopover();
+    });
+  }
+
   ngOnDestroy(): void {
     document.removeEventListener('click', () => {
       this.closeWorkerPopover();
@@ -87,49 +107,56 @@ ngOnInit(): void {
   hasWorkers(report: ReportInstanceDetail): boolean {
     return report.workerNames && report.workerNames.length > 0;
   }
-loadReports(): void {
-  this.isLoading = true;
-  this.errorMessage = '';
 
-  this.reportService.getAll(this.isAdminMode).subscribe({
-    next: (data) => {
-      this.reports = data;
+  loadReports(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
 
-      if (this.filterByCompanyId) {
-        this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+    this.reportService.getAll(this.isAdminMode).subscribe({
+      next: (data) => {
+        this.reports = data;
+
+        if (this.filterByCompanyId) {
+          this.reports = data.filter(r => r.companyId === this.filterByCompanyId);
+        }
+
+        const stored = sessionStorage.getItem('daysOverdue');
+        const savedMap: Record<number, number> = stored ? JSON.parse(stored) : {};
+
+        this.reports.forEach(r => {
+          if (r.daysOverdue !== null && r.daysOverdue !== undefined) {
+            savedMap[r.id] = r.daysOverdue;
+          }
+          if (savedMap[r.id] !== undefined) {
+            r.daysOverdue = savedMap[r.id];
+          }
+        });
+
+        sessionStorage.setItem('daysOverdue', JSON.stringify(savedMap));
+
+        this.filteredReports = this.reports;
+        this.populateFilterOptions();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.errorMessage = 'שגיאה בטעינת הדיווחים';
       }
+    });
+  }
 
-      // טען מפה שמורה מ-sessionStorage
-      const stored = sessionStorage.getItem('daysOverdue');
-      const savedMap: Record<number, number> = stored ? JSON.parse(stored) : {};
-
-      this.reports.forEach(r => {
-        // שמור ערך אמיתי
-        if (r.daysOverdue !== null && r.daysOverdue !== undefined) {
-          savedMap[r.id] = r.daysOverdue;
-        }
-        // שחזר מהמפה
-        if (savedMap[r.id] !== undefined) {
-          r.daysOverdue = savedMap[r.id];
-        }
-      });
-
-      // שמור בחזרה ל-sessionStorage
-      sessionStorage.setItem('daysOverdue', JSON.stringify(savedMap));
-
-      this.filteredReports = this.reports;
-      this.populateFilterOptions();
-      this.isLoading = false;
-    },
-    error: () => {
-      this.isLoading = false;
-      this.errorMessage = 'שגיאה בטעינת הדיווחים';
-    }
-  });
-}
   populateFilterOptions(): void {
     this.companies = [...new Set(this.reports.map(r => r.companyName))].sort();
     this.reportTypes = [...new Set(this.reports.map(r => r.reportTypeName))].sort();
+    this.populateYears();
+  }
+
+  populateYears(): void {
+    const currentYear = new Date().getFullYear();
+    this.years = [];
+    for (let y = currentYear; y >= currentYear - 5; y--) {
+      this.years.push(y.toString());
+    }
   }
 
   applyFilters(): void {
@@ -148,7 +175,13 @@ loadReports(): void {
       const matchesReportType = this.selectedReportType === 'all' ||
         report.reportTypeName === this.selectedReportType;
 
-      return matchesSearch && matchesStatus && matchesCompany && matchesReportType;
+      const matchesMonth = this.selectedMonth === 'all' ||
+        (report.period && new Date(report.period).getMonth() + 1 === +this.selectedMonth);
+
+      const matchesYear = this.selectedYear === 'all' ||
+        (report.period && new Date(report.period).getFullYear() === +this.selectedYear);
+
+      return matchesSearch && matchesStatus && matchesCompany && matchesReportType && matchesMonth && matchesYear;
     });
   }
 
@@ -157,13 +190,14 @@ loadReports(): void {
     this.selectedStatus = 'all';
     this.selectedCompany = 'all';
     this.selectedReportType = 'all';
+    this.selectedMonth = 'all';
+    this.selectedYear = 'all';
     this.filteredReports = this.reports;
   }
 
   isReportDelayed(report: ReportInstanceDetail): boolean {
-    return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0&&
-               (report.status === 'Pending' || report.status === 'Reported'); // ← הוספה
-;
+    return report.daysOverdue !== null && report.daysOverdue !== undefined && report.daysOverdue > 0 &&
+      (report.status === 'Pending' || report.status === 'Reported');
   }
 
   getDelayText(report: ReportInstanceDetail): string {
@@ -189,7 +223,7 @@ loadReports(): void {
       case 'Reported': return 'דווח';
       case 'Approved': return 'אושר';
       case 'Paid': return 'שולם';
-      case 'NotRequired':return 'לא נדרש'
+      case 'NotRequired': return 'לא נדרש';
       default: return status;
     }
   }
@@ -229,6 +263,7 @@ loadReports(): void {
   getPaidCount(): number {
     return this.filteredReports.filter(r => r.status === 'Paid').length;
   }
+
   viewReport(reportId: number): void {
     const report = this.reports.find(r => r.id === reportId);
     if (report) {
@@ -241,39 +276,39 @@ loadReports(): void {
     this.isModalOpen = false;
     this.selectedReport = null;
   }
-onEditFromModal(reportId: number): void {
-    this.router.navigate(['/reports/edit', reportId], {
-        queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
-    });
-}
-editReport(reportId: number): void {
-    this.router.navigate(['/reports/edit', reportId], {
-        queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
-    });
-}
 
-updateStatus(report: ReportInstanceDetail): void {
-  const newStatus = report.status;
-  
-  // קרא מ-sessionStorage ישירות
-  const stored = sessionStorage.getItem('daysOverdue');
-  const savedMap: Record<number, number> = stored ? JSON.parse(stored) : {};
-  const savedDaysOverdue = savedMap[report.id];
+  onEditFromModal(reportId: number): void {
+    this.router.navigate(['/reports/edit', reportId], {
+      queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
+    });
+  }
 
-  this.reportService.updateStatus(report.id, newStatus).subscribe({
-    next: () => {
-      report.status = newStatus;
-      if (newStatus === 'Approved' || newStatus === 'Paid' || newStatus === 'NotRequired') {
-        report.daysOverdue = undefined;
-      } else {
-        report.daysOverdue = savedDaysOverdue ?? undefined;
+  editReport(reportId: number): void {
+    this.router.navigate(['/reports/edit', reportId], {
+      queryParams: this.isAdminMode ? { adminMode: 'true' } : {}
+    });
+  }
+
+  updateStatus(report: ReportInstanceDetail): void {
+    const newStatus = report.status;
+
+    const stored = sessionStorage.getItem('daysOverdue');
+    const savedMap: Record<number, number> = stored ? JSON.parse(stored) : {};
+    const savedDaysOverdue = savedMap[report.id];
+
+    this.reportService.updateStatus(report.id, newStatus).subscribe({
+      next: () => {
+        report.status = newStatus;
+        if (newStatus === 'Approved' || newStatus === 'Paid' || newStatus === 'NotRequired') {
+          report.daysOverdue = undefined;
+        } else {
+          report.daysOverdue = savedDaysOverdue ?? undefined;
+        }
+      },
+      error: () => {
+        alert('שגיאה בעדכון הסטטוס');
+        this.loadReports();
       }
-    },
-    error: () => {
-      alert('שגיאה בעדכון הסטטוס');
-      this.loadReports();
-    }
-  });
-}
-
+    });
+  }
 }

@@ -1,6 +1,6 @@
 <div class="reports-container">
 
-  <!-- 🔥 המודל לצפייה -->
+  <!-- המודל לצפייה -->
   <app-report-view-modal
     [report]="selectedReport" 
     [isOpen]="isModalOpen"
@@ -44,6 +44,7 @@
       </div>
     </div>
   </div>
+
   <div class="filters-section">
     <div class="search-box">
       <input 
@@ -67,7 +68,6 @@
         <option value="Approved">אושר</option>
         <option value="Paid">שולם</option>
         <option value="NotRequired">לא נדרש</option>
-
       </select>
 
       <select 
@@ -92,10 +92,32 @@
         </option>
       </select>
 
+      <select 
+        [(ngModel)]="selectedMonth" 
+        (change)="applyFilters()"
+        class="filter-select"
+      >
+        <option value="all">כל החודשים</option>
+        <option *ngFor="let month of months" [value]="month.value">
+          {{ month.label }}
+        </option>
+      </select>
+
+      <select 
+        [(ngModel)]="selectedYear" 
+        (change)="applyFilters()"
+        class="filter-select"
+      >
+        <option value="all">כל השנים</option>
+        <option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </option>
+      </select>
+
       <button 
         (click)="clearFilters()" 
         class="btn-clear"
-        [disabled]="searchTerm === '' && selectedStatus === 'all' && selectedCompany === 'all' && selectedReportType === 'all'"
+        [disabled]="searchTerm === '' && selectedStatus === 'all' && selectedCompany === 'all' && selectedReportType === 'all' && selectedMonth === 'all' && selectedYear === 'all'"
       >
         נקה סינון
       </button>
@@ -115,7 +137,6 @@
         <tr>
           <th>חברה</th>
           <th>סוג דיווח</th>
-          <!-- <th>קוד</th> -->
           <th>תקופה</th>
           <th>סכום</th>
           <th>אמצעי תשלום</th>
@@ -137,26 +158,24 @@
             {{ report.companyName }}
           </td>
           <td>{{ report.reportTypeName }}</td>
-          <!-- <td class="short-code">{{ report.reportTypeShortCode }}</td> -->
           <td>{{ formatDate(report.period) }}</td>
           <td class="amount">{{ formatAmount(report.amount) }}</td>
           <td>
             <span *ngIf="report.paymentMethod">{{ getPaymentMethodText(report.paymentMethod) }}</span>
             <span *ngIf="!report.paymentMethod" class="no-data">-</span>
           </td>
-         
           <td>
-  <select
-    class="status-select"
-    [ngClass]="getStatusColor(report.status)"
-    [(ngModel)]="report.status"
-    (change)="updateStatus(report)"
-  >
-    <option *ngFor="let status of statuses" [value]="status">
-      {{ getStatusText(status) }}
-    </option>
-  </select>
-</td>
+            <select
+              class="status-select"
+              [ngClass]="getStatusColor(report.status)"
+              [(ngModel)]="report.status"
+              (change)="updateStatus(report)"
+            >
+              <option *ngFor="let status of statuses" [value]="status">
+                {{ getStatusText(status) }}
+              </option>
+            </select>
+          </td>
           <td>{{ formatDate(report.reportedDate) }}</td>
           <td>{{ formatDate(report.paidDate) }}</td>
 
@@ -193,14 +212,36 @@
     </table>
 
     <!-- אין תוצאות -->
-    <div *ngIf="filteredReports.length === 0" class="empty-state empty-state--success">
-      <svg class="empty-icon empty-icon--success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-        <polyline points="22 4 12 14.01 9 11.01"/>
-      </svg>
-      <h3 class="empty-title empty-title--success">🎉 כל הכבוד!</h3>
-      <p class="empty-description empty-description--success">אין דיווחים שעליך לטפל בהם כרגע</p>
-    </div>
+     <!-- עובדת - אין תוצאות בכל מצב -->
+<div *ngIf="filteredReports.length === 0 && !isAdminMode" class="empty-state empty-state--success">
+  <svg class="empty-icon empty-icon--success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+  <h3 class="empty-title empty-title--success">🎉 כל הכבוד!</h3>
+  <p class="empty-description empty-description--success">סיימת לטפל בכל הדיווחים</p>
+</div>
+
+<!-- מנהל - סינון פעיל ואין תוצאות -->
+<div *ngIf="filteredReports.length === 0 && isAdminMode && (searchTerm || selectedStatus !== 'all' || selectedCompany !== 'all' || selectedReportType !== 'all' || selectedMonth !== 'all' || selectedYear !== 'all')" class="empty-state">
+  <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
+  <h3 class="empty-title">🔍 לא נמצאו תוצאות</h3>
+  <p class="empty-description">לא נמצאו דיווחים התואמים לסינון שבחרת</p>
+</div>
+
+<!-- מנהל - אין סינון ואין דיווחים בכלל -->
+<div *ngIf="filteredReports.length === 0 && isAdminMode && !searchTerm && selectedStatus === 'all' && selectedCompany === 'all' && selectedReportType === 'all' && selectedMonth === 'all' && selectedYear === 'all'" class="empty-state">
+  <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+  </svg>
+  <h3 class="empty-title">📋 אין דיווחים להצגה</h3>
+  <p class="empty-description">לא קיימים דיווחים במערכת כרגע</p>
+</div>
+   
 
   </div>
 </div>
