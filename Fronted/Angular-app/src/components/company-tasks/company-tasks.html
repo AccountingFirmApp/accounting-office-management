@@ -1,24 +1,34 @@
 
 
-<div class="container">
-  <div class="header">
-    <app-back-button></app-back-button>
-    <!-- <app-back-button [route]="'/worker/' + workerService.currentWorker.id + '/companies'" [text]="'חזרה לחברות'"></app-back-button> -->
+<div class="reports-dashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <app-back-button [route]="returnUrl"></app-back-button>
+      <h1>
+        משימות חברה
+        <span *ngIf="company" style="font-size: 0.7em; font-weight: 400; opacity: 0.9;">
+          - {{ company.name }}
+        </span>
+      </h1>
+    </div>
+  </header>
 
-  </div>
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <div *ngIf="loading && !showChecklistModal" class="loading">טוען משימות...</div>
 
-  <div *ngIf="loading && !showChecklistModal" class="loading">טוען משימות...</div>
-  
-  <div *ngIf="error" class="error">{{ error }}</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
 
-  <div *ngIf="!loading && !error && tasks.length === 0" class="no-data">
-    אין משימות לחברה זו
-  </div>
+    <div *ngIf="!loading && !error && tasks.length === 0" class="no-data">
+      אין משימות לחברה זו
+    </div>
 
-  <div *ngIf="!loading && tasks.length > 0">
-    <p class="tasks-count">נמצאו {{ tasks.length }} משימות</p>
+    <div *ngIf="!loading && tasks.length > 0">
+      <p class="tasks-count">נמצאו {{ tasks.length }} משימות</p>
     
-    <table class="table">
+      <div class="reports-table-wrapper">
+        <table class="reports-table">
       <thead>
         <tr>
           <th>סוג משימה</th>
@@ -42,7 +52,7 @@
             <select 
               [ngModel]="task.status"
               (ngModelChange)="onStatusChange(task, $event)"
-              [style.background-color]="getStatusColor(task.status)"
+              [ngClass]="getStatusColor(task.status)"
               [disabled]="isUpdating(task.id)"
               class="status-select"
               [class.updating]="isUpdating(task.id)">
@@ -55,7 +65,10 @@
 
           <td>
             <button class="btn-checklist" (click)="openTaskDetails(task.id)">
-              📋 צפייה
+               <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg> צפייה
             </button>
           </td>
           
@@ -63,6 +76,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 
   <div class="modal-backdrop" *ngIf="showChecklistModal" (click)="closeModal()">
@@ -88,7 +102,7 @@
         <hr>
 
         <ul class="checklist-list">
-          <li *ngFor="let item of selectedTaskDetails.checklistItems" class="checklist-item">
+          <li *ngFor="let item of selectedTaskDetails.checklistItems" class="checklist-item" [ngClass]="getStatusBgClass(selectedTaskDetails?.status)">
             <div class="item-main">
               <input type="checkbox" 
                      [id]="'item-' + item.id"
@@ -108,4 +122,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

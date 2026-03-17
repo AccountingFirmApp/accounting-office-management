@@ -58,15 +58,7 @@ namespace AccountingSystem.Infrastructure.Repositories
             {
                 
 
-                if (config.Company != null)
-
-                if (config.Frequency != null)
-
-                if (config.Reporttype != null)
-
-
-                _dbSet.Add(config);
-                var result = await _context.SaveChangesAsync();
+              await  _dbSet.AddAsync(config);
 
             }
             catch (DbUpdateException dbEx)

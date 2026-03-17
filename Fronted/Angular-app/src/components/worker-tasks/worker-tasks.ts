@@ -50,6 +50,8 @@ export class WorkerTasksComponent implements OnInit {
     overdue: 0
   };
 
+  returnUrl: string = '/home';
+
   constructor(
     private workerService: WorkerService,
     private companyService: CompanyService,
@@ -206,21 +208,63 @@ openTaskDetails(taskId: number): void {
       overdue: this.tasks.filter(t => t.duedate && new Date(t.duedate) < today && t.status !== this.STATUS.DONE).length
     };
   }
-
-  getStatusClass(status: number): string {
-    const map: { [key: number]: string } = {
-      1: 'status-pending', 2: 'status-in-progress', 3: 'status-done', 4: 'status-paid', 5: 'status-not-required'
-    };
-    return map[status] || '';
-  }
+getStatusClass(status: any): string {
+  const s = String(status);
+  const map: { [key: string]: string } = {
+    '1': 'status-pending',
+    '2': 'status-in-progress', 
+    '3': 'status-done',
+    '4': 'status-paid',
+    '5': 'status-not-required',
+    'Pending':     'status-pending',
+    'InProgress':  'status-in-progress',
+    'Done':        'status-done',
+    'Paid':        'status-paid',
+    'NotRequired': 'status-not-required'
+  };
+  return map[s] || 'status-pending';
+}
 
   getTaskPriority(task: WorkerTask): string {
     if (!task.duedate) return '';
     const dueDate = new Date(task.duedate);
     const diffDays = Math.ceil((dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
     if (diffDays < 0) return 'overdue';
-    if (diffDays <= 3) return 'urgent';
+    if (diffDays <= 1) return 'warning';
     return '';
+  }
+
+  getTaskTooltip(task: WorkerTask): string {
+    if (!task.duedate) return '';
+    const dueDate = new Date(task.duedate);
+    const diffDays = Math.ceil((dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return 'משימה באיחור';
+    if (diffDays <= 1) return 'שים לב - עד היום צריך לבצע משימה';
+    return '';
+  }
+
+  getStatusText(status: any): string {
+    const s = String(status);
+    const map: { [key: string]: string } = {
+      '1': 'ממתין',
+      '2': 'בתהליך',
+      '3': 'הושלם',
+      '4': 'שולם',
+      '5': 'לא נדרש'
+    };
+    return map[s] || 'ממתין';
+  }
+
+  getStatusBgClass(status: any): string {
+    const s = String(status);
+    const map: { [key: string]: string } = {
+      '1': 'status-bg-pending',
+      '2': 'status-bg-in-progress',
+      '3': 'status-bg-done',
+      '4': 'status-bg-paid',
+      '5': 'status-bg-not-required'
+    };
+    return map[s] || 'status-bg-pending';
   }
 
   onStatusChange(task: WorkerTask, newStatus: string): void {

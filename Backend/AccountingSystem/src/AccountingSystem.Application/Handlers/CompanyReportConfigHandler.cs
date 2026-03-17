@@ -64,12 +64,12 @@ namespace AccountingSystem.Application.Handlers
             await _unitOfWork.SaveChangesAsync();
 
             var configWithDetails = await _unitOfWork.CompanyReportConfigs
-                .GetByIdWithDetailsAsync(reportConfig.Id);
+          .FindAsync(c => c.Id == reportConfig.Id);
 
-            if (configWithDetails == null)
+            if (!configWithDetails.Any())
                 throw new InvalidOperationException("שגיאה בשליפת ההגדרה שנוצרה");
 
-            return _mapper.Map<CompanyReportConfigDto>(configWithDetails);
+            return _mapper.Map<CompanyReportConfigDto>(configWithDetails.First());
         }
     }
     public class DeleteCompanyReportConfigHandler

@@ -1059,7 +1059,7 @@ public partial class AccountingDbContext : DbContext
 
             entity.HasIndex(e => new { e.Companyid, e.Reporttypeid, e.Year }, "uq_company_report_year").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd(); ;
             entity.Property(e => e.Companyid).HasColumnName("companyid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")

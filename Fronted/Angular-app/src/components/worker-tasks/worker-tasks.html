@@ -1,24 +1,68 @@
 
-  <div class="worker-tasks-container">
-          <app-back-button></app-back-button>
+<div class="reports-dashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <app-back-button [route]="returnUrl"></app-back-button>
+      <h1>המשימות שלי</h1>
+    </div>
+  </header>
 
-    <div class="header">
-      <h2>המשימות שלי</h2>
-      <button class="refresh-btn" (click)="loadTasks()" [disabled]="loading">
-        🔄 רענן
-      </button>
+  <!-- Statistics Cards -->
+  <div class="stats-grid" *ngIf="!loading && tasks.length > 0">
+    <div class="stat-card total">
+      <div class="stat-content">
+        <h3>סה"כ משימות</h3>
+        <p class="stat-number">{{ taskStats.total }}</p>
+      </div>
     </div>
-  
-    <div class="stats-cards" *ngIf="!loading && tasks.length > 0">
-      <div class="stat-card total"><div class="stat-number">{{ taskStats.total }}</div><div class="stat-label">סה"כ משימות</div></div>
-      <div class="stat-card pending"><div class="stat-number">{{ taskStats.pending }}</div><div class="stat-label">ממתינות</div></div>
-      <div class="stat-card progress"><div class="stat-number">{{ taskStats.inProgress }}</div><div class="stat-label">בתהליך</div></div>
-      <div class="stat-card done"><div class="stat-number">{{ taskStats.done }}</div><div class="stat-label">הושלמו</div></div>
-      <div class="stat-card paid"><div class="stat-number">{{ taskStats.paid }}</div><div class="stat-label">שולם</div></div>
-      <div class="stat-card not-required"><div class="stat-number">{{ taskStats.notRequired }}</div><div class="stat-label">לא נדרש</div></div>
-      <div class="stat-card overdue"><div class="stat-number">{{ taskStats.overdue }}</div><div class="stat-label">באיחור</div></div>
+
+    <div class="stat-card pending">
+      <div class="stat-content">
+        <h3>ממתינות</h3>
+        <p class="stat-number">{{ taskStats.pending }}</p>
+      </div>
     </div>
-  
+
+    <div class="stat-card progress">
+      <div class="stat-content">
+        <h3>בתהליך</h3>
+        <p class="stat-number">{{ taskStats.inProgress }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card done">
+      <div class="stat-content">
+        <h3>הושלמו</h3>
+        <p class="stat-number">{{ taskStats.done }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card paid">
+      <div class="stat-content">
+        <h3>שולם</h3>
+        <p class="stat-number">{{ taskStats.paid }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card not-required">
+      <div class="stat-content">
+        <h3>לא נדרש</h3>
+        <p class="stat-number">{{ taskStats.notRequired }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card overdue">
+      <div class="stat-content">
+        <h3>באיחור</h3>
+        <p class="stat-number">{{ taskStats.overdue }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
     <div class="filters" *ngIf="!loading && tasks.length > 0">
       <div class="search-box">
         <input type="text" placeholder="חפש חברה או סוג משימה..." [(ngModel)]="searchTerm" (input)="onSearchChange(searchTerm)">
@@ -30,15 +74,15 @@
         <button [class.active]="selectedStatus === '3'" (click)="onStatusFilterChange('3')">הושלמו</button>
       </div>
     </div>
-  
+
     <div *ngIf="loading && !showChecklistModal" class="loading">
       <div class="spinner"></div>
       <p>טוען משימות...</p>
-   </div>
+    </div>
     <div *ngIf="!loading && tasks.length === 0" class="no-tasks"><div class="empty-icon">📋</div><h3>אין משימות כרגע</h3></div>
-  
-    <div class="tasks-table-container" *ngIf="!loading && filteredTasks.length > 0">
-      <table class="tasks-table">
+
+    <div class="reports-table-wrapper" *ngIf="!loading && filteredTasks.length > 0">
+      <table class="reports-table">
         <thead>
           <tr>
             <th>חברה</th>
@@ -53,6 +97,7 @@
         <tbody>
           <tr *ngFor="let task of filteredTasks" 
               [class]="getTaskPriority(task)"
+              [title]="getTaskTooltip(task)"
               [class.assigned-to-me]="task.assignedworkerid === workerId"
               [class.assigned-to-company]="task.assignedworkerid !== workerId">
             
@@ -83,7 +128,10 @@
             </td>
             <td>
               <button class="btn-checklist-action" (click)="openTaskDetails(task.id)">
-                📋 פתח צ'קליסט
+                 <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg> פתח צ'קליסט
               </button>
             </td>
             <td class="notes">{{ task.notes || '-' }}</td>
@@ -98,6 +146,9 @@
           <div class="title-area">
             <h3>צ'קליסט לביצוע</h3>
             <p class="subtitle">{{ selectedTaskDetails?.companyName }} | {{ selectedTaskDetails?.taskTypeName }}</p>
+            <div class="status-badge" [ngClass]="getStatusClass(selectedTaskDetails?.status)">
+              {{ getStatusText(selectedTaskDetails?.status) }}
+            </div>
           </div>
           <button class="close-btn" (click)="closeModal()">&times;</button>
         </div>
@@ -118,7 +169,7 @@
           <hr>
   
           <div class="checklist-items-wrapper">
-            <div *ngFor="let item of selectedTaskDetails.checklistItems" class="checklist-row">
+            <div *ngFor="let item of selectedTaskDetails.checklistItems" class="checklist-row" [ngClass]="getStatusBgClass(selectedTaskDetails?.status)">
               <label class="checkbox-container">
                 <input type="checkbox" 
                        [checked]="item.isCompleted" 

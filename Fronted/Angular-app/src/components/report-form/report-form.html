@@ -82,11 +82,11 @@
       <div class="form-group" *ngIf="isEditMode">
         <label for="status">סטטוס</label>
         <select id="status" [(ngModel)]="formData.status" name="status">
-          <option value="Pending">ממתין</option>
-          <option value="Reported">דווח</option>
-          <option value="Paid">שולם</option>
-          <option value="Approved">אושר</option>
-          <option value="NotRequired">לא נדרש</option>
+          <option value="Pending" id="pen">ממתין</option>
+          <option value="Reported" id="rep">דווח</option>
+          <option value="Paid" id="paid">שולם</option>
+          <option value="Approved" id="app">אושר</option>
+          <option value="NotRequired" id="not-required">לא נדרש</option>
         </select>
       </div>
     </div>
