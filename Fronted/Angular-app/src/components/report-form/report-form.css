@@ -8,7 +8,30 @@
   min-height: 100vh;
   background: var(--bg-primary);
 }
+#pen {
+  background-color: #fff4e5;
+  color: #ff9800;
+}
 
+#rep {
+  background-color: #e3f2fd;
+  color: #2196f3;
+}
+
+#paid {
+  background-color: #e8f5e9;
+  color: #4caf50;
+}
+
+#app {
+  background-color: #e0f2f1;
+  color: #009688;
+}
+
+#not-required {
+  background-color: #f5f5f5;
+  color: #757575;
+}
 /* Header */
 .form-header {
   display: flex;

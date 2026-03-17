@@ -1,53 +1,207 @@
-/* =============================================
-   company-tasks — identical design to reports-list
-   ============================================= */
+/* Reports Dashboard - Corporate Fintech Design */
 
-/* Layout */
-.container {
-  direction: rtl;
-  padding: var(--space-8);
-  max-width: 1400px;
-  margin: 0 auto;
-  background: var(--bg-primary);
+.reports-dashboard {
   min-height: 100vh;
-  font-family: var(--font-text);
+  background-color: var(--bg-primary);
+  direction: rtl;
 }
 
 /* Header */
-.header {
+.dashboard-header {
+  background: var(--accent);
+  color: var(--text-inverse);
+  padding: var(--space-8) var(--space-6);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: var(--space-4);
-  margin-bottom: 30px;
 }
 
-.header h2 {
-  font-size: 2rem;
-  color: var(--text-primary);
-  margin: 0 0 5px 0;
-  font-weight: 700;
+.header-content h1 {
+  margin: 0;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-semibold);
+  letter-spacing: -0.02em;
 }
 
-/* Loading */
-.loading {
-  text-align: center;
-  padding: var(--space-16);
-  color: var(--text-secondary);
+.back-button,
+.add-button {
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
+  font-family: var(--font-text);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
-/* Error */
-.error {
-  background: var(--status-error-bg);
-  color: var(--status-error);
-  padding: var(--space-4) var(--space-6);
+.back-button {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-inverse);
+  border-color: transparent;
+}
+
+.back-button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(2px);
+}
+
+.add-button {
+  background-color: var(--bg-surface);
+  color: var(--accent);
+  border-color: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.add-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Statistics Grid */
+.stats-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-6);
+}
+
+.stat-card {
+  background-color: var(--bg-surface);
   border-radius: var(--radius-lg);
-  border-right: 4px solid var(--status-error);
-  margin-bottom: var(--space-6);
-  font-size: var(--font-size-sm);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  border: 1px solid var(--border-default);
+  border-right: 3px solid;
 }
 
-/* Empty */
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.stat-card.pending {
+  border-right-color: var(--status-warning);
+}
+
+.stat-card.overdue {
+  border-right-color: var(--status-error);
+}
+
+.stat-card.reported {
+  border-right-color: var(--status-info);
+}
+
+.stat-card.paid {
+  border-right-color: var(--status-success);
+}
+
+.stat-content h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-number {
+  margin: 0;
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  line-height: 1;
+  font-family: var(--font-mono);
+}
+
+/* Main Content */
+.dashboard-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-6) var(--space-12);
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.stat-card.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .header-content h1 {
+    font-size: var(--font-size-2xl);
+    text-align: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    padding: var(--space-6) var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .stat-card {
+    padding: var(--space-4);
+  }
+
+  .stat-number {
+    font-size: var(--font-size-3xl);
+  }
+
+  .dashboard-content {
+    padding: 0 var(--space-4) var(--space-8);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content h1 {
+    font-size: var(--font-size-xl);
+  }
+
+  .back-button,
+  .add-button {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-xs);
+  }
+}
 .no-data {
   background-color: var(--bg-surface);
   border: 1px dashed var(--border-default);
@@ -206,6 +360,57 @@
   background-color: var(--status-info-bg);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+/* =============================================
+   TABLE — exact copy of reports-list
+   ============================================= */
+.reports-table-wrapper {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-6);
+}
+
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reports-table thead {
+  background-color: var(--bg-hover);
+}
+
+.reports-table th {
+  padding: var(--space-4);
+  text-align: right;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border-default);
+}
+
+.reports-table tbody tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: all var(--transition-fast);
+}
+
+.reports-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.reports-table tbody tr:hover {
+  background-color: var(--bg-hover);
+}
+
+.reports-table td {
+  padding: var(--space-4);
+  text-align: right;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
 }
 
 /* =============================================
@@ -387,6 +592,51 @@
 .btn-secondary:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+}
+
+/* Status Background Classes for Checklist Items */
+.checklist-item {
+  transition: background-color var(--transition-fast);
+}
+
+.checklist-item.status-bg-pending {
+  background-color: rgba(251, 191, 36, 0.1); /* Light yellow */
+}
+
+.checklist-item.status-bg-pending:hover {
+  background-color: rgba(251, 191, 36, 0.2);
+}
+
+.checklist-item.status-bg-in-progress {
+  background-color: rgba(59, 130, 246, 0.1); /* Light blue */
+}
+
+.checklist-item.status-bg-in-progress:hover {
+  background-color: rgba(59, 130, 246, 0.2);
+}
+
+.checklist-item.status-bg-done {
+  background-color: rgba(34, 197, 94, 0.1); /* Light green */
+}
+
+.checklist-item.status-bg-done:hover {
+  background-color: rgba(34, 197, 94, 0.2);
+}
+
+.checklist-item.status-bg-paid {
+  background-color: rgba(34, 197, 94, 0.1); /* Light green */
+}
+
+.checklist-item.status-bg-paid:hover {
+  background-color: rgba(34, 197, 94, 0.2);
+}
+
+.checklist-item.status-bg-not-required {
+  background-color: rgba(107, 114, 128, 0.1); /* Light gray */
+}
+
+.checklist-item.status-bg-not-required:hover {
+  background-color: rgba(107, 114, 128, 0.2);
 }
 
 /* Responsive */

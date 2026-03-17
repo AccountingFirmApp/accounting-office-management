@@ -27,6 +27,7 @@ export class CompanyTasksComponent implements OnInit {
   loading = false;
   error: string | null = null;
   updatingTaskId: number | null = null;  
+  returnUrl: string = '/home';
   statusToNumber: { [key: string]: number } = {
     'Pending': 0,
     'InProgress': 1,
@@ -56,6 +57,9 @@ showChecklistModal = false;
       this.companyId = +params['id'];
       this.loadCompanyInfo();
       this.loadTasks();
+    });
+    this.route.queryParams.subscribe(params => {
+      this.returnUrl = params['returnUrl'] || '/home';
     });
   }
 
@@ -136,6 +140,17 @@ showChecklistModal = false;
       case 'Paid': return 'שולם';            
       case 'NotRequired': return 'לא נדרש';  
       default: return status;
+    }
+  }
+
+  getStatusBgClass(status: string): string {
+    switch(status) {
+      case 'Done': return 'status-bg-done';
+      case 'InProgress': return 'status-bg-in-progress';
+      case 'Pending': return 'status-bg-pending';
+      case 'Paid': return 'status-bg-paid';
+      case 'NotRequired': return 'status-bg-not-required';
+      default: return 'status-bg-pending';
     }
   }
 
