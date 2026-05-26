@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace AccountingSystem.Application.Handlers
 {
-    public class GenerateRepoetInsanceHandler : IRequestHandler<GenerateAutoReportInstanceCommand, List<ReportInstanceDto>>
+    public class GenerateReportInstanceHandler : IRequestHandler<GenerateAutoReportInstanceCommand, List<ReportInstanceDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<GenerateRepoetInsanceHandler> _logger;
+        private readonly ILogger<GenerateReportInstanceHandler> _logger;
 
-        public GenerateRepoetInsanceHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<GenerateRepoetInsanceHandler> logger)
+        public GenerateReportInstanceHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<GenerateReportInstanceHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -49,9 +49,9 @@ namespace AccountingSystem.Application.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<GenerateRepoetInsanceHandler> _logger;
+        private readonly ILogger<CheckReportInstanceHandler> _logger;
 
-        public CheckReportInstanceHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<GenerateRepoetInsanceHandler> logger)
+        public CheckReportInstanceHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CheckReportInstanceHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

@@ -43,31 +43,44 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<List<Reportinstance>> GenerateReportsAsync(DateTime date)
         {
             var connection = _context.Database.GetDbConnection();
-            await connection.OpenAsync();
             try
             {
+                await connection.OpenAsync();
                 using var command = connection.CreateCommand();
                 command.CommandText = "SELECT * FROM generate_monthly_report_instances(@p_run_date)";
                 command.Parameters.Add(new NpgsqlParameter("@p_run_date", NpgsqlTypes.NpgsqlDbType.Date) { Value = date });
                 using var reader = await command.ExecuteReaderAsync();
+
+                var iId            = reader.GetOrdinal("id");
+                var iConfigId      = reader.GetOrdinal("configid");
+                var iPeriod        = reader.GetOrdinal("period");
+                var iAmount        = reader.GetOrdinal("amount");
+                var iStatus        = reader.GetOrdinal("status");
+                var iPaymentMethod = reader.GetOrdinal("paymentmethod");
+                var iReceiptDate   = reader.GetOrdinal("receiptdate");
+                var iReportedDate  = reader.GetOrdinal("reporteddate");
+                var iPaidDate      = reader.GetOrdinal("paiddate");
+                var iComments      = reader.GetOrdinal("comments");
+                var iCreatedAt     = reader.GetOrdinal("createdat");
+                var iUpdatedAt     = reader.GetOrdinal("updatedat");
 
                 var res = new List<Reportinstance>();
                 while (await reader.ReadAsync())
                 {
                     res.Add(new Reportinstance
                     {
-                        Id = reader.GetInt32(0),
-                        Configid = reader.GetInt32(1),
-                        Period = DateOnly.FromDateTime(reader.GetDateTime(2)),
-                        Amount = reader.IsDBNull(3) ? null : reader.GetDecimal(3),
-                        Status = reader.IsDBNull(4) ? null : Enum.Parse<ReportStatus>(reader.GetString(4)),
-                        PaymentMethod = reader.IsDBNull(5) ? null : Enum.Parse<PaymentMethod>(reader.GetString(5)),
-                        Receiptdate = reader.IsDBNull(6) ? null : DateOnly.FromDateTime(reader.GetDateTime(6)),
-                        Reporteddate = reader.IsDBNull(7) ? null : DateOnly.FromDateTime(reader.GetDateTime(7)),
-                        Paiddate = reader.IsDBNull(8) ? null : DateOnly.FromDateTime(reader.GetDateTime(8)),
-                        Comments = reader.IsDBNull(9) ? null : reader.GetString(9),
-                        Createdat = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
-                        Updatedat = reader.IsDBNull(11) ? null : reader.GetDateTime(11)
+                        Id            = reader.GetInt32(iId),
+                        Configid      = reader.GetInt32(iConfigId),
+                        Period        = DateOnly.FromDateTime(reader.GetDateTime(iPeriod)),
+                        Amount        = reader.IsDBNull(iAmount) ? null : reader.GetDecimal(iAmount),
+                        Status        = reader.IsDBNull(iStatus) ? null : Enum.Parse<ReportStatus>(reader.GetString(iStatus)),
+                        PaymentMethod = reader.IsDBNull(iPaymentMethod) ? null : Enum.Parse<PaymentMethod>(reader.GetString(iPaymentMethod)),
+                        Receiptdate   = reader.IsDBNull(iReceiptDate) ? null : DateOnly.FromDateTime(reader.GetDateTime(iReceiptDate)),
+                        Reporteddate  = reader.IsDBNull(iReportedDate) ? null : DateOnly.FromDateTime(reader.GetDateTime(iReportedDate)),
+                        Paiddate      = reader.IsDBNull(iPaidDate) ? null : DateOnly.FromDateTime(reader.GetDateTime(iPaidDate)),
+                        Comments      = reader.IsDBNull(iComments) ? null : reader.GetString(iComments),
+                        Createdat     = reader.IsDBNull(iCreatedAt) ? null : reader.GetDateTime(iCreatedAt),
+                        Updatedat     = reader.IsDBNull(iUpdatedAt) ? null : reader.GetDateTime(iUpdatedAt)
                     });
                 }
                 return res;
@@ -83,9 +96,9 @@ namespace AccountingSystem.Infrastructure.Repositories
         public async Task<bool> CheckReportsAsync()
         {
             var connection = _context.Database.GetDbConnection();
-            await connection.OpenAsync();
             try
             {
+                await connection.OpenAsync();
                 using var command = connection.CreateCommand();
                 command.CommandText = "SELECT check_report_health()";
                 var result = await command.ExecuteScalarAsync();
