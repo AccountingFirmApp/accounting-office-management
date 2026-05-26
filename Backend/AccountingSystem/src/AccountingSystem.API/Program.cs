@@ -91,6 +91,7 @@ builder.Services.AddHangfireServer();
 // ========================================
 builder.Services.AddScoped<ReportGenerationJob>();
 builder.Services.AddScoped<CheckReportGenerationJob>();
+builder.Services.AddScoped<AutomaticTaskGenerationJob>();
 builder.Services.AddScoped<IReportInstanceRepository, ReportInstanceRepository>();
 builder.Services.AddScoped<IAccountingFirmRepository, AccountingFirmRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -177,7 +178,6 @@ builder.Services.AddAuthorization(options =>
 // ========================================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHostedService<AutomaticTaskGenerationJob>();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -245,6 +245,9 @@ RecurringJob.AddOrUpdate<ReportGenerationJob>(
         TimeZone = israelTimeZone
     }
 );
+BackgroundJob.Enqueue<ReportGenerationJob>(
+    job => job.RunMonthlyReport()
+);
 //app.UseHangfireDashboard("/hangfire", new DashboardOptions
 //{
 //    Authorization = new[] { new HangfireAuthorizationFilter() }
@@ -268,7 +271,17 @@ RecurringJob.AddOrUpdate<ReportGenerationJob>(
 RecurringJob.AddOrUpdate<CheckReportGenerationJob>(
     "check-report-generation",
     job => job.RunDailyCheckReport(),
-    "0 0 * * *",
+    "0 0 26-31 * *",
+    new RecurringJobOptions
+    {
+        TimeZone = israelTimeZone
+    }
+);
+
+RecurringJob.AddOrUpdate<AutomaticTaskGenerationJob>(
+    "automatic-task-generation",
+    job => job.RunMonthlyTaskGeneration(CancellationToken.None),
+    "0 2 25 * *",
     new RecurringJobOptions
     {
         TimeZone = israelTimeZone

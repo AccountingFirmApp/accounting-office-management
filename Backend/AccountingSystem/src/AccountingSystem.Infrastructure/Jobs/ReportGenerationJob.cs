@@ -1,11 +1,14 @@
 ﻿using AccountingSystem.Application.Commands;
+using Hangfire;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingSystem.Infrastructure.Jobs
 {
     public class ReportGenerationJob
     {
+        private static readonly TimeZoneInfo IsraelTimeZone =
+            TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
+
         private readonly IMediator _mediator;
 
         public ReportGenerationJob(IMediator mediator)
@@ -13,9 +16,12 @@ namespace AccountingSystem.Infrastructure.Jobs
             _mediator = mediator;
         }
 
+        [DisableConcurrentExecution(timeoutInSeconds: 600)]
+        [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
         public async Task RunMonthlyReport()
         {
-            var command = new GenerateAutoReportInstanceCommand(DateTime.Now);
+            var israelNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IsraelTimeZone);
+            var command = new GenerateAutoReportInstanceCommand(israelNow);
             await _mediator.Send(command);
         }
     }

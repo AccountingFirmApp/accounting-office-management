@@ -15,10 +15,10 @@ namespace AccountingSystem.Infrastructure.Jobs
             _mediator = mediator;
             _logger = logger;
         }
+        [DisableConcurrentExecution(timeoutInSeconds: 300)]
+        [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
         public async Task RunDailyCheckReport()
         {
-            var today = DateTime.Now.Day;
-            if (today < 26) return;
             var query = new CheckReportInstanceQuery();
             var check = await _mediator.Send(query);
             if (!check)
@@ -26,7 +26,6 @@ namespace AccountingSystem.Infrastructure.Jobs
                 _logger.LogWarning("Missing reports detected! Triggering generation...");
                 BackgroundJob.Enqueue<ReportGenerationJob>(job => job.RunMonthlyReport());
             }
-
         }
 
     }
