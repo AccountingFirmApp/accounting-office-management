@@ -106,7 +106,7 @@
     <div class="form-group">
       <label>חברות (אופציונלי)</label>
       <div class="companies-checklist">
-        <div *ngFor="let company of companies" class="checkbox-item">
+        <div *ngFor="let company of companies; trackBy: trackById" class="checkbox-item">
           <label>
             <input type="checkbox" [value]="company.id" [checked]="isCompanySelected(company.id)"
               (change)="onCompanyToggle(company.id, $event)" />

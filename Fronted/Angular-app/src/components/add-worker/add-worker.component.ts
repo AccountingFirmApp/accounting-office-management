@@ -42,7 +42,7 @@ export class WorkerFormComponent implements OnInit {
     private workerService: WorkerService,
     private companyService: CompanyService,
     private router: Router,
-    private route: ActivatedRoute
+    private route : ActivatedRoute
   ) {
     this.workerForm = this.fb.group({
       id: [null],
@@ -85,7 +85,7 @@ export class WorkerFormComponent implements OnInit {
       this.workerForm.get('password')?.disable();
       this.workerForm.get('phone')?.disable();
 
-      this.workerService.getWorkerById(+workerId).subscribe(worker => {
+      this.workerService.getWorkerById(+workerId!).subscribe(worker => {
           console.log('companyIds שהגיעו מהשרת:', worker.companyIds);
 
         let hireDateValue: string | null = null;
@@ -122,6 +122,10 @@ export class WorkerFormComponent implements OnInit {
 
   isCompanySelected(companyId: number): boolean {
     return this.selectedCompanyIds.includes(companyId);
+  }
+
+  trackById(index: number, item: any) {
+    return item.id;
   }
 
   onCompanyToggle(companyId: number, event: any) {
