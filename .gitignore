@@ -62,3 +62,8 @@ Fronted/Angular-app/nul
 # MCP (contains DB credentials)
 # ==========================
 .mcp.json
+
+# ==========================
+# Claude Code local scratch
+# ==========================
+.claude/plan/
