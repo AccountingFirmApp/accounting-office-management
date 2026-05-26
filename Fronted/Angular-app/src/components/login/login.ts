@@ -6,7 +6,6 @@ import { AuthService } from '../../services/auth.service';
 import { LoginRequestDto, GoogleLoginRequestDto } from '../../models/auth';
 import { environment } from '../../environments/environment';
 import { WorkerService } from '../../services/worker';
-
 declare const google: any;
 
 @Component({
