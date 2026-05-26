@@ -172,7 +172,7 @@ npm start
    # Open .env and fill in all values (database connection string, JWT secret, Google OAuth credentials, etc.)
    ```
 
-3. Restore the database schema by running the SQL script at the repo root - the file is named `סקריפט מסד.sql` (Hebrew filename, preserved verbatim). Execute it against your PostgreSQL instance before starting the API.
+3. Restore the database schema by running the SQL script at the repo root - the file is named `Script.sql`. Execute it against your PostgreSQL instance before starting the API.
 
 > **Note:** The backend CORS policy hard-codes `http://localhost:4200` and `https://localhost:4200` as the allowed origin. If you change the Angular dev server port, update the corresponding entry in `Backend/AccountingSystem/Program.cs`.
 
@@ -199,7 +199,7 @@ npm start
 ├── Fronted/
 │   └── Angular-app/               # Angular 18 SPA
 │       └── CLAUDE.md              # Frontend conventions & component patterns
-├── סקריפט מסד.sql                  # Initial database schema (Hebrew filename)
+├── Script.sql                  # Initial database schema 
 └── CLAUDE.md                      # Root-level project conventions
 ```
 
