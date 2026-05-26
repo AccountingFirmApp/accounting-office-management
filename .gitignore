@@ -57,3 +57,8 @@ bld/
 *.exe
 *.pdb
 Fronted/Angular-app/nul
+
+# ==========================
+# MCP (contains DB credentials)
+# ==========================
+.mcp.json
