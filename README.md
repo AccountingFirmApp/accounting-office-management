@@ -52,63 +52,42 @@ Requests travel through six layers: the Angular client sends authenticated HTTP 
 
 ```mermaid
 graph TD
+    OAuth[OAuth Provider\nExternal sign-in · issues JWT]
+
     subgraph Client["Client Layer (Angular 18)"]
-        A[Angular SPA\nstandalone components\nRTL Hebrew UI]
-        B[AuthInterceptor\nAttaches Bearer JWT only\nNo 401 handling]
-        C[Angular Services\nLocal state · HTTP calls]
+        A[Angular SPA\nRTL Hebrew UI · JWT interceptor · services]
     end
 
     subgraph API["API / Routing Layer (ASP.NET Core 9)"]
-        D[Controllers\nRoute → Action]
-        E[JWT Middleware\nValidate token\nPopulate claims]
-        F[CORS Policy\nlocalhost:4200 only]
+        B[Controllers · JWT Middleware · CORS\nRoute → Action · validate token]
     end
 
     subgraph AppLayer["Application Layer (MediatR CQRS)"]
-        G[Commands\nCreate · Update · Delete]
-        H[Queries\nGet · List · Filter]
-        I[Handlers\nBusiness logic\nValidation]
+        C[Commands · Queries · Handlers\nBusiness logic · validation]
     end
 
     subgraph Data["Data / Persistence Layer (EF Core 9)"]
-        J[Repositories\nIRepository&lt;T&gt; pattern]
-        K[DbContext\nEnum mappings\nKeyless views]
-        L[Migrations\nSchema versioning]
+        D[Repositories · DbContext · Migrations\nIRepository&lt;T&gt; · schema versioning]
     end
 
     subgraph Jobs["Async Jobs Layer (Hangfire)"]
-        M[ReportGenerationJob\nMonthly · Israel TZ cron]
-        N[TaskCreationJob\nEnd-of-month automation]
-        O[Hangfire Dashboard\n/hangfire]
+        E[Scheduled Jobs · Dashboard\nMonthly reports · month-end tasks · Israel TZ]
     end
 
     subgraph DB["Database Layer (PostgreSQL 14+)"]
-        P[(PostgreSQL\nApp schema\n+ Hangfire schema)]
+        P[(PostgreSQL\nApp schema + Hangfire schema)]
     end
 
+    A -->|Redirect to login| OAuth
+    OAuth -->|Returns JWT| A
     A -->|HTTP + JWT| B
-    B -->|Authenticated requests| C
-    C -->|HTTP calls| D
-    D --> E
-    E --> F
-    F --> D
-    D -->|IMediator.Send| G
-    D -->|IMediator.Send| H
-    G --> I
-    H --> I
-    I --> J
-    J --> K
-    K --> L
-    L --> P
-    K --> P
+    B -->|IMediator.Send| C
+    C --> D
+    D --> P
+    E -->|IMediator.Send| C
+    E -->|Writes| P
 
-    M -->|IMediator.Send| I
-    N -->|IMediator.Send| I
-    M --> P
-    N --> P
-    O -->|Monitor| M
-    O -->|Monitor| N
-
+    style OAuth fill:#134e4a,stroke:#34d399,color:#e0e0ff
     style Client fill:#1a1a2e,stroke:#4a9eff,color:#e0e0ff
     style API fill:#16213e,stroke:#4a9eff,color:#e0e0ff
     style AppLayer fill:#0f3460,stroke:#4a9eff,color:#e0e0ff
