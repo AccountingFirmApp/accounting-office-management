@@ -16,10 +16,9 @@ Full-stack workflow platform for Hebrew-speaking Accounting Office Management Sy
 
 ## Key Features
 
-- Recurring report lifecycle - status progresses through Pending, Reported, Paid, and Approved with enforced transitions.
+- Recurring report lifecycle - status progresses through Pending, Reported, Paid, and Approved.
 - Automatic monthly task generation - Hangfire fires at end-of-month on the Israeli business calendar and creates tasks for every active assignment.
 - Worker/company assignment workflow - coordinators assign workers to client companies and track completion state per cycle.
-- Full audit log - every mutation records who changed what and when.
 - Role-based access - route guards and component-level checks enforce authorization in the Angular SPA.
 - Hebrew RTL UI - all screens are right-to-left first; layout, typography, and form direction are set globally.
 - Background processing - end-of-month operations run asynchronously and do not block API responses.
